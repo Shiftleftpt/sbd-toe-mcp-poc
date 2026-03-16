@@ -1,0 +1,26 @@
+{
+  "name": "sbd-toe-mcp-poc",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "description": "MCP retrieval-first para consumo do snapshot semântico SbD-ToE no VS Code.",
+  "type": "module",
+  "bin": {
+    "sbd-toe-mcp-poc": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -w -p tsconfig.json",
+    "start": "node dist/index.js",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "checkout:backend": "tsc -p tsconfig.json && node dist/bootstrap/checkout-backend.js",
+    "package:release": "node scripts/package-release.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^5.9.3"
+  }
+}

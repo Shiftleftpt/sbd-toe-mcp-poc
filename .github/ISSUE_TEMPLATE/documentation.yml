@@ -1,0 +1,46 @@
+name: Documentation
+description: Reportar documentação confusa, incompleta ou incorreta
+title: "[Docs]: "
+labels: ["tipo:documentacao", "status:triage"]
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmações iniciais
+      options:
+        - label: Procurei issues já existentes
+          required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área afetada
+      options:
+        - README
+        - VS Code setup
+        - Release bundle
+        - Contributing / governance
+        - Security / support
+        - Outro
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Ficheiro ou secção
+      placeholder: "ex: README.md -> Instalação via GitHub Release"
+  - type: textarea
+    id: problem
+    attributes:
+      label: O que está incorreto ou pouco claro?
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Sugestão de melhoria
+      description: Se souberes, descreve o conteúdo esperado
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional
+      description: Erro observado, screenshot, dúvida recorrente, link, etc.

@@ -1,0 +1,41 @@
+## Resumo
+
+Relacionado: #<num>
+
+## Tipo de alteração
+
+- [ ] `feat`
+- [ ] `fix`
+- [ ] `docs`
+- [ ] `chore`
+- [ ] `hotfix`
+
+## O que muda
+
+- [ ] runtime MCP
+- [ ] prompts
+- [ ] VS Code setup / examples
+- [ ] release workflow / bundle
+- [ ] governance / community files
+- [ ] snapshots embutidos
+
+## Validação
+
+- [ ] `npm ci`
+- [ ] `npm run check`
+- [ ] `npm run build`
+- [ ] teste manual no VS Code quando aplicável
+
+## Impacto em release e dados
+
+- [ ] sem impacto no release bundle
+- [ ] altera conteúdos do release bundle
+- [ ] altera `data/publish/`
+- [ ] altera `data/reports/run_manifest.json`
+
+## Checklist final
+
+- [ ] issue ligada ou justificação para não existir issue
+- [ ] README/docs atualizados quando necessário
+- [ ] implicações de segurança/licenciamento revistas quando necessário
+- [ ] pronto para squash merge em `master`

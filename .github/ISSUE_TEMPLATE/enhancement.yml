@@ -1,0 +1,48 @@
+name: Enhancement
+description: Propor melhoria funcional, de release, documentação ou governance
+title: "[Enhancement]: "
+labels: ["tipo:feature", "status:triage"]
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Confirmações iniciais
+      options:
+        - label: Procurei issues já existentes
+          required: true
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Âmbito principal
+      options:
+        - Runtime MCP
+        - VS Code integration
+        - Release packaging
+        - Documentation
+        - Governance / CI / GitHub
+        - Data bundle / provenance
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema ou oportunidade
+      description: Que limitação ou necessidade queres resolver?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposta
+      description: O que propões alterar?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto esperado
+      description: Explica impacto em utilizadores, mantenedores, release bundle ou docs

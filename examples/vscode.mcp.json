@@ -1,0 +1,12 @@
+{
+  "servers": {
+    "sbdToe": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/absolute/path/to/sbd-toe-mcp-poc/dist/index.js"
+      ],
+      "envFile": "/absolute/path/to/sbd-toe-mcp-poc/.env"
+    }
+  }
+}

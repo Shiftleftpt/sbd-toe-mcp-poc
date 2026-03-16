@@ -1,0 +1,35 @@
+# CODEOWNERS for sbd-toe-mcp-poc
+# Based on GitHub's CODEOWNERS support: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owner
+* @pedrofarinhaatshiftleftpt
+
+# GitHub configuration
+/.github/ @pedrofarinhaatshiftleftpt
+/.github/CODEOWNERS @pedrofarinhaatshiftleftpt
+
+# Governance and public documentation
+/README.md @pedrofarinhaatshiftleftpt
+/CONTRIBUTING.md @pedrofarinhaatshiftleftpt
+/CODE_OF_CONDUCT.md @pedrofarinhaatshiftleftpt
+/SECURITY.md @pedrofarinhaatshiftleftpt
+/SUPPORT.md @pedrofarinhaatshiftleftpt
+/GITHUB-CONFIG.md @pedrofarinhaatshiftleftpt
+
+# Licensing
+/LICENSE* @pedrofarinhaatshiftleftpt
+
+# Runtime and release content
+/src/ @pedrofarinhaatshiftleftpt
+/prompts/ @pedrofarinhaatshiftleftpt
+/examples/ @pedrofarinhaatshiftleftpt
+/scripts/ @pedrofarinhaatshiftleftpt
+/data/publish/ @pedrofarinhaatshiftleftpt
+/data/reports/ @pedrofarinhaatshiftleftpt
+/data/upstream/ @pedrofarinhaatshiftleftpt
+/docs/ @pedrofarinhaatshiftleftpt
+
+# Build and package metadata
+/package.json @pedrofarinhaatshiftleftpt
+/package-lock.json @pedrofarinhaatshiftleftpt
+/tsconfig.json @pedrofarinhaatshiftleftpt

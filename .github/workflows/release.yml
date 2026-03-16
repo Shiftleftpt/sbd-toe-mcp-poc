@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  create-release:
+    name: Create GitHub release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RELEASE_OUTPUT_DIR: release
+
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate tagged commit
+        run: |
+          npm run check
+          npm run build
+
+      - name: Verify tag commit belongs to master
+        shell: bash
+        env:
+          TAG_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --prune origin +refs/heads/master:refs/remotes/origin/master
+
+          if ! git merge-base --is-ancestor "${TAG_SHA}" refs/remotes/origin/master; then
+            echo "Tag ${GITHUB_REF_NAME} does not point to a commit contained in origin/master."
+            exit 1
+          fi
+
+      - name: Build release bundle
+        run: node scripts/package-release.mjs --version "${GITHUB_REF_NAME}" --output-dir "${RELEASE_OUTPUT_DIR}"
+
+      - name: Create or update release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          assets=("${RELEASE_OUTPUT_DIR}"/*)
+
+          if gh release view "${GITHUB_REF_NAME}" >/dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" "${assets[@]}" --clobber
+          else
+            gh release create "${GITHUB_REF_NAME}" "${assets[@]}" \
+              --title "${GITHUB_REF_NAME}" \
+              --generate-notes
+          fi

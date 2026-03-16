@@ -1,0 +1,100 @@
+{
+  "agent": "algolia_publish",
+  "generated_at": "2026-03-14T19:12:51Z",
+  "items": [
+    {
+      "index_name": "SbD-ToE-ASKAI-Docs",
+      "record_family": "documents",
+      "settings": {
+        "attributesForFaceting": [
+          "filterOnly(collection_id)",
+          "filterOnly(chapter_id)",
+          "filterOnly(document_id)",
+          "filterOnly(semantic_layer)",
+          "filterOnly(classification)",
+          "filterOnly(is_primary_source)",
+          "filterOnly(related_roles)",
+          "filterOnly(related_risk_levels)",
+          "filterOnly(related_frameworks)"
+        ],
+        "attributesToHighlight": [
+          "title",
+          "heading",
+          "document_title",
+          "chapter_title",
+          "content"
+        ],
+        "attributesToSnippet": [
+          "content:20"
+        ],
+        "customRanking": [
+          "asc(ask_ai_priority_rank)",
+          "desc(is_primary_source)",
+          "desc(confidence)"
+        ],
+        "searchableAttributes": [
+          "unordered(title)",
+          "unordered(heading)",
+          "unordered(document_title)",
+          "unordered(chapter_title)",
+          "unordered(content)",
+          "unordered(heading_path)"
+        ]
+      }
+    },
+    {
+      "index_name": "SbD-ToE-ASKAI-Entities",
+      "record_family": "entities",
+      "settings": {
+        "attributesForFaceting": [
+          "filterOnly(entity_type)",
+          "filterOnly(collection_id)",
+          "filterOnly(chapter_id)",
+          "filterOnly(related_roles)",
+          "filterOnly(related_phases)",
+          "filterOnly(risk_levels)",
+          "filterOnly(source_layers)",
+          "filterOnly(authority_level)",
+          "filterOnly(framework)"
+        ],
+        "attributesToHighlight": [
+          "title",
+          "summary",
+          "searchable_text"
+        ],
+        "customRanking": [
+          "desc(confidence)",
+          "asc(chapter_id)"
+        ],
+        "searchableAttributes": [
+          "unordered(title)",
+          "unordered(summary)",
+          "unordered(searchable_text)",
+          "unordered(entity_type)"
+        ]
+      }
+    }
+  ],
+  "run_id": "20260314T191251Z",
+  "source": {
+    "branch": "master",
+    "commit_sha": "e2465c6420d1cbb16208913ac5b24c35fa209e42",
+    "corpus_root": "manuals_src/docs/sbd-toe",
+    "repo_url": "git@github.com:Shiftleftpt/SbD-ToE-Manual.git"
+  },
+  "stats": {
+    "errors": 0,
+    "processed_files": 2,
+    "processed_sections": 0,
+    "skipped": 0,
+    "warnings": 1
+  },
+  "summary": {
+    "indices": 2,
+    "push_mode": "pushed"
+  },
+  "version": "0.1.0",
+  "warnings": [
+    "Build entities outputs missing; running build-entities first."
+  ]
+}

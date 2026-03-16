@@ -1,0 +1,14 @@
+{
+  "branch": "master",
+  "commit_sha": "e2465c6420d1cbb16208913ac5b24c35fa209e42",
+  "corpus_root": "manuals_src/docs/sbd-toe",
+  "generated_at": "2026-03-14T19:12:51Z",
+  "llm_backend": "mock",
+  "llm_model": "mock-heuristic",
+  "project_root": "/Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph",
+  "repo_url": "git@github.com:Shiftleftpt/SbD-ToE-Manual.git",
+  "run_id": "20260314T191251Z",
+  "source_repo_dir": "/Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual",
+  "sync_mode": "clone",
+  "version": "0.1.0"
+}
