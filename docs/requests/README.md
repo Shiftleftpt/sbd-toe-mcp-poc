@@ -43,3 +43,16 @@ Se o ficheiro for um pedido formal para outro repositório, preferir um nome que
 Usar `TEMPLATE.md` como base.
 
 O template segue a estrutura já usada no upstream para pedidos adicionais, para manter consistência entre repositórios do ecossistema SbD-ToE.
+
+## Pedidos já registados
+
+- `mcp-structured-tools.md`
+  - evolução do MCP para tools estruturadas por capítulo, entidade e aplicabilidade
+- `knowledge-graph-index-enhancements.md`
+  - handover para o `sbd-toe-knowledge-graph` sobre melhorias de schema/índice
+- `mcp-retrieval-intent-normalization.md`
+  - contraparte downstream para normalização de queries, desambiguação de intenção e uso de novos metadados no ranking local
+- `sbd-review-scope-tool.md`
+  - proposta para mapear, a partir do diff, o que deve ser revisto segundo o SbD-ToE
+- `sbd-repo-guidance-tool.md`
+  - proposta para gerar guidance estruturada de projeto a partir do manual SbD-ToE
