@@ -4,6 +4,8 @@ Este ficheiro lista pontos abertos e candidatos a próximas iterações do `sbd-
 
 Não é um compromisso fechado de roadmap. Serve para tornar explícito o que ficou intencionalmente fora desta iteração.
 
+Pedidos estruturados, handovers e prompts de próximas iterações devem ser guardados em `docs/requests/`.
+
 ## 1. Distribuição no VS Code Marketplace
 
 **Estado:** aberto

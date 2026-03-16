@@ -138,6 +138,7 @@ Isto significa que:
 - o utilizador **não precisa** de fazer checkout do `sbd-toe-knowledge-graph` para usar o servidor
 
 O ficheiro `data/reports/run_manifest.json` mantém a proveniência do snapshot embutido.
+Esse ficheiro deve conter apenas proveniência pública e redistribuível, sem paths absolutos de máquinas locais.
 
 ## Instalação via GitHub Release
 
@@ -178,6 +179,8 @@ O script abaixo é apenas para mantenedores que queiram atualizar o bundle embut
 npm run checkout:backend
 ```
 
+Esse fluxo regenera um manifesto local em `data/upstream/backend-checkout.json`, usado apenas para manutenção/debug local e não versionado neste repositório.
+
 ## Configuração `.env`
 
 Copiar `.env.example` para `.env` e ajustar apenas o que fizer sentido para o teu ambiente local.
@@ -198,7 +201,7 @@ Variáveis de manutenção opcional:
 | Variável | Uso |
 | --- | --- |
 | `UPSTREAM_KNOWLEDGE_GRAPH_DIR` | checkout local do `sbd-toe-knowledge-graph` |
-| `BACKEND_CHECKOUT_FILE` | manifesto local do último refresh do bundle |
+| `BACKEND_CHECKOUT_FILE` | manifesto local do último refresh do bundle; ficheiro de manutenção local, não versionado |
 
 Não há API keys obrigatórias neste projeto: o modelo continua a ser o do utilizador no VS Code.
 

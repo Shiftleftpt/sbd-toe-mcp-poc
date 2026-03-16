@@ -17,7 +17,21 @@ interface UpstreamRunManifestPayload {
   generated_at?: string;
   branch?: string;
   commit_sha?: string;
+  corpus_root?: string;
   repo_url?: string;
+  sync_mode?: string;
+  version?: string;
+}
+
+interface PublicRunManifestPayload {
+  run_id?: string;
+  generated_at?: string;
+  branch?: string;
+  commit_sha?: string;
+  corpus_root?: string;
+  repo_url?: string;
+  sync_mode?: string;
+  version?: string;
 }
 
 function ensurePublishedIndex(
@@ -49,6 +63,39 @@ async function readJsonFile<T>(filePath: string): Promise<T> {
 
 async function ensureParent(filePath: string): Promise<void> {
   await mkdir(path.dirname(filePath), { recursive: true });
+}
+
+function normalizePublicRepoUrl(value: string | undefined): string | undefined {
+  if (!value) {
+    return undefined;
+  }
+
+  const trimmed = value.trim();
+  const sshMatch = /^git@github\.com:(.+?)(?:\.git)?$/i.exec(trimmed);
+  if (sshMatch?.[1]) {
+    return `https://github.com/${sshMatch[1]}`;
+  }
+
+  return trimmed;
+}
+
+function sanitizeRunManifest(
+  upstream: UpstreamRunManifestPayload
+): PublicRunManifestPayload {
+  const normalizedRepoUrl = normalizePublicRepoUrl(upstream.repo_url);
+
+  return {
+    ...(upstream.run_id === undefined ? {} : { run_id: upstream.run_id }),
+    ...(upstream.generated_at === undefined
+      ? {}
+      : { generated_at: upstream.generated_at }),
+    ...(upstream.branch === undefined ? {} : { branch: upstream.branch }),
+    ...(upstream.commit_sha === undefined ? {} : { commit_sha: upstream.commit_sha }),
+    ...(upstream.corpus_root === undefined ? {} : { corpus_root: upstream.corpus_root }),
+    ...(normalizedRepoUrl === undefined ? {} : { repo_url: normalizedRepoUrl }),
+    ...(upstream.sync_mode === undefined ? {} : { sync_mode: upstream.sync_mode }),
+    ...(upstream.version === undefined ? {} : { version: upstream.version })
+  };
 }
 
 async function main(): Promise<void> {
@@ -98,11 +145,13 @@ async function main(): Promise<void> {
     ensureParent(checkoutFilePath)
   ]);
 
+  const publicRunManifest = sanitizeRunManifest(runManifest);
+
   await Promise.all([
     copyFile(upstreamDocsSnapshot, localDocsSnapshot),
     copyFile(upstreamEntitiesSnapshot, localEntitiesSnapshot),
     copyFile(upstreamIndexSettings, localIndexSettings),
-    copyFile(upstreamRunManifest, localRunManifest)
+    writeFile(localRunManifest, `${JSON.stringify(publicRunManifest, null, 2)}\n`, "utf8")
   ]);
 
   const checkout: BackendCheckout = {

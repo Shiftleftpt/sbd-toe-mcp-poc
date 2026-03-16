@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { createHash } from "node:crypto";
 import readline from "node:readline";
 
 import { getConfig } from "./config.js";
@@ -54,13 +55,44 @@ type JsonRpcMessage =
   | JsonRpcError;
 
 const PROTOCOL_VERSION = "2025-03-26";
+const LOG_LEVELS = [
+  "debug",
+  "info",
+  "notice",
+  "warning",
+  "error",
+  "critical",
+  "alert",
+  "emergency"
+] as const;
+
+type LogLevel = (typeof LOG_LEVELS)[number];
+
+interface LogEvent {
+  event_type: string;
+  outcome?: "started" | "succeeded" | "failed" | "ignored";
+  request_id?: string | undefined;
+  rpc_method?: string | undefined;
+  tool_name?: string | undefined;
+  duration_ms?: number | undefined;
+  question_length?: number | undefined;
+  question_fingerprint?: string | undefined;
+  debug_enabled?: boolean | undefined;
+  top_k?: number | undefined;
+  sampling_max_tokens?: number | undefined;
+  previous_level?: LogLevel | undefined;
+  new_level?: LogLevel | undefined;
+  error_code?: number | string | undefined;
+  error_name?: string | undefined;
+  message: string;
+}
 
 class McpRuntime {
   private nextRequestId = 10_000;
   private pending = new Map<JsonRpcId, PendingRequest>();
   private clientCapabilities: Record<string, unknown> = {};
   private initialized = false;
-  private logLevel = "info";
+  private logLevel: LogLevel = "info";
 
   constructor() {
     const rl = readline.createInterface({
@@ -75,6 +107,57 @@ class McpRuntime {
 
   private writeMessage(message: unknown): void {
     process.stdout.write(`${JSON.stringify(message)}\n`);
+  }
+
+  private normalizeLogLevel(level: unknown): LogLevel {
+    if (typeof level === "string") {
+      const normalized = LOG_LEVELS.find((candidate) => candidate === level);
+      if (normalized) {
+        return normalized;
+      }
+    }
+
+    return "info";
+  }
+
+  private shouldLog(level: LogLevel): boolean {
+    return LOG_LEVELS.indexOf(level) >= LOG_LEVELS.indexOf(this.logLevel);
+  }
+
+  private getRequestId(id: JsonRpcId | null | undefined): string | undefined {
+    return id === null || id === undefined ? undefined : String(id);
+  }
+
+  private fingerprintQuestion(question: string): string {
+    return createHash("sha256").update(question, "utf8").digest("hex").slice(0, 12);
+  }
+
+  private getQuestionMetadata(args: Record<string, unknown>): {
+    question_length?: number;
+    question_fingerprint?: string;
+  } {
+    const question = args.question;
+    if (typeof question !== "string") {
+      return {};
+    }
+
+    return {
+      question_length: question.length,
+      question_fingerprint: this.fingerprintQuestion(question)
+    };
+  }
+
+  private summarizeError(error: unknown): Pick<LogEvent, "error_name" | "message"> {
+    if (error instanceof Error) {
+      return {
+        error_name: error.name,
+        message: error.message.split("\n", 1)[0] ?? "Unexpected error"
+      };
+    }
+
+    return {
+      message: String(error)
+    };
   }
 
   private sendResponse(id: JsonRpcId, result: unknown): void {
@@ -115,6 +198,11 @@ class McpRuntime {
     try {
       parsed = JSON.parse(trimmed) as unknown;
     } catch (error) {
+      await this.log("warning", {
+        event_type: "rpc.parse_error",
+        outcome: "failed",
+        ...this.summarizeError(error)
+      });
       this.sendError(null, -32700, "Parse error", {
         detail: error instanceof Error ? error.message : String(error)
       });
@@ -157,6 +245,11 @@ class McpRuntime {
     }
 
     if (!("method" in message)) {
+      await this.log("warning", {
+        event_type: "rpc.invalid_request",
+        outcome: "failed",
+        message: "Received JSON-RPC message without method"
+      });
       this.sendError(null, -32600, "Invalid Request");
       return;
     }
@@ -169,6 +262,13 @@ class McpRuntime {
     try {
       await this.handleRequest(message);
     } catch (error) {
+      await this.log("error", {
+        event_type: "rpc.unhandled_error",
+        outcome: "failed",
+        request_id: this.getRequestId(message.id),
+        rpc_method: message.method,
+        ...this.summarizeError(error)
+      });
       this.sendError(
         message.id,
         -32603,
@@ -244,32 +344,34 @@ class McpRuntime {
   }
 
   private handleSetLogLevel(request: JsonRpcRequest): void {
-    const level =
-      typeof request.params?.level === "string" ? request.params.level : "info";
+    const previousLevel = this.logLevel;
+    const level = this.normalizeLogLevel(request.params?.level);
     this.logLevel = level;
     this.sendResponse(request.id, {});
+    void this.log("notice", {
+      event_type: "logging.level_changed",
+      outcome: "succeeded",
+      request_id: this.getRequestId(request.id),
+      rpc_method: request.method,
+      previous_level: previousLevel,
+      new_level: level,
+      message: "Updated runtime log level"
+    });
   }
 
-  private async log(level: string, data: string): Promise<void> {
-    const levels = [
-      "debug",
-      "info",
-      "notice",
-      "warning",
-      "error",
-      "critical",
-      "alert",
-      "emergency"
-    ];
-
-    if (levels.indexOf(level) < levels.indexOf(this.logLevel)) {
+  private async log(level: LogLevel, event: LogEvent): Promise<void> {
+    if (!this.shouldLog(level)) {
       return;
     }
 
     this.sendNotification("notifications/message", {
       level,
       logger: "sbd-toe-mcp-poc",
-      data
+      data: {
+        timestamp: new Date().toISOString(),
+        component: "mcp-runtime",
+        ...event
+      }
     });
   }
 
@@ -452,6 +554,14 @@ class McpRuntime {
       throw new Error("O cliente MCP atual não declarou suporte para sampling.");
     }
 
+    const startedAt = Date.now();
+    await this.log("debug", {
+      event_type: "sampling.request",
+      outcome: "started",
+      sampling_max_tokens: getConfig().prompt.samplingMaxTokens,
+      message: "Requesting client-side sampling"
+    });
+
     const id = this.nextRequestId++;
     const promise = new Promise<unknown>((resolve, reject) => {
       this.pending.set(id, { resolve, reject });
@@ -481,6 +591,14 @@ class McpRuntime {
     const content = result.content;
     const text = this.extractSamplingText(content);
     const model = typeof result.model === "string" ? result.model : undefined;
+
+    await this.log("debug", {
+      event_type: "sampling.request",
+      outcome: "succeeded",
+      duration_ms: Date.now() - startedAt,
+      sampling_max_tokens: getConfig().prompt.samplingMaxTokens,
+      message: "Client-side sampling completed"
+    });
 
     return model === undefined ? { text } : { model, text };
   }
@@ -523,6 +641,25 @@ class McpRuntime {
       typeof params.arguments === "object" && params.arguments !== null
         ? (params.arguments as Record<string, unknown>)
         : {};
+    const requestId = this.getRequestId(request.id);
+    const startedAt = Date.now();
+    const metadata = {
+      request_id: requestId,
+      rpc_method: request.method,
+      tool_name: name,
+      ...this.getQuestionMetadata(args),
+      ...(typeof args.debug === "boolean" ? { debug_enabled: args.debug } : {}),
+      ...(typeof args.topK === "number" && Number.isInteger(args.topK)
+        ? { top_k: args.topK }
+        : {})
+    };
+
+    await this.log("info", {
+      event_type: "tool.call",
+      outcome: "started",
+      ...metadata,
+      message: "Tool invocation started"
+    });
 
     try {
       switch (name) {
@@ -530,20 +667,32 @@ class McpRuntime {
           const question = this.getStringArg(args, "question");
           const debug = this.getOptionalBooleanArg(args, "debug");
           const topK = this.getOptionalIntegerArg(args, "topK");
-          await this.log("info", `search_sbd_toe_manual: "${question}"`);
           const result = await searchManualQuestion(question, debug, topK);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: result.text }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
           });
           return;
         }
         case "inspect_sbd_toe_retrieval": {
           const question = this.getStringArg(args, "question");
           const topK = this.getOptionalIntegerArg(args, "topK");
-          await this.log("info", `inspect_sbd_toe_retrieval: "${question}"`);
           const result = await inspectManualRetrieval(question, topK);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: result.text }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
           });
           return;
         }
@@ -551,7 +700,6 @@ class McpRuntime {
           const question = this.getStringArg(args, "question");
           const debug = this.getOptionalBooleanArg(args, "debug");
           const topK = this.getOptionalIntegerArg(args, "topK");
-          await this.log("info", `answer_sbd_toe_manual: "${question}"`);
           const prepared = await prepareManualAnsweringContext(question, topK);
           const sampled = await this.requestSampling(
             prepared.prompt.systemPrompt,
@@ -567,14 +715,35 @@ class McpRuntime {
           this.sendResponse(request.id, {
             content: [{ type: "text", text: result.text }]
           });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
           return;
         }
         default:
+          await this.log("warning", {
+            event_type: "tool.call",
+            outcome: "failed",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            error_code: -32602,
+            message: "Unknown tool requested"
+          });
           this.sendError(request.id, -32602, `Tool desconhecida: ${name}`);
       }
     } catch (error) {
       const message = error instanceof Error ? error.message : "Erro inesperado.";
-      await this.log("error", message);
+      await this.log("error", {
+        event_type: "tool.call",
+        outcome: "failed",
+        duration_ms: Date.now() - startedAt,
+        ...metadata,
+        ...this.summarizeError(error)
+      });
       this.sendResponse(request.id, {
         isError: true,
         content: [{ type: "text", text: message }]

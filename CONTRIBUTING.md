@@ -118,7 +118,8 @@ npm run checkout:backend
 
 - `data/publish/`
 - `data/reports/run_manifest.json`
-- `data/upstream/backend-checkout.json`
+
+Além disso, confirma localmente que `data/upstream/backend-checkout.json` foi regenerado, mas não o adiciones ao commit: é um artefacto de manutenção local e não faz parte do conteúdo público do repositório.
 
 Ao rever um PR deste tipo, valida que a alteração é um refresh de artefactos publicados e não uma reconstrução ad hoc feita neste repo.
 

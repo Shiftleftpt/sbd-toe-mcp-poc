@@ -4,3 +4,4 @@ release
 .env
 npm-debug.log*
 .DS_Store
+data/upstream/backend-checkout.json
