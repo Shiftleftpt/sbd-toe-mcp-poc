@@ -13,6 +13,8 @@ Pedidos atualmente registados:
 - `docs/requests/mcp-retrieval-intent-normalization.md`
 - `docs/requests/sbd-review-scope-tool.md`
 - `docs/requests/sbd-repo-guidance-tool.md`
+- `docs/requests/ai-assisted-doc-disclosure-validation.md`
+- `docs/requests/ai-assisted-authoring-guidance.md`
 
 ## 1. Distribuição no VS Code Marketplace
 
@@ -103,6 +105,8 @@ Sem compromisso para já:
 - melhorar retrieval local com normalização de intenção e melhor aproveitamento de metadados publicados
 - estudar uma capability/tool de "review scope" SbD-ToE em função do diff
 - estudar uma tool de guidance de projeto para gerar base estruturada de `copilot-instructions` e documentação de aplicabilidade
+- tratar disclosure obrigatório e validação de revisão manual para documentos gerados com IA/MCP como iniciativa própria de governance/compliance
+- estudar guidance operacional para authoring assistido por IA/MCP baseada no manual e reaproveitável entre repositórios
 
 ### Prioridade sugerida
 
@@ -141,3 +145,5 @@ Ver também:
 - `docs/requests/mcp-retrieval-intent-normalization.md`
 - `docs/requests/sbd-review-scope-tool.md`
 - `docs/requests/sbd-repo-guidance-tool.md`
+- `docs/requests/ai-assisted-doc-disclosure-validation.md`
+- `docs/requests/ai-assisted-authoring-guidance.md`

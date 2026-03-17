@@ -56,3 +56,7 @@ O template segue a estrutura já usada no upstream para pedidos adicionais, para
   - proposta para mapear, a partir do diff, o que deve ser revisto segundo o SbD-ToE
 - `sbd-repo-guidance-tool.md`
   - proposta para gerar guidance estruturada de projeto a partir do manual SbD-ToE
+- `ai-assisted-doc-disclosure-validation.md`
+  - proposta para exigir disclosure e revisão humana em documentos gerados com apoio de IA/MCP
+- `ai-assisted-authoring-guidance.md`
+  - proposta para guidance/prompt operacional sobre uso de IA/MCP na criação e revisão de artefactos
