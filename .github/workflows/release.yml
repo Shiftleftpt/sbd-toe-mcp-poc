@@ -44,16 +44,8 @@ jobs:
           npm run build
 
       - name: Verify tag is on master
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          git config --global credential.helper store
-          echo "https://x-access-token:${GH_TOKEN}@github.com" > ~/.git-credentials
-          git fetch --no-tags --prune origin +refs/heads/master:refs/remotes/origin/master
-
-          if ! git merge-base --is-ancestor "refs/tags/${{ github.ref_name }}" refs/remotes/origin/master; then
+          if ! git merge-base --is-ancestor "${{ github.ref_name }}" refs/remotes/origin/master; then
             echo "Error: Tag ${{ github.ref_name }} is not on master branch"
             exit 1
           fi
