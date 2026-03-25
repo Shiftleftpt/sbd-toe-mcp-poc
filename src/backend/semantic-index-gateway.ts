@@ -1,7 +1,6 @@
 import { readFileSync } from "node:fs";
-import path from "node:path";
 
-import { getConfig } from "../config.js";
+import { getConfig, resolveAppPath } from "../config.js";
 import type {
   LooseRecord,
   NormalizedRecord,
@@ -604,7 +603,7 @@ function dedupeRecords(records: NormalizedRecord[]): NormalizedRecord[] {
 }
 
 function readSnapshotFile(filePath: string): SnapshotPayload {
-  const absolutePath = path.resolve(process.cwd(), filePath);
+  const absolutePath = resolveAppPath(filePath);
 
   let raw: string;
   try {
@@ -619,7 +618,7 @@ function readSnapshotFile(filePath: string): SnapshotPayload {
 }
 
 export function tryReadSnapshotFile(filePath: string): SnapshotPayload | undefined {
-  const absolutePath = path.resolve(process.cwd(), filePath);
+  const absolutePath = resolveAppPath(filePath);
   try {
     const raw = readFileSync(absolutePath, "utf8");
     return JSON.parse(raw) as SnapshotPayload;

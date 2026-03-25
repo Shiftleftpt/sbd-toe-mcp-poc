@@ -1,7 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
-import path from "node:path";
 
-import { getConfig } from "../config.js";
+import { getConfig, resolveAppPath } from "../config.js";
 
 let cachedPrompt: string | undefined;
 
@@ -94,7 +93,7 @@ export function loadSystemPromptTemplate(): string {
   }
 
   const config = getConfig();
-  const promptFile = path.resolve(process.cwd(), config.prompt.systemPromptFile);
+  const promptFile = resolveAppPath(config.prompt.systemPromptFile);
   const template =
     existsSync(promptFile) ? readFileSync(promptFile, "utf8") : defaultTemplate;
 

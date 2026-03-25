@@ -1,6 +1,11 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import type { AppConfig } from "./types.js";
 
 let cachedConfig: AppConfig | undefined;
+const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+const defaultAppRoot = path.resolve(moduleDir, "..");
 
 function getEnv(name: string, fallback?: string): string {
   const value = process.env[name];
@@ -27,6 +32,19 @@ function parseInteger(name: string, value: string, fallback: number): number {
 
 function normalizeBaseUrl(url: string): string {
   return url.endsWith("/") ? url : `${url}/`;
+}
+
+export function getAppRoot(): string {
+  const override = process.env.SBD_TOE_APP_ROOT;
+  if (override !== undefined && override.trim().length > 0) {
+    return path.resolve(override.trim());
+  }
+
+  return defaultAppRoot;
+}
+
+export function resolveAppPath(filePath: string): string {
+  return path.isAbsolute(filePath) ? filePath : path.resolve(getAppRoot(), filePath);
 }
 
 export function getConfig(): AppConfig {
