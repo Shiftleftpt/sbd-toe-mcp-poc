@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request document for knowledge graph enriched index approach (s1-s3 precursor)
+review_status: pending-human-review
+---
+
 # Melhorar os índices publicados para suportar tools MCP estruturadas
 
 ## Contexto

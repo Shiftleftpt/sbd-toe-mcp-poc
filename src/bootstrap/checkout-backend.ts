@@ -2,6 +2,7 @@ import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { getConfig } from "../config.js";
+import { checkoutFromRelease } from "./release-checkout.js";
 import type { BackendCheckout, PublishedIndexContract } from "../types.js";
 
 interface UpstreamIndexSettingsPayload {
@@ -34,7 +35,7 @@ interface PublicRunManifestPayload {
   version?: string;
 }
 
-function ensurePublishedIndex(
+export function ensurePublishedIndex(
   items: UpstreamIndexSettingsPayload["items"],
   recordFamily: string,
   fallbackIndexName: string
@@ -79,7 +80,7 @@ function normalizePublicRepoUrl(value: string | undefined): string | undefined {
   return trimmed;
 }
 
-function sanitizeRunManifest(
+export function sanitizeRunManifest(
   upstream: UpstreamRunManifestPayload
 ): PublicRunManifestPayload {
   const normalizedRepoUrl = normalizePublicRepoUrl(upstream.repo_url);
@@ -100,10 +101,18 @@ function sanitizeRunManifest(
 
 async function main(): Promise<void> {
   const config = getConfig();
+  const source = config.backend.upstreamSource;
+  if (source === "release") {
+    await checkoutFromRelease(config, process.cwd());
+    return;
+  }
+  // source === "local" → fluxo existente continua inalterado
   const upstreamRepoPath = path.resolve(process.cwd(), config.backend.upstreamRepoDir);
   const checkoutFilePath = path.resolve(process.cwd(), config.backend.checkoutFile);
   const localDocsSnapshot = path.resolve(process.cwd(), config.backend.docsSnapshotFile);
   const localEntitiesSnapshot = path.resolve(process.cwd(), config.backend.entitiesSnapshotFile);
+  const localDocsEnrichedSnapshot = path.resolve(process.cwd(), config.backend.docsEnrichedSnapshotFile);
+  const localEntitiesEnrichedSnapshot = path.resolve(process.cwd(), config.backend.entitiesEnrichedSnapshotFile);
   const localIndexSettings = path.resolve(process.cwd(), config.backend.indexSettingsFile);
   const localRunManifest = path.resolve(process.cwd(), config.backend.runManifestFile);
 
@@ -118,6 +127,18 @@ async function main(): Promise<void> {
     "data",
     "publish",
     "algolia_entities_records.json"
+  );
+  const upstreamDocsEnrichedSnapshot = path.join(
+    upstreamRepoPath,
+    "data",
+    "publish",
+    "algolia_docs_records_enriched.json"
+  );
+  const upstreamEntitiesEnrichedSnapshot = path.join(
+    upstreamRepoPath,
+    "data",
+    "publish",
+    "algolia_entities_records_enriched.json"
   );
   const upstreamIndexSettings = path.join(
     upstreamRepoPath,
@@ -140,6 +161,8 @@ async function main(): Promise<void> {
   await Promise.all([
     ensureParent(localDocsSnapshot),
     ensureParent(localEntitiesSnapshot),
+    ensureParent(localDocsEnrichedSnapshot),
+    ensureParent(localEntitiesEnrichedSnapshot),
     ensureParent(localIndexSettings),
     ensureParent(localRunManifest),
     ensureParent(checkoutFilePath)
@@ -150,6 +173,8 @@ async function main(): Promise<void> {
   await Promise.all([
     copyFile(upstreamDocsSnapshot, localDocsSnapshot),
     copyFile(upstreamEntitiesSnapshot, localEntitiesSnapshot),
+    copyFile(upstreamDocsEnrichedSnapshot, localDocsEnrichedSnapshot),
+    copyFile(upstreamEntitiesEnrichedSnapshot, localEntitiesEnrichedSnapshot),
     copyFile(upstreamIndexSettings, localIndexSettings),
     writeFile(localRunManifest, `${JSON.stringify(publicRunManifest, null, 2)}\n`, "utf8")
   ]);
@@ -161,6 +186,8 @@ async function main(): Promise<void> {
     contractFiles: {
       docsSnapshot: localDocsSnapshot,
       entitiesSnapshot: localEntitiesSnapshot,
+      docsEnrichedSnapshot: localDocsEnrichedSnapshot,
+      entitiesEnrichedSnapshot: localEntitiesEnrichedSnapshot,
       indexSettings: localIndexSettings,
       runManifest: localRunManifest
     },
@@ -192,6 +219,8 @@ async function main(): Promise<void> {
       `Backend checkout criado em ${checkoutFilePath}`,
       `docs_snapshot=${localDocsSnapshot}`,
       `entities_snapshot=${localEntitiesSnapshot}`,
+      `docs_enriched_snapshot=${localDocsEnrichedSnapshot}`,
+      `entities_enriched_snapshot=${localEntitiesEnrichedSnapshot}`,
       `run_id=${checkout.runManifest.runId ?? "n/d"}`,
       `commit_sha=${checkout.runManifest.commitSha ?? "n/d"}`,
       `docs_index=${checkout.indices.docs.indexName}`,

@@ -33,6 +33,14 @@ Relacionado: #<num>
 - [ ] altera `data/publish/`
 - [ ] altera `data/reports/run_manifest.json`
 
+## Governança AI-Assisted
+
+Se algum ficheiro nesta PR foi gerado ou co-authored com auxílio de LLM (Claude, ChatGPT, etc.):
+
+- [ ] **Revisado por humano:** Todos os documentos AI-assisted nesta PR foram revistos quanto a exactidão, conformidade e prontidão para governança (ver [AI-ASSISTED-TEMPLATE.md](docs/governors/AI-ASSISTED-TEMPLATE.md))
+  
+Se não é aplicável, deixe em branco.
+
 ## Checklist final
 
 - [ ] issue ligada ou justificação para não existir issue

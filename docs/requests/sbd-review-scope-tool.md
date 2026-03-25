@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request for repository change-driven SbD-ToE review scope mapping tool
+review_status: pending-human-review
+---
+
 # Mapear o review SbD-ToE necessário a partir das alterações do repositório
 
 ## Contexto

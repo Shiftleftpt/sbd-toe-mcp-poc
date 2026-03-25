@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request for DevSecOps governance tools integrated with SbD-ToE manual
+review_status: pending-human-review
+---
+
 # Introduzir tools MCP para planeamento de governação de repositórios com base no SbD-ToE
 
 ## Contexto

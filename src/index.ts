@@ -11,6 +11,18 @@ import {
   searchManualQuestion
 } from "./orchestrator/ask-manual.js";
 import { loadSystemPromptTemplate } from "./prompt/system-prompt.js";
+import { getSnapshotCache } from "./backend/semantic-index-gateway.js";
+import {
+  handleGetSbdToeChapterBrief,
+  handleListSbdToeChapters,
+  handleMapSbdToeApplicability,
+  handleQuerySbdToeEntities
+} from "./tools/structured-tools.js";
+import {
+  buildChapterApplicabilityJson,
+  buildSetupAgentPrompt,
+  buildSkillTemplateMarkdown
+} from "./resources/sbd-toe-resources.js";
 
 type JsonRpcId = string | number;
 
@@ -311,6 +323,12 @@ class McpRuntime {
       case "prompts/get":
         this.handlePromptGet(request);
         return;
+      case "resources/list":
+        this.handleResourcesList(request);
+        return;
+      case "resources/read":
+        await this.handleResourcesRead(request);
+        return;
       default:
         this.sendError(request.id, -32601, `Method not found: ${request.method}`);
     }
@@ -328,6 +346,10 @@ class McpRuntime {
       capabilities: {
         logging: {},
         prompts: {
+          listChanged: false
+        },
+        resources: {
+          subscribe: false,
           listChanged: false
         },
         tools: {
@@ -463,6 +485,71 @@ class McpRuntime {
           annotations: {
             readOnlyHint: true
           }
+        },
+        {
+          name: "list_sbd_toe_chapters",
+          title: "List SbD-ToE Chapters",
+          description: "Lista os capítulos do manual SbD-ToE com id, título e aplicabilidade.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              riskLevel: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Filtrar por nível de risco."
+              }
+            },
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "query_sbd_toe_entities",
+          title: "Query SbD-ToE Entities",
+          description: "Consulta entidades do manual por query, tipo, capítulo ou nível de risco.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              query: { type: "string", minLength: 1, maxLength: 200 },
+              entityType: { type: "string" },
+              chapterId: { type: "string" },
+              riskLevel: { type: "string", enum: ["L1", "L2", "L3"] },
+              topK: { type: "integer", minimum: 1, maximum: 15 }
+            },
+            required: ["query"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "get_sbd_toe_chapter_brief",
+          title: "Get SbD-ToE Chapter Brief",
+          description:
+            "Devolve resumo operacional de um capítulo: papel, fases, artefactos, intent_topics.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              chapterId: { type: "string", minLength: 1 }
+            },
+            required: ["chapterId"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "map_sbd_toe_applicability",
+          title: "Map SbD-ToE Applicability",
+          description:
+            "Mapeia capítulos/controlos activos, condicionais e excluídos para um nível de risco L1/L2/L3.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              riskLevel: { type: "string", enum: ["L1", "L2", "L3"] }
+            },
+            required: ["riskLevel"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
         }
       ]
     });
@@ -486,39 +573,155 @@ class McpRuntime {
 
   private handlePromptsList(request: JsonRpcRequest): void {
     this.sendResponse(request.id, {
-      prompts: [this.getPromptDefinition()]
+      prompts: [
+        this.getPromptDefinition(),
+        {
+          name: "setup_sbd_toe_agent",
+          title: "Setup SbD-ToE Agent",
+          description:
+            "Prompt MCP para configurar um agente com o contexto e regras do manual SbD-ToE para um nível de risco.",
+          arguments: [
+            {
+              name: "riskLevel",
+              description: "Nível de risco do projecto: L1, L2 ou L3.",
+              required: true
+            },
+            {
+              name: "projectRole",
+              description: "Papel ou descrição do projecto (opcional).",
+              required: false
+            }
+          ]
+        }
+      ]
     });
   }
 
   private handlePromptGet(request: JsonRpcRequest): void {
     const name = typeof request.params?.name === "string" ? request.params.name : "";
-    if (name !== "ask_sbd_toe_manual") {
-      this.sendError(request.id, -32602, `Prompt desconhecida: ${name}`);
-      return;
-    }
-
     const args =
       typeof request.params?.arguments === "object" && request.params.arguments !== null
         ? (request.params.arguments as Record<string, unknown>)
         : {};
-    const question = typeof args.question === "string" ? args.question : "";
-    const promptText =
-      `${loadSystemPromptTemplate()}\n\n` +
-      "Use a ferramenta `search_sbd_toe_manual` antes de responder.\n" +
-      `Question: ${question}`;
 
-    this.sendResponse(request.id, {
-      description: "Prompt grounded para perguntas sobre o manual SbD-ToE.",
-      messages: [
-        {
-          role: "user",
-          content: {
-            type: "text",
-            text: promptText
+    if (name === "ask_sbd_toe_manual") {
+      const question = typeof args.question === "string" ? args.question : "";
+      const promptText =
+        `${loadSystemPromptTemplate()}\n\n` +
+        "Use a ferramenta `search_sbd_toe_manual` antes de responder.\n" +
+        `Question: ${question}`;
+      this.sendResponse(request.id, {
+        description: "Prompt grounded para perguntas sobre o manual SbD-ToE.",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: promptText
+            }
           }
+        ]
+      });
+      return;
+    }
+
+    if (name === "setup_sbd_toe_agent") {
+      const riskLevel = args["riskLevel"];
+      if (typeof riskLevel !== "string" || !["L1", "L2", "L3"].includes(riskLevel)) {
+        this.sendError(
+          request.id,
+          -32602,
+          'O argumento "riskLevel" é obrigatório e deve ser L1, L2 ou L3.'
+        );
+        return;
+      }
+      const projectRole =
+        typeof args["projectRole"] === "string" ? args["projectRole"] : undefined;
+      const promptText = buildSetupAgentPrompt(riskLevel, projectRole);
+      this.sendResponse(request.id, {
+        description: "Prompt para configurar um agente com o contexto SbD-ToE.",
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: promptText
+            }
+          }
+        ]
+      });
+      return;
+    }
+
+    this.sendError(request.id, -32602, `Prompt desconhecida: ${name}`);
+  }
+
+  private handleResourcesList(request: JsonRpcRequest): void {
+    this.sendResponse(request.id, {
+      resources: [
+        {
+          uri: "sbd://toe/skill-template/{riskLevel}/{projectRole}",
+          name: "SbD-ToE Skill Template",
+          description:
+            "Template de skill/instructions SbD-ToE para um nível de risco e papel de projecto.",
+          mimeType: "text/markdown"
+        },
+        {
+          uri: "sbd://toe/chapter-applicability/{riskLevel}",
+          name: "SbD-ToE Chapter Applicability",
+          description:
+            "Capítulos activos, condicionais e excluídos para um nível de risco L1/L2/L3.",
+          mimeType: "application/json"
         }
       ]
     });
+  }
+
+  private async handleResourcesRead(request: JsonRpcRequest): Promise<void> {
+    const uri = typeof request.params?.uri === "string" ? request.params.uri : "";
+
+    const applicabilityMatch = /^\/\/toe\/chapter-applicability\/([^/]+)$/.exec(
+      uri.startsWith("sbd:") ? uri.slice(4) : ""
+    );
+    if (applicabilityMatch !== null) {
+      const riskLevel = applicabilityMatch[1] ?? "";
+      if (!["L1", "L2", "L3"].includes(riskLevel)) {
+        this.sendError(
+          request.id,
+          -32602,
+          `riskLevel inválido: "${riskLevel}". Valores permitidos: L1, L2, L3.`
+        );
+        return;
+      }
+      const data = buildChapterApplicabilityJson(riskLevel);
+      this.sendResponse(request.id, {
+        contents: [{ uri, mimeType: "application/json", text: JSON.stringify(data, null, 2) }]
+      });
+      return;
+    }
+
+    const skillTemplateMatch = /^\/\/toe\/skill-template\/([^/]+)\/([^/]+)$/.exec(
+      uri.startsWith("sbd:") ? uri.slice(4) : ""
+    );
+    if (skillTemplateMatch !== null) {
+      const riskLevel = skillTemplateMatch[1] ?? "";
+      const projectRole = skillTemplateMatch[2] ?? "";
+      if (!["L1", "L2", "L3"].includes(riskLevel)) {
+        this.sendError(
+          request.id,
+          -32602,
+          `riskLevel inválido: "${riskLevel}". Valores permitidos: L1, L2, L3.`
+        );
+        return;
+      }
+      const text = buildSkillTemplateMarkdown(riskLevel, projectRole);
+      this.sendResponse(request.id, {
+        contents: [{ uri, mimeType: "text/markdown", text }]
+      });
+      return;
+    }
+
+    this.sendError(request.id, -32602, `URI de resource desconhecida: ${uri}`);
   }
 
   private getStringArg(args: Record<string, unknown>, key: string): string {
@@ -714,6 +917,66 @@ class McpRuntime {
           );
           this.sendResponse(request.id, {
             content: [{ type: "text", text: result.text }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "list_sbd_toe_chapters": {
+          const cache = getSnapshotCache();
+          const result = handleListSbdToeChapters(args, cache);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "query_sbd_toe_entities": {
+          const cache = getSnapshotCache();
+          const result = await handleQuerySbdToeEntities(args, cache);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "get_sbd_toe_chapter_brief": {
+          const cache = getSnapshotCache();
+          const result = handleGetSbdToeChapterBrief(args, cache);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "map_sbd_toe_applicability": {
+          const cache = getSnapshotCache();
+          const result = handleMapSbdToeApplicability(args, cache);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });
           await this.log("info", {
             event_type: "tool.call",

@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request document for MCP structured query tools (s4 precursor)
+review_status: pending-human-review
+---
+
 # Evoluir o MCP com tools estruturadas de consulta SbD-ToE
 
 ## Contexto

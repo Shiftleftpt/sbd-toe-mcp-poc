@@ -93,6 +93,93 @@ Que policies governam pipelines CI/CD?
 
 5. se necessário, usar `inspect_sbd_toe_retrieval` e `DEBUG_MODE=true`
 
+## AI-Assisted Contributions
+
+Este repositório adopta a governança de documentação AI-assisted conforme SbD-ToE Cap. 14 (Governança, Revisões e Conformidade).
+
+### Quando Aplicável
+
+Se a sua contribuição **inclui conteúdo gerado ou co-authored por LLM** (Claude, ChatGPT, GitHub Copilot, etc.), é obrigatório:
+
+1. **Adicionar disclosure header** no início do ficheiro (YAML frontmatter ou HTML comment)
+2. **Completar review humano** e revisar a checkbox "Governance: AI-Assisted" no PR template
+3. **Validar localmente** que `npm run check` passa (inclui verificação de disclosure automática)
+
+### Formato de Disclosure
+
+Insira no início do seu ficheiro:
+
+```yaml
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: generated-code
+reasoning: Brief explanation of why content was AI-generated
+---
+```
+
+**Campos obrigatórios:**
+- `ai_assisted`: sempre `true`
+- `model`: modelo LLM usado (ex: "Claude Haiku 4.5", "Claude 3.5 Sonnet")
+- `date`: data em formato `YYYY-MM-DD`
+- `purpose`: um de `generated-code`, `governance-doc`, `test-plan`, `integration-test`, `documentation`, `other`
+
+Ver [docs/governors/AI-ASSISTED-TEMPLATE.md](docs/governors/AI-ASSISTED-TEMPLATE.md) para exemplos detalhados.
+
+### Validação Automática
+
+Antes de fazer commit:
+
+```bash
+npm run check
+```
+
+Este comando valida que:
+- Todos os ficheiros em `aos/` e `docs/requests/` têm disclosure válido (se foram modificados)
+- Formato YAML esteja correcto (AI_ASSISTED, MODEL, DATE, PURPOSE obrigatórios)
+- DATE esteja em formato `YYYY-MM-DD`
+- PURPOSE esteja na allowlist
+
+Se falhar, a mensagem de erro indica exatamente qual disclosure está inválido.
+
+### Entidade Responsável
+
+Ficheiros monitorizados para compliance:
+- `aos/` — roadmaps, slice briefs, coordination records
+- `docs/requests/` — feature requests, test plans, integration specs
+- `docs/governors/` — governance policies and templates
+- `.github/skills/` — Copilot skills e agent procedures
+
+### PR Review Checkpoint
+
+No template do PR, existe agora uma checkbox de Governance:
+
+```markdown
+## Governança AI-Assisted
+
+- [ ] **Revisado por humano:** Todos os documentos AI-assisted nesta PR foram revistos...
+```
+
+Se a sua PR adiciona ou modifica qualquer ficheiro em `aos/` ou `docs/requests/`, **deve marcar esta checkbox**.
+
+Revisor deve validar:
+1. Disclosure header está presente e válido
+2. `MODEL` identifica o LLM correcto
+3. `DATE` é recente e alinha com o timeline de trabalho
+4. `PURPOSE` é acurado
+5. Conteúdo foi revisto por humano quanto a exactidão técnica
+
+### Filosofia
+
+A filosofia deste projeto é **transparência total**. Os disclosures:
+- São parte da história pública do repositório
+- Demonstram conform com SbD-ToE Cap. 14
+- Permitem auditorias futuras
+- Servem como referência para contribuidores novos
+
+**Qualquer contribuição AI-assisted sem disclosure não será aceite no merge.**
+
 ## Issues, PRs e rastreabilidade
 
 - Usa uma branch por tema ou issue.

@@ -66,12 +66,51 @@ const SOURCE_PREFIX: Record<RetrievalSource, string> = {
   entities: "E"
 };
 
-interface SnapshotCache {
+export interface EnrichedFields {
+  readonly aliases_pt_en?: readonly string[] | undefined;
+  readonly intent_topics?: readonly string[] | undefined;
+  readonly canonical_control_ids?: readonly string[] | undefined;
+  readonly artifact_ids?: readonly string[] | undefined;
+  readonly authority_level?: string | undefined;
+}
+
+export type EnrichedLookup = ReadonlyMap<string, EnrichedFields>;
+
+export interface SnapshotCache {
   docs: SnapshotPayload;
   entities: SnapshotPayload;
+  docsEnrichedLookup: EnrichedLookup;
+  entitiesEnrichedLookup: EnrichedLookup;
 }
 
 let cachedSnapshots: SnapshotCache | undefined;
+
+function extractStringArray(value: unknown): readonly string[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined;
+  }
+  const result = value.filter((item): item is string => typeof item === "string");
+  return result.length > 0 ? result : undefined;
+}
+
+export function buildEnrichedLookup(payload: SnapshotPayload): EnrichedLookup {
+  const map = new Map<string, EnrichedFields>();
+  for (const item of payload.items ?? []) {
+    const id = typeof item.objectID === "string" ? item.objectID : undefined;
+    if (!id) {
+      continue;
+    }
+    map.set(id, {
+      aliases_pt_en: extractStringArray(item.aliases_pt_en),
+      intent_topics: extractStringArray(item.intent_topics),
+      canonical_control_ids: extractStringArray(item.canonical_control_ids),
+      artifact_ids: extractStringArray(item.artifact_ids),
+      authority_level:
+        typeof item.authority_level === "string" ? item.authority_level : undefined
+    });
+  }
+  return map;
+}
 
 function normalizeWhitespace(value: string): string {
   return value.replace(/\s+/g, " ").trim();
@@ -198,6 +237,154 @@ function tokenize(value: string): string[] {
     .filter((token) => token.length > 2);
 }
 
+type QueryIntent =
+  | "repo_bootstrap"
+  | "dependency_governance"
+  | "ci_cd_gates"
+  | "review_scope"
+  | "canonical_guidance"
+  | "generic";
+
+const CANONICAL_ALIASES_PT_EN: Record<string, readonly string[]> = {
+  "repositório de código": ["code repository", "codebase", "repository"],
+  "dependências": ["dependencies", "dependency", "package"],
+  "dependência": ["dependency", "dependencies", "package"],
+  sbom: ["software bill of materials", "bill of materials"],
+  "bill of materials": ["sbom", "bills"],
+  sca: ["software composition analysis", "composition analysis"],
+  "composition analysis": ["sca", "software composition"],
+  "ci/cd": ["continuous integration", "continuous delivery", "pipeline", "ci", "cd"],
+  "continuous integration": ["ci/cd", "ci", "pipeline"],
+  "continuous delivery": ["ci/cd", "cd", "pipeline"],
+  pipeline: ["ci/cd", "workflow", "workflow github actions"],
+  "github actions": ["pipeline", "workflow", "action", "github"],
+  "workflow github": ["github actions", "workflow github actions"],
+  aprovação: ["approval", "review", "approve"],
+  "aprovação de publicação": ["release approval", "publish approval"],
+  aprovações: ["approvals", "reviews"],
+  exceção: ["exception", "exemption", "waiver"],
+  exceções: ["exceptions", "exemptions", "waivers"],
+  capítulo: ["chapter", "section", "guide"],
+  controlo: ["control", "requirement", "verificação"],
+  "sast": ["static analysis", "security analysis", "code scanning"],
+  "static analysis": ["sast", "security analysis"],
+  "git": ["version control", "vcs", "scm"],
+  "configuration management": ["version control", "git"],
+  "upstream": ["backend", "source"],
+  "snapshot": ["snapshot", "snapshot enriched", "enriched"],
+  publicação: ["publication", "publishing", "release"],
+  publicar: ["publish", "publishing", "release"]
+};
+
+const INTENT_KEYWORDS: Record<QueryIntent, readonly string[]> = {
+  repo_bootstrap: ["bootstrap", "criar", "create", "new", "setup", "inicializar", "init", "repository"],
+  dependency_governance: [
+    "dependência",
+    "dependency",
+    "sbom",
+    "sca",
+    "package",
+    "lock",
+    "upgrade",
+    "atualizar",
+    "vendor"
+  ],
+  ci_cd_gates: [
+    "ci/cd",
+    "pipeline",
+    "workflow",
+    "github actions",
+    "gate",
+    "approval",
+    "validação",
+    "check",
+    "teste"
+  ],
+  review_scope: ["rever", "review", "auditar", "verificar", "check", "scope", "escopo", "o que", "what"],
+  canonical_guidance: ["como", "how", "quando", "when", "onde", "where", "guidance", "melhor", "best"],
+  generic: []
+};
+
+export function expandQueryWithAliases(query: string): string {
+  let expanded = query;
+
+  for (const [canonical, aliases] of Object.entries(CANONICAL_ALIASES_PT_EN)) {
+    const pattern = new RegExp(`\\b${canonical}\\b`, "gi");
+    if (pattern.test(expanded)) {
+      const expansion = aliases.join(" ");
+      expanded = expanded.replace(pattern, (match) => `${match} ${expansion}`);
+    }
+  }
+
+  return expanded;
+}
+
+export function classifyQueryIntent(query: string): QueryIntent {
+  const normalized = normalizeForSearch(query);
+  const tokens = tokenize(query);
+
+  for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS) as Array<[QueryIntent, readonly string[]]>) {
+    if (intent === "generic") continue;
+
+    for (const keyword of keywords) {
+      const keywordNormalized = normalizeForSearch(keyword);
+      if (normalized.includes(keywordNormalized) || tokens.some((t) => keywordNormalized.includes(t) || t.includes(keywordNormalized))) {
+        return intent;
+      }
+    }
+  }
+
+  return "generic";
+}
+
+export function computeIntentScore(
+  record: Omit<NormalizedRecord, "localScore">,
+  intent: QueryIntent,
+  expandedTokens: string[]
+): number {
+  let boost = 0;
+
+  if (record.intent_topics && record.intent_topics.length > 0) {
+    for (const topic of record.intent_topics) {
+      const topicNormalized = normalizeForSearch(topic);
+      if (intent === "repo_bootstrap" && topicNormalized.includes("bootstrap")) {
+        boost += 3;
+      }
+      if (intent === "dependency_governance" && (topicNormalized.includes("depend") || topicNormalized.includes("sbom") || topicNormalized.includes("sca"))) {
+        boost += 3;
+      }
+      if (intent === "ci_cd_gates" && (topicNormalized.includes("pipeline") || topicNormalized.includes("ci") || topicNormalized.includes("gate"))) {
+        boost += 3;
+      }
+      if (intent === "review_scope" && topicNormalized.includes("review")) {
+        boost += 2;
+      }
+    }
+  }
+
+  if (record.aliases_pt_en && record.aliases_pt_en.length > 0) {
+    for (const alias of record.aliases_pt_en) {
+      const aliasNormalized = normalizeForSearch(alias);
+      const aliasTokenized = tokenize(alias);
+      if (expandedTokens.some((t) => aliasNormalized.includes(t) || aliasTokenized.includes(t))) {
+        boost += 2;
+      }
+    }
+  }
+
+  if (record.authority_level) {
+    const levelNormalized = normalizeForSearch(record.authority_level);
+    if (levelNormalized === "canonical" && intent !== "generic") {
+      boost += 1;
+    }
+    if ((levelNormalized === "demo" || levelNormalized === "example" || levelNormalized === "training") && intent !== "generic") {
+      boost -= 1;
+    }
+  }
+
+  return boost;
+}
+
 function deriveExcerpt(record: LooseRecord): string {
   const excerpt = firstString(record, EXCERPT_KEYS);
   if (excerpt) {
@@ -267,8 +454,11 @@ function derivePageUrl(record: LooseRecord): string | undefined {
 }
 
 function buildLocalScore(query: string, record: Omit<NormalizedRecord, "localScore">): number {
-  const queryText = normalizeForSearch(query);
-  const tokens = Array.from(new Set(tokenize(query)));
+  const expandedQuery = expandQueryWithAliases(query);
+  const queryText = normalizeForSearch(expandedQuery);
+  const tokens = Array.from(new Set(tokenize(expandedQuery)));
+  const intent = classifyQueryIntent(query);
+
   const title = normalizeForSearch(record.title);
   const metadata = normalizeForSearch(
     [
@@ -325,17 +515,23 @@ function buildLocalScore(query: string, record: Omit<NormalizedRecord, "localSco
     score += 2;
   }
 
+  const intentBoost = computeIntentScore(record, intent, tokens);
+  score += intentBoost;
+
   return Number(score.toFixed(2));
 }
 
-function normalizeHit(
+export function normalizeHit(
   hit: LooseRecord,
   source: RetrievalSource,
   indexName: string,
   rank: number,
   citationId: string,
-  query: string
+  query: string,
+  enrichedLookup?: EnrichedLookup
 ): NormalizedRecord {
+  const enrichedId = typeof hit.objectID === "string" ? hit.objectID : undefined;
+  const enriched = enrichedId ? enrichedLookup?.get(enrichedId) : undefined;
   const documentPath = firstString(hit, DOCUMENT_PATH_KEYS);
   const chapterPath = firstString(hit, CHAPTER_PATH_KEYS);
   const baseRecord: Omit<NormalizedRecord, "localScore"> = {
@@ -361,6 +557,11 @@ function normalizeHit(
     chapterPath,
     documentTitle: firstString(hit, DOCUMENT_TITLE_KEYS),
     tags: stringList(hit, TAG_KEYS),
+    aliases_pt_en: enriched?.aliases_pt_en,
+    intent_topics: enriched?.intent_topics,
+    canonical_control_ids: enriched?.canonical_control_ids,
+    artifact_ids: enriched?.artifact_ids,
+    authority_level: enriched?.authority_level,
     algoliaRank: rank + 1,
     raw: hit
   };
@@ -417,17 +618,35 @@ function readSnapshotFile(filePath: string): SnapshotPayload {
   return JSON.parse(raw) as SnapshotPayload;
 }
 
+export function tryReadSnapshotFile(filePath: string): SnapshotPayload | undefined {
+  const absolutePath = path.resolve(process.cwd(), filePath);
+  try {
+    const raw = readFileSync(absolutePath, "utf8");
+    return JSON.parse(raw) as SnapshotPayload;
+  } catch {
+    return undefined;
+  }
+}
+
 function loadSnapshots(): SnapshotCache {
   if (cachedSnapshots) {
     return cachedSnapshots;
   }
 
   const config = getConfig();
+  const docsEnriched = tryReadSnapshotFile(config.backend.docsEnrichedSnapshotFile);
+  const entitiesEnriched = tryReadSnapshotFile(config.backend.entitiesEnrichedSnapshotFile);
   cachedSnapshots = {
     docs: readSnapshotFile(config.backend.docsSnapshotFile),
-    entities: readSnapshotFile(config.backend.entitiesSnapshotFile)
+    entities: readSnapshotFile(config.backend.entitiesSnapshotFile),
+    docsEnrichedLookup: docsEnriched ? buildEnrichedLookup(docsEnriched) : new Map(),
+    entitiesEnrichedLookup: entitiesEnriched ? buildEnrichedLookup(entitiesEnriched) : new Map()
   };
   return cachedSnapshots;
+}
+
+export function getSnapshotCache(): SnapshotCache {
+  return loadSnapshots();
 }
 
 function createCitationIds(source: RetrievalSource, total: number): string[] {
@@ -449,10 +668,10 @@ export async function retrievePublishedContext(
   const entitiesIndex = checkout?.indices.entities.indexName ?? config.backend.entitiesIndex;
 
   const docsRecords = docsHits.map((hit, index) =>
-    normalizeHit(hit, "docs", docsIndex, index, docIds[index]!, query)
+    normalizeHit(hit, "docs", docsIndex, index, docIds[index]!, query, snapshots.docsEnrichedLookup)
   );
   const entityRecords = entityHits.map((hit, index) =>
-    normalizeHit(hit, "entities", entitiesIndex, index, entityIds[index]!, query)
+    normalizeHit(hit, "entities", entitiesIndex, index, entityIds[index]!, query, snapshots.entitiesEnrichedLookup)
   );
 
   const retrieved = dedupeRecords(sortByPriority([...docsRecords, ...entityRecords]));
@@ -475,7 +694,9 @@ export async function retrievePublishedContext(
       commitSha: checkout?.runManifest.commitSha,
       upstreamRepoPath: checkout?.upstreamRepoPath,
       docsSnapshotFile: config.backend.docsSnapshotFile,
-      entitiesSnapshotFile: config.backend.entitiesSnapshotFile
+      entitiesSnapshotFile: config.backend.entitiesSnapshotFile,
+      docsEnrichedSnapshotFile: config.backend.docsEnrichedSnapshotFile,
+      entitiesEnrichedSnapshotFile: config.backend.entitiesEnrichedSnapshotFile
     }
   };
 }

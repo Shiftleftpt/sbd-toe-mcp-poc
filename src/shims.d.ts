@@ -23,6 +23,7 @@ declare module "node:readline" {
 declare const process: {
   env: Record<string, string | undefined>;
   cwd: () => string;
+  execPath: string;
   exit: (code?: number) => never;
   stdin: any;
   stdout: {

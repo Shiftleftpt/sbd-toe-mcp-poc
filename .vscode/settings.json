@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^cd /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-mcp-poc && node -e \"\nconst f = JSON\\.parse\\(require\\('fs'\\)\\.readFileSync\\('data/publish/algolia_entities_records_enriched\\.json','utf8'\\)\\);\nconst item = f\\.items\\?\\.\\[0\\] \\?\\? f\\[0\\] \\?\\? Object\\.values\\(f\\)\\[0\\];\nconsole\\.log\\(JSON\\.stringify\\(Object\\.keys\\(item \\?\\? \\{\\}\\), null, 2\\)\\);\nconsole\\.log\\('---SAMPLE---'\\);\nconsole\\.log\\(JSON\\.stringify\\(item, null, 2\\)\\.slice\\(0,1500\\)\\);\n\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

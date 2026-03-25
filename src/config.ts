@@ -64,6 +64,14 @@ export function getConfig(): AppConfig {
         "ENTITIES_SNAPSHOT_FILE",
         "./data/publish/algolia_entities_records.json"
       ),
+      docsEnrichedSnapshotFile: getEnv(
+        "DOCS_ENRICHED_SNAPSHOT_FILE",
+        "./data/publish/algolia_docs_records_enriched.json"
+      ),
+      entitiesEnrichedSnapshotFile: getEnv(
+        "ENTITIES_ENRICHED_SNAPSHOT_FILE",
+        "./data/publish/algolia_entities_records_enriched.json"
+      ),
       indexSettingsFile: getEnv(
         "INDEX_SETTINGS_FILE",
         "./data/publish/algolia_index_settings.json"
@@ -71,7 +79,17 @@ export function getConfig(): AppConfig {
       runManifestFile: getEnv(
         "RUN_MANIFEST_FILE",
         "./data/reports/run_manifest.json"
-      )
+      ),
+      upstreamSource: ((): "local" | "release" => {
+        const v = getEnv("UPSTREAM_SOURCE", "local");
+        if (v !== "local" && v !== "release") {
+          throw new Error(`UPSTREAM_SOURCE deve ser 'local' ou 'release', recebido: '${v}'`);
+        }
+        return v;
+      })(),
+      upstreamReleaseTag: getEnv("UPSTREAM_RELEASE_TAG", "latest"),
+      upstreamReleaseMaxBytes: 100 * 1024 * 1024,
+      upstreamReleaseTimeoutMs: 60_000
     },
     prompt: {
       systemPromptFile: getEnv(

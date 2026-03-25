@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request document for AI-assisted document disclosure validation (s8 precursor)
+review_status: pending-human-review
+---
+
 # Exigir disclosure e revisão humana para documentos gerados com apoio de IA/MCP
 
 ## Contexto

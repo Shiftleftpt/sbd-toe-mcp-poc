@@ -16,8 +16,14 @@ export interface AppConfig {
     checkoutFile: string;
     docsSnapshotFile: string;
     entitiesSnapshotFile: string;
+    docsEnrichedSnapshotFile: string;
+    entitiesEnrichedSnapshotFile: string;
     indexSettingsFile: string;
     runManifestFile: string;
+    readonly upstreamSource: "local" | "release";
+    readonly upstreamReleaseTag: string;
+    readonly upstreamReleaseMaxBytes: number;
+    readonly upstreamReleaseTimeoutMs: number;
   };
   prompt: {
     systemPromptFile: string;
@@ -49,6 +55,11 @@ export interface NormalizedRecord {
   chapterPath?: string | undefined;
   documentTitle?: string | undefined;
   tags: string[];
+  aliases_pt_en?: readonly string[] | undefined;
+  intent_topics?: readonly string[] | undefined;
+  canonical_control_ids?: readonly string[] | undefined;
+  artifact_ids?: readonly string[] | undefined;
+  authority_level?: string | undefined;
   algoliaRank: number;
   localScore: number;
   raw: LooseRecord;
@@ -67,6 +78,8 @@ export interface BackendCheckout {
   contractFiles: {
     docsSnapshot: string;
     entitiesSnapshot: string;
+    docsEnrichedSnapshot: string;
+    entitiesEnrichedSnapshot: string;
     indexSettings: string;
     runManifest: string;
   };
@@ -101,6 +114,8 @@ export interface RetrievalBundle {
     upstreamRepoPath?: string | undefined;
     docsSnapshotFile: string;
     entitiesSnapshotFile: string;
+    docsEnrichedSnapshotFile: string;
+    entitiesEnrichedSnapshotFile: string;
   };
 }
 
@@ -124,6 +139,8 @@ export interface ManualToolResult {
       upstreamRepoPath?: string | undefined;
       docsSnapshotFile: string;
       entitiesSnapshotFile: string;
+      docsEnrichedSnapshotFile: string;
+      entitiesEnrichedSnapshotFile: string;
     };
     prompt: string;
     selectedCitationIds: string[];

@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request for retrieval intent normalization and enriched metadata usage (s3 context)
+review_status: pending-human-review
+---
+
 # Melhorar retrieval do MCP com normalização de intenção e uso de metadados estruturados
 
 ## Contexto

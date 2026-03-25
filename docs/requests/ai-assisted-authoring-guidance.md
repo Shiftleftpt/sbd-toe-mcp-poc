@@ -1,3 +1,12 @@
+---
+ai_assisted: true
+model: Claude Haiku 4.5
+date: 2026-03-24
+purpose: documentation
+reasoning: Feature request document for AI-assisted authoring guidance in the SbD-ToE MCP project
+review_status: pending-human-review
+---
+
 # Gerar guidance operacional para authoring assistido por IA/MCP
 
 ## Contexto
