@@ -43,10 +43,9 @@ jobs:
           npm run check
           npm run build
 
-      - name: Verify tag commit belongs to master
+      - name: Verify tag is on master
         shell: bash
         env:
-          TAG_SHA: ${{ github.sha }}
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
@@ -54,8 +53,8 @@ jobs:
           echo "https://x-access-token:${GH_TOKEN}@github.com" > ~/.git-credentials
           git fetch --no-tags --prune origin +refs/heads/master:refs/remotes/origin/master
 
-          if ! git merge-base --is-ancestor "${TAG_SHA}" refs/remotes/origin/master; then
-            echo "Tag ${GITHUB_REF_NAME} does not point to a commit contained in origin/master."
+          if ! git merge-base --is-ancestor "refs/tags/${{ github.ref_name }}" refs/remotes/origin/master; then
+            echo "Error: Tag ${{ github.ref_name }} is not on master branch"
             exit 1
           fi
 
