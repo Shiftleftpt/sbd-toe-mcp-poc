@@ -37,6 +37,7 @@ export const REQUIRED_BUNDLE_ENTRIES = [
   { kind: "dir", src: "prompts", dest: "prompts" },
   { kind: "dir", src: "examples", dest: "examples" },
   { kind: "dir", src: "docs", dest: "docs" },
+  { kind: "file", src: "package.json", dest: "package.json" },
   { kind: "file", src: ".vscode/mcp.json", dest: ".vscode/mcp.json" },
   { kind: "file", src: ".env.example", dest: ".env.example" },
   { kind: "file", src: "README.md", dest: "README.md" },
