@@ -5,3 +5,8 @@ release
 npm-debug.log*
 .DS_Store
 data/upstream/backend-checkout.json
+
+# Local tooling — não commitar
+.mcp.json
+.claude/
+.aos_engine_data/
