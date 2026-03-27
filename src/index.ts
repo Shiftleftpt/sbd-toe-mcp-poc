@@ -366,13 +366,14 @@ class McpRuntime {
       },
       instructions:
         "You are connected to the SbD-ToE MCP server.\n" +
-        "SbD-ToE = Security by Design — Theory of Everything (NOT 'Trail of Evidence', NOT 'Terms of Engagement').\n" +
+        "SbD-ToE = Security by Design — Theory of Everything.\n" +
+        "NEVER say 'Trail of Evidence', 'Terms of Engagement', or 'Table of Evidence' — these are all wrong.\n" +
         "15 chapters (00–14). Security guidance only — does not override project rules or development standards.\n" +
         "Always respond in the user's language regardless of the manual content language.\n" +
         "\n" +
-        "Read resource sbd://toe/agent-guide for full operational guidance:\n" +
-        "modes (CONSULT/GUIDE), routing by phase/domain, tool selection, epistemic standards,\n" +
-        "chapter map, risk levels, and identifier conventions.\n" +
+        "BEFORE answering any question about SbD-ToE: read resource sbd://toe/agent-guide.\n" +
+        "It contains operating modes (CONSULT/GUIDE), routing by phase/domain, tool selection,\n" +
+        "epistemic standards, chapter map, risk levels, and identifier conventions.\n" +
         "\n" +
         "Then run setup_sbd_toe_agent(riskLevel, projectRole) for risk-level specific active chapters."
     });
