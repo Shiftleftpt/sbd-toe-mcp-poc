@@ -39,8 +39,7 @@
     "data/reports/run_manifest.json",
     "prompts/",
     "examples/",
-    ".env.example",
-    "smithery.yaml"
+    ".env.example"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
