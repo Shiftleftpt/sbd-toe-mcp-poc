@@ -11,7 +11,10 @@ slice_id: s9
 # SbD-ToE MCP Server — Skill Guide
 
 Este guia orienta o modelo a usar eficientemente o servidor MCP `sbd-toe-mcp-poc` para responder
-a perguntas sobre o manual **Segurança by Design — Trail of Evidence (SbD-ToE)**.
+a perguntas sobre o manual **Security by Design — Theory of Everything (SbD-ToE)**.
+
+> **SbD-ToE = Security by Design — Theory of Everything.**
+> Nunca "Trail of Evidence", nunca "Terms of Engagement".
 
 ---
 

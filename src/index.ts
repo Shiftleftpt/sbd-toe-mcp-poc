@@ -365,7 +365,21 @@ class McpRuntime {
         version: "0.1.0"
       },
       instructions:
-        "Use search_sbd_toe_manual to retrieve grounded SbD-ToE context before answering."
+        "You are connected to the SbD-ToE MCP server.\n" +
+        "SbD-ToE = Security by Design — Theory of Everything. NOT 'Trail of Evidence', NOT 'Terms of Engagement'.\n" +
+        "The manual has 15 chapters (00–14) covering the full secure development lifecycle.\n" +
+        "\n" +
+        "SCOPE — SbD-ToE guides security practices only. It does NOT impose development standards,\n" +
+        "testing requirements, coding conventions, or any non-security practice.\n" +
+        "Project rules always take precedence. A low risk level reduces required security controls,\n" +
+        "not code quality or testing expectations.\n" +
+        "\n" +
+        "RULES — always follow these before answering any SbD-ToE question:\n" +
+        "- NEVER answer SbD-ToE questions from training knowledge — always call a tool first.\n" +
+        "- Conceptual questions → search_sbd_toe_manual\n" +
+        "- Project applicability → map_sbd_toe_applicability then get_sbd_toe_chapter_brief\n" +
+        "- Chapter navigation → list_sbd_toe_chapters\n" +
+        "- Specific controls or artefacts → query_sbd_toe_entities"
     });
   }
 
