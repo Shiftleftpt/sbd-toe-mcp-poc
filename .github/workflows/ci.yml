@@ -38,6 +38,64 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Check MCP-served agent files integrity
+        run: |
+          FOUND=0
+
+          # System prompt deve começar com header esperado
+          FILE="prompts/sbd-toe-chat-system.md"
+          if [ -f "$FILE" ]; then
+            if ! head -1 "$FILE" | grep -q "^You are an assistant for"; then
+              echo "❌ $FILE: does not start with expected header"
+              FOUND=$((FOUND + 1))
+            fi
+            UNKNOWN=$(grep -oE '\{\{[A-Z_]+\}\}' "$FILE" | sort -u | \
+              grep -vE '^\{\{(SITE_BASE_URL|MANUAL_BASE_URL|CROSS_CHECK_BASE_URL|DOCS_INDEX|ENTITIES_INDEX)\}\}$' || true)
+            if [ -n "$UNKNOWN" ]; then
+              echo "❌ $FILE: unknown template variable(s): $UNKNOWN"
+              FOUND=$((FOUND + 1))
+            fi
+          fi
+
+          # SKILL.md deve ter frontmatter ai_assisted: true
+          FILE=".github/skills/sbd-toe-skill/SKILL.md"
+          if [ -f "$FILE" ]; then
+            if ! head -5 "$FILE" | grep -q "ai_assisted: true"; then
+              echo "❌ $FILE: missing ai_assisted frontmatter"
+              FOUND=$((FOUND + 1))
+            fi
+          fi
+
+          # Ficheiros MCP-served não devem ter URLs externas inesperadas
+          for FILE in "prompts/sbd-toe-chat-system.md" ".github/skills/sbd-toe-skill/SKILL.md"; do
+            [ -f "$FILE" ] || continue
+            UNEXPECTED=$(grep -oE 'https?://[^[:space:]"'\'']+' "$FILE" | \
+              grep -v 'securitybydesign\.dev' | \
+              grep -v 'github\.com/Shiftleftpt' || true)
+            if [ -n "$UNEXPECTED" ]; then
+              echo "❌ $FILE: unexpected external URL(s): $UNEXPECTED"
+              FOUND=$((FOUND + 1))
+            fi
+          done
+
+          if [ "$FOUND" -gt 0 ]; then
+            echo "❌ $FOUND integrity violation(s) in MCP-served agent files"
+            exit 1
+          fi
+          echo "✅ MCP-served agent files integrity OK"
+
+      - name: Check for committed secrets
+        run: |
+          if git ls-files | grep -E '(^|/)\.env$'; then
+            echo "❌ .env file detected in tracked files — remove it immediately"
+            exit 1
+          fi
+          if git ls-files | grep -E '(^|/)\.mcp\.json$'; then
+            echo "❌ .mcp.json detected in tracked files — contains local paths, should not be committed"
+            exit 1
+          fi
+          echo "✅ No sensitive files detected"
+
       - name: Type check
         run: npm run check
 

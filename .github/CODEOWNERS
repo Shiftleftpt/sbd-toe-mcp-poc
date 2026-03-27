@@ -8,6 +8,13 @@
 /.github/ @pedrofarinhaatshiftleftpt
 /.github/CODEOWNERS @pedrofarinhaatshiftleftpt
 
+# Agent configuration — prompt injection risk — explicit review required
+/.github/agents/ @pedrofarinhaatshiftleftpt
+/.github/prompts/ @pedrofarinhaatshiftleftpt
+/.github/skills/ @pedrofarinhaatshiftleftpt
+/.github/copilot-instructions.md @pedrofarinhaatshiftleftpt
+/prompts/ @pedrofarinhaatshiftleftpt
+
 # Governance and public documentation
 /README.md @pedrofarinhaatshiftleftpt
 /CONTRIBUTING.md @pedrofarinhaatshiftleftpt
@@ -32,3 +39,7 @@
 /package.json @pedrofarinhaatshiftleftpt
 /package-lock.json @pedrofarinhaatshiftleftpt
 /tsconfig.json @pedrofarinhaatshiftleftpt
+
+# Data path configuration — altera onde o servidor lê os snapshots
+/.env.example @pedrofarinhaatshiftleftpt
+/src/config.ts @pedrofarinhaatshiftleftpt
