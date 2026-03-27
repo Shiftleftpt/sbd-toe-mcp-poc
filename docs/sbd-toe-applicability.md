@@ -7,13 +7,15 @@ Para o papel e responsabilidades do repositório, ver [`docs/role.md`](role.md).
 
 ## Classificação de Risco
 
-**L1 — risco baixo** no modelo SbD-ToE E+D+I:
+**L2 — risco médio** no modelo SbD-ToE E+D+I (score: 5):
 
-- **E=1:** transporte `stdio` local, sem endpoint de rede exposto
+- **E=2:** pacote npm público (`@shiftleftpt/sbd-toe-mcp`); chamadas ao GitHub API para download de release assets; runtime via stdio local (sem endpoint de rede exposto)
 - **D=1:** documentação pública, sem dados pessoais ou regulados por desenho
-- **I=1:** ferramenta consultiva local, sem escrita em sistemas externos nem delegação automática de decisão
+- **I=2:** ferramenta de apoio à decisão para LLMs em contexto de segurança; respostas incorretas podem influenciar decisões de AppSec; PoC sem produção crítica
 
-Rever se o servidor passar a expor HTTP, processar dados pessoais ou segredos, ou influenciar decisões automatizadas com impacto real.
+Ver registo formal de classificação em [`docs/SecurityByDesign/classificacao.md`](SecurityByDesign/classificacao.md).
+
+Rever se o servidor passar a expor HTTP, processar dados pessoais ou segredos, ou influenciar decisões automatizadas com impacto real (I=3).
 
 ---
 
@@ -111,7 +113,7 @@ Estes domínios são baseline mínima. Cap. 11–20 aprofundam ou especializam c
 
 | Capítulo | Estado | Evidência no repositório |
 |---|---|---|
-| Cap. 01 — Classificação | Diretamente aplicável | Classificação L1 documentada |
+| Cap. 01 — Classificação | Diretamente aplicável | Classificação L2 documentada em `docs/security/classificacao.md` |
 | Cap. 02 — Requisitos | Diretamente aplicável | Requisitos ativos listados abaixo |
 | Cap. 05 — Dependências/SCA | Diretamente aplicável | `package-lock.json`, `dependabot.yml` |
 | Cap. 06 — Desenvolvimento Seguro | Diretamente aplicável | `src/` TypeScript, validação, prompts |
@@ -165,10 +167,10 @@ Não é deploy para runtime. É promoção e distribuição de artefactos. Aplic
 - `ERR-*` — mensagens de erro seguras, sem stack trace para o cliente
 - `CFG-*` — configuração segura, separação entre código e configuração
 - `REQ-*` — requisitos versionados, rastreáveis e auditáveis
-- Cap. 05 — dependências, SCA e SBOM proporcionais a L1
+- Cap. 05 — dependências, SCA e SBOM proporcionais a L2
 - Cap. 06 — validação do código, origem, revisão humana
 - Cap. 07 — CI/CD seguro (workflows GitHub Actions ativos)
-- Cap. 10 — testes/scanning proporcionais a L1
+- Cap. 10 — testes/scanning proporcionais a L2
 - Cap. 11 — release seguro, integridade e readiness pré-publicação
 
 ---

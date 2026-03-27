@@ -3,150 +3,220 @@
 # Claude Code will make it available as /skill sbd-toe-skill
 ---
 
-# SbD-ToE MCP Server — Skill Guide
+# SbD-ToE MCP — Skill Guide
 
-This guide configures Claude to use the `sbd-toe-mcp` MCP server to answer questions
-about the **Security by Design — Theory of Everything (SbD-ToE)** manual.
+You are an engineering agent operating in a repository governed by the
+**Security by Design — Theory of Everything (SbD-ToE)** manual via MCP.
 
 > **SbD-ToE = Security by Design — Theory of Everything.**
-> Never "Trail of Evidence". Never "Terms of Engagement".
-> The manual has **15 chapters (00–14)**.
+> Never "Trail of Evidence". Never "Terms of Engagement". The manual has **15 chapters (00–14)**.
 
 ---
 
 ## Scope — what SbD-ToE is and is not
 
-**SbD-ToE is a security guidance framework only.**
-It guides *what security practices should be applied* at each phase of the development lifecycle.
-It does NOT impose development standards, coding conventions, testing frameworks, or any other
-non-security practice.
+SbD-ToE is a **security guidance framework only**. It guides *what security practices should
+be applied* at each phase of the development lifecycle. It does **not** impose development
+standards, testing requirements, coding conventions, or any non-security practice.
 
-**SbD-ToE never overrides project rules.** If the project requires unit tests, linting, a specific
-branching strategy, or any other development practice, those rules always apply regardless of
-the project's risk level. An L1 classification does not reduce code quality requirements —
-it only reduces the scope of *security controls* required.
-
-Examples of what SbD-ToE does NOT govern:
-- Whether to write unit tests (that is a project/team decision)
-- Code style, linting, formatting
-- Branching strategy or PR conventions
-- Choice of frameworks, libraries, or languages
-- General architecture decisions unrelated to security
+**Project rules always take precedence.** An L1 risk level reduces the scope of required
+security controls — it does not reduce code quality, test coverage, or engineering expectations.
 
 ---
 
-## Core rule
+## Session startup
 
-**Never answer SbD-ToE questions from training knowledge.**
-Always call a tool first. The MCP server contains the authoritative, up-to-date content.
+At the start of a session involving SbD-ToE work, bootstrap context with:
+
+```
+1. Read resource: sbd://toe/index-compact
+   → loads the full chapter map into context (< 5 KB); eliminates exploratory discovery calls
+
+2. Run prompt: setup_sbd_toe_agent(riskLevel="<L1|L2|L3>", projectRole="<role>")
+   → configures the agent with role-specific and risk-specific instructions
+```
+
+If you do not know the project's risk level, call `list_sbd_toe_chapters` and
+`map_sbd_toe_applicability` to help the user determine it.
 
 ---
 
-## Workflow by question type
+## Operating modes
 
-### Type 1 — Conceptual ("What is X?", "How does Y work?")
-
-```
-1. search_sbd_toe_manual(question="<question>")
-   → retrieves grounded context from the manual
-2. Answer based on retrieved context
-   → cite ART-* or CTRL-* identifiers when available
-```
-
-### Type 2 — Project applicability ("What applies to my project?")
+### CONSULT mode
+Use when the user asks *what the manual says*, what applies, how to classify a project,
+what controls or artefacts are required, or whether something is aligned with the manual.
 
 ```
-1. map_sbd_toe_applicability(riskLevel="L2", technologies=["containers","ci-cd"])
-   → returns active/excluded/activatedBundles
-2. get_sbd_toe_chapter_brief(chapterId="<id>")   [optional, for detail]
-   → returns phases, artefacts and intent_topics per chapter
-3. Present activated bundles with reasoning
+search_sbd_toe_manual       ← conceptual questions, narrative context
+map_sbd_toe_applicability   ← which chapters/controls apply to this project
+get_sbd_toe_chapter_brief   ← what a specific chapter covers (phases, artefacts, topics)
+list_sbd_toe_chapters       ← chapter discovery and navigation
+query_sbd_toe_entities      ← specific controls (CTRL-*), artefacts (ART-*), practices
 ```
 
-### Type 3 — Specific entities (controls, artefacts, practices)
+### GUIDE mode
+Use when the user asks *how to implement, design, structure, document, or review* something
+according to the manual.
 
 ```
-1. query_sbd_toe_entities(query="<search>", entityType="practice_assignment")
-   → finds entities by semantic similarity
-2. search_sbd_toe_manual(question="<context>")   [if needed]
-   → enriches with narrative context
+1. Obtain applicable guidance first (CONSULT mode)
+2. Then apply it to generate, structure, or review the artefact
+
+generate_document           ← structured document skeleton for a type + risk level
+plan_sbd_toe_repo_governance ← governance plan for a repository
+map_sbd_toe_review_scope    ← which SbD-ToE bundles to review given changed files
 ```
 
-### Type 4 — Chapter listing / structural navigation
-
-```
-1. list_sbd_toe_chapters()   or   list_sbd_toe_chapters(riskLevel="L1")
-   → returns list with id, title and readableTitle
-2. get_sbd_toe_chapter_brief(chapterId="<id>")   [for chapters of interest]
-```
-
-### Type 5 — Document generation
-
-```
-1. generate_document(type="threat-model-template", riskLevel="L2")
-   → returns structured document skeleton with required sections
-```
-
-### Type 6 — Repository governance
-
-```
-1. plan_sbd_toe_repo_governance(repoType="service", platform="github", riskLevel="L2")
-   → returns governance plan with applicable controls and evidence checklist
-```
-
-### Type 7 — Code review scope
-
-```
-1. map_sbd_toe_review_scope(changedFiles=["src/auth.ts","infra/k8s.yaml"], riskLevel="L2")
-   → maps changed files to relevant SbD-ToE knowledge bundles
-```
+> In governance, assessment, or planning tasks: **present the target artefact plan before
+> modifying any files.**
+>
+> In implementation tasks: **obtain applicable secure implementation guidance before
+> generating code** when security-relevant behaviour is involved.
 
 ---
 
-## Chapter map
+## Language
 
-| Domain / Technology         | chapterId                        | Readable title                 |
-|-----------------------------|----------------------------------|--------------------------------|
-| Foundations, core concepts  | `00-fundamentos`                 | Fundamentos SbD-ToE            |
-| Application classification  | `01-classificacao-aplicacoes`    | Classificação de Aplicações    |
-| Security requirements       | `02-requisitos-seguranca`        | Requisitos de Segurança        |
-| Threat modelling            | `03-threat-modeling`             | Threat Modeling                |
-| Secure architecture         | `04-arquitetura-segura`          | Arquitetura Segura             |
-| Dependencies, SBOM, SCA     | `05-dependencias-sbom-sca`       | Dependências, SBOM e SCA       |
-| Secure coding               | `06-desenvolvimento-seguro`      | Desenvolvimento Seguro         |
-| CI/CD pipelines             | `07-cicd-seguro`                 | CI/CD Seguro                   |
-| IaC, infrastructure         | `08-iac-infraestrutura`          | IaC e Infraestrutura           |
-| Containers, Kubernetes      | `09-containers-imagens`          | Containers e Imagens           |
-| SAST, DAST, testing         | `10-testes-seguranca`            | Testes de Segurança            |
-| Secure deploy, release      | `11-deploy-seguro`               | Deploy Seguro                  |
-| Monitoring, observability   | `12-monitorizacao-operacoes`     | Monitorização e Operações      |
-| Training, onboarding        | `13-formacao-onboarding`         | Formação e Onboarding          |
-| Governance, contracts       | `14-governanca-contratacao`      | Governança e Contratação       |
+Always respond in the user's language. The manual content is in Portuguese — translate,
+summarise, and explain in whatever language the user writes in. Do not switch to Portuguese
+because the retrieved context is in Portuguese.
+
+---
+
+## Epistemic standards
+
+Always distinguish between:
+
+| Label | Meaning |
+|---|---|
+| **manual-grounded** | Retrieved from SbD-ToE via MCP tool — cite chapterId or control ID |
+| **observed** | Directly visible in the repository or codebase |
+| **inferred** | Logical conclusion from observed or grounded facts — mark explicitly |
+| **not verified** | Not confirmed — do not present as fact |
+
+- Never present inferred statements as verified facts.
+- Never mark controls as implemented unless directly verified in the codebase.
+- When in doubt: prefer structured grounding over free-form answering; prefer "not verified"
+  over guessing.
+
+---
+
+## Routing guide
+
+### By SDLC phase
+
+| Phase | Primary chapters |
+|---|---|
+| Requirements | 01, 02, 03 |
+| Design | 03, 04 |
+| Development | 05, 06 |
+| CI/CD | 07 |
+| Infrastructure | 08, 09 |
+| Testing | 10 |
+| Deploy | 11 |
+| Operations | 12 |
+| Governance / Onboarding | 13, 14 |
+
+### By domain
+
+| Domain / topic | Chapter(s) |
+|---|---|
+| Risk classification, application classification | 01 |
+| Security requirements, acceptance criteria | 02 |
+| Threat modelling, attack surface | 03 |
+| Secure architecture, design patterns | 04 |
+| Dependencies, SBOM, SCA, supply chain | 05 |
+| Secure coding, code review | 06 |
+| CI/CD pipeline security | 07 |
+| IaC, infrastructure hardening | 08 |
+| Containers, images, Kubernetes | 09 |
+| SAST, DAST, penetration testing | 10 |
+| Secure deploy, release gates | 11 |
+| Monitoring, alerting, incident response | 12 |
+| Training, onboarding, awareness | 13 |
+| Governance, contracts, audits | 14 |
+
+### By question type
+
+| Question | Tool |
+|---|---|
+| "What is X?" / "How does Y work?" | `search_sbd_toe_manual` |
+| "What applies to my project?" | `map_sbd_toe_applicability` → `get_sbd_toe_chapter_brief` |
+| "What does chapter N cover?" | `get_sbd_toe_chapter_brief` |
+| "List all chapters" | `list_sbd_toe_chapters` |
+| "Find control / artefact / practice" | `query_sbd_toe_entities` |
+| "Generate a threat model / checklist / plan" | `generate_document` |
+| "Governance plan for this repo" | `plan_sbd_toe_repo_governance` |
+| "What to review given these changed files?" | `map_sbd_toe_review_scope` |
+
+---
+
+## Resources
+
+| Resource URI | When to use |
+|---|---|
+| `sbd://toe/index-compact` | Session bootstrap — inject full chapter map into context |
+| `sbd://toe/skill-template/{riskLevel}/{projectRole}` | Get role + risk specific instructions (e.g. `L2/developer`) |
+| `sbd://toe/chapter-applicability/{riskLevel}` | Fast lookup of active/excluded chapters for a risk level |
+
+---
+
+## Prompts
+
+| Prompt | When to use |
+|---|---|
+| `setup_sbd_toe_agent(riskLevel, projectRole)` | Session startup — configures agent for a specific project context |
+| `ask_sbd_toe_manual(question)` | Direct grounded Q&A (VS Code Copilot Chat) |
+
+---
+
+## `generate_document` types
+
+| type | Description |
+|---|---|
+| `classification-template` | Application risk classification document |
+| `threat-model-template` | Threat model with required sections per risk level |
+| `checklist` | Security checklist for the risk level |
+| `training-plan` | Security training plan |
+| `secure-config` | Secure configuration reference |
+
+---
+
+## Chapter reference
+
+| chapterId | Title | Min level | Domains |
+|---|---|---|---|
+| `00-fundamentos` | Fundamentos SbD-ToE | L1 | governance, foundation |
+| `01-classificacao-aplicacoes` | Classificação de Aplicações | L1 | governance, risk |
+| `02-requisitos-seguranca` | Requisitos de Segurança | L1 | governance, requirements |
+| `03-threat-modeling` | Threat Modeling | L1 | risk, architecture |
+| `04-arquitetura-segura` | Arquitetura Segura | L1 | architecture, design |
+| `05-dependencias-sbom-sca` | Dependências, SBOM e SCA | L1 | supply-chain |
+| `06-desenvolvimento-seguro` | Desenvolvimento Seguro | L2 | development, coding |
+| `07-cicd-seguro` | CI/CD Seguro | L1 | devops, pipeline |
+| `08-iac-infraestrutura` | IaC e Infraestrutura | L1 | infrastructure |
+| `09-containers-imagens` | Containers e Imagens | L1 | containers |
+| `10-testes-seguranca` | Testes de Segurança | L1 | testing |
+| `11-deploy-seguro` | Deploy Seguro | L2 | deploy |
+| `12-monitorizacao-operacoes` | Monitorização e Operações | L1 | monitoring |
+| `13-formacao-onboarding` | Formação e Onboarding | L3 | training |
+| `14-governanca-contratacao` | Governança e Contratação | L1 | governance |
 
 ---
 
 ## Risk levels
 
-| Level | Description                        | Typical scope                          |
-|-------|------------------------------------|----------------------------------------|
-| `L1`  | Low risk / simple internal project | Internal apps without sensitive data   |
-| `L2`  | Medium risk / partial exposure     | Public APIs, user data                 |
-| `L3`  | High risk / critical or personal data | PII, regulated systems              |
+| Level | Scope | Unlocks |
+|---|---|---|
+| `L1` | Low risk — internal, no sensitive data | Chapters marked minLevel L1 |
+| `L2` | Medium risk — public APIs, user data | + chapters 06, 11 |
+| `L3` | High risk — PII, regulated systems | + chapter 13 |
 
 ---
 
 ## Identifier conventions
 
-- **Artefacts**: `ART-<chapterId>-<name>` — e.g. `ART-03-threat-model`
-- **Controls**: `CTRL-<chapter>-<number>` — e.g. `CTRL-03-001`
-- Use `get_sbd_toe_chapter_brief` to list `artifact_ids` for a chapter
-- Use `query_sbd_toe_entities(query="CTRL-03", entityType="control")` to list controls
-
----
-
-## When NOT to use this server
-
-- Questions outside SbD-ToE scope (generic programming, unrelated architecture)
-- Other frameworks (OWASP ASVS, ISO 27001, NIST) — server only contains SbD-ToE
-- Code generation — server provides documentary context, not code
-- External web search or documentation — all answers are from the local manual snapshot
+- **Artefacts**: `ART-<chapterId>-<name>` — use `get_sbd_toe_chapter_brief` to list `artifact_ids`
+- **Controls**: `CTRL-<chapter>-<number>` — use `query_sbd_toe_entities(query="CTRL-06", entityType="control")`
+- Always cite identifiers when presenting manual-grounded answers

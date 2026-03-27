@@ -7,32 +7,50 @@
 
 This project uses the **SbD-ToE MCP server** (`@shiftleftpt/sbd-toe-mcp`).
 
-**SbD-ToE = Security by Design — Theory of Everything** — a 15-chapter framework
-for secure-by-design software development.
+**SbD-ToE = Security by Design — Theory of Everything** — a 15-chapter security guidance
+framework for secure-by-design software development.
 
-## Important — scope of SbD-ToE
+## Scope
 
-**SbD-ToE guides security practices only.** It does not impose development standards,
-testing requirements, coding conventions, or architecture decisions unrelated to security.
-Project rules always take precedence. An L1 risk level reduces required *security controls*,
+SbD-ToE guides **security practices only**. It does not impose development standards,
+testing requirements, coding conventions, or any non-security practice. Project rules
+always take precedence. A lower risk level reduces required security controls —
 not code quality or testing expectations.
 
-## How to answer security questions
+## Operating modes
 
-When the user asks about security, secure development, SbD-ToE controls, threat
-modelling, SBOM, CI/CD security, containers, or any topic covered by the manual:
+Use the SbD-ToE MCP in two ways:
 
-1. **Always call a tool first** — never answer from training knowledge
-2. Use `search_sbd_toe_manual` for conceptual questions
-3. Use `map_sbd_toe_applicability` to determine which chapters apply to this project
-4. Use `list_sbd_toe_chapters` to navigate the manual structure
-5. Use `query_sbd_toe_entities` to find specific controls or artefacts
-6. Use `generate_document` to produce document skeletons
-7. Use `map_sbd_toe_review_scope` when reviewing changed files
+**CONSULT** — when asked what the manual says, what applies, how to classify a project,
+what controls or artefacts are required, or whether something is aligned with the manual.
+
+**GUIDE** — when asked how to implement, design, structure, document, or review something
+according to the manual. Always obtain applicable guidance before generating or modifying.
+
+## Language
+
+Always respond in the user's language. The manual content is in Portuguese — translate
+and explain in the user's language regardless of the retrieved content language.
+
+## Rules
+
+- Do not answer SbD-ToE questions from training knowledge — always call a tool first.
+- If the request touches security practices, risk classification, controls, requirements,
+  artefacts, secure coding, governance, or validation: use the MCP.
+- Always distinguish: **manual-grounded** / **observed** / **inferred** / **not verified**.
+- Never mark controls as implemented unless directly verified.
+- In governance or planning tasks: present the target artefact plan before modifying files.
+
+## Session startup
+
+```
+1. Read: sbd://toe/index-compact          ← bootstrap chapter map
+2. Run:  setup_sbd_toe_agent(riskLevel="<L1|L2|L3>", projectRole="<role>")
+```
 
 ## Load the full skill guide
 
-For detailed workflow patterns and examples, load the skill:
+For detailed routing, tool chaining, chapter map and examples:
 
 ```
 /skill sbd-toe-skill
