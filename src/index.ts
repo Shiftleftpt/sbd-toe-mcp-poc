@@ -805,32 +805,32 @@ class McpRuntime {
     this.sendResponse(request.id, {
       resources: [
         {
+          uri: "sbd://toe/agent-guide",
+          name: "SbD-ToE Agent Guide",
+          description:
+            "READ THIS FIRST. Operational guide for AI agents: SbD-ToE identity (Security by Design — Theory of Everything), CONSULT/GUIDE modes, routing by SDLC phase and domain, tool selection, epistemic standards, chapter map, risk levels, identifier conventions.",
+          mimeType: "text/markdown"
+        },
+        {
           uri: "sbd://toe/skill-template/{riskLevel}/{projectRole}",
           name: "SbD-ToE Skill Template",
           description:
-            "Template de skill/instructions SbD-ToE para um nível de risco e papel de projecto.",
+            "Role-specific guidance template for a given risk level (L1/L2/L3) and project role. Use after reading sbd://toe/agent-guide.",
           mimeType: "text/markdown"
         },
         {
           uri: "sbd://toe/chapter-applicability/{riskLevel}",
           name: "SbD-ToE Chapter Applicability",
           description:
-            "Capítulos activos, condicionais e excluídos para um nível de risco L1/L2/L3.",
+            "Active, conditional and excluded chapters for a given risk level (L1/L2/L3).",
           mimeType: "application/json"
         },
         {
           uri: "sbd://toe/index-compact",
           name: "SbD-ToE Index Compact",
           description:
-            "Índice compacto do manual SbD-ToE. Injectável em system prompt para eliminar fase de descoberta exploratória.",
+            "Compact JSON index of the full SbD-ToE manual. Injectable into system prompt to eliminate exploratory discovery.",
           mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/agent-guide",
-          name: "SbD-ToE Agent Guide",
-          description:
-            "Full operational guide for agents: CONSULT/GUIDE modes, routing by phase and domain, tool selection, epistemic standards, chapter map, risk levels.",
-          mimeType: "text/markdown"
         }
       ]
     });
