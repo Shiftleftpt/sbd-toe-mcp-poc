@@ -76,6 +76,14 @@ map_sbd_toe_review_scope    ← which SbD-ToE bundles to review given changed fi
 
 ---
 
+## Language
+
+Always respond in the user's language. The manual content is in Portuguese — translate,
+summarise, and explain in whatever language the user writes in. Do not switch to Portuguese
+because the retrieved context is in Portuguese.
+
+---
+
 ## Epistemic standards
 
 Always distinguish between:

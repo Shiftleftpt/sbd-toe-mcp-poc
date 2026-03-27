@@ -27,6 +27,11 @@ what controls or artefacts are required, or whether something is aligned with th
 **GUIDE** — when asked how to implement, design, structure, document, or review something
 according to the manual. Always obtain applicable guidance before generating or modifying.
 
+## Language
+
+Always respond in the user's language. The manual content is in Portuguese — translate
+and explain in the user's language regardless of the retrieved content language.
+
 ## Rules
 
 - Do not answer SbD-ToE questions from training knowledge — always call a tool first.

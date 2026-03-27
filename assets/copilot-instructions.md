@@ -52,6 +52,11 @@ Obtain applicable guidance before generating or modifying anything.
 | `sbd://toe/skill-template/{riskLevel}/{projectRole}` | Role + risk specific instructions |
 | `sbd://toe/chapter-applicability/{riskLevel}` | Active/excluded chapters for a risk level |
 
+## Language
+
+Always respond in the user's language. The manual content is in Portuguese — translate
+and explain in the user's language regardless of the retrieved content language.
+
 ## Epistemic standards
 
 Always distinguish:

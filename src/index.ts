@@ -385,7 +385,9 @@ class McpRuntime {
         "- Never mark controls as implemented unless directly verified.\n" +
         "- In planning tasks: present the artefact plan before modifying files.\n" +
         "\n" +
-        "SESSION START: read sbd://toe/index-compact, then run setup_sbd_toe_agent(riskLevel, projectRole)."
+        "SESSION START: read sbd://toe/index-compact, then run setup_sbd_toe_agent(riskLevel, projectRole).\n" +
+        "\n" +
+        "LANGUAGE: always respond in the user's language, regardless of the language of the retrieved manual content."
     });
   }
 
