@@ -184,12 +184,6 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contribution workflow.
 
 ---
 
-## Smithery
-
-This server is registered on [Smithery](https://smithery.ai) — the MCP server directory. Smithery provides one-click install and guided configuration.
-
----
-
 ## Security
 
 See [`SECURITY.md`](SECURITY.md). Vulnerabilities must be reported privately by email, never via public issue.
