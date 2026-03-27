@@ -3,7 +3,7 @@
     "sbdToe": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"]
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
     }
   }
 }

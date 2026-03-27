@@ -37,7 +37,7 @@ startCommand:
   commandFunction: |-
     (config) => ({
       command: "npx",
-      args: ["-y", "sbd-toe-mcp"],
+      args: ["-y", "@shiftleftpt/sbd-toe-mcp"],
       env: Object.fromEntries(
         Object.entries(config).filter(([_, v]) => v !== undefined && v !== "")
       )

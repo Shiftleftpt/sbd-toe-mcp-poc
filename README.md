@@ -163,14 +163,14 @@ Também não é necessário editar manualmente a configuração MCP se usares a 
 
 ## Quick Start — instalar via npm
 
-[![npm](https://img.shields.io/npm/v/sbd-toe-mcp)](https://www.npmjs.com/package/sbd-toe-mcp)
+[![npm](https://img.shields.io/npm/v/@shiftleftpt%2fsbd-toe-mcp)](https://www.npmjs.com/package/@shiftleftpt/sbd-toe-mcp)
 
 **Zero configuração obrigatória.** O servidor funciona directamente com `npx`:
 
 1. Instalar Node.js ≥ 20.9.0: [nodejs.org/download](https://nodejs.org/download/)
 2. Registar o servidor no teu cliente MCP (exemplo para Claude Code):
    ```bash
-   claude mcp add sbd-toe -- npx -y sbd-toe-mcp
+   claude mcp add sbd-toe -- npx -y @shiftleftpt/sbd-toe-mcp
    ```
 3. Usar as tools MCP no Claude Code (ou Claude Desktop, VS Code, Cursor, etc.)
 

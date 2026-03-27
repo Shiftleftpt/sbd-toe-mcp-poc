@@ -7,14 +7,14 @@ produced_by: executor
 slice_id: s13
 ---
 
-# Installation Guide — sbd-toe-mcp
+# Installation Guide — @shiftleftpt/sbd-toe-mcp
 
 ## Quick Start (any MCP client)
 
 **No environment variables required.** The server works zero-config with a single command:
 
 ```bash
-npx -y sbd-toe-mcp
+npx -y @shiftleftpt/sbd-toe-mcp
 ```
 
 The package bundles all semantic data locally — no Algolia, no API keys, no `.env` setup needed.
@@ -54,7 +54,7 @@ Add the `sbd-toe` server to your existing `claude_desktop_config.json`:
   "mcpServers": {
     "sbd-toe": {
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"]
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
     }
   }
 }
@@ -78,7 +78,7 @@ What are the authentication requirements for an L2 application?
 ### Option A — one-line registration
 
 ```bash
-claude mcp add sbd-toe -- npx -y sbd-toe-mcp
+claude mcp add sbd-toe -- npx -y @shiftleftpt/sbd-toe-mcp
 ```
 
 This registers the server globally in your Claude Code config.
@@ -92,7 +92,7 @@ Create `.mcp.json` at your project root:
   "mcpServers": {
     "sbd-toe": {
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"]
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
     }
   }
 }
@@ -124,7 +124,7 @@ Copy [`examples/vscode.mcp.json`](../examples/vscode.mcp.json) to your project a
     "sbdToe": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"]
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
     }
   }
 }
@@ -159,7 +159,7 @@ Cursor supports MCP servers via a JSON config file.
   "mcpServers": {
     "sbd-toe": {
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"]
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
     }
   }
 }
@@ -186,7 +186,7 @@ Windsurf uses a global MCP config file.
   "mcpServers": {
     "sbd-toe": {
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"]
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
     }
   }
 }
@@ -207,7 +207,7 @@ Any client that supports the MCP `stdio` transport can use this server.
 ```json
 {
   "command": "npx",
-  "args": ["-y", "sbd-toe-mcp"]
+  "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
 }
 ```
 
@@ -219,7 +219,7 @@ For **Zed**, add an entry in the `context_servers` section of your `~/.config/ze
     "sbd-toe-mcp": {
       "command": {
         "path": "npx",
-        "args": ["-y", "sbd-toe-mcp"]
+        "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
       }
     }
   }
@@ -227,13 +227,13 @@ For **Zed**, add an entry in the `context_servers` section of your `~/.config/ze
 ```
 
 For other clients, consult their documentation for how to register stdio MCP servers.
-The key fields are always: `command: "npx"` and `args: ["-y", "sbd-toe-mcp"]`.
+The key fields are always: `command: "npx"` and `args: ["-y", "@shiftleftpt/sbd-toe-mcp"]`.
 
 ---
 
 ## Optional Configuration
 
-No environment variables are required. The server works fully out-of-the-box with `npx -y sbd-toe-mcp`.
+No environment variables are required. The server works fully out-of-the-box with `npx -y @shiftleftpt/sbd-toe-mcp`.
 
 The following variables can be set to customise behaviour:
 
@@ -255,7 +255,7 @@ If your MCP client supports an `env` key in the server config, use it:
   "mcpServers": {
     "sbd-toe": {
       "command": "npx",
-      "args": ["-y", "sbd-toe-mcp"],
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"],
       "env": {
         "DEBUG_MODE": "true",
         "MAX_CONTEXT_RECORDS": "12"
@@ -279,7 +279,7 @@ Install Node.js ≥ 20.9.0 from [nodejs.org/download](https://nodejs.org/downloa
 ### Server fails to start / tools not available
 
 1. Verify your Node.js version: `node --version` (must be ≥ v20.9.0)
-2. Try updating to the latest package version: `npx -y sbd-toe-mcp@latest`
+2. Try updating to the latest package version: `npx -y @shiftleftpt/sbd-toe-mcp@latest`
 3. Restart the MCP client completely (quit and reopen, not just reload)
 4. Check the client's MCP log output for error messages
 
@@ -291,7 +291,7 @@ Install Node.js ≥ 20.9.0 from [nodejs.org/download](https://nodejs.org/downloa
 
 ### Responses seem outdated
 
-The semantic data is bundled inside the package. Run `npx -y sbd-toe-mcp@latest` to
+The semantic data is bundled inside the package. Run `npx -y @shiftleftpt/sbd-toe-mcp@latest` to
 force-fetch the most recent published version.
 
 ### Debugging the server directly
@@ -299,7 +299,7 @@ force-fetch the most recent published version.
 Run the server manually in a terminal to see its startup output:
 
 ```bash
-npx -y sbd-toe-mcp
+npx -y @shiftleftpt/sbd-toe-mcp
 ```
 
 The server will log to `stderr`. If it starts successfully you will see a ready message.
