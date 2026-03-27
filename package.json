@@ -1,6 +1,6 @@
 {
   "name": "@shiftleftpt/sbd-toe-mcp",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "license": "Apache-2.0",
   "description": "MCP server for SbD-ToE security manual — structured tools for Claude, GitHub Copilot and other MCP clients",
   "keywords": ["mcp", "security", "sbd", "toe", "devsecops", "claude", "copilot", "llm"],
