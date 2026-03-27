@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           registry-url: https://registry.npmjs.org
 
@@ -73,9 +73,6 @@ jobs:
 
       - name: Publish to npm
         # Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret required.
-        # Prerequisites: package configured for Trusted Publishing on npmjs.com
-        # (package Settings → Trusted Publishing → add this GitHub repo/workflow).
-        # NODE_AUTH_TOKEN must NOT be set here: the npm CLI exchanges the GitHub
-        # OIDC token for a short-lived npm token automatically when id-token: write
-        # is granted and setup-node is configured with registry-url.
+        # id-token: write grants the GitHub OIDC token; the npm CLI exchanges
+        # it automatically for a short-lived npm token.
         run: npm publish --access public --provenance
