@@ -14,6 +14,30 @@ about the **Security by Design — Theory of Everything (SbD-ToE)** manual.
 
 ---
 
+## Scope — what SbD-ToE is and is not
+
+**SbD-ToE is a security guidance framework only.**
+It guides *what security practices should be applied* at each phase of the development lifecycle.
+It does NOT impose development standards, coding conventions, testing frameworks, or any other
+non-security practice.
+
+**SbD-ToE never overrides project rules.** If the project requires unit tests, linting, a specific
+branching strategy, or any other development practice, those rules always apply regardless of
+the project's risk level. An L1 classification does not reduce code quality requirements —
+it only reduces the scope of *security controls* required.
+
+Examples of what SbD-ToE does NOT govern:
+- Whether to write unit tests (that is a project/team decision)
+- Code style, linting, formatting
+- Branching strategy or PR conventions
+- Choice of frameworks, libraries, or languages
+- General architecture decisions unrelated to security
+
+Use SbD-ToE context only to answer questions explicitly about security practices, controls,
+threat modelling, secure architecture, SBOM, secure CI/CD, or compliance.
+
+---
+
 ## Core rule
 
 **Never answer SbD-ToE questions from training knowledge.**

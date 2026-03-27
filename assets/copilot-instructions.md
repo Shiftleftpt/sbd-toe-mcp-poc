@@ -12,6 +12,15 @@ for secure-by-design software development. NOT "Trail of Evidence". NOT "Terms o
 
 ---
 
+## Important — scope of SbD-ToE
+
+**SbD-ToE guides security practices only.** It does not impose development standards,
+testing requirements, coding style, or any non-security practice. Project rules always
+take precedence. A low risk level (L1) reduces the required *security controls* —
+it does not reduce code quality, test coverage, or general engineering expectations.
+
+---
+
 ## Using the MCP tools
 
 When answering questions about security, secure development practices, threat modelling,

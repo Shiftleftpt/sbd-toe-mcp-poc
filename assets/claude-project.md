@@ -10,6 +10,13 @@ This project uses the **SbD-ToE MCP server** (`@shiftleftpt/sbd-toe-mcp`).
 **SbD-ToE = Security by Design — Theory of Everything** — a 15-chapter framework
 for secure-by-design software development.
 
+## Important — scope of SbD-ToE
+
+**SbD-ToE guides security practices only.** It does not impose development standards,
+testing requirements, coding conventions, or architecture decisions unrelated to security.
+Project rules always take precedence. An L1 risk level reduces required *security controls*,
+not code quality or testing expectations.
+
 ## How to answer security questions
 
 When the user asks about security, secure development, SbD-ToE controls, threat

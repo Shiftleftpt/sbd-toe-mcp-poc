@@ -369,6 +369,11 @@ class McpRuntime {
         "SbD-ToE = Security by Design — Theory of Everything. NOT 'Trail of Evidence', NOT 'Terms of Engagement'.\n" +
         "The manual has 15 chapters (00–14) covering the full secure development lifecycle.\n" +
         "\n" +
+        "SCOPE — SbD-ToE guides security practices only. It does NOT impose development standards,\n" +
+        "testing requirements, coding conventions, or any non-security practice.\n" +
+        "Project rules always take precedence. A low risk level reduces required security controls,\n" +
+        "not code quality or testing expectations.\n" +
+        "\n" +
         "RULES — always follow these before answering any SbD-ToE question:\n" +
         "- NEVER answer SbD-ToE questions from training knowledge — always call a tool first.\n" +
         "- Conceptual questions → search_sbd_toe_manual\n" +
