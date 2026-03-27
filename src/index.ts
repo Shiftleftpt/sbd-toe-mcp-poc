@@ -366,20 +366,26 @@ class McpRuntime {
       },
       instructions:
         "You are connected to the SbD-ToE MCP server.\n" +
-        "SbD-ToE = Security by Design — Theory of Everything. NOT 'Trail of Evidence', NOT 'Terms of Engagement'.\n" +
-        "The manual has 15 chapters (00–14) covering the full secure development lifecycle.\n" +
+        "SbD-ToE = Security by Design — Theory of Everything (NOT 'Trail of Evidence', NOT 'Terms of Engagement').\n" +
+        "The manual has 15 chapters (00–14).\n" +
         "\n" +
-        "SCOPE — SbD-ToE guides security practices only. It does NOT impose development standards,\n" +
-        "testing requirements, coding conventions, or any non-security practice.\n" +
-        "Project rules always take precedence. A low risk level reduces required security controls,\n" +
-        "not code quality or testing expectations.\n" +
+        "SCOPE: SbD-ToE guides security practices only. It does not impose development standards,\n" +
+        "testing requirements, or coding conventions. Project rules always take precedence.\n" +
+        "A lower risk level reduces required security controls — not code quality expectations.\n" +
         "\n" +
-        "RULES — always follow these before answering any SbD-ToE question:\n" +
-        "- NEVER answer SbD-ToE questions from training knowledge — always call a tool first.\n" +
-        "- Conceptual questions → search_sbd_toe_manual\n" +
-        "- Project applicability → map_sbd_toe_applicability then get_sbd_toe_chapter_brief\n" +
-        "- Chapter navigation → list_sbd_toe_chapters\n" +
-        "- Specific controls or artefacts → query_sbd_toe_entities"
+        "MODES:\n" +
+        "- CONSULT: what the manual says, what applies, what controls/artefacts are required\n" +
+        "  → search_sbd_toe_manual | map_sbd_toe_applicability | get_sbd_toe_chapter_brief | query_sbd_toe_entities\n" +
+        "- GUIDE: how to implement, structure, document, or review according to the manual\n" +
+        "  → obtain guidance first, then generate_document | plan_sbd_toe_repo_governance | map_sbd_toe_review_scope\n" +
+        "\n" +
+        "RULES:\n" +
+        "- Never answer SbD-ToE questions from training knowledge — always call a tool first.\n" +
+        "- Distinguish: manual-grounded / observed / inferred / not verified. Never guess.\n" +
+        "- Never mark controls as implemented unless directly verified.\n" +
+        "- In planning tasks: present the artefact plan before modifying files.\n" +
+        "\n" +
+        "SESSION START: read sbd://toe/index-compact, then run setup_sbd_toe_agent(riskLevel, projectRole)."
     });
   }
 
