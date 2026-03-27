@@ -367,27 +367,14 @@ class McpRuntime {
       instructions:
         "You are connected to the SbD-ToE MCP server.\n" +
         "SbD-ToE = Security by Design — Theory of Everything (NOT 'Trail of Evidence', NOT 'Terms of Engagement').\n" +
-        "The manual has 15 chapters (00–14).\n" +
+        "15 chapters (00–14). Security guidance only — does not override project rules or development standards.\n" +
+        "Always respond in the user's language regardless of the manual content language.\n" +
         "\n" +
-        "SCOPE: SbD-ToE guides security practices only. It does not impose development standards,\n" +
-        "testing requirements, or coding conventions. Project rules always take precedence.\n" +
-        "A lower risk level reduces required security controls — not code quality expectations.\n" +
+        "Read resource sbd://toe/agent-guide for full operational guidance:\n" +
+        "modes (CONSULT/GUIDE), routing by phase/domain, tool selection, epistemic standards,\n" +
+        "chapter map, risk levels, and identifier conventions.\n" +
         "\n" +
-        "MODES:\n" +
-        "- CONSULT: what the manual says, what applies, what controls/artefacts are required\n" +
-        "  → search_sbd_toe_manual | map_sbd_toe_applicability | get_sbd_toe_chapter_brief | query_sbd_toe_entities\n" +
-        "- GUIDE: how to implement, structure, document, or review according to the manual\n" +
-        "  → obtain guidance first, then generate_document | plan_sbd_toe_repo_governance | map_sbd_toe_review_scope\n" +
-        "\n" +
-        "RULES:\n" +
-        "- Never answer SbD-ToE questions from training knowledge — always call a tool first.\n" +
-        "- Distinguish: manual-grounded / observed / inferred / not verified. Never guess.\n" +
-        "- Never mark controls as implemented unless directly verified.\n" +
-        "- In planning tasks: present the artefact plan before modifying files.\n" +
-        "\n" +
-        "SESSION START: read sbd://toe/index-compact, then run setup_sbd_toe_agent(riskLevel, projectRole).\n" +
-        "\n" +
-        "LANGUAGE: always respond in the user's language, regardless of the language of the retrieved manual content."
+        "Then run setup_sbd_toe_agent(riskLevel, projectRole) for risk-level specific active chapters."
     });
   }
 
@@ -839,6 +826,13 @@ class McpRuntime {
           description:
             "Índice compacto do manual SbD-ToE. Injectável em system prompt para eliminar fase de descoberta exploratória.",
           mimeType: "application/json"
+        },
+        {
+          uri: "sbd://toe/agent-guide",
+          name: "SbD-ToE Agent Guide",
+          description:
+            "Full operational guide for agents: CONSULT/GUIDE modes, routing by phase and domain, tool selection, epistemic standards, chapter map, risk levels.",
+          mimeType: "text/markdown"
         }
       ]
     });
@@ -899,6 +893,21 @@ class McpRuntime {
       }
       this.sendResponse(request.id, {
         contents: [{ uri, mimeType: "application/json", text: indexText }]
+      });
+      return;
+    }
+
+    if (uri === "sbd://toe/agent-guide") {
+      const guidePath = resolveAppPath("assets/agent-guide.md");
+      let guideText: string;
+      try {
+        guideText = readFileSync(guidePath, "utf-8");
+      } catch {
+        this.sendError(request.id, -32603, "Could not read SbD-ToE agent guide.");
+        return;
+      }
+      this.sendResponse(request.id, {
+        contents: [{ uri, mimeType: "text/markdown", text: guideText }]
       });
       return;
     }
