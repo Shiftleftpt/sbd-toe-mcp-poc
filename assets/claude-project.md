@@ -23,13 +23,6 @@ modelling, SBOM, CI/CD security, containers, or any topic covered by the manual:
 6. Use `generate_document` to produce document skeletons
 7. Use `map_sbd_toe_review_scope` when reviewing changed files
 
-## This project's profile
-
-<!-- Customise for your project: -->
-- Risk level: L2
-- Technologies: containers, ci-cd
-- Platform: github
-
 ## Load the full skill guide
 
 For detailed workflow patterns and examples, load the skill:
