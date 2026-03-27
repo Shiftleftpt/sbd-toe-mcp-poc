@@ -15,7 +15,7 @@ import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
 
-export const PROJECT_NAME = "sbd-toe-mcp-poc";
+export const PROJECT_NAME = "sbd-toe-mcp";
 
 export const REQUIRED_PUBLISH_FILES = [
   "data/publish/algolia_docs_records.json",

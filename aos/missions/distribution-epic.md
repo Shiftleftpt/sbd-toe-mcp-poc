@@ -2,7 +2,7 @@
 ai_assisted: true
 model: Claude Sonnet 4.6
 date: 2026-03-27
-purpose: mission-brief
+purpose: governance-doc
 produced_by: human+auditor
 target: sync
 status: pending-evaluation

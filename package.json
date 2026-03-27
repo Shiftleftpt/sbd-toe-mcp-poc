@@ -1,13 +1,31 @@
 {
-  "name": "sbd-toe-mcp-poc",
+  "name": "sbd-toe-mcp",
   "version": "0.1.0",
-  "private": true,
   "license": "Apache-2.0",
-  "description": "MCP retrieval-first para consumo do snapshot semântico SbD-ToE no VS Code.",
+  "description": "MCP server for SbD-ToE security manual — structured tools for Claude, GitHub Copilot and other MCP clients",
+  "keywords": ["mcp", "security", "sbd", "toe", "devsecops", "claude", "copilot", "llm"],
+  "homepage": "https://github.com/Shiftleftpt/sbd-toe-mcp-poc#readme",
+  "bugs": { "url": "https://github.com/Shiftleftpt/sbd-toe-mcp-poc/issues" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shiftleftpt/sbd-toe-mcp-poc.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
-    "sbd-toe-mcp-poc": "./dist/index.js"
+    "sbd-toe-mcp": "./dist/index.js"
   },
+  "files": [
+    "dist/",
+    "data/publish/",
+    "data/reports/run_manifest.json",
+    "prompts/",
+    "examples/",
+    ".env.example",
+    "smithery.yaml"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -w -p tsconfig.json",

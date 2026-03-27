@@ -92,13 +92,13 @@ O papel detalhado deste repositório está documentado em [`docs/role.md`](docs/
 
 ## Distribuição e release bundle
 
-O canal principal de distribuição é **GitHub Releases**, não npm. O `package.json` permanece com `private: true` de propósito.
+O canal principal de distribuição é **npm** (`sbd-toe-mcp`). O **GitHub Releases** mantém-se como canal secundário — publica um bundle self-contained para instalação em ambientes sem acesso à internet ou sem `npx`.
 
-Cada release publica um bundle utilizável com convenção de nome explícita:
+Cada release publica um bundle via GitHub Releases com convenção de nome explícita:
 
-- `sbd-toe-mcp-poc-vX.Y.Z-bundle.tar.gz`
-- `sbd-toe-mcp-poc-vX.Y.Z-bundle.zip`
-- `sbd-toe-mcp-poc-vX.Y.Z-bundle.sha256`
+- `sbd-toe-mcp-vX.Y.Z-bundle.tar.gz`
+- `sbd-toe-mcp-vX.Y.Z-bundle.zip`
+- `sbd-toe-mcp-vX.Y.Z-bundle.sha256`
 
 O bundle inclui:
 
@@ -140,11 +140,11 @@ Isto significa que:
 O ficheiro `data/reports/run_manifest.json` mantém a proveniência do snapshot embutido.
 Esse ficheiro deve conter apenas proveniência pública e redistribuível, sem paths absolutos de máquinas locais.
 
-## Instalação via GitHub Release
+## Instalação via GitHub Release (alternativa sem internet)
 
-Fluxo recomendado para utilizadores finais:
+Fluxo para ambientes sem acesso ao npm ou sem `npx`:
 
-1. Descarregar o asset `sbd-toe-mcp-poc-vX.Y.Z-bundle.zip` ou `sbd-toe-mcp-poc-vX.Y.Z-bundle.tar.gz` em **GitHub Releases**.
+1. Descarregar o asset `sbd-toe-mcp-vX.Y.Z-bundle.zip` ou `sbd-toe-mcp-vX.Y.Z-bundle.tar.gz` em **GitHub Releases**.
 2. Extrair o archive para um diretório local.
 3. Confirmar que a extração já inclui `dist/` e `data/publish/`.
 4. Copiar `.env.example` para `.env`.
@@ -160,6 +160,24 @@ cp .env.example .env
 
 Depois de extrair a release, não é necessário correr `npm ci` nem `npm run build`.
 Também não é necessário editar manualmente a configuração MCP se usares a pasta extraída como workspace do VS Code.
+
+## Quick Start — instalar via npm
+
+[![npm](https://img.shields.io/npm/v/sbd-toe-mcp)](https://www.npmjs.com/package/sbd-toe-mcp)
+
+**Zero configuração obrigatória.** O servidor funciona directamente com `npx`:
+
+1. Instalar Node.js ≥ 20.9.0: [nodejs.org/download](https://nodejs.org/download/)
+2. Registar o servidor no teu cliente MCP (exemplo para Claude Code):
+   ```bash
+   claude mcp add sbd-toe -- npx -y sbd-toe-mcp
+   ```
+3. Usar as tools MCP no Claude Code (ou Claude Desktop, VS Code, Cursor, etc.)
+
+Para instruções completas por cliente MCP (Claude Desktop, VS Code, Cursor, Windsurf, Zed),
+consultar [`docs/installation.md`](docs/installation.md).
+
+---
 
 ## Instalação a partir do source
 

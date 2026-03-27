@@ -210,8 +210,9 @@
       "metadata": {
         "id": "s12",
         "title": "npm-ready: package rename + publish config",
-        "status": "not_started"
+        "status": "closed"
       },
+      "closed_at": "2026-03-27T15:08:50.851755Z",
       "goal": {
         "description": "Preparar package.json e scripts para publicação pública no npm. Remover 'private: true', renomear para 'sbd-toe-mcp', adicionar campo 'files' com data/dist/prompts, corrigir bin entry, adicionar metadados npm (keywords, repository, homepage, publishConfig). Corrigir examples/vscode.mcp.json para usar npx em vez de absolute paths. Atualizar PROJECT_NAME em package-release-lib.mjs. Sem alterações em src/.",
         "acceptance_criteria": [
@@ -228,8 +229,9 @@
       "metadata": {
         "id": "s13",
         "title": "Installation docs + config examples",
-        "status": "not_started"
+        "status": "closed"
       },
+      "closed_at": "2026-03-27T15:15:07.088358Z",
       "goal": {
         "description": "Criar documentação de instalação completa e exemplos de configuração por cliente MCP. Cobrir Claude Desktop, Claude Code, VS Code + GitHub Copilot, Cursor, Windsurf, Zed e outros. Enfatizar zero-config (sem env vars obrigatórias). Atualizar README.md com Quick Start. Documentar apenas os 18 env vars funcionais (omitir os 5 dead-code: DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG).",
         "acceptance_criteria": [
@@ -246,8 +248,9 @@
       "metadata": {
         "id": "s14",
         "title": "Smithery registration (smithery.yaml)",
-        "status": "not_started"
+        "status": "closed"
       },
+      "closed_at": "2026-03-27T15:30:32.848981Z",
       "goal": {
         "description": "Criar smithery.yaml na raiz do repositório seguindo o schema oficial de Smithery (https://smithery.ai/docs/schema). Configurar startCommand com npx -y sbd-toe-mcp. Documentar env vars opcionais funcionais (18 usados, omitir os 5 dead-code). Adicionar smithery.yaml ao campo 'files' do package.json e a REQUIRED_BUNDLE_ENTRIES. Validar que o YAML é sintaticamente correcto.",
         "acceptance_criteria": [
@@ -264,8 +267,9 @@
       "metadata": {
         "id": "s15",
         "title": "npm publish CI (release.yml automation)",
-        "status": "not_started"
+        "status": "closed"
       },
+      "closed_at": "2026-03-27T15:46:27.708358Z",
       "goal": {
         "description": "Adicionar step de 'npm publish --access public' ao workflow .github/workflows/release.yml, após o bundle existente. Usar NPM_TOKEN secret via NODE_AUTH_TOKEN. Configurar setup-node com registry-url. Garantir que publish só ocorre após npm run check, npm run build e npm run test passarem. Adicionar publishConfig ao package.json.",
         "acceptance_criteria": [
@@ -279,5 +283,5 @@
       }
     }
   },
-  "notes": "Epic F1-F7 (s1-s8+s4-tests) e F8-F10 (s9-s11) closed. Epic distribuição (s12-s15) not_started. Decisões de design em aos/missions/distribution-decisions.md. 5 env vars dead-code identificadas (DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG) — omitidas da docs pública, remoção futura."
+  "notes": "Todos os epics closed: F1-F7 (s1-s8+s4-tests), F8-F10 (s9-s11), Distribuição (s12-s15). Pronto para publicação npm — operador deve configurar NPM_TOKEN secret e criar tag v*.*.*. Registo Smithery: manual após 1ª publicação. 5 env vars dead-code identificadas — remoção futura."
 }

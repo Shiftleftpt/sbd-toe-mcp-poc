@@ -107,6 +107,42 @@
       "state": "closed",
       "owner": "sync",
       "cycle_count": 0
+    },
+    "s12": {
+      "id": "s12",
+      "created_at": "2026-03-27T12:50:28.450579Z",
+      "updated_at": "2026-03-27T15:08:50.851755Z",
+      "title": "Brief — s12: npm-ready packaging (distribution epic). Rename sbd-toe-mcp-poc → sbd-toe-mcp, remove private:true, add files field (dist/, data/publish/, prompts/, .env.example), fix bin entry, add npm metadata (keywords, repository, homepage, publishConfig), update PROJECT_NAME in package-release-lib.mjs, fix examples/vscode.mcp.json to use npx. No src/ changes. Verify npm name availability first.",
+      "state": "closed",
+      "owner": "sync",
+      "cycle_count": 0
+    },
+    "s13": {
+      "id": "s13",
+      "created_at": "2026-03-27T15:10:04.273908Z",
+      "updated_at": "2026-03-27T15:15:07.088358Z",
+      "title": "Brief — s13: Installation docs + config examples. Create docs/installation.md (≥150 lines, all MCP clients: Claude Desktop/Code/VS Code/Cursor/Windsurf/Zed). Create examples/claude-desktop.json. Update README.md with Quick Start section (≤3 steps, npx zero-config). Document only 5 functional optional env vars — omit dead-code vars (DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG). No src/ changes.",
+      "state": "closed",
+      "owner": "sync",
+      "cycle_count": 0
+    },
+    "s14": {
+      "id": "s14",
+      "created_at": "2026-03-27T15:16:04.204238Z",
+      "updated_at": "2026-03-27T15:30:32.848981Z",
+      "title": "Brief — s14: Smithery registration. Create smithery.yaml at repo root following official Smithery schema (https://smithery.ai/docs/config/smithery-yaml). Configure startCommand with npx -y sbd-toe-mcp. Document 6 functional optional env vars (DEBUG_MODE, MAX_CONTEXT_RECORDS, SITE_BASE_URL, MANUAL_BASE_URL, CROSS_CHECK_BASE_URL, SBD_TOE_APP_ROOT). Omit 5 dead-code vars. Verify smithery.yaml already in package.json files field. No src/ changes.",
+      "state": "closed",
+      "owner": "sync",
+      "cycle_count": 0
+    },
+    "s15": {
+      "id": "s15",
+      "created_at": "2026-03-27T15:42:16.286701Z",
+      "updated_at": "2026-03-27T15:46:27.708362Z",
+      "title": "Brief — s15: npm publish CI. Add registry-url to setup-node step in release.yml. Add 'Publish to npm' step after 'Create or update release' using npm publish --access public with NODE_AUTH_TOKEN: NPM_TOKEN secret. Fix README.md references that describe GitHub Releases as primary channel (npm is now primary). No src/ changes. Operator must configure NPM_TOKEN secret in GitHub repo settings after merge.",
+      "state": "closed",
+      "owner": "sync",
+      "cycle_count": 0
     }
   },
   "briefs": {
@@ -238,6 +274,50 @@
       "slice_id": "s11",
       "produced_by": "sync",
       "content": "\n# Brief — s11: Repo Governance Planning (F10)\n\n## Metadata\n\n- **slice_id:** s11\n- **produced_by:** sync\n- **date:** 2026-03-26\n- **target:** executor\n- **depends_on:** s10 (closed)\n- **epic:** F8–F10 (último slice)\n\n---\n\n## Objective\n\nImplementar `plan_sbd_toe_repo_governance` — tool MCP que gera um plano de governance para um repositório, baseado no tipo de repo, plataforma, nível de risco e contexto organizacional. Ferramenta de advisory apenas: devolve plano JSON para o utilizador editar e aplicar manualmente.\n\n> **Nota — `compare_to_framework` não entra neste slice.** Requer dados de rastreabilidade auditados em `002-cross-check-normativo` que ainda não estão validados upstream.\n\n---\n\n## Scope\n\n### 11.1 — `plan_sbd_toe_repo_governance`\n\n**Ficheiros novos:** `src/tools/plan-repo-governance.ts`, `src/tools/plan-repo-governance.test.ts`\n**Ficheiros modificados:** `src/index.ts` (registo)\n\n**Input schema:**\n```typescript\n{\n  repoType: \"mcp-server\" | \"vscode-extension\" | \"application\" | \"library\" | \"ci-orchestrator\" | \"governance-tool\",\n  platform: \"github\" | \"gitlab\",\n  riskLevel: \"L1\" | \"L2\" | \"L3\",\n  organizationContext: {\n    scale: \"solo\" | \"team\" | \"regulated\",\n    teamSize?: number,          // opcional, 1–500\n    enforcementLevel?: \"advisory\" | \"enforced\" | \"audited\"  // opcional\n  }\n}\n```\n\nTodos os enum fields validados com allowlists → `-32602` se inválidos.\n`organizationContext` obrigatório mas os campos internos opcionais.\n`teamSize`: se presente, deve ser inteiro 1–500 → `-32602` se fora do range.\n\n**Output schema:**\n```typescript\n{\n  repoType: string,\n  platform: string,\n  riskLevel: string,\n  applicableControls: Array<{\n    controlId: string,          // ex: \"CTRL-ci-branch-protection\"\n    title: string,\n    chapter: string,            // chapterId do index-compact\n    domain: string,\n    mandatory: boolean,\n    recommended: boolean,\n    evidence: string            // o que deve existir no repo para demonstrar conformidade\n  }>,\n  mandatoryControls: string[],      // subset de controlIds obrigatórios\n  recommendedControls: string[],    // subset de controlIds recomendados\n  baselineCheckpoints: Array<{\n    phase: string,              // ex: \"Setup CI\", \"Add SAST\", \"Configure Branch Protection\"\n    controls: string[],         // controlIds a aplicar nesta fase\n    description: string\n  }>,\n  evidenceChecklist: Array<{\n    item: string,               // ex: \"Branch protection rules activas no main\"\n    control: string,            // controlId associado\n    required: boolean\n  }>,\n  gaps: Array<{\n    control: string,            // controlId\n    reason: string,             // porquê é um gap típico para este perfil\n    remediationEffort: \"low\" | \"medium\" | \"high\"\n  }>,\n  platformSpecific: {\n    recommendations: string     // YAML simples com recomendações GitHub/GitLab\n  }\n}\n```\n\n**Controlos hardcoded** (implementar como constantes no módulo — não configuráveis externamente):\n\n**Controlos base (todos os repos L1+):**\n- `CTRL-ci-branch-protection` → cap. `07-cicd-seguro` — Branch protection no branch principal\n- `CTRL-ci-required-checks` → cap. `07-cicd-seguro` — CI obrigatório antes de merge\n- `CTRL-secrets-scanning` → cap. `02-requisitos-seguranca` — Scanning de segredos activo\n- `CTRL-dependency-review` → cap. `05-dependencias-sbom-sca` — Revisão de dependências no PR\n- `CTRL-ai-disclosure` → cap. `14-governanca-contratacao` — Disclosure de documentos AI-assisted\n\n**Controlos L2+ (adicionar a L1):**\n- `CTRL-sast-pipeline` → cap. `10-testes-seguranca` — SAST no pipeline CI\n- `CTRL-sbom-generation` → cap. `05-dependencias-sbom-sca` — Geração de SBOM\n- `CTRL-release-signing` → cap. `11-deploy-seguro` — Assinatura de releases\n- `CTRL-iac-scanning` → cap. `08-iac-infraestrutura` — Scanning de IaC (se aplicável)\n\n**Controlos L3 (adicionar a L2):**\n- `CTRL-audit-log` → cap. `12-monitorizacao-operacoes` — Audit log de acções no repo\n- `CTRL-access-review` → cap. `14-governanca-contratacao` — Revisão periódica de acessos\n- `CTRL-incident-runbook` → cap. `14-governanca-contratacao` — Runbook de incidentes\n- `CTRL-training-evidence` → cap. `13-formacao-onboarding` — Evidência de formação da equipa\n\n**Controlos por repoType** (adicionar aos base):\n- `mcp-server` → `CTRL-mcp-input-validation` (cap. `06-desenvolvimento-seguro`), `CTRL-mcp-output-sanitization` (cap. `06-desenvolvimento-seguro`)\n- `vscode-extension` → `CTRL-extension-permissions-minimal` (cap. `04-arquitetura-segura`)\n- `ci-orchestrator` → `CTRL-pipeline-least-privilege` (cap. `07-cicd-seguro`), `CTRL-secret-rotation` (cap. `02-requisitos-seguranca`)\n- `governance-tool` → `CTRL-audit-trail` (cap. `14-governanca-contratacao`)\n- `application`, `library` → sem controlos repoType-específicos adicionais (base suficiente)\n\n**baselineCheckpoints** — mínimo 4 fases, progressão lógica:\n1. **\"Setup Básico\"** — branch protection, CI obrigatório, secrets scanning\n2. **\"Qualidade de Código\"** — SAST, dependency review, revisão de PRs\n3. **\"Gestão de Releases\"** — release signing, SBOM, changelog\n4. **\"Governance Contínua\"** — access review, audit log, formação (L3 only)\n\n**evidenceChecklist** — mínimo 8 items para L2+, mínimo 5 para L1.\n\n**platformSpecific.recommendations** — YAML simples (string), ex. para GitHub:\n```yaml\nbranch_protection:\n  require_pull_request_reviews: true\n  required_approving_review_count: 1\n  require_status_checks: true\nsecurity_features:\n  secret_scanning: enabled\n  dependabot_alerts: enabled\n```\n\nPara GitLab: equivalentes (Merge Request approvals, SAST jobs, etc.).\n\n**gaps** — gaps típicos por perfil (não requerem análise do repo real — são gaps comuns para o perfil declarado):\n- `mcp-server` + L1 → gap `CTRL-sast-pipeline` (comum não ter SAST em MCPs pequenos)\n- `library` + qualquer → gap `CTRL-sbom-generation` (frequentemente esquecido)\n- `solo` scale → gap `CTRL-access-review` (sem equipa para rever)\n- L3 + `team` → gap `CTRL-training-evidence` (evidência formal rara)\n\n---\n\n## Out of Scope\n\n- Não implementar `compare_to_framework`\n- Tool não acede ao repo real — apenas advisory baseado nos inputs declarados\n- Não modificar tools existentes (s9/s10)\n- Não alterar `src/backend/`, `src/bootstrap/`, `src/resources/`\n- Não tocar em testes existentes\n\n---\n\n## Deliverable\n\n| Ficheiro | Acção |\n|---|---|\n| `src/tools/plan-repo-governance.ts` | novo |\n| `src/tools/plan-repo-governance.test.ts` | novo |\n| `src/index.ts` | modificar (registo da nova tool) |\n\n---\n\n## Implementation\n\n### Padrão de registo em `src/index.ts`\n\nSeguir exactamente o padrão das tools de s10 (`generate_document`, `map_sbd_toe_review_scope`):\n1. `handleToolsList()` → entrada com `name`, `title`, `description`, `inputSchema`, `annotations: { readOnlyHint: true }`\n2. `handleToolsCall()` → `case \"plan_sbd_toe_repo_governance\":` com chamada ao handler, `sendResponse`, log via `sendNotification`\n\n`plan_sbd_toe_repo_governance` não precisa de acesso ao snapshot cache — lógica totalmente estática.\n\n### Ordem recomendada\n\n1. `src/tools/plan-repo-governance.ts` — tipos, constantes de controlos, handler\n2. `src/tools/plan-repo-governance.test.ts` — ≥5 cenários\n3. Registo em `src/index.ts`\n4. `npm run check && npm run build && npm run test`\n\n### Notas\n\n- **Sem `any`**: tipos explícitos em tudo\n- **`stdout` reservado**: logs apenas em `stderr`\n- **Allowlists**: `repoType`, `platform`, `riskLevel`, `scale`, `enforcementLevel` validados\n- **`mandatoryControls` não vazio para L2/L3**: verificar que a lógica produz pelo menos 1 controlo obrigatório\n- **READABLE_TITLES**: se necessário para `chapter` legível nos controlos, usar os mesmos títulos de `structured-tools.ts` (não copiar novamente — importar ou referenciar o mesmo mapa)\n\n---\n\n## Acceptance Criteria\n\n**AC-1: tool regista e responde**\n- `plan_sbd_toe_repo_governance` aparece em `tools/list`\n- Input válido qualquer → resposta com todos os campos do output schema\n\n**AC-2: `mandatoryControls` não vazio para L2/L3**\n- Input `{repoType: \"application\", platform: \"github\", riskLevel: \"L2\", organizationContext: {scale: \"team\"}}` → `mandatoryControls` com ≥3 controlIds\n- Input `{..., riskLevel: \"L3\", ...}` → `mandatoryControls` com ≥ os de L2\n\n**AC-3: `baselineCheckpoints` ≥4 fases**\n- Qualquer input válido → `baselineCheckpoints` com ≥4 entradas\n- Cada fase tem `phase`, `controls` (≥1), `description`\n\n**AC-4: `evidenceChecklist` ≥8 items para L2+**\n- Input L2 → `evidenceChecklist` com ≥8 entradas\n- Input L1 → `evidenceChecklist` com ≥5 entradas\n- Cada item tem `item`, `control`, `required`\n\n**AC-5: `platformSpecific.recommendations` em YAML simples**\n- Input com `platform: \"github\"` → `platformSpecific.recommendations` é string YAML não vazia com recomendações GitHub\n- Input com `platform: \"gitlab\"` → YAML com recomendações GitLab distintas das GitHub\n\n**AC-6: validação de inputs**\n- `repoType: \"invalid\"` → erro JSON-RPC `-32602`\n- `platform: \"bitbucket\"` → erro JSON-RPC `-32602`\n- `riskLevel: \"L4\"` → erro JSON-RPC `-32602`\n- `organizationContext.scale: \"enterprise\"` → erro JSON-RPC `-32602`\n- `organizationContext.teamSize: 600` → erro JSON-RPC `-32602`\n\n**AC-7: Qualidade**\n- `npm run check` limpo\n- `npm run build` limpo\n- `npm run test` passa — todos os testes existentes continuam a passar\n- ≥5 cenários de teste cobrindo: ≥3 perfis distintos (repoType × riskLevel), validação de inputs, mandatoryControls L2/L3, baselineCheckpoints, evidenceChecklist\n- Sem `any`, sem stdout poluído\n\n---\n\n## Validation\n\n```bash\ncd /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-mcp-poc\n\n# 1. Qualidade geral\nnpm run check && npm run build && npm run test -- --reporter=verbose 2>&1 | tail -10\n\n# 2. Ficheiro criado\nls src/tools/plan-repo-governance.ts src/tools/plan-repo-governance.test.ts\n\n# 3. Registo em index.ts\ngrep -n \"plan_sbd_toe_repo_governance\" src/index.ts | head -10\n\n# 4. mandatoryControls não vazio para L2\nnode -e \"\nconst {handlePlanSbdToeRepoGovernance} = require('./dist/tools/plan-repo-governance.js');\nconst r = handlePlanSbdToeRepoGovernance({repoType:'application', platform:'github', riskLevel:'L2', organizationContext:{scale:'team'}});\nconsole.log('mandatory:', r.mandatoryControls.length, 'checkpoints:', r.baselineCheckpoints.length, 'evidence:', r.evidenceChecklist.length);\n\"\n\n# 5. Sem any\ngrep -n \": any\" src/tools/plan-repo-governance.ts\n```\n\n---\n\n## Risks\n\n| Risco | Mitigação |\n|---|---|\n| `mandatoryControls` vazio para L2 (lógica não cobre mínimos) | Verificar com `npm run test` e teste dedicado antes de submeter |\n| `platformSpecific` com YAML inválido (quebras de linha incorrectas) | Usar template literal com indentação consistente; verificar que é parseable |\n| `READABLE_TITLES` duplicado novamente (risco já identificado em s10) | Importar de `structured-tools.ts` se possível; se não, usar chapterId sem título legível no `chapter` field |\n| `gaps` vazios para todos os perfis (lógica muito permissiva) | Garantir ≥1 gap para qualquer combinação repoType+riskLevel |\n",
+      "cycle": 0,
+      "based_on_test_result_id": "",
+      "reinforcement_notes": ""
+    },
+    "brief-s12": {
+      "id": "brief-s12",
+      "created_at": "2026-03-27T12:50:28.459336Z",
+      "updated_at": "2026-03-27T12:50:28.459340Z",
+      "slice_id": "s12",
+      "produced_by": "sync",
+      "content": "Brief — s12: npm-ready packaging (distribution epic). Rename sbd-toe-mcp-poc → sbd-toe-mcp, remove private:true, add files field (dist/, data/publish/, prompts/, .env.example), fix bin entry, add npm metadata (keywords, repository, homepage, publishConfig), update PROJECT_NAME in package-release-lib.mjs, fix examples/vscode.mcp.json to use npx. No src/ changes. Verify npm name availability first.",
+      "cycle": 0,
+      "based_on_test_result_id": "",
+      "reinforcement_notes": ""
+    },
+    "brief-s13": {
+      "id": "brief-s13",
+      "created_at": "2026-03-27T15:10:04.278292Z",
+      "updated_at": "2026-03-27T15:10:04.278297Z",
+      "slice_id": "s13",
+      "produced_by": "sync",
+      "content": "Brief — s13: Installation docs + config examples. Create docs/installation.md (≥150 lines, all MCP clients: Claude Desktop/Code/VS Code/Cursor/Windsurf/Zed). Create examples/claude-desktop.json. Update README.md with Quick Start section (≤3 steps, npx zero-config). Document only 5 functional optional env vars — omit dead-code vars (DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG). No src/ changes.",
+      "cycle": 0,
+      "based_on_test_result_id": "",
+      "reinforcement_notes": ""
+    },
+    "brief-s14": {
+      "id": "brief-s14",
+      "created_at": "2026-03-27T15:16:04.207405Z",
+      "updated_at": "2026-03-27T15:16:04.207408Z",
+      "slice_id": "s14",
+      "produced_by": "sync",
+      "content": "Brief — s14: Smithery registration. Create smithery.yaml at repo root following official Smithery schema (https://smithery.ai/docs/config/smithery-yaml). Configure startCommand with npx -y sbd-toe-mcp. Document 6 functional optional env vars (DEBUG_MODE, MAX_CONTEXT_RECORDS, SITE_BASE_URL, MANUAL_BASE_URL, CROSS_CHECK_BASE_URL, SBD_TOE_APP_ROOT). Omit 5 dead-code vars. Verify smithery.yaml already in package.json files field. No src/ changes.",
+      "cycle": 0,
+      "based_on_test_result_id": "",
+      "reinforcement_notes": ""
+    },
+    "brief-s15": {
+      "id": "brief-s15",
+      "created_at": "2026-03-27T15:42:16.294397Z",
+      "updated_at": "2026-03-27T15:42:16.294402Z",
+      "slice_id": "s15",
+      "produced_by": "sync",
+      "content": "Brief — s15: npm publish CI. Add registry-url to setup-node step in release.yml. Add 'Publish to npm' step after 'Create or update release' using npm publish --access public with NODE_AUTH_TOKEN: NPM_TOKEN secret. Fix README.md references that describe GitHub Releases as primary channel (npm is now primary). No src/ changes. Operator must configure NPM_TOKEN secret in GitHub repo settings after merge.",
       "cycle": 0,
       "based_on_test_result_id": "",
       "reinforcement_notes": ""
@@ -726,10 +806,158 @@
       "slice_id": "s11",
       "from_role": "tester",
       "to_role": "sync"
+    },
+    "handover-s12-e56b31b6": {
+      "id": "handover-s12-e56b31b6",
+      "created_at": "2026-03-27T12:50:32.434589Z",
+      "updated_at": "2026-03-27T12:50:32.434593Z",
+      "slice_id": "s12",
+      "from_role": "sync",
+      "to_role": "executor"
+    },
+    "handover-s12-49ce8f45": {
+      "id": "handover-s12-49ce8f45",
+      "created_at": "2026-03-27T15:05:39.590394Z",
+      "updated_at": "2026-03-27T15:05:39.590397Z",
+      "slice_id": "s12",
+      "from_role": "executor",
+      "to_role": "sync"
+    },
+    "handover-s12-23c4fa3c": {
+      "id": "handover-s12-23c4fa3c",
+      "created_at": "2026-03-27T15:06:09.670352Z",
+      "updated_at": "2026-03-27T15:06:09.670358Z",
+      "slice_id": "s12",
+      "from_role": "sync",
+      "to_role": "tester"
+    },
+    "handover-s12-dd46f955": {
+      "id": "handover-s12-dd46f955",
+      "created_at": "2026-03-27T15:08:32.366273Z",
+      "updated_at": "2026-03-27T15:08:32.366277Z",
+      "slice_id": "s12",
+      "from_role": "tester",
+      "to_role": "sync"
+    },
+    "handover-s13-f45a4f26": {
+      "id": "handover-s13-f45a4f26",
+      "created_at": "2026-03-27T15:10:08.251262Z",
+      "updated_at": "2026-03-27T15:10:08.251267Z",
+      "slice_id": "s13",
+      "from_role": "sync",
+      "to_role": "executor"
+    },
+    "handover-s13-840520ce": {
+      "id": "handover-s13-840520ce",
+      "created_at": "2026-03-27T15:12:50.054393Z",
+      "updated_at": "2026-03-27T15:12:50.054395Z",
+      "slice_id": "s13",
+      "from_role": "executor",
+      "to_role": "sync"
+    },
+    "handover-s13-59345a8e": {
+      "id": "handover-s13-59345a8e",
+      "created_at": "2026-03-27T15:13:07.856661Z",
+      "updated_at": "2026-03-27T15:13:07.856666Z",
+      "slice_id": "s13",
+      "from_role": "sync",
+      "to_role": "tester"
+    },
+    "handover-s13-dce741ff": {
+      "id": "handover-s13-dce741ff",
+      "created_at": "2026-03-27T15:14:52.699052Z",
+      "updated_at": "2026-03-27T15:14:52.699055Z",
+      "slice_id": "s13",
+      "from_role": "tester",
+      "to_role": "sync"
+    },
+    "handover-s14-d3e068aa": {
+      "id": "handover-s14-d3e068aa",
+      "created_at": "2026-03-27T15:16:06.965376Z",
+      "updated_at": "2026-03-27T15:16:06.965381Z",
+      "slice_id": "s14",
+      "from_role": "sync",
+      "to_role": "executor"
+    },
+    "handover-s14-f3bfbf12": {
+      "id": "handover-s14-f3bfbf12",
+      "created_at": "2026-03-27T15:28:09.998564Z",
+      "updated_at": "2026-03-27T15:28:09.998566Z",
+      "slice_id": "s14",
+      "from_role": "executor",
+      "to_role": "sync"
+    },
+    "handover-s14-aeb74602": {
+      "id": "handover-s14-aeb74602",
+      "created_at": "2026-03-27T15:28:20.603330Z",
+      "updated_at": "2026-03-27T15:28:20.603334Z",
+      "slice_id": "s14",
+      "from_role": "sync",
+      "to_role": "tester"
+    },
+    "handover-s14-344002c5": {
+      "id": "handover-s14-344002c5",
+      "created_at": "2026-03-27T15:30:12.624006Z",
+      "updated_at": "2026-03-27T15:30:12.624009Z",
+      "slice_id": "s14",
+      "from_role": "tester",
+      "to_role": "sync"
+    },
+    "handover-s15-944bb5d0": {
+      "id": "handover-s15-944bb5d0",
+      "created_at": "2026-03-27T15:42:20.176761Z",
+      "updated_at": "2026-03-27T15:42:20.176768Z",
+      "slice_id": "s15",
+      "from_role": "sync",
+      "to_role": "executor"
+    },
+    "handover-s15-934f7a8b": {
+      "id": "handover-s15-934f7a8b",
+      "created_at": "2026-03-27T15:44:12.531117Z",
+      "updated_at": "2026-03-27T15:44:12.531119Z",
+      "slice_id": "s15",
+      "from_role": "executor",
+      "to_role": "sync"
+    },
+    "handover-s15-fa6f69ae": {
+      "id": "handover-s15-fa6f69ae",
+      "created_at": "2026-03-27T15:44:30.734227Z",
+      "updated_at": "2026-03-27T15:44:30.734234Z",
+      "slice_id": "s15",
+      "from_role": "sync",
+      "to_role": "tester"
+    },
+    "handover-s15-b073c0a3": {
+      "id": "handover-s15-b073c0a3",
+      "created_at": "2026-03-27T15:46:04.790156Z",
+      "updated_at": "2026-03-27T15:46:04.790159Z",
+      "slice_id": "s15",
+      "from_role": "tester",
+      "to_role": "sync"
     }
   },
-  "questions": {},
-  "answers": {},
+  "questions": {
+    "q-s14-schema-preconditions": {
+      "id": "q-s14-schema-preconditions",
+      "created_at": "2026-03-27T15:24:26.698173Z",
+      "updated_at": "2026-03-27T15:24:26.698179Z",
+      "slice_id": "s14",
+      "asked_by": "executor",
+      "content": "3 bloqueadores antes de escrever smithery.yaml: (1) Schema oficial em smithery.ai/docs/config/smithery-yaml → 404; não foi possível verificar se o formato do brief (commandFunction JS inline) é actual ou obsoleto. (2) Pré-condição: package npm ainda não publicado — Smithery faz scan do npm para descobrir o ficheiro; sem publicação prévia não é possível validar. (3) Credenciais/conta Smithery: não está claro se é necessário criar conta antes do registo automático, ou se há tokens/secrets adicionais. Proposta: Opção A — adiar s14 para depois de s15 (publicar npm primeiro, confirmar schema, depois criar smithery.yaml). Opção B — prosseguir com schema do brief aceitando risco de correcção posterior. Aguarda decisão do sync. Ver aos/workflow_track/s14/executor_question.md.",
+      "answered": true
+    }
+  },
+  "answers": {
+    "ans-s14-proceed-option-b": {
+      "id": "ans-s14-proceed-option-b",
+      "created_at": "2026-03-27T15:26:22.393256Z",
+      "updated_at": "2026-03-27T15:26:22.393262Z",
+      "slice_id": "s14",
+      "question_id": "q-s14-schema-preconditions",
+      "answered_by": "sync",
+      "content": "Opção B — prosseguir. (1) Schema: o formato do brief é o padrão real de servidores MCP na Smithery; URL de docs mudou mas o formato commandFunction é consistente com o ecossistema. AC-1 valida só sintaxe YAML, não semântica Smithery. (2) Registo automático: correcção ao brief — o registo NÃO é automático via npm; requer submissão manual do operador após s15. Sem dependência de ordem. (3) Conta Smithery: fora de scope — operação manual do operador. Deliverable deste slice é apenas o ficheiro smithery.yaml correcto. Escrever o ficheiro conforme brief secção 14.1, adaptar estrutura se necessário e documentar no report."
+    }
+  },
   "execution_results": {
     "result-s1-enriched-checkout": {
       "id": "result-s1-enriched-checkout",
@@ -864,6 +1092,42 @@
       "slice_id": "s11",
       "produced_by": "executor",
       "summary": "Implementada tool plan_sbd_toe_repo_governance: catálogo de 16 controlos CTRL-*, lógica aditiva L1⊂L2⊂L3, 6 repoTypes × 2 platforms × 3 riskLevels. Output: applicableControls, mandatoryControls (L1=4, L2=9, L3=15), recommendedControls, baselineCheckpoints (≥4; +incident-response L2+), evidenceChecklist (L1≥4, L2≥8, L3≥12), gaps contextuais, platformSpecific YAML adaptado. Registada em src/index.ts. npm run check/build/test: 247 passed (10 test files, 28 novos casos). Sem any, sem stdout.",
+      "declared_status": "completed"
+    },
+    "result-s12-npm-packaging": {
+      "id": "result-s12-npm-packaging",
+      "created_at": "2026-03-27T15:05:39.581861Z",
+      "updated_at": "2026-03-27T15:05:39.581867Z",
+      "slice_id": "s12",
+      "produced_by": "executor",
+      "summary": "npm-ready packaging completo: renomeado sbd-toe-mcp-poc→sbd-toe-mcp, removido private:true, adicionados files/publishConfig/keywords/repository/bugs/homepage, bin corrigido para sbd-toe-mcp, description actualizada. PROJECT_NAME em package-release-lib.mjs actualizado. examples/vscode.mcp.json substituído por config npx portável. Corrigidas 2 pré-existências: purpose:mission-brief em distribution-epic.md e referências ao nome antigo no teste de release. npm run check+build+test: 247 passed, 0 failures. Nome sbd-toe-mcp confirmado disponível no npm (404).",
+      "declared_status": "completed"
+    },
+    "result-s13-installation-docs": {
+      "id": "result-s13-installation-docs",
+      "created_at": "2026-03-27T15:12:50.045540Z",
+      "updated_at": "2026-03-27T15:12:50.045545Z",
+      "slice_id": "s13",
+      "produced_by": "executor",
+      "summary": "Installation docs completos: docs/installation.md (306 linhas, 10 secções, todos os clientes MCP: Claude Desktop/Code/VS Code/Cursor/Windsurf/Zed), examples/claude-desktop.json (config npx), README.md actualizado com Quick Start em 3 passos + badge npm + link para installation.md. Zero dead-code env vars documentadas. npm run check+build+test: 247 passed, 0 failures.",
+      "declared_status": "completed"
+    },
+    "result-s14-smithery-yaml": {
+      "id": "result-s14-smithery-yaml",
+      "created_at": "2026-03-27T15:28:09.990228Z",
+      "updated_at": "2026-03-27T15:28:09.990233Z",
+      "slice_id": "s14",
+      "produced_by": "executor",
+      "summary": "smithery.yaml criado na raiz: schema commandFunction npx, 6 env vars funcionais com defaults e descriptions, zero dead-code vars. YAML sintaticamente válido (python3). smithery.yaml já estava em package.json files (s12). Registo Smithery é manual (operador submete após s15 — brief corrigido pelo sync). npm run check+build+test: 247 passed, 0 failures.",
+      "declared_status": "completed"
+    },
+    "result-s15-npm-publish-ci": {
+      "id": "result-s15-npm-publish-ci",
+      "created_at": "2026-03-27T15:44:12.527392Z",
+      "updated_at": "2026-03-27T15:44:12.527397Z",
+      "slice_id": "s15",
+      "produced_by": "executor",
+      "summary": "npm publish CI automatizado: registry-url adicionado ao setup-node, step 'Publish to npm' como último step do job com NODE_AUTH_TOKEN e comentário instrucional. README.md corrigido: npm como canal principal, GitHub Releases como secundário (bundle sem internet), bundle names actualizados para sbd-toe-mcp-*. npm run check+build+test: 247 passed, 0 failures. Operador precisa de configurar NPM_TOKEN secret após merge.",
       "declared_status": "completed"
     }
   },
@@ -1002,6 +1266,42 @@
       "produced_by": "tester",
       "outcome": "pass",
       "summary": "PASS — todos os 7 acceptance criteria satisfeitos (cycle 0).\n\nAC-1 validação: repoType/platform/riskLevel/teamSize inválidos → -32602. enforcementLevel inválido também testado.\nAC-2 applicableControls: ≥4 entradas com 4 campos obrigatórios (controlId, description, category, rationale) para todas as combinações válidas. 16 controlos no catálogo.\nAC-3 mandatoryControls: L2=9 (≥5), L3=15 (≥10). Subset property verificada directamente no artefacto compilado: todos os IDs de mandatoryControls existem em applicableControls (OK).\nAC-4 baselineCheckpoints: L1=4 fases, L2/L3=5 fases (+incident-response). Cada fase tem phase não vazio e ≥1 action.\nAC-5 evidenceChecklist — contagem explícita via ESM import: L1=4 (≥4), L2=8 (≥8), L3=12 (≥12). Cada item tem item, category, requiredFor não vazio.\nAC-6 platformSpecific YAML: github contém branch_protection (com signed_commits L3, security-scan L2); gitlab contém protected_branches. String não vazia.\nAC-7 qualidade: npm run check/build/test limpos, 247 PASS (10 ficheiros, sem regressões nos 219 de s10), 28 casos de teste, sem any nem stdout.\n\nEpic F8-F10 completo. Recomendar close de s11."
+    },
+    "tester-s12-pass-001": {
+      "id": "tester-s12-pass-001",
+      "created_at": "2026-03-27T15:08:32.359273Z",
+      "updated_at": "2026-03-27T15:08:32.359279Z",
+      "slice_id": "s12",
+      "produced_by": "tester",
+      "outcome": "pass",
+      "summary": "PASS — todos os 7 acceptance criteria satisfeitos (cycle 0).\n\nAC-1 nome/metadados: name=sbd-toe-mcp, private=undefined, description sem poc/VS Code, keywords(8)/repository/bugs/homepage/publishConfig presentes.\nAC-2 bin/files: bin[\"sbd-toe-mcp\"]=\"./dist/index.js\"; files=[dist/,data/publish/,data/reports/run_manifest.json,prompts/,examples/,.env.example,smithery.yaml].\nAC-3 npm pack: dist/index.js ✓, 6 ficheiros data/publish/ ✓, prompts/sbd-toe-chat-system.md ✓; nenhum src/, node_modules/, .aos_engine_data/, .claude/.\nAC-4 PROJECT_NAME: \"sbd-toe-mcp\" (sem -poc) confirmado em scripts/package-release-lib.mjs.\nAC-5 vscode.mcp.json: JSON válido, command=npx, args=[\"-y\",\"sbd-toe-mcp\"], sem caminhos absolutos.\nAC-6 npm E404: nome sbd-toe-mcp disponível no registry (confirmado independentemente).\nAC-7 qualidade: check 35 valid/0 invalid, build limpo, 247 testes PASS (10 ficheiros).\n\nRecomendar close."
+    },
+    "tester-s13-pass-001": {
+      "id": "tester-s13-pass-001",
+      "created_at": "2026-03-27T15:14:52.693901Z",
+      "updated_at": "2026-03-27T15:14:52.693906Z",
+      "slice_id": "s13",
+      "produced_by": "tester",
+      "outcome": "pass",
+      "summary": "PASS — todos os 6 acceptance criteria satisfeitos (cycle 0).\n\nAC-1 installation.md: 306 linhas (≥150), 10 secções, todos os 6 clientes MCP (Claude Desktop, Claude Code, VS Code+Copilot, Cursor, Windsurf, Zed) com snippets copy-pasteable.\nAC-2 zero-config: \"No environment variables required.\" declarado explicitamente (2x). Snippet mínimo é command:npx/args:sbd-toe-mcp. .env não é passo obrigatório.\nAC-3 dead-code omitidas: DEFAULT_LANGUAGE/DOCS_HITS/ENTITIES_HITS/SAMPLING_MAX_TOKENS/UPSTREAM_RELEASE_TAG ausentes. Tabela tem 6 entradas funcionais (≤6).\nAC-4 claude-desktop.json: JSON válido, command=npx, args=[\"-y\",\"sbd-toe-mcp\"].\nAC-5 README Quick Start: secção presente com badge npm, 3 passos Claude Code, npx+sbd-toe-mcp, link para docs/installation.md.\nAC-6 qualidade: check 38 valid/0 invalid, build limpo, 247 testes PASS (10 ficheiros).\n\nRecomendar close."
+    },
+    "tester-s14-pass-001": {
+      "id": "tester-s14-pass-001",
+      "created_at": "2026-03-27T15:30:12.613188Z",
+      "updated_at": "2026-03-27T15:30:12.613194Z",
+      "slice_id": "s14",
+      "produced_by": "tester",
+      "outcome": "pass",
+      "summary": "PASS — todos os 6 acceptance criteria satisfeitos (cycle 0).\n\nAC-1 smithery.yaml: existe na raiz, python3 yaml.safe_load → YAML válido.\nAC-2 startCommand npx: commandFunction com command:npx, args:[\"-y\",\"sbd-toe-mcp\"], type:stdio.\nAC-3 env vars funcionais: 6 entradas (≥4) com description/default — DEBUG_MODE, MAX_CONTEXT_RECORDS, SITE_BASE_URL, MANUAL_BASE_URL, CROSS_CHECK_BASE_URL, SBD_TOE_APP_ROOT. additionalProperties:false.\nAC-4 dead-code ausentes: grep das 5 vars → output vazio.\nAC-5 package.json files: \"smithery.yaml\" presente (adicionado em s12).\nAC-6 qualidade: check 43 valid/0 invalid, build limpo, 247 testes PASS (10 ficheiros).\n\nNota operacional: registo Smithery é manual após s15, não automático. Ver sync_answer.md.\n\nRecomendar close."
+    },
+    "tester-s15-pass-001": {
+      "id": "tester-s15-pass-001",
+      "created_at": "2026-03-27T15:46:04.782332Z",
+      "updated_at": "2026-03-27T15:46:04.782338Z",
+      "slice_id": "s15",
+      "produced_by": "tester",
+      "outcome": "pass",
+      "summary": "PASS — todos os 6 acceptance criteria satisfeitos (cycle 0).\n\nAC-1 registry-url: \"registry-url: https://registry.npmjs.org\" presente no step Setup Node.js.\nAC-2 Publish to npm: step presente com npm publish --access public, NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}, comentário instrucional completo.\nAC-3 sequência: Validate(42)→Verify tag(47)→Build bundle(54)→Create release(57)→Publish to npm(73) — publish é último step, correcto.\nAC-4 YAML válido: python3 yaml.safe_load sem excepção.\nAC-5 README corrigido: linha 95 declara npm como canal principal, GitHub Releases como secundário; Quick Start intacto; bundle names actualizados.\nAC-6 qualidade: check 46 valid/0 invalid, build limpo, 247 testes PASS (10 ficheiros).\n\nEpic distribuição completo (s12–s15). Acção remanescente para operador: configurar NPM_TOKEN secret no GitHub antes da próxima tag.\n\nRecomendar close."
     }
   },
   "block_reasons": {},
@@ -1012,10 +1312,10 @@
       "created_at": "2026-03-24T18:11:50.792181Z",
       "updated_at": "2026-03-24T18:11:50.792184Z",
       "project_brief_id": "PROJECT_BRIEF",
-      "completed_at": "2026-03-27T10:03:52.269730Z",
+      "completed_at": "2026-03-27T15:46:27.713117Z",
       "status": "completed",
       "slices_total": 0,
-      "slices_completed": 12,
+      "slices_completed": 16,
       "slices_blocked": 0,
       "slices_blocked_permanent": [],
       "summary": ""

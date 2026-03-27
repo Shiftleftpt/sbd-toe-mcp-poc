@@ -1,7 +1,6 @@
 {
-  "servers": {
-    "sbdToe": {
-      "type": "stdio",
+  "mcpServers": {
+    "sbd-toe": {
       "command": "npx",
       "args": ["-y", "sbd-toe-mcp"]
     }
