@@ -5,6 +5,24 @@ import type { LooseRecord } from "../types.js";
 const VALID_RISK_LEVELS = ["L1", "L2", "L3"] as const;
 type RiskLevel = (typeof VALID_RISK_LEVELS)[number];
 
+const READABLE_TITLES: Record<string, string> = {
+  "00-fundamentos":             "Fundamentos SbD-ToE",
+  "01-classificacao-aplicacoes": "Classificação de Aplicações",
+  "02-requisitos-seguranca":     "Requisitos de Segurança",
+  "03-threat-modeling":          "Threat Modeling",
+  "04-arquitetura-segura":       "Arquitetura Segura",
+  "05-dependencias-sbom-sca":    "Dependências, SBOM e SCA",
+  "06-desenvolvimento-seguro":   "Desenvolvimento Seguro",
+  "07-cicd-seguro":              "CI/CD Seguro",
+  "08-iac-infraestrutura":       "IaC e Infraestrutura",
+  "09-containers-imagens":       "Containers e Imagens",
+  "10-testes-seguranca":         "Testes de Segurança",
+  "11-deploy-seguro":            "Deploy Seguro",
+  "12-monitorizacao-operacoes":  "Monitorização e Operações",
+  "13-formacao-onboarding":      "Formação e Onboarding",
+  "14-governanca-contratacao":   "Governança e Contratação"
+};
+
 function isValidRiskLevel(value: unknown): value is RiskLevel {
   return typeof value === "string" && (VALID_RISK_LEVELS as readonly string[]).includes(value);
 }
@@ -38,7 +56,7 @@ export function handleListSbdToeChapters(
 
   const items = getEntityItems(cache);
   const seen = new Set<string>();
-  const chapters: Array<{ id: string; title: string }> = [];
+  const chapters: Array<{ id: string; title: string; readableTitle: string }> = [];
 
   for (const item of items) {
     const oid = getStr(item, "objectID") ?? "";
@@ -62,7 +80,8 @@ export function handleListSbdToeChapters(
     }
 
     seen.add(id);
-    chapters.push({ id, title: getStr(item, "title") ?? id });
+    const title = getStr(item, "title") ?? id;
+    chapters.push({ id, title, readableTitle: READABLE_TITLES[id] ?? title });
   }
 
   return { chapters };
@@ -187,6 +206,116 @@ export function handleGetSbdToeChapterBrief(
   };
 }
 
+const VALID_TECHNOLOGIES = [
+  "containers", "serverless", "kubernetes", "ci-cd", "iac", "api-gateway",
+  "mobile", "spa", "microservices", "legacy-integration", "ml-ai", "data-pipeline",
+  "sca-sbom", "sast", "dast", "secrets-management", "monitoring", "iam",
+  "network-segmentation", "cryptography"
+] as const;
+
+type Technology = (typeof VALID_TECHNOLOGIES)[number];
+
+const VALID_PROJECT_ROLES = [
+  "developer", "architect", "security", "devops", "manager"
+] as const;
+
+type ProjectRole = (typeof VALID_PROJECT_ROLES)[number];
+
+function isValidTechnology(value: unknown): value is Technology {
+  return typeof value === "string" && (VALID_TECHNOLOGIES as readonly string[]).includes(value);
+}
+
+function isValidProjectRole(value: unknown): value is ProjectRole {
+  return typeof value === "string" && (VALID_PROJECT_ROLES as readonly string[]).includes(value);
+}
+
+interface ActivatedBundle {
+  chapterId: string;
+  status: "active" | "conditional";
+  reason: string;
+}
+
+interface ActivatedBundles {
+  foundationBundles: ActivatedBundle[];
+  domainBundles: ActivatedBundle[];
+  operationalBundles: ActivatedBundle[];
+}
+
+function buildActivatedBundles(
+  riskLevel: RiskLevel,
+  technologies: Technology[]
+): ActivatedBundles {
+  const techSet = new Set(technologies);
+
+  const foundationBundles: ActivatedBundle[] = [
+    { chapterId: "01-classificacao-aplicacoes", status: "active", reason: "Obrigatório L1+" },
+    { chapterId: "02-requisitos-seguranca",      status: "active", reason: "Obrigatório L1+" },
+    { chapterId: "03-threat-modeling",           status: "active", reason: "Obrigatório L1+" }
+  ];
+
+  const domainBundles: ActivatedBundle[] = [];
+  if (techSet.has("sca-sbom") || techSet.has("sast") || techSet.has("dast")) {
+    domainBundles.push({
+      chapterId: "05-dependencias-sbom-sca",
+      status: "active",
+      reason: `technologies inclui ${(["sca-sbom", "sast", "dast"] as const).filter((t) => techSet.has(t)).join(", ")}`
+    });
+  }
+  if (riskLevel === "L2" || riskLevel === "L3") {
+    domainBundles.push({
+      chapterId: "06-desenvolvimento-seguro",
+      status: "active",
+      reason: `Sempre para ${riskLevel}+`
+    });
+  }
+  if (techSet.has("iac") || techSet.has("containers") || techSet.has("kubernetes")) {
+    domainBundles.push({
+      chapterId: "08-iac-infraestrutura",
+      status: "active",
+      reason: `technologies inclui ${(["iac", "containers", "kubernetes"] as const).filter((t) => techSet.has(t)).join(", ")}`
+    });
+  }
+  if (techSet.has("containers") || techSet.has("kubernetes")) {
+    domainBundles.push({
+      chapterId: "09-containers-imagens",
+      status: "active",
+      reason: `technologies inclui ${(["containers", "kubernetes"] as const).filter((t) => techSet.has(t)).join(", ")}`
+    });
+  }
+  if (techSet.has("sast") || techSet.has("dast")) {
+    domainBundles.push({
+      chapterId: "10-testes-seguranca",
+      status: "active",
+      reason: `technologies inclui ${(["sast", "dast"] as const).filter((t) => techSet.has(t)).join(", ")}`
+    });
+  }
+
+  const operationalBundles: ActivatedBundle[] = [];
+  if (techSet.has("ci-cd")) {
+    operationalBundles.push({
+      chapterId: "07-cicd-seguro",
+      status: "active",
+      reason: "technologies inclui ci-cd"
+    });
+  }
+  if (riskLevel === "L2" || riskLevel === "L3") {
+    operationalBundles.push({
+      chapterId: "11-deploy-seguro",
+      status: "active",
+      reason: "L2+"
+    });
+  }
+  if (techSet.has("monitoring")) {
+    operationalBundles.push({
+      chapterId: "12-monitorizacao-operacoes",
+      status: "active",
+      reason: "technologies inclui monitoring"
+    });
+  }
+
+  return { foundationBundles, domainBundles, operationalBundles };
+}
+
 export function handleMapSbdToeApplicability(
   args: Record<string, unknown>,
   cache: SnapshotCache
@@ -198,6 +327,43 @@ export function handleMapSbdToeApplicability(
     );
   }
   const riskLevel = riskLevelArg;
+
+  // Validate optional technologies allowlist
+  const technologiesArg = args["technologies"];
+  let technologies: Technology[] = [];
+  if (technologiesArg !== undefined) {
+    if (!Array.isArray(technologiesArg)) {
+      const err: { code: number; message: string; data: unknown } = {
+        code: -32602,
+        message: 'O argumento "technologies" deve ser um array.',
+        data: null
+      };
+      throw Object.assign(new Error(err.message), { rpcError: err });
+    }
+    const invalidTechs = (technologiesArg as unknown[]).filter((t) => !isValidTechnology(t));
+    if (invalidTechs.length > 0) {
+      const err = {
+        code: -32602,
+        message: `Valores inválidos em "technologies": ${invalidTechs.map(String).join(", ")}. Valores permitidos: ${VALID_TECHNOLOGIES.join(", ")}.`,
+        data: { invalidValues: invalidTechs }
+      };
+      throw Object.assign(new Error(err.message), { rpcError: err });
+    }
+    technologies = (technologiesArg as unknown[]).filter(isValidTechnology);
+  }
+
+  // Validate optional projectRole allowlist
+  const projectRoleArg = args["projectRole"];
+  if (projectRoleArg !== undefined && !isValidProjectRole(projectRoleArg)) {
+    const err = {
+      code: -32602,
+      message: `Valor inválido em "projectRole": "${String(projectRoleArg)}". Valores permitidos: ${VALID_PROJECT_ROLES.join(", ")}.`,
+      data: { invalidValue: projectRoleArg }
+    };
+    throw Object.assign(new Error(err.message), { rpcError: err });
+  }
+
+  const hasPersonalData = typeof args["hasPersonalData"] === "boolean" ? args["hasPersonalData"] : false;
 
   const items = getEntityItems(cache);
 
@@ -221,10 +387,22 @@ export function handleMapSbdToeApplicability(
   const active = [...activeChapterIds].sort();
   const excluded = [...allChapterIds].filter((id) => !activeChapterIds.has(id)).sort();
 
+  const activatedBundles = buildActivatedBundles(riskLevel, technologies);
+
+  // 13-formacao-onboarding: apenas L3
+  if (riskLevel === "L3") {
+    activatedBundles.operationalBundles.push({
+      chapterId: "13-formacao-onboarding",
+      status: "active",
+      reason: "L3"
+    });
+  }
+
   return {
     riskLevel,
     active,
     conditional: [],
-    excluded
+    excluded,
+    activatedBundles
   };
 }

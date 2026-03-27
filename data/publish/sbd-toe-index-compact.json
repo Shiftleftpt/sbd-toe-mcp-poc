@@ -1,0 +1,111 @@
+{
+  "version": "1.0",
+  "generated_at": "2026-03-26T00:00:00Z",
+  "chapters": [
+    {
+      "chapterId": "00-fundamentos",
+      "readableTitle": "Fundamentos SbD-ToE",
+      "domains": ["governance", "foundation"],
+      "technologies": [],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "01-classificacao-aplicacoes",
+      "readableTitle": "Classificação de Aplicações",
+      "domains": ["governance", "risk"],
+      "technologies": [],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "02-requisitos-seguranca",
+      "readableTitle": "Requisitos de Segurança",
+      "domains": ["governance", "requirements"],
+      "technologies": [],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "03-threat-modeling",
+      "readableTitle": "Threat Modeling",
+      "domains": ["risk", "architecture"],
+      "technologies": [],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "04-arquitetura-segura",
+      "readableTitle": "Arquitetura Segura",
+      "domains": ["architecture", "design"],
+      "technologies": [],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "05-dependencias-sbom-sca",
+      "readableTitle": "Dependências, SBOM e SCA",
+      "domains": ["supply-chain", "dependencies"],
+      "technologies": ["sca-sbom", "sast", "dast"],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "06-desenvolvimento-seguro",
+      "readableTitle": "Desenvolvimento Seguro",
+      "domains": ["development", "coding"],
+      "technologies": [],
+      "minLevel": "L2"
+    },
+    {
+      "chapterId": "07-cicd-seguro",
+      "readableTitle": "CI/CD Seguro",
+      "domains": ["devops", "pipeline"],
+      "technologies": ["ci-cd"],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "08-iac-infraestrutura",
+      "readableTitle": "IaC e Infraestrutura",
+      "domains": ["infrastructure", "iac"],
+      "technologies": ["iac", "containers", "kubernetes"],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "09-containers-imagens",
+      "readableTitle": "Containers e Imagens",
+      "domains": ["infrastructure", "containers"],
+      "technologies": ["containers", "kubernetes"],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "10-testes-seguranca",
+      "readableTitle": "Testes de Segurança",
+      "domains": ["testing", "quality"],
+      "technologies": ["sast", "dast"],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "11-deploy-seguro",
+      "readableTitle": "Deploy Seguro",
+      "domains": ["deployment", "operations"],
+      "technologies": [],
+      "minLevel": "L2"
+    },
+    {
+      "chapterId": "12-monitorizacao-operacoes",
+      "readableTitle": "Monitorização e Operações",
+      "domains": ["operations", "observability"],
+      "technologies": ["monitoring"],
+      "minLevel": "L1"
+    },
+    {
+      "chapterId": "13-formacao-onboarding",
+      "readableTitle": "Formação e Onboarding",
+      "domains": ["training", "governance"],
+      "technologies": [],
+      "minLevel": "L3"
+    },
+    {
+      "chapterId": "14-governanca-contratacao",
+      "readableTitle": "Governança e Contratação",
+      "domains": ["governance", "compliance"],
+      "technologies": [],
+      "minLevel": "L1"
+    }
+  ]
+}

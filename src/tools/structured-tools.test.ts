@@ -369,6 +369,63 @@ describe("handleGetSbdToeChapterBrief", () => {
   });
 });
 
+// --- list_sbd_toe_chapters — readableTitle ---
+
+describe("handleListSbdToeChapters — readableTitle", () => {
+  it("includes readableTitle field distinct from id", () => {
+    const cache = makeCache([
+      makeChapterBundle("01-classificacao-aplicacoes", "Cap. 01")
+    ]);
+    const result = handleListSbdToeChapters({}, cache) as {
+      chapters: Array<{ id: string; title: string; readableTitle: string }>;
+    };
+    expect(result.chapters).toHaveLength(1);
+    const ch = result.chapters[0];
+    expect(ch?.readableTitle).toBe("Classificação de Aplicações");
+    expect(ch?.readableTitle).not.toBe(ch?.id);
+  });
+
+  it("covers all 14 known chapter ids with distinct readableTitles", () => {
+    const knownIds = [
+      "01-classificacao-aplicacoes", "02-requisitos-seguranca", "03-threat-modeling",
+      "04-arquitetura-segura", "05-dependencias-sbom-sca", "06-desenvolvimento-seguro",
+      "07-cicd-seguro", "08-iac-infraestrutura", "09-containers-imagens",
+      "10-testes-seguranca", "11-deploy-seguro", "12-monitorizacao-operacoes",
+      "13-formacao-onboarding", "14-governanca-contratacao"
+    ];
+    const items = knownIds.map((id) => makeChapterBundle(id, `Title ${id}`));
+    const cache = makeCache(items);
+    const result = handleListSbdToeChapters({}, cache) as {
+      chapters: Array<{ id: string; readableTitle: string }>;
+    };
+    expect(result.chapters).toHaveLength(14);
+    for (const ch of result.chapters) {
+      expect(ch.readableTitle).not.toBe(ch.id);
+      expect(typeof ch.readableTitle).toBe("string");
+      expect(ch.readableTitle.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("falls back to title when chapterId is unknown", () => {
+    const cache = makeCache([makeChapterBundle("unknown-chapter-xyz", "My Custom Title")]);
+    const result = handleListSbdToeChapters({}, cache) as {
+      chapters: Array<{ id: string; title: string; readableTitle: string }>;
+    };
+    expect(result.chapters[0]?.readableTitle).toBe("My Custom Title");
+  });
+
+  it("preserves id and title fields (retro-compatibility)", () => {
+    const cache = makeCache([makeChapterBundle("07-cicd-seguro", "CI/CD Seguro")]);
+    const result = handleListSbdToeChapters({}, cache) as {
+      chapters: Array<{ id: string; title: string; readableTitle: string }>;
+    };
+    const ch = result.chapters[0];
+    expect(ch?.id).toBe("07-cicd-seguro");
+    expect(ch?.title).toBe("CI/CD Seguro");
+    expect(ch?.readableTitle).toBe("CI/CD Seguro");
+  });
+});
+
 // --- map_sbd_toe_applicability ---
 
 describe("handleMapSbdToeApplicability", () => {
@@ -453,5 +510,125 @@ describe("handleMapSbdToeApplicability", () => {
     };
     expect(result.excluded).toContain("02-cap");
     expect(result.excluded).not.toContain("01-cap");
+  });
+});
+
+// --- map_sbd_toe_applicability — activatedBundles ---
+
+interface ActivatedBundle {
+  chapterId: string;
+  status: string;
+  reason: string;
+}
+
+interface ActivatedBundles {
+  foundationBundles: ActivatedBundle[];
+  domainBundles: ActivatedBundle[];
+  operationalBundles: ActivatedBundle[];
+}
+
+describe("handleMapSbdToeApplicability — activatedBundles", () => {
+  it("always includes 3 foundation bundles for any risk level", () => {
+    const cache = makeCache([]);
+    const result = handleMapSbdToeApplicability({ riskLevel: "L1" }, cache) as {
+      activatedBundles: ActivatedBundles;
+    };
+    expect(result.activatedBundles.foundationBundles).toHaveLength(3);
+    const ids = result.activatedBundles.foundationBundles.map((b) => b.chapterId);
+    expect(ids).toContain("01-classificacao-aplicacoes");
+    expect(ids).toContain("02-requisitos-seguranca");
+    expect(ids).toContain("03-threat-modeling");
+  });
+
+  it("activates 09-containers-imagens when technologies includes 'containers'", () => {
+    const cache = makeCache([]);
+    const result = handleMapSbdToeApplicability(
+      { riskLevel: "L2", technologies: ["containers", "ci-cd"] },
+      cache
+    ) as { activatedBundles: ActivatedBundles };
+    const domainIds = result.activatedBundles.domainBundles.map((b) => b.chapterId);
+    expect(domainIds).toContain("09-containers-imagens");
+  });
+
+  it("activates 07-cicd-seguro when technologies includes 'ci-cd'", () => {
+    const cache = makeCache([]);
+    const result = handleMapSbdToeApplicability(
+      { riskLevel: "L1", technologies: ["ci-cd"] },
+      cache
+    ) as { activatedBundles: ActivatedBundles };
+    const opIds = result.activatedBundles.operationalBundles.map((b) => b.chapterId);
+    expect(opIds).toContain("07-cicd-seguro");
+  });
+
+  it("does NOT activate 13-formacao-onboarding for L1 even with hasPersonalData", () => {
+    const cache = makeCache([]);
+    const result = handleMapSbdToeApplicability(
+      { riskLevel: "L1", hasPersonalData: true },
+      cache
+    ) as { activatedBundles: ActivatedBundles };
+    const opIds = result.activatedBundles.operationalBundles.map((b) => b.chapterId);
+    expect(opIds).not.toContain("13-formacao-onboarding");
+  });
+
+  it("activates 13-formacao-onboarding for L3", () => {
+    const cache = makeCache([]);
+    const result = handleMapSbdToeApplicability(
+      { riskLevel: "L3" },
+      cache
+    ) as { activatedBundles: ActivatedBundles };
+    const opIds = result.activatedBundles.operationalBundles.map((b) => b.chapterId);
+    expect(opIds).toContain("13-formacao-onboarding");
+  });
+
+  it("does not activate domain/operational bundles for L1 without technologies", () => {
+    const cache = makeCache([]);
+    const result = handleMapSbdToeApplicability({ riskLevel: "L1" }, cache) as {
+      activatedBundles: ActivatedBundles;
+    };
+    expect(result.activatedBundles.domainBundles).toHaveLength(0);
+    expect(result.activatedBundles.operationalBundles).toHaveLength(0);
+  });
+
+  it("throws (with rpcError) when technologies contain invalid value", () => {
+    const cache = makeCache([]);
+    let caughtError: unknown;
+    try {
+      handleMapSbdToeApplicability({ riskLevel: "L1", technologies: ["invalid-tech"] }, cache);
+    } catch (e) {
+      caughtError = e;
+    }
+    expect(caughtError).toBeInstanceOf(Error);
+    expect((caughtError as Error & { rpcError?: { code: number } }).rpcError?.code).toBe(-32602);
+    expect((caughtError as Error).message).toContain("invalid-tech");
+  });
+
+  it("throws (with rpcError) when projectRole is invalid", () => {
+    const cache = makeCache([]);
+    let caughtError: unknown;
+    try {
+      handleMapSbdToeApplicability({ riskLevel: "L1", projectRole: "invalid-role" }, cache);
+    } catch (e) {
+      caughtError = e;
+    }
+    expect(caughtError).toBeInstanceOf(Error);
+    expect((caughtError as Error & { rpcError?: { code: number } }).rpcError?.code).toBe(-32602);
+  });
+
+  it("retro-compatible: input {riskLevel: 'L1'} without optional fields still works", () => {
+    const cache = makeCache([
+      makeChapterBundle("01-cap", "Cap. 01"),
+      makePracticeAssignment("01-cap", ["L1"])
+    ]);
+    const result = handleMapSbdToeApplicability({ riskLevel: "L1" }, cache) as {
+      riskLevel: string;
+      active: string[];
+      conditional: string[];
+      excluded: string[];
+      activatedBundles: ActivatedBundles;
+    };
+    expect(result.riskLevel).toBe("L1");
+    expect(result.active).toContain("01-cap");
+    expect(result.conditional).toEqual([]);
+    expect(result.activatedBundles.foundationBundles).toHaveLength(3);
   });
 });
