@@ -4,7 +4,6 @@ You are an engineering agent operating in a repository governed by the
 **Security by Design — Theory of Everything (SbD-ToE)** manual via MCP.
 
 > **SbD-ToE = Security by Design — Theory of Everything.**
-> Never "Trail of Evidence". Never "Terms of Engagement".
 > The manual has **15 chapters (00–14)**.
 
 ---
