@@ -1,323 +1,205 @@
-# sbd-toe-mcp-poc
+# @shiftleftpt/sbd-toe-mcp
 
-Servidor MCP (Model Context Protocol) para VS Code, em Node.js/TypeScript, que faz retrieval local sobre snapshots semânticos publicados do manual SbD-ToE e os expõe ao chat via `stdio`.
+MCP server for the SbD-ToE security manual — structured tools for Claude, GitHub Copilot, Cursor, Windsurf, Zed and any MCP-compatible client.
 
-> Estado atual: **PoC / primeira iteração publicável**. O foco desta versão é distribuição simples via GitHub Releases, uso local no VS Code, grounding forte e zero dependência de builder semântico em runtime.
+[![npm](https://img.shields.io/npm/v/@shiftleftpt%2fsbd-toe-mcp)](https://www.npmjs.com/package/@shiftleftpt/sbd-toe-mcp)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
 
-## O que é este projeto
+---
 
-Este repositório empacota um servidor MCP que:
+## Quick Start
 
-- corre localmente via `stdio`
-- expõe tools e prompts MCP para consulta do manual
-- usa o modelo configurado pelo utilizador no VS Code
-- faz retrieval local sobre um bundle embutido em `data/publish/`
-- devolve contexto grounded, citações e metadados úteis para debug
+**Zero configuration required.** Works out-of-the-box with `npx`:
 
-O objetivo é responder melhor, dentro do VS Code, a perguntas práticas sobre o ecossistema SbD-ToE, por exemplo:
-
-```text
-quais os requisitos de autenticacao que preciso implementar para esta aplicacao L1
+**Claude Code:**
+```bash
+claude mcp add sbd-toe -- npx -y @shiftleftpt/sbd-toe-mcp
 ```
 
-ou:
-
-```text
-Que policies governam pipelines CI/CD?
+**Claude Desktop / Cursor / Windsurf** — add to your MCP config:
+```json
+{
+  "mcpServers": {
+    "sbd-toe": {
+      "command": "npx",
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
+    }
+  }
+}
 ```
 
-## Porque existe
+**VS Code + GitHub Copilot** — add to `.vscode/mcp.json`:
+```json
+{
+  "servers": {
+    "sbdToe": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@shiftleftpt/sbd-toe-mcp"]
+    }
+  }
+}
+```
 
-O manual SbD-ToE é a fonte editorial canónica, mas o consumo prático dentro do editor exige uma camada técnica própria:
+For full installation instructions for all clients see [`docs/installation.md`](docs/installation.md).
 
-- descoberta contextual no momento da pergunta
-- recuperação determinística de records relevantes
-- composição de prompt grounded
-- integração direta com o chat do VS Code
+**Requirements:** Node.js ≥ 20.9.0
 
-Este repositório existe para fazer essa ponte, sem duplicar o papel dos outros repositórios do ecossistema.
+---
 
-## Relação com o ecossistema SbD-ToE
+## What it does
 
-| Repositório | Papel |
-| --- | --- |
-| `Shiftleftpt/SbD-ToE-Manual` | fonte editorial canónica do manual |
-| `sbd-toe-knowledge-graph` | builder/publicador dos snapshots semânticos |
-| `sbd-toe-mcp-poc` | consumer MCP para uso local no VS Code |
+This MCP server gives any AI client structured access to the [SbD-ToE security manual](https://www.securitybydesign.dev/sbd-toe/sbd-manual/) — a comprehensive framework for secure-by-design software development.
 
-Este projeto **consome** artefactos já produzidos pelo `sbd-toe-knowledge-graph`. Não reindexa o manual, não reconstrói semântica e não substitui o builder.
+All data is bundled locally. No Algolia, no internet connection required at runtime, no API keys.
 
-## O que faz
+---
 
-- consulta os snapshots `SbD-ToE-ASKAI-Docs` e `SbD-ToE-ASKAI-Entities`
-- faz ranking local observável para seleção de contexto
-- expõe as tools `search_sbd_toe_manual`, `answer_sbd_toe_manual` e `inspect_sbd_toe_retrieval`
-- expõe a prompt MCP `ask_sbd_toe_manual`
-- permite debug forte quando `debug=true` ou `DEBUG_MODE=true`
-- usa sampling MCP opcionalmente, mantendo o modelo do lado do utilizador
+## Tools
 
-## O que não faz
+| Tool | Description |
+|---|---|
+| `search_sbd_toe_manual` | Retrieval over the manual — returns grounded context with citations |
+| `answer_sbd_toe_manual` | Retrieval + answer via MCP sampling (uses the user's model) |
+| `inspect_sbd_toe_retrieval` | Debug tool — shows retrieval scores, selection and prompt |
+| `list_sbd_toe_chapters` | Lists all 14 manual chapters with readable titles and risk levels |
+| `query_sbd_toe_entities` | Queries structured entities (controls, requirements, patterns) |
+| `get_sbd_toe_chapter_brief` | Returns a structured brief for a specific chapter |
+| `map_sbd_toe_applicability` | Maps a project profile to applicable chapter bundles |
+| `generate_document` | Generates a structured document skeleton (5 types × 3 risk levels) |
+| `map_sbd_toe_review_scope` | Maps changed file paths to relevant SbD-ToE knowledge bundles |
+| `plan_sbd_toe_repo_governance` | Produces an advisory governance plan for a repository |
 
-- não faz parsing do corpus Markdown
-- não reconstrói bundles semânticos
-- não reindexa o manual
-- não depende de Algolia em runtime
-- não executa retrieval remoto
-- não mantém memória conversacional
-- não substitui o VS Code Chat nem o `sbd-toe-knowledge-graph`
+### Resources
 
-## Arquitetura resumida
+| Resource | Description |
+|---|---|
+| `sbd://toe/index-compact` | Compact chapter index (<5KB) — injectable into system prompts |
+| `sbd://toe/skill-template` | Skill template for AI agent configuration (L1/L2/L3) |
+| `sbd://toe/chapter-applicability` | Chapter applicability by risk level |
 
-1. O utilizador faz uma pergunta no chat do VS Code.
-2. O chat chama `search_sbd_toe_manual` ou `answer_sbd_toe_manual`.
-3. O servidor MCP lê os snapshots locais embutidos em `data/publish/`.
-4. O retrieval combina records documentais e estruturados.
-5. O servidor devolve contexto grounded com citações `[D1]`, `[E1]`, links e debug.
-6. O modelo do utilizador responde com base nesse contexto.
+### Prompts
 
-O papel detalhado deste repositório está documentado em [`docs/role.md`](docs/role.md).
+| Prompt | Description |
+|---|---|
+| `setup_sbd_toe_agent` | Slash command to configure an AI agent with SbD-ToE context |
 
-## Ferramentas MCP expostas
+---
 
-- `search_sbd_toe_manual`
-  - tool principal para o fluxo normal de chat
-  - devolve contexto grounded sem obrigar a sampling
-- `answer_sbd_toe_manual`
-  - usa retrieval local e pede a resposta final ao modelo do utilizador via MCP sampling
-- `inspect_sbd_toe_retrieval`
-  - mostra retrieval, seleção final e prompt montado
-  - útil para tuning, grounding e troubleshooting
-- `ask_sbd_toe_manual`
-  - prompt MCP/slash command para orientar o chat a usar retrieval antes de responder
+## Architecture
 
-## Distribuição e release bundle
+```
+AI client (Claude / Copilot / Cursor / ...)
+    ↓  MCP stdio
+sbd-toe-mcp server
+    ↓  local read
+data/publish/   ← semantic snapshots bundled in the package
+```
 
-O canal principal de distribuição é **npm** (`sbd-toe-mcp`). O **GitHub Releases** mantém-se como canal secundário — publica um bundle self-contained para instalação em ambientes sem acesso à internet ou sem `npx`.
+1. The user asks a question in their AI client.
+2. The client calls a tool (e.g. `search_sbd_toe_manual`).
+3. The server reads the local snapshots in `data/publish/`.
+4. Retrieval combines documentary and structured records.
+5. The server returns grounded context with citations and links.
+6. The user's model answers based on that context.
 
-Cada release publica um bundle via GitHub Releases com convenção de nome explícita:
+---
+
+## Distribution
+
+**Primary channel: npm**
+
+```bash
+npx -y @shiftleftpt/sbd-toe-mcp
+```
+
+**Secondary channel: GitHub Releases** — self-contained bundle for environments without internet access or `npx`. Each release publishes:
 
 - `sbd-toe-mcp-vX.Y.Z-bundle.tar.gz`
 - `sbd-toe-mcp-vX.Y.Z-bundle.zip`
 - `sbd-toe-mcp-vX.Y.Z-bundle.sha256`
 
-O bundle inclui:
+### Installing from a GitHub Release bundle
 
-- `dist/`
-- `data/publish/`
-- `data/reports/run_manifest.json`
-- `prompts/`
-- `examples/`
-- `docs/`
-- `.vscode/mcp.json`
-- `.env.example`
-- `README.md`
-- `CONTRIBUTING.md`
-- `CODE_OF_CONDUCT.md`
-- `SECURITY.md`
-- `SUPPORT.md`
-- ficheiros de licença
+For environments without npm/npx:
 
-O bundle **não** inclui:
-
-- `node_modules`
-- checkout completo do upstream
-- tooling de desenvolvimento desnecessário para runtime
-
-## Como os snapshots são distribuídos
-
-`data/publish/` é tratado como parte intencional do produto:
-
-- fica **versionado no repositório**
-- fica **incluído no artefacto de release**
-- é a base do retrieval local em runtime
-
-Isto significa que:
-
-- o utilizador **não precisa** de Algolia
-- o utilizador **não precisa** de correr o builder semântico
-- o utilizador **não precisa** de fazer checkout do `sbd-toe-knowledge-graph` para usar o servidor
-
-O ficheiro `data/reports/run_manifest.json` mantém a proveniência do snapshot embutido.
-Esse ficheiro deve conter apenas proveniência pública e redistribuível, sem paths absolutos de máquinas locais.
-
-## Instalação via GitHub Release (alternativa sem internet)
-
-Fluxo para ambientes sem acesso ao npm ou sem `npx`:
-
-1. Descarregar o asset `sbd-toe-mcp-vX.Y.Z-bundle.zip` ou `sbd-toe-mcp-vX.Y.Z-bundle.tar.gz` em **GitHub Releases**.
-2. Extrair o archive para um diretório local.
-3. Confirmar que a extração já inclui `dist/` e `data/publish/`.
-4. Copiar `.env.example` para `.env`.
-5. Abrir a pasta extraída no VS Code.
-6. Reutilizar o `.vscode/mcp.json` já incluído no bundle.
-7. Abrir o chat e usar perguntas reais sobre o manual.
-
-Exemplo:
-
-```bash
-cp .env.example .env
-```
-
-Depois de extrair a release, não é necessário correr `npm ci` nem `npm run build`.
-Também não é necessário editar manualmente a configuração MCP se usares a pasta extraída como workspace do VS Code.
-
-## Quick Start — instalar via npm
-
-[![npm](https://img.shields.io/npm/v/@shiftleftpt%2fsbd-toe-mcp)](https://www.npmjs.com/package/@shiftleftpt/sbd-toe-mcp)
-
-**Zero configuração obrigatória.** O servidor funciona directamente com `npx`:
-
-1. Instalar Node.js ≥ 20.9.0: [nodejs.org/download](https://nodejs.org/download/)
-2. Registar o servidor no teu cliente MCP (exemplo para Claude Code):
-   ```bash
-   claude mcp add sbd-toe -- npx -y @shiftleftpt/sbd-toe-mcp
+1. Download `sbd-toe-mcp-vX.Y.Z-bundle.zip` from [GitHub Releases](https://github.com/Shiftleftpt/sbd-toe-mcp-poc/releases).
+2. Extract the archive.
+3. Point your MCP client to the extracted `dist/index.js`:
+   ```json
+   {
+     "command": "node",
+     "args": ["/path/to/extracted/dist/index.js"]
+   }
    ```
-3. Usar as tools MCP no Claude Code (ou Claude Desktop, VS Code, Cursor, etc.)
-
-Para instruções completas por cliente MCP (Claude Desktop, VS Code, Cursor, Windsurf, Zed),
-consultar [`docs/installation.md`](docs/installation.md).
+4. No `npm ci` or `npm run build` needed — the bundle is self-contained.
 
 ---
 
-## Instalação a partir do source
+## Optional configuration
 
-Se preferires trabalhar a partir do source deste repositório:
+No environment variables are required. The following can be overridden:
 
-```bash
-npm ci
-npm run check
-npm run build
-```
+| Variable | Default | Description |
+|---|---|---|
+| `DEBUG_MODE` | `false` | Enable debug metadata in responses |
+| `MAX_CONTEXT_RECORDS` | `8` | Max records returned per query |
+| `SITE_BASE_URL` | `https://www.securitybydesign.dev/` | Override base URL |
+| `MANUAL_BASE_URL` | `https://www.securitybydesign.dev/sbd-toe/sbd-manual/` | Override manual URL |
+| `CROSS_CHECK_BASE_URL` | `https://www.securitybydesign.dev/sbd-toe/cross-check-normativo/` | Override cross-check URL |
+| `SBD_TOE_APP_ROOT` | auto (resolved from `dist/`) | Override app root path |
 
-O checkout de source já traz `data/publish/` versionado. Portanto, mesmo a partir do source, o uso normal do MCP **não** depende do builder semântico.
+Copy `.env.example` to `.env` and adjust as needed.
 
-O script abaixo é apenas para mantenedores que queiram atualizar o bundle embutido a partir de um checkout local do `sbd-toe-knowledge-graph`:
+---
+
+## Relation to the SbD-ToE ecosystem
+
+| Repository | Role |
+|---|---|
+| `Shiftleftpt/SbD-ToE-Manual` | canonical editorial source of the manual |
+| `sbd-toe-knowledge-graph` | builder/publisher of semantic snapshots |
+| `@shiftleftpt/sbd-toe-mcp` | MCP server — consumes snapshots, exposes tools |
+
+This project **consumes** artefacts already produced by `sbd-toe-knowledge-graph`. It does not re-index the manual, does not rebuild semantics and does not replace the builder.
+
+Maintainers who want to update the bundled snapshots from a local checkout of `sbd-toe-knowledge-graph`:
 
 ```bash
 npm run checkout:backend
 ```
 
-Esse fluxo regenera um manifesto local em `data/upstream/backend-checkout.json`, usado apenas para manutenção/debug local e não versionado neste repositório.
+---
 
-## Configuração `.env`
+## Development
 
-Copiar `.env.example` para `.env` e ajustar apenas o que fizer sentido para o teu ambiente local.
-
-Variáveis mais relevantes para runtime:
-
-| Variável | Uso |
-| --- | --- |
-| `DOCS_SNAPSHOT_FILE` | snapshot documental local |
-| `ENTITIES_SNAPSHOT_FILE` | snapshot de entidades local |
-| `INDEX_SETTINGS_FILE` | metadados dos índices publicados |
-| `RUN_MANIFEST_FILE` | proveniência do bundle embutido |
-| `SYSTEM_PROMPT_FILE` | system prompt usada pela tool de answer |
-| `DEBUG_MODE` | ativa debug adicional nas respostas |
-
-Variáveis de manutenção opcional:
-
-| Variável | Uso |
-| --- | --- |
-| `UPSTREAM_KNOWLEDGE_GRAPH_DIR` | checkout local do `sbd-toe-knowledge-graph` |
-| `BACKEND_CHECKOUT_FILE` | manifesto local do último refresh do bundle; ficheiro de manutenção local, não versionado |
-
-Não há API keys obrigatórias neste projeto: o modelo continua a ser o do utilizador no VS Code.
-
-## Integração com VS Code
-
-O exemplo de configuração está em [`examples/vscode.mcp.json`](examples/vscode.mcp.json).
-
-Para o fluxo mais simples via GitHub Release, o bundle já inclui [`.vscode/mcp.json`](.vscode/mcp.json) com este formato:
-
-```json
-{
-  "servers": {
-    "sbdToe": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["${workspaceFolder}/dist/index.js"],
-      "envFile": "${workspaceFolder}/.env"
-    }
-  }
-}
+```bash
+npm ci
+npm run check
+npm run build
+npm run test
 ```
 
-Se abrires a pasta extraída no VS Code, `${workspaceFolder}` passa a apontar para esse bundle e o editor pode usar a configuração diretamente.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contribution workflow.
 
-Exemplo realista para um bundle extraído fora do workspace atual:
+---
 
-```json
-{
-  "servers": {
-    "sbdToe": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["/absolute/path/to/sbd-toe-mcp-poc/dist/index.js"],
-      "envFile": "/absolute/path/to/sbd-toe-mcp-poc/.env"
-    }
-  }
-}
-```
+## Smithery
 
-Se estiveres a trabalhar diretamente neste repositório, podes adaptar para `${workspaceFolder}`.
+This server is registered on [Smithery](https://smithery.ai) — the MCP server directory. Smithery provides one-click install and guided configuration.
 
-## Exemplo de uso no chat
+---
 
-Perguntas úteis para validar a integração:
+## Security
 
-```text
-quais os requisitos de autenticacao que preciso implementar para esta aplicacao L1
-```
+See [`SECURITY.md`](SECURITY.md). Vulnerabilities must be reported privately by email, never via public issue.
 
-```text
-Que policies governam pipelines CI/CD?
-```
+---
 
-Comportamento esperado:
+## Licence
 
-- o chat usa `search_sbd_toe_manual` ou `answer_sbd_toe_manual`
-- o MCP recupera records relevantes do bundle local
-- a resposta final usa apenas o contexto recuperado
-- a resposta cita records e aponta páginas determinísticas quando existirem
+Split licensing:
 
-## Troubleshooting e debug
-
-- Se `dist/` não existir, estás provavelmente num checkout de source sem build concluído.
-- Se `data/publish/` não existir, a instalação está incompleta ou o archive foi extraído incorretamente.
-- Se o cliente MCP não suportar `sampling`, usa `search_sbd_toe_manual` como fluxo principal.
-- Usa `inspect_sbd_toe_retrieval` para ver retrieval, seleção final e prompt montado.
-- Ativa `DEBUG_MODE=true` para anexar metadados de debug à resposta.
-- Se precisares de atualizar o snapshot embutido, usa `npm run checkout:backend` a partir de um checkout local do `sbd-toe-knowledge-graph`.
-
-## Contribuição
-
-O fluxo de contribuição está em [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
-Em resumo:
-
-- trunk-based development com `master`
-- branches `feat/`, `fix/`, `docs/`, `chore/` e `hotfix/`
-- validação local com `npm ci`, `npm run check` e `npm run build`
-- teste manual no VS Code antes de abrir PR
-- squash merge para `master`
-- releases por tag `vX.Y.Z`
-
-## Próximas iterações
-
-Os pontos abertos e candidatos a evolução futura estão em [`NEXT-STEPS.md`](NEXT-STEPS.md), incluindo a hipótese de uma extensão wrapper para publicação no VS Code Marketplace.
-
-## Suporte
-
-Ver [`SUPPORT.md`](SUPPORT.md).
-
-## Segurança
-
-Ver [`SECURITY.md`](SECURITY.md). Vulnerabilidades devem ser reportadas em privado por email, nunca por issue público.
-
-## Licença
-
-Este repositório usa **split licensing**:
-
-- código e runtime: [`LICENSE`](LICENSE) (`Apache-2.0`)
-- documentação e snapshots embutidos: [`LICENSE-DATA`](LICENSE-DATA) (`CC BY-SA 4.0`)
-- nota de mapeamento e atribuição: [`LICENSE-NOTE.md`](LICENSE-NOTE.md)
+- code and runtime: [`LICENSE`](LICENSE) (`Apache-2.0`)
+- documentation and bundled snapshots: [`LICENSE-DATA`](LICENSE-DATA) (`CC BY-SA 4.0`)
+- mapping and attribution note: [`LICENSE-NOTE.md`](LICENSE-NOTE.md)
