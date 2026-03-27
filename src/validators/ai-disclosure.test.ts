@@ -4,7 +4,6 @@ import {
   validateDisclosure,
   validateAIDisclosure,
   ALLOWED_PURPOSES,
-  AIDisclosure,
 } from './ai-disclosure.js';
 
 describe('AI Disclosure Validator', () => {
