@@ -24,8 +24,7 @@ import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
 import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
 import {
   buildChapterApplicabilityJson,
-  buildSetupAgentPrompt,
-  buildSkillTemplateMarkdown
+  buildSetupAgentPrompt
 } from "./resources/sbd-toe-resources.js";
 
 type JsonRpcId = string | number;
@@ -812,13 +811,6 @@ class McpRuntime {
           mimeType: "text/markdown"
         },
         {
-          uri: "sbd://toe/skill-template/{riskLevel}/{projectRole}",
-          name: "SbD-ToE Skill Template",
-          description:
-            "Role-specific guidance template for a given risk level (L1/L2/L3) and project role. Use after reading sbd://toe/agent-guide.",
-          mimeType: "text/markdown"
-        },
-        {
           uri: "sbd://toe/chapter-applicability/{riskLevel}",
           name: "SbD-ToE Chapter Applicability",
           description:
@@ -855,27 +847,6 @@ class McpRuntime {
       const data = buildChapterApplicabilityJson(riskLevel);
       this.sendResponse(request.id, {
         contents: [{ uri, mimeType: "application/json", text: JSON.stringify(data, null, 2) }]
-      });
-      return;
-    }
-
-    const skillTemplateMatch = /^\/\/toe\/skill-template\/([^/]+)\/([^/]+)$/.exec(
-      uri.startsWith("sbd:") ? uri.slice(4) : ""
-    );
-    if (skillTemplateMatch !== null) {
-      const riskLevel = skillTemplateMatch[1] ?? "";
-      const projectRole = skillTemplateMatch[2] ?? "";
-      if (!["L1", "L2", "L3"].includes(riskLevel)) {
-        this.sendError(
-          request.id,
-          -32602,
-          `riskLevel inválido: "${riskLevel}". Valores permitidos: L1, L2, L3.`
-        );
-        return;
-      }
-      const text = buildSkillTemplateMarkdown(riskLevel, projectRole);
-      this.sendResponse(request.id, {
-        contents: [{ uri, mimeType: "text/markdown", text }]
       });
       return;
     }
