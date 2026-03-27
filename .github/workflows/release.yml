@@ -72,10 +72,14 @@ jobs:
           fi
 
       - name: Publish to npm
-        # Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret required.
-        # setup-node writes an .npmrc _authToken template that evaluates to an
-        # empty string when NODE_AUTH_TOKEN is unset, blocking the OIDC exchange.
-        # We delete it explicitly so npm falls back to OIDC (id-token: write above).
+        # npm Trusted Publishing (OIDC): the npm CLI does not auto-exchange the
+        # GitHub OIDC token. We request it explicitly with the npm registry as
+        # audience and pass it as NODE_AUTH_TOKEN. The registry validates it
+        # against the Trusted Publisher configuration for this package.
         run: |
-          npm config delete //registry.npmjs.org/:_authToken
-          npm publish --access public --provenance
+          OIDC_TOKEN=$(curl -fsSL \
+            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https://registry.npmjs.org/" \
+            | jq -r '.value')
+          echo "::add-mask::${OIDC_TOKEN}"
+          NODE_AUTH_TOKEN="${OIDC_TOKEN}" npm publish --access public --provenance
