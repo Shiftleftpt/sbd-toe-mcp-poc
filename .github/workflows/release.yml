@@ -35,7 +35,9 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          registry-url: https://registry.npmjs.org
+          # registry-url intentionally omitted: setting it causes setup-node to write
+          # an .npmrc auth token template that overrides npm Trusted Publishing (OIDC).
+          # npm defaults to registry.npmjs.org without explicit configuration.
 
       - name: Install dependencies
         run: npm ci
