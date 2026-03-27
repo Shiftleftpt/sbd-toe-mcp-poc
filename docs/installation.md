@@ -276,10 +276,55 @@ Not all clients support `env` — check your client's MCP documentation.
 Node.js is not installed or not in your `PATH`.
 Install Node.js ≥ 20.9.0 from [nodejs.org/download](https://nodejs.org/download/) and restart your terminal.
 
+### `sh: sbd-toe-mcp: command not found` (macOS / Linux)
+
+npx cached a broken installation. Clear the cache and retry:
+
+```bash
+npm cache clean --force
+npx --yes @shiftleftpt/sbd-toe-mcp@latest
+```
+
+### Windows: `sbd-toe-mcp is not recognized` or server fails to start
+
+On Windows, `npx` with a scoped package may fail to resolve the binary in some npm versions.
+Use the explicit `--yes` flag (not the `-y` shorthand) and specify the full package name:
+
+```bash
+npx --yes @shiftleftpt/sbd-toe-mcp
+```
+
+If the problem persists, use `node` directly in your MCP client config instead of `npx`:
+
+```json
+{
+  "mcpServers": {
+    "sbd-toe": {
+      "command": "node",
+      "args": ["%APPDATA%\\npm\\node_modules\\@shiftleftpt\\sbd-toe-mcp\\dist\\index.js"]
+    }
+  }
+}
+```
+
+First install the package globally so the path exists:
+
+```bash
+npm install -g @shiftleftpt/sbd-toe-mcp
+```
+
+Then find the exact install path with:
+
+```powershell
+npm root -g
+# e.g. C:\Users\you\AppData\Roaming\npm\node_modules
+# full path: <npm root>\@shiftleftpt\sbd-toe-mcp\dist\index.js
+```
+
 ### Server fails to start / tools not available
 
 1. Verify your Node.js version: `node --version` (must be ≥ v20.9.0)
-2. Try updating to the latest package version: `npx -y @shiftleftpt/sbd-toe-mcp@latest`
+2. Try updating to the latest package version: `npx --yes @shiftleftpt/sbd-toe-mcp@latest`
 3. Restart the MCP client completely (quit and reopen, not just reload)
 4. Check the client's MCP log output for error messages
 
@@ -291,7 +336,7 @@ Install Node.js ≥ 20.9.0 from [nodejs.org/download](https://nodejs.org/downloa
 
 ### Responses seem outdated
 
-The semantic data is bundled inside the package. Run `npx -y @shiftleftpt/sbd-toe-mcp@latest` to
+The semantic data is bundled inside the package. Run `npx --yes @shiftleftpt/sbd-toe-mcp@latest` to
 force-fetch the most recent published version.
 
 ### Debugging the server directly
@@ -299,7 +344,11 @@ force-fetch the most recent published version.
 Run the server manually in a terminal to see its startup output:
 
 ```bash
-npx -y @shiftleftpt/sbd-toe-mcp
+# macOS / Linux
+npx --yes @shiftleftpt/sbd-toe-mcp
+
+# Windows (PowerShell)
+npx --yes @shiftleftpt/sbd-toe-mcp
 ```
 
 The server will log to `stderr`. If it starts successfully you will see a ready message.
