@@ -1,15 +1,11 @@
----
-# Installation: copy this file to .github/skills/sbd-toe-skill/SKILL.md in your project
-# Claude Code will make it available as /skill sbd-toe-skill
----
-
-# SbD-ToE MCP — Skill Guide
+# SbD-ToE — Agent Guide
 
 You are an engineering agent operating in a repository governed by the
 **Security by Design — Theory of Everything (SbD-ToE)** manual via MCP.
 
 > **SbD-ToE = Security by Design — Theory of Everything.**
-> Never "Trail of Evidence". Never "Terms of Engagement". The manual has **15 chapters (00–14)**.
+> Never "Trail of Evidence". Never "Terms of Engagement".
+> The manual has **15 chapters (00–14)**.
 
 ---
 
@@ -24,20 +20,26 @@ security controls — it does not reduce code quality, test coverage, or enginee
 
 ---
 
-## Session startup
+## Language
 
-At the start of a session involving SbD-ToE work, bootstrap context with:
+Always respond in the user's language. The manual content is in Portuguese — translate,
+summarise, and explain in whatever language the user writes in. Do not switch to Portuguese
+because the retrieved context is in Portuguese.
+
+---
+
+## Session setup
+
+After reading this guide, run:
 
 ```
-1. Read resource: sbd://toe/index-compact
-   → loads the full chapter map into context (< 5 KB); eliminates exploratory discovery calls
-
-2. Run prompt: setup_sbd_toe_agent(riskLevel="<L1|L2|L3>", projectRole="<role>")
-   → configures the agent with role-specific and risk-specific instructions
+setup_sbd_toe_agent(riskLevel="<L1|L2|L3>", projectRole="<role>")
 ```
 
-If you do not know the project's risk level, call `list_sbd_toe_chapters` and
-`map_sbd_toe_applicability` to help the user determine it.
+This returns the list of active chapters and risk-level specific rules for the project.
+
+If you do not know the project's risk level, use `map_sbd_toe_applicability` or
+`list_sbd_toe_chapters` to help the user determine it.
 
 ---
 
@@ -63,9 +65,9 @@ according to the manual.
 1. Obtain applicable guidance first (CONSULT mode)
 2. Then apply it to generate, structure, or review the artefact
 
-generate_document           ← structured document skeleton for a type + risk level
+generate_document            ← structured document skeleton for a type + risk level
 plan_sbd_toe_repo_governance ← governance plan for a repository
-map_sbd_toe_review_scope    ← which SbD-ToE bundles to review given changed files
+map_sbd_toe_review_scope     ← which SbD-ToE bundles to review given changed files
 ```
 
 > In governance, assessment, or planning tasks: **present the target artefact plan before
@@ -73,14 +75,6 @@ map_sbd_toe_review_scope    ← which SbD-ToE bundles to review given changed fi
 >
 > In implementation tasks: **obtain applicable secure implementation guidance before
 > generating code** when security-relevant behaviour is involved.
-
----
-
-## Language
-
-Always respond in the user's language. The manual content is in Portuguese — translate,
-summarise, and explain in whatever language the user writes in. Do not switch to Portuguese
-because the retrieved context is in Portuguese.
 
 ---
 
@@ -156,9 +150,10 @@ Always distinguish between:
 
 | Resource URI | When to use |
 |---|---|
-| `sbd://toe/index-compact` | Session bootstrap — inject full chapter map into context |
-| `sbd://toe/skill-template/{riskLevel}/{projectRole}` | Get role + risk specific instructions (e.g. `L2/developer`) |
-| `sbd://toe/chapter-applicability/{riskLevel}` | Fast lookup of active/excluded chapters for a risk level |
+| `sbd://toe/agent-guide` | This document — full operational guide |
+| `sbd://toe/index-compact` | Full chapter map as JSON — fast structured lookup |
+| `sbd://toe/skill-template/{riskLevel}/{projectRole}` | Role + risk specific instructions |
+| `sbd://toe/chapter-applicability/{riskLevel}` | Active/excluded chapters for a risk level |
 
 ---
 
@@ -166,8 +161,8 @@ Always distinguish between:
 
 | Prompt | When to use |
 |---|---|
-| `setup_sbd_toe_agent(riskLevel, projectRole)` | Session startup — configures agent for a specific project context |
-| `ask_sbd_toe_manual(question)` | Direct grounded Q&A (VS Code Copilot Chat) |
+| `setup_sbd_toe_agent(riskLevel, projectRole)` | Session setup — active chapters + risk-specific rules |
+| `ask_sbd_toe_manual(question)` | Direct grounded Q&A |
 
 ---
 
