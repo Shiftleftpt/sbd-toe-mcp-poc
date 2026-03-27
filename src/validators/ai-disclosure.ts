@@ -11,7 +11,6 @@
  * Campos obrigatórios: AI_ASSISTED, MODEL, DATE, PURPOSE
  */
 
-import { strict as assert } from 'assert';
 
 export const ALLOWED_PURPOSES = [
   'generated-code',
@@ -102,10 +101,8 @@ function parseHTMLCommentSection(content: string): Record<string, unknown> | nul
 
   // Parse remaining key:value pairs (MODEL, DATE, PURPOSE, etc.)
   // Pattern: KEY: VALUE (comma-separated)
-  const pairs = fullComment
-    .replace(/<!--\s*/, '')
-    .replace(/\s*-->/g, '')
-    .split(',');
+  // Extract inner content of <!-- ... --> using slice to avoid HTML-manipulation patterns.
+  const pairs = fullComment.slice(4, -3).trim().split(',');
 
   for (let i = 1; i < pairs.length; i++) {
     const pairRaw = pairs[i];

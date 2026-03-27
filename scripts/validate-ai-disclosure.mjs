@@ -10,7 +10,7 @@
  * Valida que toda documentação AI-assistida tenha disclosure explícita para rastreabilidade.
  */
 
-import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
+import { readFileSync, existsSync, readdirSync } from 'fs';
 import { join, relative } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -86,10 +86,8 @@ function parseHTMLCommentSection(content) {
   const aiValue = match[1].trim().toLowerCase();
   result.ai_assisted = aiValue === 'true' ? true : aiValue === 'false' ? false : null;
 
-  const pairs = fullComment
-    .replace(/<!--\s*/, '')
-    .replace(/\s*-->/g, '')
-    .split(',');
+  // Extract inner content of <!-- ... --> using slice to avoid HTML-manipulation patterns.
+  const pairs = fullComment.slice(4, -3).trim().split(',');
 
   for (let i = 1; i < pairs.length; i++) {
     const pair = pairs[i].trim();
@@ -233,8 +231,6 @@ function validateFile(filePath) {
 function main() {
   const args = process.argv.slice(2);
   const isCheckMode = args.includes('--check');
-  const includeAO = args.includes('--include-ao');
-  const includeDocs = args.includes('--include-docs');
 
   const files = getMonitoredFiles();
   const results = {};

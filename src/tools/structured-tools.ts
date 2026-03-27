@@ -363,8 +363,6 @@ export function handleMapSbdToeApplicability(
     throw Object.assign(new Error(err.message), { rpcError: err });
   }
 
-  const hasPersonalData = typeof args["hasPersonalData"] === "boolean" ? args["hasPersonalData"] : false;
-
   const items = getEntityItems(cache);
 
   const allChapterIds = new Set<string>();
