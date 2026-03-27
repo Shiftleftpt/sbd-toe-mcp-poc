@@ -75,6 +75,7 @@ jobs:
         # Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret required.
         # Prerequisites: package configured for Trusted Publishing on npmjs.com
         # (package Settings → Trusted Publishing → add this GitHub repo/workflow).
+        # NODE_AUTH_TOKEN must NOT be set here: the npm CLI exchanges the GitHub
+        # OIDC token for a short-lived npm token automatically when id-token: write
+        # is granted and setup-node is configured with registry-url.
         run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
