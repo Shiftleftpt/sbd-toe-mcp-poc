@@ -9,8 +9,6 @@ export interface AppConfig {
   backend: {
     docsIndex: string;
     entitiesIndex: string;
-    docsHits: number;
-    entitiesHits: number;
     maxContextRecords: number;
     upstreamRepoDir: string;
     checkoutFile: string;
@@ -27,7 +25,6 @@ export interface AppConfig {
   };
   prompt: {
     systemPromptFile: string;
-    defaultLanguage: string;
     siteBaseUrl: string;
     manualBaseUrl: string;
     crossCheckBaseUrl: string;

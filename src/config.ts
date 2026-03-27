@@ -59,8 +59,6 @@ export function getConfig(): AppConfig {
         "SEMANTIC_BACKEND_ENTITIES_INDEX",
         "SbD-ToE-ASKAI-Entities"
       ),
-      docsHits: parseInteger("DOCS_HITS", getEnv("DOCS_HITS", "8"), 8),
-      entitiesHits: parseInteger("ENTITIES_HITS", getEnv("ENTITIES_HITS", "5"), 5),
       maxContextRecords: parseInteger(
         "MAX_CONTEXT_RECORDS",
         getEnv("MAX_CONTEXT_RECORDS", "8"),
@@ -114,7 +112,6 @@ export function getConfig(): AppConfig {
         "SYSTEM_PROMPT_FILE",
         "./prompts/sbd-toe-chat-system.md"
       ),
-      defaultLanguage: getEnv("DEFAULT_LANGUAGE", "pt-PT"),
       siteBaseUrl: normalizeBaseUrl(
         getEnv("SITE_BASE_URL", "https://www.securitybydesign.dev/")
       ),

@@ -1,0 +1,7 @@
+# Exclude compiled test files — not needed at runtime.
+**/*.test.js
+**/*.test.d.ts
+**/*.test.js.map
+dist/test-utils.js
+dist/test-utils.d.ts
+dist/test-utils.js.map

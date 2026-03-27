@@ -18,5 +18,9 @@
   "include": [
     "src/**/*.ts",
     "scripts/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/**/*.test.ts",
+    "src/test-utils.ts"
   ]
 }
