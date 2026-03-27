@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import readline from "node:readline";
 
-import { getConfig } from "./config.js";
+import { getConfig, resolveAppPath } from "./config.js";
 import {
   formatSampledAnswerResult,
   inspectManualRetrieval,
@@ -11,13 +12,16 @@ import {
   searchManualQuestion
 } from "./orchestrator/ask-manual.js";
 import { loadSystemPromptTemplate } from "./prompt/system-prompt.js";
-import { getSnapshotCache } from "./backend/semantic-index-gateway.js";
+import { getSnapshotCache, retrievePublishedContext } from "./backend/semantic-index-gateway.js";
 import {
   handleGetSbdToeChapterBrief,
   handleListSbdToeChapters,
   handleMapSbdToeApplicability,
   handleQuerySbdToeEntities
 } from "./tools/structured-tools.js";
+import { handleGenerateDocument } from "./tools/generate-document.js";
+import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
+import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
 import {
   buildChapterApplicabilityJson,
   buildSetupAgentPrompt,
@@ -537,14 +541,148 @@ class McpRuntime {
           annotations: { readOnlyHint: true }
         },
         {
-          name: "map_sbd_toe_applicability",
-          title: "Map SbD-ToE Applicability",
+          name: "plan_sbd_toe_repo_governance",
+          title: "Plan SbD-ToE Repo Governance",
           description:
-            "Mapeia capítulos/controlos activos, condicionais e excluídos para um nível de risco L1/L2/L3.",
+            "Dado o tipo de repositório, plataforma e nível de risco, devolve um plano de governança com controlos aplicáveis, checkpoints de baseline, checklist de evidências e recomendações de plataforma.",
           inputSchema: {
             type: "object",
             properties: {
-              riskLevel: { type: "string", enum: ["L1", "L2", "L3"] }
+              repoType: {
+                type: "string",
+                enum: ["library", "service", "webapp", "infrastructure", "pipeline", "monorepo"],
+                description: "Tipo de repositório."
+              },
+              platform: {
+                type: "string",
+                enum: ["github", "gitlab"],
+                description: "Plataforma de hosting do repositório."
+              },
+              riskLevel: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Nível de risco do projecto."
+              },
+              organizationContext: {
+                type: "object",
+                description: "Contexto organizacional opcional.",
+                properties: {
+                  scale:            { type: "string", enum: ["startup", "mid-size", "enterprise"] },
+                  teamSize:         { type: "integer", minimum: 1 },
+                  enforcementLevel: { type: "string", enum: ["advisory", "enforced", "strict"] }
+                },
+                additionalProperties: false
+              }
+            },
+            required: ["repoType", "platform", "riskLevel"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "generate_document",
+          title: "Generate SbD-ToE Document",
+          description:
+            "Gera o esqueleto estruturado de um documento SbD-ToE (secções, campos obrigatórios, critérios de aceitação) para um tipo e nível de risco.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              type: {
+                type: "string",
+                enum: ["classification-template", "threat-model-template", "checklist", "training-plan", "secure-config"],
+                description: "Tipo de documento a gerar."
+              },
+              riskLevel: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Nível de risco do projecto."
+              },
+              context: {
+                type: "object",
+                description: "Contexto adicional do projecto (reservado, não usado na estrutura).",
+                additionalProperties: true
+              }
+            },
+            required: ["type", "riskLevel"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "map_sbd_toe_review_scope",
+          title: "Map SbD-ToE Review Scope",
+          description:
+            "Dado um conjunto de ficheiros alterados, mapeia quais knowledge bundles SbD-ToE devem ser revistos, com reasoning explícito por path.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              changedFiles: {
+                type: "array",
+                items: { type: "string" },
+                minItems: 1,
+                description: "Lista de paths relativos ao raiz do repositório."
+              },
+              riskLevel: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Nível de risco do projecto."
+              },
+              projectContext: {
+                type: "object",
+                description: "Contexto adicional do projecto (opcional).",
+                properties: {
+                  repoRole:          { type: "string" },
+                  runtimeModel:      { type: "string" },
+                  distributionModel: { type: "string" },
+                  hasCi:             { type: "boolean" }
+                },
+                additionalProperties: false
+              },
+              diffSummary: {
+                type: "string",
+                description: "Resumo do diff (truncado a 500 chars)."
+              }
+            },
+            required: ["changedFiles", "riskLevel"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "map_sbd_toe_applicability",
+          title: "Map SbD-ToE Applicability",
+          description:
+            "Mapeia capítulos/controlos activos, condicionais e excluídos para um nível de risco L1/L2/L3. Suporta contexto de projecto para activar bundles relevantes.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              riskLevel: { type: "string", enum: ["L1", "L2", "L3"] },
+              technologies: {
+                type: "array",
+                items: {
+                  type: "string",
+                  enum: [
+                    "containers", "serverless", "kubernetes", "ci-cd", "iac", "api-gateway",
+                    "mobile", "spa", "microservices", "legacy-integration", "ml-ai", "data-pipeline",
+                    "sca-sbom", "sast", "dast", "secrets-management", "monitoring", "iam",
+                    "network-segmentation", "cryptography"
+                  ]
+                },
+                description: "Tecnologias usadas no projecto."
+              },
+              hasPersonalData: {
+                type: "boolean",
+                description: "O projecto processa dados pessoais?"
+              },
+              isPublicFacing: {
+                type: "boolean",
+                description: "O projecto tem exposição pública?"
+              },
+              projectRole: {
+                type: "string",
+                enum: ["developer", "architect", "security", "devops", "manager"],
+                description: "Papel do utilizador no projecto."
+              }
             },
             required: ["riskLevel"],
             additionalProperties: false
@@ -672,6 +810,13 @@ class McpRuntime {
           description:
             "Capítulos activos, condicionais e excluídos para um nível de risco L1/L2/L3.",
           mimeType: "application/json"
+        },
+        {
+          uri: "sbd://toe/index-compact",
+          name: "SbD-ToE Index Compact",
+          description:
+            "Índice compacto do manual SbD-ToE. Injectável em system prompt para eliminar fase de descoberta exploratória.",
+          mimeType: "application/json"
         }
       ]
     });
@@ -717,6 +862,21 @@ class McpRuntime {
       const text = buildSkillTemplateMarkdown(riskLevel, projectRole);
       this.sendResponse(request.id, {
         contents: [{ uri, mimeType: "text/markdown", text }]
+      });
+      return;
+    }
+
+    if (uri === "sbd://toe/index-compact") {
+      const indexPath = resolveAppPath("data/publish/sbd-toe-index-compact.json");
+      let indexText: string;
+      try {
+        indexText = readFileSync(indexPath, "utf-8");
+      } catch {
+        this.sendError(request.id, -32603, "Não foi possível ler o índice compacto SbD-ToE.");
+        return;
+      }
+      this.sendResponse(request.id, {
+        contents: [{ uri, mimeType: "application/json", text: indexText }]
       });
       return;
     }
@@ -903,6 +1063,28 @@ class McpRuntime {
           const question = this.getStringArg(args, "question");
           const debug = this.getOptionalBooleanArg(args, "debug");
           const topK = this.getOptionalIntegerArg(args, "topK");
+
+          if (!this.supportsSampling()) {
+            // Fallback gracioso: devolver top-3 documentos sem sampling
+            const bundle = await retrievePublishedContext(question, 3);
+            const fallbackResult = {
+              sampling_unavailable: true,
+              note: "Sampling não disponível neste cliente. Apresentando os 3 documentos mais relevantes como contexto.",
+              results: bundle.retrieved
+            };
+            this.sendResponse(request.id, {
+              content: [{ type: "text", text: JSON.stringify(fallbackResult, null, 2) }]
+            });
+            await this.log("info", {
+              event_type: "tool.call",
+              outcome: "succeeded",
+              duration_ms: Date.now() - startedAt,
+              ...metadata,
+              message: "Tool invocation completed (sampling fallback)"
+            });
+            return;
+          }
+
           const prepared = await prepareManualAnsweringContext(question, topK);
           const sampled = await this.requestSampling(
             prepared.prompt.systemPrompt,
@@ -972,6 +1154,48 @@ class McpRuntime {
           });
           return;
         }
+        case "plan_sbd_toe_repo_governance": {
+          const result = handlePlanRepoGovernance(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "generate_document": {
+          const result = handleGenerateDocument(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "map_sbd_toe_review_scope": {
+          const result = handleMapSbdToeReviewScope(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
         case "map_sbd_toe_applicability": {
           const cache = getSnapshotCache();
           const result = handleMapSbdToeApplicability(args, cache);
@@ -999,6 +1223,26 @@ class McpRuntime {
           this.sendError(request.id, -32602, `Tool desconhecida: ${name}`);
       }
     } catch (error) {
+      // Erros com rpcError emitem JSON-RPC error (ex: -32602 para input inválido)
+      if (
+        error instanceof Error &&
+        "rpcError" in error &&
+        error.rpcError !== null &&
+        typeof error.rpcError === "object"
+      ) {
+        const rpcError = error.rpcError as { code: number; message: string; data?: unknown };
+        await this.log("warning", {
+          event_type: "tool.call",
+          outcome: "failed",
+          duration_ms: Date.now() - startedAt,
+          ...metadata,
+          error_code: rpcError.code,
+          message: rpcError.message
+        });
+        this.sendError(request.id, rpcError.code, rpcError.message, rpcError.data);
+        return;
+      }
+
       const message = error instanceof Error ? error.message : "Erro inesperado.";
       await this.log("error", {
         event_type: "tool.call",

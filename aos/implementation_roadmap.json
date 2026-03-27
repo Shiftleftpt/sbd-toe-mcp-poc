@@ -1,0 +1,283 @@
+{
+  "version": "2.0",
+  "created_at": "2026-03-24T17:00:00Z",
+  "updated_at": "2026-03-26T19:26:40Z",
+  "active_slice_id": null,
+  "slices": {
+    "s1": {
+      "metadata": {
+        "id": "s1",
+        "title": "Checkout dos índices enriquecidos",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Actualizar src/bootstrap/checkout-backend.ts para copiar os ficheiros _enriched publicados pelo upstream, e adicionar as respectivas chaves em AppConfig e .env.example — sem ainda consumir os novos campos no gateway.",
+        "acceptance_criteria": [
+          "Após npm run checkout:backend existem data/publish/algolia_entities_records_enriched.json e data/publish/algolia_docs_records_enriched.json com conteúdo válido { items: [...] }",
+          "npm run check e npm run build passam sem erros",
+          "src/backend/semantic-index-gateway.ts não é tocado neste slice"
+        ]
+      },
+      "closed_at": "2026-03-24T18:11:50.787336Z"
+    },
+    "s2": {
+      "metadata": {
+        "id": "s2",
+        "title": "Gateway e tipos para campos enriquecidos",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Actualizar src/types.ts e src/backend/semantic-index-gateway.ts para carregar e expor os campos enriquecidos (aliases_pt_en, intent_topics, canonical_control_ids, artifact_ids) via merge por objectID.",
+        "acceptance_criteria": [
+          "NormalizedRecord tem os 4 campos novos com tipos readonly string[]",
+          "EnrichedFields está definida e exportada em src/types.ts",
+          "Gateway carrega enriched com fallback gracioso (ficheiro ausente → items: [], sem crash)",
+          "npm run check e npm run build passam sem erros"
+        ]
+      },
+      "closed_at": "2026-03-24T18:37:30.096846Z"
+    },
+    "s3": {
+      "metadata": {
+        "id": "s3",
+        "title": "Scoring PT/EN com aliases_pt_en e intent_topics",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Usar os campos aliases_pt_en e intent_topics no scoring local para melhorar a cobertura de queries em português. Expandir matches PT/EN, boost por intent_topics, penalização de conteúdo demo/training.",
+        "acceptance_criteria": [
+          "5 pares PT/EN testados manualmente retornam resultados consistentes",
+          "Modo debug expõe expansões e boosts aplicados",
+          "npm run check e npm run build passam sem erros"
+        ]
+      },
+      "closed_at": "2026-03-24T21:37:04.098893Z"
+    },
+    "s4-tests": {
+      "metadata": {
+        "id": "s4-tests",
+        "title": "Suite de testes unitários (s1+s2+s3)",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Implementar testes unitários que cubram o código implementado em s1, s2 e s3. Setup vitest, testes para checkout-backend.ts, semantic-index-gateway.ts e test-utils.ts. Cobertura mínima ≥70%.",
+        "acceptance_criteria": [
+          "npm run test passa (exit 0), cobertura ≥70%",
+          "Testes cobrem os 6 casos principais: expandAliases, classifyIntent, computeScore, buildEnrichedLookup, normalizeHit, sanitizeRunManifest",
+          "npm run check e npm run build limpos",
+          "Sem any nos testes, sem stdout poluído"
+        ]
+      },
+      "closed_at": "2026-03-24T21:36:56.620199Z"
+    },
+    "s4": {
+      "metadata": {
+        "id": "s4",
+        "title": "Tools estruturadas de consulta",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Implementar as 4 tools MCP prioritárias: list_sbd_toe_chapters, query_sbd_toe_entities, get_sbd_toe_chapter_brief, map_sbd_toe_applicability. Registar em src/index.ts, validar inputs com allowlists.",
+        "acceptance_criteria": [
+          "As 4 tools respondem a inputs válidos com output estruturado",
+          "Inputs inválidos são rejeitados com erro JSON-RPC -32602",
+          "npm run check e npm run build passam sem erros"
+        ]
+      },
+      "closed_at": "2026-03-24T22:16:47.746200Z"
+    },
+    "s5": {
+      "metadata": {
+        "id": "s5",
+        "title": "MCP Resources para enforcement a agentes",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Expor resources MCP e prompt nomeado que permitem a um agente auto-configurar-se com as prescrições SbD-ToE. Resources sbd_toe_skill_template e sbd_toe_chapter_applicability, prompt setup_sbd_toe_agent.",
+        "acceptance_criteria": [
+          "Resource sbd_toe_skill_template responde para L1, L2, L3",
+          "Resource sbd_toe_chapter_applicability lista correctamente os capítulos aplicáveis por nível",
+          "Prompt setup_sbd_toe_agent é invocável como slash command",
+          "npm run check e npm run build passam sem erros"
+        ]
+      },
+      "closed_at": "2026-03-24T22:32:55.963000Z"
+    },
+    "s6": {
+      "metadata": {
+        "id": "s6",
+        "title": "Checkout de snapshots via GitHub Releases",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Adicionar modo UPSTREAM_SOURCE=local|release em src/config.ts. No modo release: descarregar asset de bundle da release mais recente via GitHub API. Validar integridade sha256, timeout 60s, tamanho máximo.",
+        "acceptance_criteria": [
+          "UPSTREAM_SOURCE=release npm run checkout:backend descarrega e instala snapshots correctamente",
+          "URLs de origem são validadas; inputs externos não controlam a URL de download",
+          "Timeout e tamanho máximo são aplicados",
+          "npm run check e npm run build passam sem erros"
+        ]
+      },
+      "closed_at": "2026-03-24T22:43:00.749996Z"
+    },
+    "s7": {
+      "metadata": {
+        "id": "s7",
+        "title": "Bundle self-contained com índices enriquecidos",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Actualizar scripts/package-release.mjs para incluir snapshots _enriched no bundle. Gates de packaging: falhar se qualquer ficheiro obrigatório estiver ausente. Gerar sha256. Bundle auto-suficiente sem rede.",
+        "acceptance_criteria": [
+          "Bundle contém os snapshots enriquecidos e compila sem erros",
+          "npm run check e npm run build passam sem erros",
+          "sha256 gerado e disponível no release/"
+        ]
+      },
+      "closed_at": "2026-03-24T23:05:53.706869Z"
+    },
+    "s8": {
+      "metadata": {
+        "id": "s8",
+        "title": "Governança de documentos AI-Assisted",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Implementar formato de disclosure obrigatório para documentos criados com assistência de IA. Script de validação em CI, PR template com checkbox de confirmação, aplicação retroactiva a artefactos AOS e docs.",
+        "acceptance_criteria": [
+          "CI rejeita docs marcados como AI-assisted sem disclosure válido",
+          "PR template inclui checkbox de revisão humana",
+          "npm run check passa limpo"
+        ]
+      },
+      "closed_at": "2026-03-25T13:43:26.303546Z"
+    },
+    "s9": {
+      "metadata": {
+        "id": "s9",
+        "title": "AI Setup Foundation",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Corrigir os gaps de usabilidade confirmados em duas iterações reais com Claude.ai: (9.1) SKILL.md em .github/skills/sbd-toe-skill/SKILL.md; (9.2) expandir map_sbd_toe_applicability com campos opcionais technologies/hasPersonalData/isPublicFacing/projectRole e output activatedBundles; (9.3) fallback gracioso em answer_sbd_toe_manual quando sampling indisponível; (9.4) campo readableTitle em list_sbd_toe_chapters; (9.5) resource sbd://toe/index-compact <5KB injectável em system prompt.",
+        "acceptance_criteria": [
+          "SKILL.md: markdown válido, workflow por tipo de pergunta, 9+ domínios mapeados, exemplos ponta-a-ponta",
+          "map_sbd_toe_applicability: aceita {riskLevel, technologies?, hasPersonalData?, isPublicFacing?, projectRole?}; 5 perfis devolvem activatedBundles plausíveis com status e reason; output retro-compatível",
+          "answer_sbd_toe_manual: quando sampling ausente retorna retrieval top-3 + sampling_unavailable: true; não lança erro para o utilizador final",
+          "list_sbd_toe_chapters: campo readableTitle presente e distinto do ID em todos os capítulos",
+          "Resource sbd://toe/index-compact: disponível via resources/list e resources/read, <5KB, campos chapterId/readableTitle/domains/technologies/minLevel presentes em todos os registos",
+          "npm run check && npm run build limpos; npm run test passa; sem any; sem stdout poluído"
+        ]
+      },
+      "closed_at": "2026-03-26T19:09:58.433828Z"
+    },
+    "s10": {
+      "metadata": {
+        "id": "s10",
+        "title": "generate_document tool + Review Scope Mapping",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Implementar tool generate_document que aceita {type, riskLevel, context?} e devolve esqueleto estruturado de documento sem conteúdo pré-gerado. Implementar tool map_sbd_toe_review_scope que mapeia paths alterados a knowledge bundles SbD-ToE a rever.",
+        "acceptance_criteria": [
+          "generate_document: 5 tipos suportados; output contém sections, acceptanceCriteria e relevantBundles; L1/L2/L3 produzem estruturas distintas; sem conteúdo pré-gerado",
+          "map_sbd_toe_review_scope: valida paths (sem path traversal — -32602 em paths com ..); 5 cenários cobrem outputs plausíveis; bundlesToReview usa nomenclatura de bundles de s9; pathMapping cobre 6+ padrões",
+          "npm run check && npm run build limpos; npm run test passa; sem any, sem mutations"
+        ]
+      },
+      "closed_at": "2026-03-26T19:26:40Z"
+    },
+    "s11": {
+      "metadata": {
+        "id": "s11",
+        "title": "Repo Governance Planning",
+        "status": "closed"
+      },
+      "goal": {
+        "description": "Implementar tool plan_sbd_toe_repo_governance: aceita {repoType, platform, riskLevel, organizationContext} e devolve plano JSON com applicableControls, mandatoryControls, recommendedControls, baselineCheckpoints, evidenceChecklist, gaps e platform_specific (GitHub). Sem auto-execução — apenas advisory.",
+        "acceptance_criteria": [
+          "plan_sbd_toe_repo_governance: aceita 4 parâmetros, valida enums; 5 cenários produzem planos plausíveis",
+          "mandatoryControls não vazio para L2/L3",
+          "baselineCheckpoints ≥ 4 fases",
+          "evidenceChecklist ≥ 8 items",
+          "GitHub-specific recommendations em YAML simples",
+          "npm run check && npm run build limpos; npm run test passa; sem any, sem mutations"
+        ]
+      },
+      "closed_at": "2026-03-27T10:03:52.264821Z"
+    },
+    "s12": {
+      "metadata": {
+        "id": "s12",
+        "title": "npm-ready: package rename + publish config",
+        "status": "not_started"
+      },
+      "goal": {
+        "description": "Preparar package.json e scripts para publicação pública no npm. Remover 'private: true', renomear para 'sbd-toe-mcp', adicionar campo 'files' com data/dist/prompts, corrigir bin entry, adicionar metadados npm (keywords, repository, homepage, publishConfig). Corrigir examples/vscode.mcp.json para usar npx em vez de absolute paths. Atualizar PROJECT_NAME em package-release-lib.mjs. Sem alterações em src/.",
+        "acceptance_criteria": [
+          "package.json: sem 'private'; name='sbd-toe-mcp'; bin.sbd-toe-mcp='./dist/index.js'; 'files' contém 'dist/', 'data/publish/', 'data/reports/run_manifest.json', 'prompts/'; 'keywords', 'repository', 'homepage', 'publishConfig' presentes",
+          "scripts/package-release-lib.mjs: PROJECT_NAME === 'sbd-toe-mcp'",
+          "examples/vscode.mcp.json: command='npx', args=['-y','sbd-toe-mcp'] — sem absolute paths",
+          "npm pack --dry-run lista dist/index.js, data/publish/algolia_entities_records.json, prompts/ — sem ficheiros de src/ nem node_modules/",
+          "npm view sbd-toe-mcp retorna erro 404 (nome disponível) OU executor reporta colisão ao sync",
+          "npm run check && npm run build && npm run test passam (247 testes, zero regressões)"
+        ]
+      }
+    },
+    "s13": {
+      "metadata": {
+        "id": "s13",
+        "title": "Installation docs + config examples",
+        "status": "not_started"
+      },
+      "goal": {
+        "description": "Criar documentação de instalação completa e exemplos de configuração por cliente MCP. Cobrir Claude Desktop, Claude Code, VS Code + GitHub Copilot, Cursor, Windsurf, Zed e outros. Enfatizar zero-config (sem env vars obrigatórias). Atualizar README.md com Quick Start. Documentar apenas os 18 env vars funcionais (omitir os 5 dead-code: DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG).",
+        "acceptance_criteria": [
+          "docs/installation.md existe com ≥150 linhas; contém secções para Claude Desktop, Claude Code, VS Code/Copilot, Cursor, Windsurf/Zed; cada secção tem snippet JSON copy-pasteable",
+          "examples/claude-desktop.json existe; é JSON válido; usa command='npx', args=['-y','sbd-toe-mcp']; sem env vars obrigatórias",
+          "examples/vscode.mcp.json (já corrigido em s12) confirmado em docs",
+          "README.md tem secção 'Quick Start' com npx -y sbd-toe-mcp como comando zero-config; instalação em ≤3 passos para o cliente mais simples",
+          "docs/installation.md não documenta DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG (dead code omitido)",
+          "npm run check limpo; todos os ficheiros novos têm disclosure header"
+        ]
+      }
+    },
+    "s14": {
+      "metadata": {
+        "id": "s14",
+        "title": "Smithery registration (smithery.yaml)",
+        "status": "not_started"
+      },
+      "goal": {
+        "description": "Criar smithery.yaml na raiz do repositório seguindo o schema oficial de Smithery (https://smithery.ai/docs/schema). Configurar startCommand com npx -y sbd-toe-mcp. Documentar env vars opcionais funcionais (18 usados, omitir os 5 dead-code). Adicionar smithery.yaml ao campo 'files' do package.json e a REQUIRED_BUNDLE_ENTRIES. Validar que o YAML é sintaticamente correcto.",
+        "acceptance_criteria": [
+          "smithery.yaml existe na raiz; é YAML válido (parseável sem erro por qualquer parser YAML standard)",
+          "startCommand.type='stdio', startCommand.command='npx', startCommand.args=['-y','sbd-toe-mcp'] — ou schema equivalente conforme spec oficial",
+          "Env vars opcionais documentados com description e default: pelo menos DEBUG_MODE, MAX_CONTEXT_RECORDS, SITE_BASE_URL, SBD_TOE_APP_ROOT",
+          "smithery.yaml NÃO documenta DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG",
+          "package.json campo 'files' inclui 'smithery.yaml'; REQUIRED_BUNDLE_ENTRIES em package-release-lib.mjs inclui smithery.yaml",
+          "npm run check limpo"
+        ]
+      }
+    },
+    "s15": {
+      "metadata": {
+        "id": "s15",
+        "title": "npm publish CI (release.yml automation)",
+        "status": "not_started"
+      },
+      "goal": {
+        "description": "Adicionar step de 'npm publish --access public' ao workflow .github/workflows/release.yml, após o bundle existente. Usar NPM_TOKEN secret via NODE_AUTH_TOKEN. Configurar setup-node com registry-url. Garantir que publish só ocorre após npm run check, npm run build e npm run test passarem. Adicionar publishConfig ao package.json.",
+        "acceptance_criteria": [
+          "release.yml: step 'Publish to npm' presente após 'Build release bundle'; usa NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}",
+          "release.yml: step setup-node tem registry-url: https://registry.npmjs.org",
+          "release.yml: publish só ocorre se jobs anteriores (check, build) tiverem sucesso — sequência correcta",
+          "package.json: publishConfig.access='public' presente",
+          "release.yml: comentário explica que NPM_TOKEN deve ser configurado em Settings > Secrets do repositório GitHub",
+          "npm run check limpo; release.yml é YAML válido"
+        ]
+      }
+    }
+  },
+  "notes": "Epic F1-F7 (s1-s8+s4-tests) e F8-F10 (s9-s11) closed. Epic distribuição (s12-s15) not_started. Decisões de design em aos/missions/distribution-decisions.md. 5 env vars dead-code identificadas (DEFAULT_LANGUAGE, DOCS_HITS, ENTITIES_HITS, SAMPLING_MAX_TOKENS, UPSTREAM_RELEASE_TAG) — omitidas da docs pública, remoção futura."
+}
