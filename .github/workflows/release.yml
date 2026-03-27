@@ -35,9 +35,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          # registry-url intentionally omitted: setting it causes setup-node to write
-          # an .npmrc auth token template that overrides npm Trusted Publishing (OIDC).
-          # npm defaults to registry.npmjs.org without explicit configuration.
+          registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         run: npm ci
@@ -75,6 +73,9 @@ jobs:
 
       - name: Publish to npm
         # Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret required.
-        # id-token: write grants the GitHub OIDC token; the npm CLI exchanges
-        # it automatically for a short-lived npm token.
-        run: npm publish --access public --provenance
+        # setup-node writes an .npmrc _authToken template that evaluates to an
+        # empty string when NODE_AUTH_TOKEN is unset, blocking the OIDC exchange.
+        # We delete it explicitly so npm falls back to OIDC (id-token: write above).
+        run: |
+          npm config delete //registry.npmjs.org/:_authToken
+          npm publish --access public --provenance
