@@ -1,0 +1,119 @@
+name: "Incidente de Segurança (IR)"
+description: "Gerir um incidente de segurança interno já triado. Para disclosure responsável, ver SECURITY.md."
+title: "[IR] "
+labels:
+  - "tipo:security"
+  - "area:incident-response"
+assignees:
+  - "pedrofarinhaatshiftleftpt"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > **Nota:** Este template é para gestão interna de incidentes já triados.
+        > Para reportar uma vulnerabilidade em privado, consulta [SECURITY.md](../../SECURITY.md).
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severidade
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Estado
+      options:
+        - Aberto
+        - Em investigação
+        - Mitigado
+        - Fechado
+    validations:
+      required: true
+
+  - type: input
+    id: component
+    attributes:
+      label: Componente afetado
+      placeholder: "ex: release-checkout, semantic-index-gateway, ci-pipeline"
+    validations:
+      required: true
+
+  - type: input
+    id: detected_at
+    attributes:
+      label: Data de deteção
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição
+      description: "O que aconteceu, quando, como foi detetado."
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impacto
+      description: "Impacto real ou potencial. Dados afetados? Utilizadores? Sistemas?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: timeline
+    attributes:
+      label: Cronologia
+      value: |
+        | Data/Hora | Evento |
+        |---|---|
+        | | Deteção |
+        | | Notificação inicial |
+        | | Início de investigação |
+        | | Mitigação aplicada |
+        | | Resolução |
+
+  - type: textarea
+    id: root_cause
+    attributes:
+      label: Causa Raiz
+      description: "A preencher durante/após investigação."
+
+  - type: checkboxes
+    id: mitigation_actions
+    attributes:
+      label: Ações de Mitigação
+      options:
+        - label: Revogar acessos comprometidos (se aplicável)
+        - label: Notificar responsável de segurança nas primeiras 4 horas
+        - label: Isolar componente afetado (se aplicável)
+        - label: Aplicar patch/mitigação temporária
+        - label: Verificar integridade de releases afetadas
+
+  - type: textarea
+    id: corrective_actions
+    attributes:
+      label: Ações Correctivas (post-mortem)
+      description: "Prazo máximo: 5 dias úteis após resolução."
+
+  - type: textarea
+    id: postmortem
+    attributes:
+      label: Post-Mortem
+      value: |
+        **Data do post-mortem:**
+
+        **O que correu mal:**
+
+        **O que correu bem:**
+
+        **O que vai mudar:**

@@ -1,0 +1,131 @@
+name: "Release Checklist de Segurança"
+description: "Checklist de segurança pré-release. Instanciar para cada tag v*.*.*."
+title: "[RELEASE] v"
+labels:
+  - "tipo:release"
+  - "area:security"
+assignees:
+  - "pedrofarinhaatshiftleftpt"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Gate de Segurança Pré-release
+
+        Este checklist deve ser preenchido e aprovado antes de publicar o release.
+        Referência: Manual SbD-ToE Cap. 10 + [`politica-testes.md`](../../docs/SecurityByDesign/politica-testes.md)
+
+  - type: input
+    id: version
+    attributes:
+      label: Versão
+      placeholder: "ex: 0.4.0"
+    validations:
+      required: true
+
+  - type: input
+    id: release_date
+    attributes:
+      label: Data planeada de release
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---\n### SAST"
+
+  - type: dropdown
+    id: sast_status
+    attributes:
+      label: CodeQL — findings críticos/altos
+      options:
+        - "✅ ZERO findings Critical/High"
+        - "⚠️ Findings presentes com exceção aprovada"
+        - "❌ Findings por resolver"
+    validations:
+      required: true
+
+  - type: input
+    id: sast_evidence
+    attributes:
+      label: Evidência SAST
+      placeholder: "ex: CodeQL run #123 — link ou build log"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---\n### Dependências"
+
+  - type: dropdown
+    id: audit_status
+    attributes:
+      label: npm audit — vulnerabilidades Critical/High
+      options:
+        - "✅ ZERO vulnerabilidades Critical/High"
+        - "⚠️ Vulnerabilidades com exceção aprovada"
+        - "❌ Vulnerabilidades por resolver"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---\n### Cobertura de Testes"
+
+  - type: input
+    id: coverage
+    attributes:
+      label: Cobertura de testes (linhas)
+      placeholder: "ex: 73% (threshold: 70%)"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---\n### SBOM"
+
+  - type: dropdown
+    id: sbom_status
+    attributes:
+      label: SBOM gerado para este release
+      options:
+        - "✅ Gerado e incluído como asset"
+        - "⚠️ Em falta — exceção registada"
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---\n### Exceções Activas"
+
+  - type: textarea
+    id: active_exceptions
+    attributes:
+      label: Exceções de segurança activas neste release
+      description: "Listar issue numbers das exceções activas com TTL válido. Se nenhuma, escrever 'Nenhuma'."
+      placeholder: |
+        - #42 CTRL-SECRETS-001 — TTL: 2026-09-27
+        - #38 CTRL-QUALITY-002 — TTL: 2026-06-01
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---\n### Aprovação"
+
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Gates de aprovação
+      options:
+        - label: "CI a verde (build + type check + testes)"
+          required: true
+        - label: "Tag aponta para commit em master"
+          required: true
+        - label: "Todos os findings Critical/High resolvidos ou excepcionados"
+          required: true
+        - label: "Exceções activas têm TTL válido"
+          required: true
+        - label: "Aprovado por @pedrofarinhaatshiftleftpt"
+          required: true

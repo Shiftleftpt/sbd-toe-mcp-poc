@@ -1,0 +1,84 @@
+name: "Exceção de Segurança"
+description: "Solicitar exceção formal a um controlo de segurança L2 com justificação e TTL."
+title: "[EXCEPTION] "
+labels:
+  - "tipo:security"
+  - "area:governance"
+assignees:
+  - "pedrofarinhaatshiftleftpt"
+body:
+  - type: input
+    id: control_id
+    attributes:
+      label: ID do controlo
+      placeholder: "ex: CTRL-SECRETS-001"
+    validations:
+      required: true
+
+  - type: input
+    id: control_desc
+    attributes:
+      label: Descrição do controlo
+      placeholder: "ex: Scanning de segredos (gitleaks/trufflehog)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justificação
+      description: "Por que razão este controlo é inaplicável ou desproporcional no contexto atual?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: residual_risk
+    attributes:
+      label: Severidade do risco residual
+      options:
+        - Critical
+        - High
+        - Medium
+        - Low
+    validations:
+      required: true
+
+  - type: textarea
+    id: residual_risk_desc
+    attributes:
+      label: Descrição do risco residual
+      description: "Qual o risco aceite ao não implementar este controlo?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: compensating_controls
+    attributes:
+      label: Controlos compensatórios
+      description: "Que outros controlos ou medidas compensam parcialmente a ausência deste controlo?"
+
+  - type: input
+    id: expiry_date
+    attributes:
+      label: Data de expiração (TTL)
+      placeholder: "YYYY-MM-DD"
+    validations:
+      required: true
+
+  - type: input
+    id: reassess_condition
+    attributes:
+      label: Condição de reavaliação
+      placeholder: "ex: se HTTP transport for adicionado"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: approval
+    attributes:
+      label: Aprovação
+      options:
+        - label: "Aprovado por @pedrofarinhaatshiftleftpt"
+          required: true
+        - label: "Registado em docs/SecurityByDesign/controlos-l2.md — secção Exceções Formais"
+          required: true
