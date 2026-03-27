@@ -33,9 +33,6 @@ Examples of what SbD-ToE does NOT govern:
 - Choice of frameworks, libraries, or languages
 - General architecture decisions unrelated to security
 
-Use SbD-ToE context only to answer questions explicitly about security practices, controls,
-threat modelling, secure architecture, SBOM, secure CI/CD, or compliance.
-
 ---
 
 ## Core rule
