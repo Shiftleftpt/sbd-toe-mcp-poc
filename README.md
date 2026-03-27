@@ -1,6 +1,6 @@
 # @shiftleftpt/sbd-toe-mcp
 
-MCP server for the SbD-ToE security manual — structured tools for Claude, GitHub Copilot, Cursor, Windsurf, Zed and any MCP-compatible client.
+MCP server for the **SbD-ToE** (**Security by Design — Theory of Everything**) security manual — structured tools for Claude, GitHub Copilot, Cursor, Windsurf, Zed and any MCP-compatible client.
 
 [![npm](https://img.shields.io/npm/v/@shiftleftpt%2fsbd-toe-mcp)](https://www.npmjs.com/package/@shiftleftpt/sbd-toe-mcp)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
@@ -49,7 +49,7 @@ For full installation instructions for all clients see [`docs/installation.md`](
 
 ## What it does
 
-This MCP server gives any AI client structured access to the [SbD-ToE security manual](https://www.securitybydesign.dev/sbd-toe/sbd-manual/) — a comprehensive framework for secure-by-design software development.
+This MCP server gives any AI client structured access to the [SbD-ToE security manual](https://www.securitybydesign.dev/sbd-toe/sbd-manual/) — a 15-chapter (00–14) framework for Security by Design — Theory of Everything.
 
 All data is bundled locally. No Algolia, no internet connection required at runtime, no API keys.
 
