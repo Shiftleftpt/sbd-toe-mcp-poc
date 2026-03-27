@@ -20,12 +20,12 @@ import {
   handleQuerySbdToeEntities
 } from "./tools/structured-tools.js";
 import { handleGenerateDocument } from "./tools/generate-document.js";
+import { handleGenerateSbdToeSkill } from "./tools/generate-sbd-toe-skill.js";
 import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
 import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
 import {
   buildChapterApplicabilityJson,
-  buildSetupAgentPrompt,
-  buildSkillTemplateMarkdown
+  buildSetupAgentPrompt
 } from "./resources/sbd-toe-resources.js";
 
 type JsonRpcId = string | number;
@@ -372,7 +372,9 @@ class McpRuntime {
         "BEFORE answering any SbD-ToE question, read resource sbd://toe/agent-guide — it contains\n" +
         "operating modes, routing by phase/domain, tool selection, epistemic standards, and chapter map.\n" +
         "\n" +
-        "Then run setup_sbd_toe_agent(riskLevel, projectRole) for risk-level specific active chapters."
+        "Then run setup_sbd_toe_agent(riskLevel, projectRole) for risk-level specific active chapters.\n" +
+        "\n" +
+        "To create a skill or instructions file for an AI client, use generate_sbd_toe_skill(clientType)."
     });
   }
 
@@ -616,6 +618,24 @@ class McpRuntime {
           annotations: { readOnlyHint: true }
         },
         {
+          name: "generate_sbd_toe_skill",
+          title: "Generate SbD-ToE Skill Content",
+          description:
+            "Use this tool when asked to 'create a skill for SbD-ToE', 'set up instructions', " +
+            "'configure this client to use SbD-ToE', or 'integrate SbD-ToE'. " +
+            "Returns the canonical skill content from sbd://toe/agent-guide. " +
+            "Save the returned content to the appropriate skill/instructions file for your client " +
+            "(e.g. .claude/skills/sbd-toe.md, .github/copilot-instructions.md, .cursorrules). " +
+            "No parameters required.",
+          inputSchema: {
+            type: "object",
+            properties: {},
+            required: [],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
           name: "map_sbd_toe_review_scope",
           title: "Map SbD-ToE Review Scope",
           description:
@@ -805,32 +825,25 @@ class McpRuntime {
     this.sendResponse(request.id, {
       resources: [
         {
-          uri: "sbd://toe/skill-template/{riskLevel}/{projectRole}",
-          name: "SbD-ToE Skill Template",
+          uri: "sbd://toe/agent-guide",
+          name: "SbD-ToE Agent Guide",
           description:
-            "Template de skill/instructions SbD-ToE para um nível de risco e papel de projecto.",
+            "READ THIS FIRST. Operational guide for AI agents: SbD-ToE identity (Security by Design — Theory of Everything), CONSULT/GUIDE modes, routing by SDLC phase and domain, tool selection, epistemic standards, chapter map, risk levels, identifier conventions.",
           mimeType: "text/markdown"
         },
         {
           uri: "sbd://toe/chapter-applicability/{riskLevel}",
           name: "SbD-ToE Chapter Applicability",
           description:
-            "Capítulos activos, condicionais e excluídos para um nível de risco L1/L2/L3.",
+            "Active, conditional and excluded chapters for a given risk level (L1/L2/L3).",
           mimeType: "application/json"
         },
         {
           uri: "sbd://toe/index-compact",
           name: "SbD-ToE Index Compact",
           description:
-            "Índice compacto do manual SbD-ToE. Injectável em system prompt para eliminar fase de descoberta exploratória.",
+            "Compact JSON index of the full SbD-ToE manual. Injectable into system prompt to eliminate exploratory discovery.",
           mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/agent-guide",
-          name: "SbD-ToE Agent Guide",
-          description:
-            "Full operational guide for agents: CONSULT/GUIDE modes, routing by phase and domain, tool selection, epistemic standards, chapter map, risk levels.",
-          mimeType: "text/markdown"
         }
       ]
     });
@@ -855,27 +868,6 @@ class McpRuntime {
       const data = buildChapterApplicabilityJson(riskLevel);
       this.sendResponse(request.id, {
         contents: [{ uri, mimeType: "application/json", text: JSON.stringify(data, null, 2) }]
-      });
-      return;
-    }
-
-    const skillTemplateMatch = /^\/\/toe\/skill-template\/([^/]+)\/([^/]+)$/.exec(
-      uri.startsWith("sbd:") ? uri.slice(4) : ""
-    );
-    if (skillTemplateMatch !== null) {
-      const riskLevel = skillTemplateMatch[1] ?? "";
-      const projectRole = skillTemplateMatch[2] ?? "";
-      if (!["L1", "L2", "L3"].includes(riskLevel)) {
-        this.sendError(
-          request.id,
-          -32602,
-          `riskLevel inválido: "${riskLevel}". Valores permitidos: L1, L2, L3.`
-        );
-        return;
-      }
-      const text = buildSkillTemplateMarkdown(riskLevel, projectRole);
-      this.sendResponse(request.id, {
-        contents: [{ uri, mimeType: "text/markdown", text }]
       });
       return;
     }
@@ -1199,6 +1191,20 @@ class McpRuntime {
         }
         case "generate_document": {
           const result = handleGenerateDocument(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "generate_sbd_toe_skill": {
+          const result = handleGenerateSbdToeSkill();
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });
