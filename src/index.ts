@@ -20,6 +20,7 @@ import {
   handleQuerySbdToeEntities
 } from "./tools/structured-tools.js";
 import { handleGenerateDocument } from "./tools/generate-document.js";
+import { handleGenerateSbdToeSkill } from "./tools/generate-sbd-toe-skill.js";
 import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
 import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
 import {
@@ -371,7 +372,9 @@ class McpRuntime {
         "BEFORE answering any SbD-ToE question, read resource sbd://toe/agent-guide — it contains\n" +
         "operating modes, routing by phase/domain, tool selection, epistemic standards, and chapter map.\n" +
         "\n" +
-        "Then run setup_sbd_toe_agent(riskLevel, projectRole) for risk-level specific active chapters."
+        "Then run setup_sbd_toe_agent(riskLevel, projectRole) for risk-level specific active chapters.\n" +
+        "\n" +
+        "To create a skill or instructions file for an AI client, use generate_sbd_toe_skill(clientType)."
     });
   }
 
@@ -610,6 +613,24 @@ class McpRuntime {
               }
             },
             required: ["type", "riskLevel"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "generate_sbd_toe_skill",
+          title: "Generate SbD-ToE Skill Content",
+          description:
+            "Use this tool when asked to 'create a skill for SbD-ToE', 'set up instructions', " +
+            "'configure this client to use SbD-ToE', or 'integrate SbD-ToE'. " +
+            "Returns the canonical skill content from sbd://toe/agent-guide. " +
+            "Save the returned content to the appropriate skill/instructions file for your client " +
+            "(e.g. .claude/skills/sbd-toe.md, .github/copilot-instructions.md, .cursorrules). " +
+            "No parameters required.",
+          inputSchema: {
+            type: "object",
+            properties: {},
+            required: [],
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -1170,6 +1191,20 @@ class McpRuntime {
         }
         case "generate_document": {
           const result = handleGenerateDocument(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "generate_sbd_toe_skill": {
+          const result = handleGenerateSbdToeSkill();
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });
