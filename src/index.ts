@@ -904,6 +904,16 @@ class McpRuntime {
           description:
             "Compact JSON index of the full SbD-ToE manual. Injectable into system prompt to eliminate exploratory discovery.",
           mimeType: "application/json"
+        },
+        {
+          uri: "sbd://toe/ontology",
+          name: "SbD-ToE Ontology",
+          description:
+            "Full SbD-ToE ontology YAML: domain_mapping (requirement category → control domains), " +
+            "8 inference rules with priorities, 4 resolution pipelines (consult/guide/threats/review), " +
+            "and entity schemas. Read once per session to understand the deterministic resolution model " +
+            "before calling consult_security_requirements, get_threat_landscape or get_guide_by_role.",
+          mimeType: "application/yaml"
         }
       ]
     });
@@ -958,6 +968,21 @@ class McpRuntime {
       }
       this.sendResponse(request.id, {
         contents: [{ uri, mimeType: "text/markdown", text: guideText }]
+      });
+      return;
+    }
+
+    if (uri === "sbd://toe/ontology") {
+      const ontologyPath = resolveAppPath("data/publish/sbdtoe-ontology.yaml");
+      let ontologyText: string;
+      try {
+        ontologyText = readFileSync(ontologyPath, "utf-8");
+      } catch {
+        this.sendError(request.id, -32603, "Could not read SbD-ToE ontology YAML.");
+        return;
+      }
+      this.sendResponse(request.id, {
+        contents: [{ uri, mimeType: "application/yaml", text: ontologyText }]
       });
       return;
     }

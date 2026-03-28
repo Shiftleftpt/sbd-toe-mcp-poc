@@ -21,7 +21,8 @@ function makeOntologyData(overrides: Partial<OntologyData> = {}): OntologyData {
       { requirement_id: "AUT-001", type: "base", category: "AUT", name: "MFA", applicable_levels: { L1: false, L2: true, L3: true }, source_chapter: 2 },
     ],
     controls: [
-      { control_id: "CTRL-MON", name: "Monitoring", domain: "monitoring", control_type: "detective", abstraction_level: "operational", applicable_lifecycle_phases: [], source_practice_ids: [] },
+      { control_id: "CTRL-MON", name: "Monitoring", domain: "monitoring", control_type: "detective", abstraction_level: "operational", applicable_lifecycle_phases: [], source_practice_ids: [], chapter_ids: ["12-monitorizacao-operacoes"] },
+      { control_id: "CTRL-AUTH", name: "Identity", domain: "identity", control_type: "preventive", abstraction_level: "technical", applicable_lifecycle_phases: [], source_practice_ids: [], chapter_ids: ["02-requisitos-seguranca"] },
     ],
     roles: [],
     threats: [
@@ -104,5 +105,41 @@ describe("_resolveThreatLandscape", () => {
     const result = _resolveThreatLandscape({ risk_level: "L1" }, makeOntologyData());
     expect(typeof result.meta.note).toBe("string");
     expect(result.meta.note.length).toBeGreaterThan(0);
+  });
+
+  it("mitigated_by resolved via chapter_ids on controls", () => {
+    const result = _resolveThreatLandscape({ risk_level: "L1" }, makeOntologyData());
+    // MT-001 is in chapter 12 → CTRL-MON covers chapter 12
+    const mt001 = result.threats.find((t) => t.mitigated_threat_id === "MT-001");
+    expect(mt001).toBeDefined();
+    expect(mt001?.mitigated_by).toHaveLength(1);
+    expect(mt001?.mitigated_by[0]?.control_id).toBe("CTRL-MON");
+    expect(mt001?.mitigated_by[0]?.domain).toBe("monitoring");
+  });
+
+  it("mitigated_by is empty array when no control covers that chapter", () => {
+    const result = _resolveThreatLandscape({ risk_level: "L2" }, makeOntologyData());
+    // MT-003 is in chapter 99 (no control covers it)
+    // MT-003 is not in results (not in active chapters and no heuristic match)
+    // Use a chapter with no matching control:
+    const ontology = makeOntologyData({
+      requirements: [
+        { requirement_id: "LOG-001", type: "base", category: "LOG", name: "Audit log", applicable_levels: { L1: true, L2: true, L3: true }, source_chapter: 55 },
+      ],
+      threats: [
+        { mitigated_threat_id: "MT-X", threat_label_raw: "Unknown threat", chapter_id: "55-unknown", associated_controls: [], confidence: 0.5 },
+      ],
+    });
+    const r = _resolveThreatLandscape({ risk_level: "L1" }, ontology);
+    const mtX = r.threats.find((t) => t.mitigated_threat_id === "MT-X");
+    expect(mtX).toBeDefined();
+    expect(mtX?.mitigated_by).toEqual([]);
+  });
+
+  it("each threat has mitigated_by as an array", () => {
+    const result = _resolveThreatLandscape({ risk_level: "L2" }, makeOntologyData());
+    for (const t of result.threats) {
+      expect(Array.isArray(t.mitigated_by)).toBe(true);
+    }
   });
 });

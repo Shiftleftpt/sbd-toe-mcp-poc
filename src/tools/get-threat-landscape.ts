@@ -24,9 +24,16 @@ import { _resolveConsultResult } from "./consult-security-requirements.js";
 // Types
 // ---------------------------------------------------------------------------
 
+export interface MitigatingControl {
+  control_id: string;
+  name: string;
+  domain: string;
+}
+
 export interface ThreatWithConfidence extends Threat {
   _confidence: "derived" | "heuristic";
   _active_chapter: string;
+  mitigated_by: MitigatingControl[];
 }
 
 export interface GetThreatLandscapeResult {
@@ -61,7 +68,7 @@ export function _resolveThreatLandscape(
   args: Record<string, unknown>,
   ontologyData: ReturnType<typeof getOntologyData>
 ): GetThreatLandscapeResult {
-  const { threats: allThreats } = ontologyData;
+  const { threats: allThreats, controls: allControls } = ontologyData;
 
   // Run consult pipeline to get filtered requirements
   const consult = _resolveConsultResult(args, ontologyData);
@@ -71,27 +78,34 @@ export function _resolveThreatLandscape(
     consult.requirements.map((r) => r.source_chapter).filter((n) => !isNaN(n))
   );
 
-  // Collect chapter_ids (string slugs) for display
-  const activeChapterIds = [...new Set(
-    consult.requirements
-      .map((r) => r.source_file?.split("/").pop()?.replace(".md", "") ?? "")
-      .filter(Boolean)
-  )];
-
   // Collect active domains for heuristic fallback
   const activeDomains = new Set(consult.activeDomains);
 
-  // Filter threats
+  // Build control lookup by chapter_id slug for mitigated_by resolution.
+  // Uses all controls (not just active ones) — chapter_ids is the authoritative
+  // structural mapping from the knowledge-graph pipeline.
+  const controlsByChapter = new Map<string, MitigatingControl[]>();
+  for (const ctrl of allControls) {
+    for (const chId of ctrl.chapter_ids ?? []) {
+      const list = controlsByChapter.get(chId) ?? [];
+      list.push({ control_id: ctrl.control_id, name: ctrl.name, domain: ctrl.domain });
+      controlsByChapter.set(chId, list);
+    }
+  }
+
+  // Filter threats and resolve mitigated_by
   const threats: ThreatWithConfidence[] = [];
   for (const threat of allThreats) {
     const chId = threat.chapter_id ?? "";
     const chNum = chapterNumber(chId);
+    const mitigated_by = controlsByChapter.get(chId) ?? [];
 
     if (!isNaN(chNum) && activeChapterNumbers.has(chNum)) {
       threats.push({
         ...threat,
         _confidence: "derived",
-        _active_chapter: chId
+        _active_chapter: chId,
+        mitigated_by
       });
       continue;
     }
@@ -109,7 +123,8 @@ export function _resolveThreatLandscape(
       threats.push({
         ...threat,
         _confidence: "heuristic",
-        _active_chapter: chId
+        _active_chapter: chId,
+        mitigated_by
       });
     }
   }

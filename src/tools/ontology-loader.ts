@@ -35,6 +35,8 @@ export interface Control {
   abstraction_level: string;
   applicable_lifecycle_phases: string[];
   source_practice_ids: string[];
+  /** Chapter slugs this control covers (e.g. ["06-desenvolvimento-seguro"]) */
+  chapter_ids?: string[];
   description?: string;
   aliases?: string[];
 }

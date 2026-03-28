@@ -40,6 +40,7 @@ export interface ConsultSecurityRequirementsResult {
   activeDomains: string[];
   requirements: Requirement[];
   controls: ControlWithConfidence[];
+  rule_trace: string[];
   meta: {
     requirementCount: number;
     controlCount: number;
@@ -115,12 +116,30 @@ export function _resolveConsultResult(
       _confidence: directDomains.has(c.domain) ? "direct" : "derived"
     }));
 
+  // Build rule_trace — which inference rules fired (§5, mcp_ontology_integration.md)
+  const rule_trace: string[] = [];
+  // Priority 100 — always fires when risk_level is provided
+  rule_trace.push(`REQUIREMENT_APPLIES_BY_RISK(risk_level=${riskLevel}): ${filteredReqs.length} requirements active`);
+  // Priority 95 — fires when any requirement has a direct domain link
+  if (directDomains.size > 0) {
+    rule_trace.push(`CONTROL_ACTIVE_DIRECT_LINK: ${directDomains.size} direct domain(s) found → confidence=direct`);
+  }
+  // Priority 90 — fires when there are active categories to derive domains from
+  if (activeCategories.length > 0) {
+    rule_trace.push(`CONTROL_ACTIVE_BY_DOMAIN: ${activeCategories.length} categories → ${activeDomains.size} domains → ${controls.length} controls`);
+  }
+  // Priority 60, restrictive — fires when concerns narrowing was applied
+  if (concernsApplied && concernsApplied.length > 0) {
+    rule_trace.push(`CONCERNS_FILTER_REQUIREMENTS(concerns=[${concernsApplied.join(",")}]): intersected with risk-level filter`);
+  }
+
   return {
     risk_level: riskLevel,
     activeCategories,
     activeDomains: [...activeDomains].sort(),
     requirements: filteredReqs,
     controls,
+    rule_trace,
     meta: {
       requirementCount: filteredReqs.length,
       controlCount: controls.length,

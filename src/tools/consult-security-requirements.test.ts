@@ -130,4 +130,28 @@ describe("_resolveConsultResult", () => {
     const sorted = [...result.activeCategories].sort();
     expect(result.activeCategories).toEqual(sorted);
   });
+
+  it("rule_trace always includes REQUIREMENT_APPLIES_BY_RISK", () => {
+    const result = _resolveConsultResult({ risk_level: "L1" }, makeOntologyData());
+    expect(result.rule_trace.some((r) => r.startsWith("REQUIREMENT_APPLIES_BY_RISK"))).toBe(true);
+  });
+
+  it("rule_trace includes CONTROL_ACTIVE_BY_DOMAIN when controls are derived", () => {
+    const result = _resolveConsultResult({ risk_level: "L1" }, makeOntologyData());
+    expect(result.rule_trace.some((r) => r.startsWith("CONTROL_ACTIVE_BY_DOMAIN"))).toBe(true);
+  });
+
+  it("rule_trace includes CONCERNS_FILTER_REQUIREMENTS only when concerns provided", () => {
+    const withConcerns = _resolveConsultResult({ risk_level: "L2", concerns: ["auth"] }, makeOntologyData());
+    expect(withConcerns.rule_trace.some((r) => r.startsWith("CONCERNS_FILTER_REQUIREMENTS"))).toBe(true);
+
+    const noConcerns = _resolveConsultResult({ risk_level: "L2" }, makeOntologyData());
+    expect(noConcerns.rule_trace.some((r) => r.startsWith("CONCERNS_FILTER_REQUIREMENTS"))).toBe(false);
+  });
+
+  it("rule_trace is an array of non-empty strings", () => {
+    const result = _resolveConsultResult({ risk_level: "L2" }, makeOntologyData());
+    expect(Array.isArray(result.rule_trace)).toBe(true);
+    expect(result.rule_trace.every((r) => typeof r === "string" && r.length > 0)).toBe(true);
+  });
 });
