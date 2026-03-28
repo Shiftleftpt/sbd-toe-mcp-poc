@@ -1,0 +1,696 @@
+# SbD-ToE Ontology v1.0
+# Generated from real data: 130 requirements, 14 controls, 175 practices, 233 threats
+# Escopo completo — 15 categorias de requisitos, 8 domínios de controlo
+# Usado pelo OntologyEngine para resolução determinística de decisões de segurança
+
+meta:
+  name: "SbD-ToE Security Ontology"
+  version: "1.0"
+  description: >
+    Ontologia computável do manual SbD-ToE. Transforma o manual num modelo de decisão:
+    dado um contexto de aplicação, resolve requisitos → controlos → práticas → regras → evidências.
+  data_sources:
+    requirements:    "data/entities/canonical_requirements_s7.json"
+    controls:        "data/entities/canonical_controls.json"
+    practices:       "data/entities/practices.json"
+    threats:         "data/entities/mitigated_threats.json"
+    artifacts:       "data/entities/artifact_catalog.json"
+    phases:          "data/entities/sdlc_phases_canonical_s6.json"
+    roles:           "data/entities/canonical_roles_s5.json"
+    user_stories:    "data/entities/lifecycle_user_stories.json"
+    assignments:     "data/entities/practice_assignments.json"
+    control_links:   "data/entities/control_links.json"
+    maturity:        "data/entities/maturity_mappings.json"
+    policy_refs:     "data/entities/policy_references.json"
+    proportionality: "data/entities/proportionality.json"
+    evidence_patterns: "data/entities/evidence_patterns.json"   # extrai de: addon/10-validacao-requisitos.md (Cap02) + addon/05-validacao.md (Cap04)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ENTITIES
+# Cada entidade mapeia para um ficheiro JSON + campo de ID
+# ─────────────────────────────────────────────────────────────────────────────
+
+entities:
+
+  Application:
+    description: "Contexto de aplicação avaliada — não persiste, é input em runtime"
+    attributes:
+      - id: string
+      - name: string
+      - risk_level: enum[L1, L2, L3]
+      - exposure: enum[local, internal, authenticated, public]
+      - data_sensitivity: enum[low, personal, regulated, secrets]
+      - technologies: list[string]
+      - chapter_context: string          # ex: logging, auth, api (filtro de ameaças)
+      - concerns: list[string]           # ex: [logging, auth, api] — multi-domínio
+      - artifact_type: string            # ex: http_endpoint, batch_job, cli, library
+      - deployment_context: string       # ex: cloud, on-premise, hybrid, serverless
+
+  Requirement:
+    description: "Requisito de segurança extraído do manual SbD-ToE"
+    source_file: "data/entities/canonical_requirements_s7.json"
+    id_field: "requirement_id"
+    attributes:
+      - requirement_id: string          # ex: AUT-001, LOG-003
+      - type: enum[base, architecture, iac]
+      - category: string                # ex: AUT, LOG, ACC, VAL, ...
+      - domain: string                  # label semântico
+      - name: string
+      - applicable_levels:             # quais níveis de risco exigem este req
+          L1: boolean
+          L2: boolean
+          L3: boolean
+      - source_chapter: integer        # 2, 4, 8
+      - source_file: string
+
+  Control:
+    description: "Controlo operacional canónico — estratégia técnica de mitigação"
+    source_file: "data/entities/canonical_controls.json"
+    id_field: "control_id"
+    attributes:
+      - control_id: string             # ex: CTRL-identity-...
+      - name: string
+      - domain: string                 # code_integrity | governance | identity | infrastructure | monitoring | secrets | supply_chain | testing
+      - control_type: enum[preventive, detective, corrective, governance]
+      - applicable_lifecycle_phases: list[string]
+      - artifact_types: list[string]
+      - source_practice_ids: list[string]
+      - abstraction_level: enum[technical, governance]
+
+  Threat:
+    description: "Ameaça de segurança mitigada pelo manual"
+    source_file: "data/entities/mitigated_threats.json"
+    id_field: "id"
+    attributes:
+      - id: string
+      - name: string
+      - category: string               # STRIDE category quando disponível
+      - associated_controls: list[string]
+      - chapter_id: string
+      - cwe: string
+      - cvss_score: float
+
+  Artifact:
+    description: "Artefacto de segurança exigido ou produzido"
+    source_file: "data/entities/artifact_catalog.json"
+    id_field: "artifact_type_id"
+    attributes:
+      - artifact_type_id: string       # ex: ART-access-review-...
+      - name: string
+      - category: string               # governance_record | test_report | config | ...
+      - lifecycle_phases: list[string]
+      - produced_by_controls: list[string]
+      - validated_by_controls: list[string]
+
+  Practice:
+    description: "Prática operacional de segurança — o que FAZER"
+    source_file: "data/entities/practices.json"
+    id_field: "id"
+    attributes:
+      - id: string                     # ex: 06-desenvolvimento-seguro:code-review-seguro
+      - label: string
+      - chapter_id: string
+
+  UserStory:
+    description: "User story de ciclo de vida — liga práticas a roles + contextos"
+    source_file: "data/entities/lifecycle_user_stories.json"
+    id_field: "id"
+    attributes:
+      - id: string                     # ex: 06-desenvolvimento-seguro-us-03
+      - us_id: string
+      - title: string
+      - goal: string
+      - practice_id: string
+      - roles_normalized: list[string]
+      - chapter_id: string
+      - artifacts: list[string]
+      - checklist_items: list[string]
+
+  PracticeAssignment:
+    description: "Tarefa concreta: quem faz o quê, em que fase, com que nível de risco"
+    source_file: "data/entities/practice_assignments.json"
+    id_field: "id"
+    attributes:
+      - id: string
+      - practice_id: string
+      - action: string
+      - role: string
+      - phase: string
+      - risk_level: enum[L1, L2, L3]
+      - proportionality: string
+      - artifacts: list[string]
+
+  SDLCPhase:
+    description: "Fase canónica do ciclo de vida de desenvolvimento"
+    source_file: "data/entities/sdlc_phases_canonical_s6.json"
+    id_field: "phase_id"
+    attributes:
+      - phase_id: string               # plan | design | develop | build | test | release | deploy | operate
+      - label: string
+      - aliases: list[string]
+      - manual_chapter: integer
+
+  Role:
+    description: "Papel/responsável na execução de práticas"
+    source_file: "data/entities/canonical_roles_s5.json"
+    id_field: "role_id"
+    attributes:
+      - role_id: string                # developer | arquitetos-software | security-champion | ...
+      - aliases: list[string]
+
+  MaturityMapping:
+    description: "Mapeamento de maturidade para frameworks externos (OWASP SAMM, etc.)"
+    source_file: "data/entities/maturity_mappings.json"
+    id_field: "id"
+    attributes:
+      - id: string
+      - framework: string              # OWASP SAMM v2.1 | NIST | ISO 27001 | ...
+      - framework_area: string
+      - chapter_id: string
+      - coverage_summary: string
+
+  ImplementationRule:
+    description: >-
+      Regra concreta prescritiva para geração de código seguro.
+      Camada intermédia entre Practice e o LLM/agente — mais prescritiva que user story.
+    source_file: null                  # a popular em extração futura
+    id_field: "rule_id"
+    attributes:
+      - rule_id: string                # ex: IMPL-LOG-001
+      - description: string            # ex: "não registar tokens em logs"
+      - domain: string                 # alinhado com control.domain
+      - applies_to_artifact_types: list[string]   # ex: [http_endpoint, worker]
+      - mandatory: boolean
+      - forbidden_examples: list[string]   # anti-patterns concretos
+      - recommended_evidence: string   # ex: "teste negativo que verifica ausência de token"
+      - maps_to_requirement_ids: list[string]
+      - maps_to_control_id: string
+
+  EvidencePattern:
+    description: >-
+      Padrão de evidência observável — permite review determinístico.
+      Liga artefactos/sinais concretos a requisitos esperados.
+    source_file: "data/entities/evidence_patterns.json"
+    source_documents:
+      - "data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/02-requisitos-seguranca/addon/10-validacao-requisitos.md"
+      - "data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md"
+    coverage:
+      populated: [AUT, CFG, VAL, LOG, API, ARC, ENC]  # categorias com evidências documentadas
+      stub: [ACC, SES, ERR, INT, REQ, DST, IDE, IAC]  # sem cobertura nos docs de validação
+      note: >-
+        ENC foi adicionado ao canónico como lacuna do manual (10 requisitos de criptografia).
+        O doc 10-validacao-requisitos.md é a fonte originária destes requisitos e evidências.
+    id_field: "id"
+    attributes:
+      - id: string                     # ex: EP-LOG-001
+      - evidence_type: enum[file, test, config, log, workflow, policy]
+      - detectable_in: list[string]    # ex: [src/, .github/workflows/, Dockerfile]
+      - detection_hint: string         # ex: "presença de structured logger import"
+      - maps_to_requirement_id: string # ex: LOG-003
+      - maps_to_control_id: string
+      - confidence_when_present: enum[high, medium, low]
+
+  ArtifactRequirement:
+    description: >-
+      Requisito de artefacto — liga um artefacto concreto aos controlos que o exigem
+      e às práticas que o produzem. Fonte primária do sinal de confiança 'direct' no
+      traversal Requirement → Control.
+    source_file: "data/entities/artifact_requirements.json"
+    id_field: "id"
+    attributes:
+      - id: string
+      - artifact_type_id: string        # referência a Artifact.artifact_type_id
+      - source_control_ids: list[string] # controlos que exigem este artefacto
+      - source_practice_ids: list[string]
+      - chapter_id: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DOMAIN MAPPING
+# Liga categorias de requisitos a domínios de controlo
+# Esta é a "chave" para traversal Requirement → Control
+# ─────────────────────────────────────────────────────────────────────────────
+
+domain_mapping:
+  # requirement category → control domain(s)
+
+  # Cap 02 — Base security requirements (12 categories)
+  AUT:  [identity, governance]          # Autenticação e Identidade
+  ACC:  [identity]                      # Controlo de Acesso
+  LOG:  [monitoring]                    # Registo e Monitorização
+  SES:  [identity]                      # Sessões e Estado
+  VAL:  [code_integrity]               # Validação de Entrada
+  ERR:  [code_integrity, governance]   # Gestão de Erros
+  CFG:  [infrastructure, governance]   # Configuração e Ambiente
+  API:  [identity, code_integrity]     # Segurança de APIs
+  INT:  [code_integrity, secrets]      # Integridade e Integração
+  REQ:  [governance]                   # Requisitos de Segurança no SDLC
+  DST:  [supply_chain, code_integrity] # Distribuição e Supply Chain
+  IDE:  [governance, code_integrity]   # Ambiente de Desenvolvimento
+
+  # Cap 04 — Architecture requirements
+  ARC:  [governance, identity, infrastructure, monitoring]
+
+  # Cap 08 — Infrastructure-as-Code requirements
+  IAC:  [infrastructure, supply_chain, secrets]
+
+  # Cap 02 — Criptografia e Dados Sensíveis (lacuna do catálogo original; adicionado como ENC)
+  ENC:  [secrets, code_integrity]  # ENC-001..ENC-010 — temporariamente no canónico até actualização do manual
+
+  # Nota: 8 domínios canónicos = code_integrity | governance | identity | infrastructure
+  #       | monitoring | secrets | supply_chain | testing
+  # O domínio 'testing' é ativado indiretamente via REQ (source_practice_ids
+  # ligam práticas de teste aos controlos do domínio testing).
+  # Não existe mapeamento direto categoria→testing para evitar ativação generalista.
+  # Quando EvidencePattern for populado, REQ poderá mapear também para testing.
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RELATIONS
+# Relações explícitas (derivadas dos dados) e inferidas (pela engine)
+# ─────────────────────────────────────────────────────────────────────────────
+
+relations:
+
+  # Derivadas diretamente dos dados
+  explicit:
+
+    control_produces_artifact:
+      from: Control
+      to: Artifact
+      via: "control.artifact_types ↔ artifact.artifact_type_id"
+      cardinality: one_to_many
+
+    control_implemented_by_practice:
+      from: Control
+      to: Practice
+      via: "control.source_practice_ids ↔ practice.id"
+      cardinality: one_to_many
+
+    control_applies_in_phase:
+      from: Control
+      to: SDLCPhase
+      via: "control.applicable_lifecycle_phases ↔ phase.phase_id + aliases"
+      cardinality: many_to_many
+
+    practice_has_user_story:
+      from: Practice
+      to: UserStory
+      via: "user_story.practice_id == practice.id"
+      cardinality: one_to_many
+
+    assignment_assigns_role:
+      from: PracticeAssignment
+      to: Role
+      via: "assignment.role ↔ role.role_id + aliases"
+      cardinality: many_to_one
+
+    assignment_occurs_in_phase:
+      from: PracticeAssignment
+      to: SDLCPhase
+      via: "assignment.phase ↔ phase.phase_id + aliases"
+      cardinality: many_to_one
+
+    assignment_at_risk_level:
+      from: PracticeAssignment
+      to_value: "assignment.risk_level"
+      note: "L1 | L2 | L3"
+
+    artifact_req_links_control:
+      from: ArtifactRequirement
+      to: Control
+      via: "artifact_requirement.source_control_ids ↔ control.control_id"
+      cardinality: many_to_many
+      note: >-
+        Linkagem directa artefacto→controlo. Usada como sinal de confiança 'direct'
+        quando o controlo já está ativo por domain_mapping. Fonte:
+        data/entities/artifact_requirements.json
+
+    implementation_rule_refines_requirement:
+      from: ImplementationRule
+      to: Requirement
+      via: "implementation_rule.maps_to_requirement_ids ↔ requirement.requirement_id"
+      cardinality: many_to_many
+      note: "Stub — relação activa quando ImplementationRule.source_file for populado"
+
+    implementation_rule_implements_control:
+      from: ImplementationRule
+      to: Control
+      via: "implementation_rule.maps_to_control_id ↔ control.control_id"
+      cardinality: many_to_one
+      note: "Stub — relação activa quando ImplementationRule.source_file for populado"
+
+    evidence_pattern_validates_requirement:
+      from: EvidencePattern
+      to: Requirement
+      via: "evidence_pattern.maps_to_requirement_id ↔ requirement.requirement_id"
+      cardinality: many_to_one
+      note: "Parcialmente populado: categorias AUT, CFG, VAL, LOG, API (Cap02) + ARC (Cap04)"
+
+    evidence_pattern_validates_control:
+      from: EvidencePattern
+      to: Control
+      via: "evidence_pattern.maps_to_control_id ↔ control.control_id"
+      cardinality: many_to_one
+      note: "Parcialmente populado: activo nas mesmas categorias que evidence_pattern_validates_requirement"
+
+  # Inferidas pela engine via domain_mapping
+  inferred:
+
+    requirement_maps_to_control:
+      from: Requirement
+      to: Control
+      via: "domain_mapping[requirement.category] ∩ control.domain"
+      confidence: derived
+      note: >-
+        Mecanismo primário de traversal enquanto não existir mapeamento direct explícito
+        por requirement_id canónico. domain_mapping é o fallback universal.
+
+    requirement_maps_to_control_direct:
+      from: Requirement
+      to: Control
+      via: "future: explicit req_id → ctrl_id table"
+      confidence: direct
+      note: >-
+        Quando existir: usar como relação primária, domain_mapping como fallback.
+        Estrutura: [{requirement_id, control_id, strength: direct|derived}]
+
+    requirement_applies_to_application:
+      from: Requirement
+      to: Application
+      via: "RULE: REQUIREMENT_APPLIES_BY_RISK"
+
+    threat_mitigated_by_control:
+      from: Threat
+      to: Control
+      via: "threat.associated_controls"
+      confidence_levels:
+        direct:   "associação explicitamente mapeada req_id→ctrl_id"
+        derived:  "derivada por categoria/capítulo/domínio partilhado"
+        heuristic: "match de texto parcial em associated_controls"
+      note: "Engine devolve mitigation_link_type por cada relação ameaça→controlo"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INFERENCE RULES
+# Regras determinísticas usadas pelo OntologyEngine
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Metadados de regras:
+#   priority:   ordem de aplicação (100 = mais alto); regras com même priority correm em paralelo
+#   rule_type:  additive (adiciona ao conjunto) | restrictive (filtra) | override (substitui)
+#   conflicts:  regras com as quais pode colidir (resolução: priority wins)
+
+rules:
+
+  REQUIREMENT_APPLIES_BY_RISK:
+    description: "Um requisito aplica-se se o nível de risco da aplicação o exige"
+    priority: 100
+    rule_type: additive
+    condition:
+      - "application.risk_level in [L1, L2, L3]"
+      - "requirement.applicable_levels[application.risk_level] == true"
+    result: "requirement is applicable"
+    note: >
+      L3 inclui tudo (L1+L2+L3).
+      L2 inclui L1+L2.
+      L1 inclui apenas L1.
+
+  CONTROL_ACTIVE_FROM_REQUIREMENT:
+    description: "Um controlo ativa-se se algum requisito aplicável mapeia para o seu domínio"
+    priority: 90
+    rule_type: additive
+    condition:
+      - "requirement is applicable"
+      - "requirement.category in domain_mapping"
+      - "control.domain in domain_mapping[requirement.category]"
+    result: "control is active (confidence=derived)"
+
+  PRACTICE_ACTIVE_FROM_CONTROL:
+    description: "Uma prática ativa-se se o controlo que a implementa está ativo"
+    priority: 80
+    rule_type: additive
+    condition:
+      - "control is active"
+      - "practice.id in control.source_practice_ids"
+    result: "practice is active"
+
+  ASSIGNMENT_ACTIVE_BY_RISK:
+    description: "Uma tarefa é relevante se o nível de risco a inclui"
+    priority: 70
+    rule_type: additive
+    condition:
+      - "practice is active"
+      - "assignment.practice_id == practice.id"
+      - "assignment.risk_level <= application.risk_level"
+    result: "assignment is active"
+    risk_ordering: "L1 < L2 < L3"
+
+  ARTIFACT_REQUIRED_FROM_CONTROL:
+    description: "Um artefacto é exigido se o controlo que o produz está ativo"
+    priority: 80
+    rule_type: additive
+    condition:
+      - "control is active"
+      - "artifact.artifact_type_id in control.artifact_types (normalized)"
+    result: "artifact is required"
+
+  THREAT_MODEL_REQUIRED_L2:
+    description: "Threat modeling é obrigatório a partir de L2"
+    priority: 95
+    rule_type: additive
+    conflicts: []
+    condition:
+      - "application.risk_level in [L2, L3]"
+    result: "ARC requirements apply"
+    note: "Ativa todas as requirements com category=ARC"
+
+  IAC_REQUIRED_L2:
+    description: "Requisitos de IaC aplicam-se a partir de L2"
+    priority: 95
+    rule_type: additive
+    conflicts: []
+    condition:
+      - "application.risk_level in [L2, L3]"
+    result: "IAC requirements apply"
+    note: "Ativa todas as requirements com category=IAC"
+
+  EXPOSURE_AMPLIFIES_REQUIREMENTS:
+    description: "Exposição pública ou dados regulados ampliam requisitos aplicáveis"
+    priority: 85
+    rule_type: additive
+    conflicts: []            # não conflitua; apenas adiciona ao conjunto de L1
+    condition:
+      - "application.exposure in [public, authenticated]"
+      - "OR application.data_sensitivity in [regulated, secrets]"
+    result: "apply AUT + ACC + API + INT + SES requirements regardless of L1"
+    note: "Garante baseline de auth/access mesmo em L1 público"
+
+  CONCERNS_FILTER_REQUIREMENTS:
+    description: >-
+      Se application.concerns definidos, projeta um subconjunto de requisitos como
+      'primary focus'. Não remove os restantes — mantém-nos como contexto secundário.
+    priority: 60
+    rule_type: projection
+    conflicts: []
+    condition:
+      - "application.concerns is not empty"
+      - "requirement.category in concern_mapped_categories(application.concerns)"
+    result: "tag matching requirements with focus=true; all others remain active with focus=false"
+    note: >-
+      Projeção não normativa: o conjunto base de requisitos (filtrado por REQUIREMENT_APPLIES_BY_RISK)
+      mantém-se intacto. O consumer (MCP/agente) usa focus=true para priorizar,
+      nunca para excluir. ex. concerns=[logging] → LOG requirements são focus=true,
+      os restantes mantêm-se mas são focus=false.
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RESOLUTION PIPELINES
+# Sequências canónicas de resolução para cada tipo de consulta
+# ─────────────────────────────────────────────────────────────────────────────
+
+resolution_pipelines:
+
+  consult:
+    description: "O que se aplica à minha aplicação?"
+    steps:
+      1: "Application → [REQUIREMENT_APPLIES_BY_RISK] → applicable_requirements"
+      2: "applicable_requirements → [CONTROL_ACTIVE_FROM_REQUIREMENT] → active_controls"
+      3: "active_controls → artifacts → required_artifacts"
+      4: "[THREAT_MODEL_REQUIRED_L2 | IAC_REQUIRED_L2] → extra_requirements"
+    output:
+      - applicable_requirements: list[Requirement]
+      - active_controls: list[Control]
+      - required_artifacts: list[Artifact]
+      - applicable_categories: list[string]
+
+  guide:
+    description: "Como implementar? (código, pipeline, config)"
+    steps:
+      1: "Application → applicable_requirements → active_controls"
+      2: "active_controls → [PRACTICE_ACTIVE_FROM_CONTROL] → active_practices"
+      3: "active_practices → user_stories → checklist_items"
+      4: "active_practices → [ASSIGNMENT_ACTIVE_BY_RISK] → active_assignments"
+      5: "active_assignments → role + phase"
+    output:
+      - active_practices: list[Practice]
+      - active_assignments: list[PracticeAssignment]
+      - user_stories: list[UserStory]
+      - by_role: dict[role → list[action]]
+      - by_phase: dict[phase → list[action]]
+
+  review:
+    description: "O meu código/sistema cumpre?"
+    steps:
+      1: "Application → [REQUIREMENT_APPLIES_BY_RISK] → applicable_requirements"
+      2: "applicable_requirements → [CONTROL_ACTIVE_FROM_REQUIREMENT] → active_controls"
+      3: "applicable_requirements → [evidence_pattern_validates_requirement] → expected_evidence_patterns"
+      4: "expected_evidence_patterns → match supplied_code_context → present | absent"
+      5: "absent evidence_patterns → map back to requirements → gaps"
+      6: "gaps → active_controls → risk_exposure"
+    output:
+      - compliant: list[Requirement]
+      - gaps: list[Requirement]
+      - missing_artifacts: list[Artifact]
+      - missing_evidence: list[EvidencePattern]
+      - risk_exposure: string
+    note: >-
+      Steps 3-5 operacionais para categorias AUT, CFG, VAL, LOG, API, ARC (evidências documentadas).
+      Categorias ACC, SES, ERR, INT, REQ, DST, IDE, IAC mantêm-se stub até extracção futura.
+      Steps 1-2+6 funcionam para todas as categorias.
+
+  threats:
+    description: "Que ameaças existem? O que mitiga?"
+    steps:
+      1: "Application.chapter_context → filter threats by chapter_id"
+      2: "threats → associated_controls → map to active_controls"
+      3: "active_controls → practices → mitigations"
+    output:
+      - applicable_threats: list[Threat]
+      - mitigated_by: dict[threat → list[Control]]
+      - unmitigated: list[Threat]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CATEGORY REGISTRY
+# Metadata de todas as 14 categorias de requisitos
+# ─────────────────────────────────────────────────────────────────────────────
+
+categories:
+
+  # Cap 02 — Base
+  AUT:
+    label: "Autenticação e Identidade"
+    source_chapter: 2
+    count: 10
+    min_risk_level: L1
+    related_domains: [identity, governance]
+
+  ACC:
+    label: "Controlo de Acesso"
+    source_chapter: 2
+    count: 10
+    min_risk_level: L1
+    related_domains: [identity]
+
+  LOG:
+    label: "Registo e Monitorização"
+    source_chapter: 2
+    count: 10
+    min_risk_level: L1
+    related_domains: [monitoring]
+
+  SES:
+    label: "Sessões e Estado"
+    source_chapter: 2
+    count: 8
+    min_risk_level: L1
+    related_domains: [identity]
+
+  VAL:
+    label: "Validação de Entrada"
+    source_chapter: 2
+    count: 7
+    min_risk_level: L1
+    related_domains: [code_integrity]
+
+  ERR:
+    label: "Gestão de Erros"
+    source_chapter: 2
+    count: 7
+    min_risk_level: L1
+    related_domains: [code_integrity, governance]
+
+  CFG:
+    label: "Configuração e Ambiente"
+    source_chapter: 2
+    count: 7
+    min_risk_level: L1
+    related_domains: [infrastructure, governance]
+
+  API:
+    label: "Segurança de APIs"
+    source_chapter: 2
+    count: 7
+    min_risk_level: L1
+    related_domains: [identity, code_integrity]
+
+  INT:
+    label: "Integridade e Integração"
+    source_chapter: 2
+    count: 8
+    min_risk_level: L1
+    related_domains: [code_integrity, secrets]
+
+  REQ:
+    label: "Requisitos de Segurança no SDLC"
+    source_chapter: 2
+    count: 7
+    min_risk_level: L1
+    related_domains: [governance]
+
+  DST:
+    label: "Distribuição e Supply Chain"
+    source_chapter: 2
+    count: 7
+    min_risk_level: L1
+    related_domains: [supply_chain, code_integrity]
+
+  IDE:
+    label: "Ambiente de Desenvolvimento"
+    source_chapter: 2
+    count: 6
+    min_risk_level: L1
+    related_domains: [governance, code_integrity]
+
+  # Cap 04 — Architecture
+  ARC:
+    label: "Requisitos de Arquitetura Segura"
+    source_chapter: 4
+    count: 13
+    min_risk_level: L2
+    related_domains: [governance, identity, infrastructure, monitoring]
+
+  # Cap 08 — Infrastructure-as-Code
+  IAC:
+    label: "Infraestrutura como Código"
+    source_chapter: 8
+    count: 13
+    min_risk_level: L2
+    related_domains: [infrastructure, supply_chain, secrets]
+
+  # Cap 02 — Criptografia e Dados Sensíveis (adicionado como lacuna do manual)
+  ENC:
+    label: "Criptografia e Dados Sensíveis"
+    source_chapter: 2
+    count: 10
+    min_risk_level: L1
+    related_domains: [secrets, code_integrity]
+    note: >-
+      Categoria adicionada temporariamente ao canónico com base em 10-validacao-requisitos.md.
+      Lacuna identificada: não existia no catálogo original extraido do Cap 02.
+      Candidatos a absorver em cate gorias existentes quando o manual for actualizado:
+        ENC-001 → INT-003 (TLS), ENC-004 → AUT-006 (hashing), ENC-005/ENC-008 → CFG-006 (cofre),
+        ENC-009 → DST/IDE (secret scanning), ENC-007 → LOG (masking).
+      Requisitos sem contraparte directa: ENC-002, ENC-003, ENC-010 (lacunas reais).

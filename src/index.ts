@@ -22,6 +22,9 @@ import {
 import { handleGenerateSbdToeSkill } from "./tools/generate-sbd-toe-skill.js";
 import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
 import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
+import { handleConsultSecurityRequirements } from "./tools/consult-security-requirements.js";
+import { handleGetThreatLandscape } from "./tools/get-threat-landscape.js";
+import { handleGetGuideByRole } from "./tools/get-guide-by-role.js";
 import {
   buildChapterApplicabilityJson,
   buildSetupAgentPrompt
@@ -672,6 +675,106 @@ class McpRuntime {
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
+        },
+        {
+          name: "consult_security_requirements",
+          title: "Consult SbD-ToE Security Requirements",
+          description:
+            "Deterministic resolution of security requirements and controls for a given application context. " +
+            "Filters requirements by risk level, optionally narrows by concern domains (auth, logging, api, etc.), " +
+            "then derives active controls via the ontology domain_mapping pipeline. " +
+            "All data comes from the SbD-ToE ontology — nothing is invented.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              risk_level: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Application risk level. Controls which requirements are active."
+              },
+              concerns: {
+                type: "array",
+                items: {
+                  type: "string",
+                  enum: ["auth", "logging", "validation", "api", "config", "integrity", "distribution", "ide", "requirements", "architecture", "iac", "encryption"]
+                },
+                description: "Optional concern domains to narrow scope (intersects with risk-level filter, does not replace)."
+              },
+              exposure: {
+                type: "string",
+                enum: ["local", "internal", "authenticated", "public"],
+                description: "Application exposure level (informational — not yet used in filtering)."
+              },
+              data_sensitivity: {
+                type: "string",
+                enum: ["low", "personal", "regulated", "secrets"],
+                description: "Data sensitivity level (informational — not yet used in filtering)."
+              }
+            },
+            required: ["risk_level"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "get_threat_landscape",
+          title: "Get SbD-ToE Threat Landscape",
+          description:
+            "Deterministic threat resolution for an application context using the SbD-ToE ontology threats pipeline. " +
+            "Returns threats from mitigated_threats.json relevant to the active source chapters derived from " +
+            "the risk-level-filtered requirements. Optionally narrowed by concern domains. " +
+            "All data comes from the SbD-ToE ontology — nothing is invented.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              risk_level: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Application risk level."
+              },
+              concerns: {
+                type: "array",
+                items: {
+                  type: "string",
+                  enum: ["auth", "logging", "validation", "api", "config", "integrity", "distribution", "ide", "requirements", "architecture", "iac", "encryption"]
+                },
+                description: "Optional concern domains to narrow which chapters are in scope."
+              }
+            },
+            required: ["risk_level"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "get_guide_by_role",
+          title: "Get SbD-ToE Guide by Role",
+          description:
+            "Returns practice assignments and user stories from the SbD-ToE manual for a given risk level, " +
+            "optionally filtered by role and/or lifecycle phase. " +
+            "Roles are resolved via canonical aliases (e.g. 'dev' → 'developer', 'appsec' → 'security-champion'). " +
+            "Results grouped by role and phase. All data from the SbD-ToE ontology — nothing is invented.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              risk_level: {
+                type: "string",
+                enum: ["L1", "L2", "L3"],
+                description: "Application risk level."
+              },
+              role: {
+                type: "string",
+                description: "Role to filter by (supports canonical IDs and aliases, e.g. 'developer', 'security-champion', 'devops', 'appsec')."
+              },
+              phase: {
+                type: "string",
+                description: "Lifecycle phase to filter by (e.g. 'design', 'implement', 'test', 'operate')."
+              }
+            },
+            required: ["risk_level"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
         }
       ]
     });
@@ -1176,6 +1279,48 @@ class McpRuntime {
         case "map_sbd_toe_applicability": {
           const cache = getSnapshotCache();
           const result = handleMapSbdToeApplicability(args, cache);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "consult_security_requirements": {
+          const result = handleConsultSecurityRequirements(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "get_threat_landscape": {
+          const result = handleGetThreatLandscape(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "get_guide_by_role": {
+          const result = handleGetGuideByRole(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });

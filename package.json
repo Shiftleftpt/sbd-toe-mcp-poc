@@ -3,9 +3,20 @@
   "version": "0.3.0",
   "license": "Apache-2.0",
   "description": "MCP server for the SbD-ToE (Security by Design — Theory of Everything) security manual — structured tools for Claude, GitHub Copilot and other MCP clients",
-  "keywords": ["mcp", "security", "sbd", "toe", "devsecops", "claude", "copilot", "llm"],
+  "keywords": [
+    "mcp",
+    "security",
+    "sbd",
+    "toe",
+    "devsecops",
+    "claude",
+    "copilot",
+    "llm"
+  ],
   "homepage": "https://github.com/Shiftleftpt/sbd-toe-mcp-poc#readme",
-  "bugs": { "url": "https://github.com/Shiftleftpt/sbd-toe-mcp-poc/issues" },
+  "bugs": {
+    "url": "https://github.com/Shiftleftpt/sbd-toe-mcp-poc/issues"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Shiftleftpt/sbd-toe-mcp-poc.git"
@@ -62,5 +73,8 @@
     "@vitest/ui": "^1.6.0",
     "typescript": "^5.9.3",
     "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "yaml": "^2.8.3"
   }
 }
