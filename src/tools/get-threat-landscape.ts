@@ -84,9 +84,13 @@ export function _resolveThreatLandscape(
   // Collect active domains for heuristic fallback
   const activeDomains = new Set(consult.active_domains);
 
-  // Build control lookup by chapter_id slug for mitigated_by resolution.
-  // Uses all controls (not just active ones) — chapter_ids is the authoritative
-  // structural mapping from the knowledge-graph pipeline.
+  // Build control lookup by control_id for canonical mitigated_by resolution.
+  const controlById = new Map<string, MitigatingControl>();
+  for (const ctrl of allControls) {
+    controlById.set(ctrl.control_id, { control_id: ctrl.control_id, name: ctrl.name, domain: ctrl.domain });
+  }
+
+  // Fallback: control lookup by chapter_id slug (used when canonical_control_ids absent).
   const controlsByChapter = new Map<string, MitigatingControl[]>();
   for (const ctrl of allControls) {
     for (const chId of ctrl.chapter_ids ?? []) {
@@ -101,17 +105,23 @@ export function _resolveThreatLandscape(
   for (const threat of allThreats) {
     const chId = threat.chapter_id ?? "";
     const chNum = chapterNumber(chId);
-    const mitigated_by = controlsByChapter.get(chId) ?? [];
 
-    const threatId   = threat.mitigated_threat_id ?? threat.object_id ?? "";
-    const threatName = threat.threat_label_raw ?? "";
+    const threatId   = threat.id ?? threat.mitigated_threat_id ?? "";
+    const threatName = threat.title ?? threat.threat_label_raw ?? "";
+
+    // Prefer canonical_control_ids (direct structural reference) for mitigated_by.
+    // Fall back to chapter-based lookup if not available.
+    const canonicalIds = threat.canonical_control_ids ?? [];
+    const mitigated_by: MitigatingControl[] = canonicalIds.length > 0
+      ? canonicalIds.flatMap((id) => { const c = controlById.get(id); return c ? [c] : []; })
+      : (controlsByChapter.get(chId) ?? []);
 
     if (!isNaN(chNum) && activeChapterNumbers.has(chNum)) {
       threats.push({
         ...threat,
         id: threatId,
         name: threatName,
-        mitigation_confidence: "derived",
+        mitigation_confidence: canonicalIds.length > 0 ? "derived" : "derived",
         mitigated_by
       });
       continue;
@@ -153,19 +163,36 @@ export function _resolveThreatLandscape(
       activeChapters: [...activeChapterNumbers].sort((a, b) => a - b).map(String),
       concernsApplied: consult.meta.concernsApplied,
       note:
-        "Threats resolved deterministically from the SbD-ToE ontology via chapter matching. " +
-        "associated_controls are file paths — relevance derived via chapter_id (§10 constraint 3). " +
-        "confidence: 'derived' = chapter number match; 'heuristic' = domain keyword match."
+        "mitigated_by: direct from canonical_control_ids when available, chapter-match otherwise. " +
+        "heuristic = domain keyword match on chapter_id."
     }
   };
 }
 
 // ---------------------------------------------------------------------------
-// Public handler
+// Public handler — lean projection (strips internal/null fields)
 // ---------------------------------------------------------------------------
 
 export function handleGetThreatLandscape(
   args: Record<string, unknown>
 ): GetThreatLandscapeResult {
-  return _resolveThreatLandscape(args, getOntologyData());
+  const full = _resolveThreatLandscape(args, getOntologyData());
+  return {
+    ...full,
+    threats: full.threats.map((t) => {
+      const slim: ThreatWithConfidence = {
+        id: t.id,
+        name: t.name,
+        mitigation_confidence: t.mitigation_confidence,
+        mitigated_by: t.mitigated_by,
+        associated_controls: [],  // stripped — file paths not useful to agent
+        ...(t.chapter_id ? { chapter_id: t.chapter_id } : {}),
+        ...(t.mitigation_summary ? { mitigation_summary: t.mitigation_summary } : {}),
+        ...(t.how_it_arises ? { how_it_arises: t.how_it_arises } : {}),
+        ...(t.methodology ? { methodology: t.methodology } : {}),
+        ...(t.essence ? { essence: t.essence } : {}),
+      };
+      return slim;
+    }),
+  };
 }
