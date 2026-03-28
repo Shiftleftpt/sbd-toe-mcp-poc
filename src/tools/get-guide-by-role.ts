@@ -32,6 +32,22 @@ export interface AssignmentWithStory extends PracticeAssignment {
   user_story?: UserStory;
 }
 
+export interface AssignmentSlim {
+  id: string;
+  chapter_id: string;
+  practice_id: string;
+  role: string;
+  phase: string;
+  action: string;
+  artifacts: string[];
+  user_story?: {
+    us_id?: string;
+    title: string;
+    goal?: string;
+    acceptance_criteria?: string;
+  };
+}
+
 export interface GetGuideByRoleResult {
   risk_level: string;
   roleFilter: string | null;
@@ -40,6 +56,27 @@ export interface GetGuideByRoleResult {
   assignments: AssignmentWithStory[];
   by_role: Record<string, AssignmentWithStory[]>;
   by_phase: Record<string, AssignmentWithStory[]>;
+  meta: {
+    assignmentCount: number;
+    userStoryCount: number;
+    knownRoles: string[];
+    knownPhases: string[];
+    note: string;
+  };
+}
+
+/** Lean public output — no by_role/by_phase duplication, slim assignment objects */
+export interface GetGuideByRoleOutput {
+  risk_level: string;
+  roleFilter: string | null;
+  canonicalRole: string | null;
+  phaseFilter: string | null;
+  /** Populated only when role= or phase= is specified. Without filter, use role_summary/phase_summary. */
+  assignments: AssignmentSlim[];
+  /** Counts per role — always present */
+  role_summary: Record<string, number>;
+  /** Counts per phase — always present */
+  phase_summary: Record<string, number>;
   meta: {
     assignmentCount: number;
     userStoryCount: number;
@@ -153,11 +190,62 @@ export function _resolveGuideByRole(
 }
 
 // ---------------------------------------------------------------------------
-// Public handler
+// Public handler — lean output to stay within agent context limits
 // ---------------------------------------------------------------------------
+
+function slimAssignment(a: AssignmentWithStory): AssignmentSlim {
+  const slim: AssignmentSlim = {
+    id: a.id,
+    chapter_id: a.chapter_id,
+    practice_id: a.practice_id,
+    role: a.role,
+    phase: a.phase,
+    action: a.action,
+    artifacts: a.artifacts,
+  };
+  if (a.user_story) {
+    slim.user_story = {
+      ...(a.user_story.us_id ? { us_id: a.user_story.us_id } : {}),
+      title: a.user_story.title,
+      ...(a.user_story.goal ? { goal: a.user_story.goal } : {}),
+      ...(a.user_story.acceptance_criteria
+        ? { acceptance_criteria: a.user_story.acceptance_criteria }
+        : {}),
+    };
+  }
+  return slim;
+}
 
 export function handleGetGuideByRole(
   args: Record<string, unknown>
-): GetGuideByRoleResult {
-  return _resolveGuideByRole(args, getOntologyData());
+): GetGuideByRoleOutput {
+  const full = _resolveGuideByRole(args, getOntologyData());
+  const hasFilter = full.roleFilter !== null || full.phaseFilter !== null;
+
+  // Build summary counts (always returned — cheap)
+  const role_summary: Record<string, number> = {};
+  const phase_summary: Record<string, number> = {};
+  for (const [role, items] of Object.entries(full.by_role)) {
+    role_summary[role] = items.length;
+  }
+  for (const [phase, items] of Object.entries(full.by_phase)) {
+    phase_summary[phase] = items.length;
+  }
+
+  const note = hasFilter
+    ? full.meta.note
+    : full.meta.note +
+      " No role/phase filter — assignments omitted. Specify role= or phase= for details.";
+
+  return {
+    risk_level: full.risk_level,
+    roleFilter: full.roleFilter,
+    canonicalRole: full.canonicalRole,
+    phaseFilter: full.phaseFilter,
+    // Only return full assignments when scoped — without filter it's 200-1000+ items
+    assignments: hasFilter ? full.assignments.map(slimAssignment) : [],
+    role_summary,
+    phase_summary,
+    meta: { ...full.meta, note },
+  };
 }

@@ -38,16 +38,13 @@ export interface Requirement {
 export interface Control {
   control_id: string;
   name: string;
-  name_en?: string;
   domain: string;
   control_type: string;
   abstraction_level: string;
   applicable_lifecycle_phases: string[];
-  source_practice_ids: string[];
   /** Chapter slugs this control covers (e.g. ["06-desenvolvimento-seguro"]) */
   chapter_ids?: string[];
   description?: string;
-  aliases?: string[];
 }
 
 export interface CanonicalRole {
@@ -58,17 +55,18 @@ export interface CanonicalRole {
 }
 
 export interface Threat {
-  mitigated_threat_id?: string;
-  object_id?: string;
-  threat_label_raw?: string;
+  id?: string;              // mitigated_threat_id (e.g. "MT-001")
+  title?: string;           // human-readable threat name
   essence?: string;
   chapter_id?: string;
-  category?: string | null;
-  cwe?: string | null;
-  cvss_score?: number | null;
-  associated_controls: string[];
   mitigation_summary?: string;
-  confidence?: number;
+  how_it_arises?: string;
+  methodology?: string;     // e.g. "STRIDE"
+  canonical_control_ids?: string[];  // direct control ID references (enriched index)
+  // kept for backward compat with internal chapter matching
+  mitigated_threat_id?: string;
+  threat_label_raw?: string;
+  associated_controls: string[];
 }
 
 export interface PracticeAssignment {
@@ -207,20 +205,16 @@ export function getOntologyData(): OntologyData {
     }
 
     if (rt === "control") {
-      const cNameEn = strOf(item, "name_en");
-      const cDesc   = strOf(item, "description");
+      const cDesc = strOf(item, "description");
       controls.push({
         control_id:                  strOf(item, "control_id"),
         name:                        strOf(item, "name"),
-        ...(cNameEn ? { name_en: cNameEn }       : {}),
         domain:                      strOf(item, "domain"),
         control_type:                strOf(item, "control_type"),
         abstraction_level:           strOf(item, "abstraction_level"),
         applicable_lifecycle_phases: arrStr(item, "applicable_lifecycle_phases"),
-        source_practice_ids:         arrStr(item, "source_practice_ids"),
         chapter_ids:                 arrStr(item, "chapter_ids"),
-        ...(cDesc   ? { description: cDesc }     : {}),
-        aliases:                     arrStr(item, "aliases"),
+        ...(cDesc ? { description: cDesc } : {}),
       });
       continue;
     }
@@ -239,24 +233,25 @@ export function getOntologyData(): OntologyData {
     }
 
     if (rt === "threat") {
-      const tMtId = strOf(item, "mitigated_threat_id");
-      const tObjId = strOf(item, "object_id");
-      const tLabel = strOf(item, "threat_label_raw");
-      const tEss   = strOf(item, "essence");
-      const tChId  = strOf(item, "chapter_id");
+      // Canonical ID: prefer "id" (MT-001), fall back to mitigated_threat_id
+      const tId     = strOf(item, "id") || strOf(item, "mitigated_threat_id");
+      // Title: use "title" field (enriched index), no threat_label_raw in v1.4.0+
+      const tTitle  = strOf(item, "title") || strOf(item, "threat_label_raw");
+      const tEss    = strOf(item, "essence");
+      const tChId   = strOf(item, "chapter_id");
       const tMitSum = strOf(item, "mitigation_summary");
+      const tHow    = strOf(item, "how_it_arises");
+      const tMeth   = strOf(item, "methodology");
       threats.push({
-        ...(tMtId   ? { mitigated_threat_id: tMtId }   : {}),
-        ...(tObjId  ? { object_id: tObjId }             : {}),
-        ...(tLabel  ? { threat_label_raw: tLabel }      : {}),
-        ...(tEss    ? { essence: tEss }                 : {}),
-        ...(tChId   ? { chapter_id: tChId }             : {}),
-        category:            typeof item["category"] === "string" ? item["category"] : null,
-        cwe:                 typeof item["cwe"] === "string" ? item["cwe"] : null,
-        cvss_score:          typeof item["cvss_score"] === "number" ? item["cvss_score"] : null,
-        associated_controls: arrStr(item, "associated_controls"),
-        ...(tMitSum ? { mitigation_summary: tMitSum }   : {}),
-        ...(typeof item["confidence"] === "number" ? { confidence: item["confidence"] as number } : {}),
+        ...(tId     ? { id: tId, mitigated_threat_id: tId } : {}),
+        ...(tTitle  ? { title: tTitle, threat_label_raw: tTitle } : {}),
+        ...(tEss    ? { essence: tEss }          : {}),
+        ...(tChId   ? { chapter_id: tChId }      : {}),
+        ...(tMitSum ? { mitigation_summary: tMitSum } : {}),
+        ...(tHow    ? { how_it_arises: tHow }    : {}),
+        ...(tMeth   ? { methodology: tMeth }     : {}),
+        canonical_control_ids: arrStr(item, "canonical_control_ids"),
+        associated_controls:   arrStr(item, "associated_controls"),
       });
       continue;
     }

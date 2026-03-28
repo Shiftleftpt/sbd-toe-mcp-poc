@@ -153,7 +153,12 @@ export async function handleQuerySbdToeEntities(
     });
   }
 
-  return { entities: results.slice(0, topK), total: results.length };
+  // Strip internal fields (raw Algolia record, scoring) — not useful to the agent.
+  const entities = results.slice(0, topK).map(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ({ raw, algoliaRank, localScore, indexName, ...rest }) => rest
+  );
+  return { entities, total: results.length };
 }
 
 export function handleGetSbdToeChapterBrief(

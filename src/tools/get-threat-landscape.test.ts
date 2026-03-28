@@ -21,7 +21,7 @@ function makeOntologyData(overrides: Partial<OntologyData> = {}): OntologyData {
       { requirement_id: "AUT-001", type: "base", category: "AUT", name: "MFA", applicable_levels: { L1: false, L2: true, L3: true }, source_chapter: 2 },
     ],
     controls: [
-      { control_id: "CTRL-MON", name: "Monitoring", domain: "monitoring", control_type: "detective", abstraction_level: "operational", applicable_lifecycle_phases: [], source_practice_ids: [], chapter_ids: ["12-monitorizacao-operacoes"] },
+      { control_id: "CTRL-MON", name: "Monitoring", domain: "monitoring", control_type: "detective", abstraction_level: "operational", applicable_lifecycle_phases: [], chapter_ids: ["12-monitorizacao-operacoes"] },
       { control_id: "CTRL-AUTH", name: "Identity", domain: "identity", control_type: "preventive", abstraction_level: "technical", applicable_lifecycle_phases: [], source_practice_ids: [], chapter_ids: ["02-requisitos-seguranca"] },
     ],
     roles: [],

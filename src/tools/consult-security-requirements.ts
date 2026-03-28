@@ -16,7 +16,7 @@
  * All data is read from data/publish/ — nothing is invented.
  */
 
-import type { Control, Requirement } from "./ontology-loader.js";
+import type { Requirement } from "./ontology-loader.js";
 import { getOntologyData } from "./ontology-loader.js";
 
 // ---------------------------------------------------------------------------
@@ -30,7 +30,35 @@ function isValidRiskLevel(v: unknown): v is RiskLevel {
   return typeof v === "string" && (VALID_RISK_LEVELS as readonly string[]).includes(v);
 }
 
-export interface ControlWithConfidence extends Control {
+/** Slim requirement — only fields needed by the agent in output */
+export interface RequirementSlim {
+  requirement_id: string;
+  name: string;
+  category: string;
+  type: string;
+}
+
+/** Slim control — only fields needed by the agent in output */
+export interface ControlSlim {
+  control_id: string;
+  name: string;
+  domain: string;
+  control_type: string;
+  applicable_lifecycle_phases: string[];
+  chapter_ids?: string[];
+  _confidence: "direct" | "derived";
+}
+
+/** Internal full type — keeps source_chapter for threat pipeline */
+export interface ControlWithConfidence {
+  control_id: string;
+  name: string;
+  domain: string;
+  control_type: string;
+  abstraction_level: string;
+  applicable_lifecycle_phases: string[];
+  chapter_ids?: string[];
+  description?: string;
   _confidence: "direct" | "derived";
 }
 
@@ -40,6 +68,22 @@ export interface ConsultSecurityRequirementsResult {
   active_domains: string[];
   requirements: Requirement[];
   controls: ControlWithConfidence[];
+  rule_trace: string[];
+  meta: {
+    requirementCount: number;
+    controlCount: number;
+    concernsApplied: string[] | null;
+    note: string;
+  };
+}
+
+/** Lean public result — safe for agent context windows */
+export interface ConsultSecurityRequirementsOutput {
+  risk_level: string;
+  active_categories: string[];
+  active_domains: string[];
+  requirements: RequirementSlim[];
+  controls: ControlSlim[];
   rule_trace: string[];
   meta: {
     requirementCount: number;
@@ -154,11 +198,33 @@ export function _resolveConsultResult(
 }
 
 // ---------------------------------------------------------------------------
-// Public handler
+// Public handler — returns slim projection to stay within agent context limits
 // ---------------------------------------------------------------------------
 
 export function handleConsultSecurityRequirements(
   args: Record<string, unknown>
-): ConsultSecurityRequirementsResult {
-  return _resolveConsultResult(args, getOntologyData());
+): ConsultSecurityRequirementsOutput {
+  const full = _resolveConsultResult(args, getOntologyData());
+  return {
+    risk_level: full.risk_level,
+    active_categories: full.active_categories,
+    active_domains: full.active_domains,
+    requirements: full.requirements.map((r) => ({
+      requirement_id: r.requirement_id,
+      name: r.name,
+      category: r.category,
+      type: r.type,
+    })),
+    controls: full.controls.map((c) => ({
+      control_id: c.control_id,
+      name: c.name,
+      domain: c.domain,
+      control_type: c.control_type,
+      applicable_lifecycle_phases: c.applicable_lifecycle_phases,
+      ...(c.chapter_ids ? { chapter_ids: c.chapter_ids } : {}),
+      _confidence: c._confidence,
+    })),
+    rule_trace: full.rule_trace,
+    meta: full.meta,
+  };
 }

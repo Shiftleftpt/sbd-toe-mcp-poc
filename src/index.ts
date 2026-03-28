@@ -1260,7 +1260,7 @@ class McpRuntime {
           const cache = getSnapshotCache();
           const result = handleListSbdToeChapters(args, cache);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1275,7 +1275,7 @@ class McpRuntime {
           const cache = getSnapshotCache();
           const result = await handleQuerySbdToeEntities(args, cache);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1290,7 +1290,7 @@ class McpRuntime {
           const cache = getSnapshotCache();
           const result = handleGetSbdToeChapterBrief(args, cache);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1304,7 +1304,7 @@ class McpRuntime {
         case "plan_sbd_toe_repo_governance": {
           const result = handlePlanRepoGovernance(args, getSnapshotCache());
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1318,7 +1318,7 @@ class McpRuntime {
         case "generate_sbd_toe_skill": {
           const result = handleGenerateSbdToeSkill();
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1332,7 +1332,7 @@ class McpRuntime {
         case "map_sbd_toe_review_scope": {
           const result = handleMapSbdToeReviewScope(args);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1347,7 +1347,7 @@ class McpRuntime {
           const cache = getSnapshotCache();
           const result = handleMapSbdToeApplicability(args, cache);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1361,7 +1361,7 @@ class McpRuntime {
         case "consult_security_requirements": {
           const result = handleConsultSecurityRequirements(args);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1375,7 +1375,7 @@ class McpRuntime {
         case "get_threat_landscape": {
           const result = handleGetThreatLandscape(args);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1389,7 +1389,7 @@ class McpRuntime {
         case "get_guide_by_role": {
           const result = handleGetGuideByRole(args);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",
@@ -1403,7 +1403,7 @@ class McpRuntime {
         case "resolve_entities": {
           const result = handleResolveEntities(args);
           this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           await this.log("info", {
             event_type: "tool.call",

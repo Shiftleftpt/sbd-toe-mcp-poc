@@ -4,11 +4,23 @@ import { emptySnapshotPayload, mockSnapshotPayload } from "../test-utils.js";
 import type { SnapshotCache } from "../backend/semantic-index-gateway.js";
 
 function makeCache(items: unknown[] = []): SnapshotCache {
+  // Build entitiesEnrichedLookup from items that carry artifact_ids,
+  // keyed by objectID (the join key used by the tool).
+  const entitiesEnrichedLookup = new Map<string, { artifact_ids?: readonly string[] }>();
+  for (const item of items) {
+    if (typeof item !== "object" || item === null) continue;
+    const rec = item as Record<string, unknown>;
+    const oid = typeof rec["objectID"] === "string" ? rec["objectID"] : undefined;
+    const arts = Array.isArray(rec["artifact_ids"]) ? (rec["artifact_ids"] as string[]) : undefined;
+    if (oid && arts && arts.length > 0) {
+      entitiesEnrichedLookup.set(oid, { artifact_ids: arts });
+    }
+  }
   return {
     docs: emptySnapshotPayload,
     entities: { items } as typeof mockSnapshotPayload,
     docsEnrichedLookup: new Map(),
-    entitiesEnrichedLookup: new Map()
+    entitiesEnrichedLookup: entitiesEnrichedLookup as SnapshotCache["entitiesEnrichedLookup"]
   };
 }
 
@@ -46,6 +58,7 @@ describe("handlePlanRepoGovernance", () => {
   it("extracts artefacts from entities with artifact_ids", () => {
     const items = [
       {
+        objectID: "entity::proportionality::01-abc",
         entity_type: "proportionality",
         chapter_id: "01-classificacao-aplicacoes",
         artifact_ids: ["ART-threat-model-abc123", "ART-checklist-def456"],
@@ -60,11 +73,13 @@ describe("handlePlanRepoGovernance", () => {
   it("filters artefacts by riskLevel", () => {
     const items = [
       {
+        objectID: "entity::x::01-l1",
         chapter_id: "01-classificacao-aplicacoes",
         artifact_ids: ["ART-doc-l1only"],
         risk_levels: ["L1"]
       },
       {
+        objectID: "entity::x::06-l2",
         chapter_id: "06-desenvolvimento-seguro",
         artifact_ids: ["ART-doc-l2plus"],
         risk_levels: ["L2", "L3"]
