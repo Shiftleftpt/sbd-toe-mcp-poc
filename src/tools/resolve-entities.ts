@@ -155,9 +155,34 @@ export function _resolveEntities(
     return matchesAllFilters(item, filters);
   });
 
+  // Strip Algolia-internal fields that are never useful to the agent.
+  // Also drop null/empty-array values and cap large arrays to 5 items.
+  const STRIP_FIELDS = new Set([
+    "objectID", "collection_id", "confidence", "warnings", "searchable_text",
+    "source_layers", "source_section_id", "document_path", "chapter_path",
+    "entity_type",  // redundant with record_type
+    "framework", "label",  // low-signal metadata
+    "summary",      // often duplicates title/aliases
+  ]);
+  const ARRAY_CAP = 5;
+  const entities = matched.slice(0, limit).map((item) => {
+    if (typeof item !== "object" || item === null) return item;
+    const out: Record<string, unknown> = {};
+    for (const [k, v] of Object.entries(item as Record<string, unknown>)) {
+      if (STRIP_FIELDS.has(k)) continue;
+      if (v === null || (Array.isArray(v) && v.length === 0)) continue; // drop nulls and empty arrays
+      if (Array.isArray(v) && v.length > ARRAY_CAP) {
+        out[k] = v.slice(0, ARRAY_CAP); // cap large arrays
+      } else {
+        out[k] = v;
+      }
+    }
+    return out;
+  });
+
   return {
     record_type: recordType,
-    entities: matched.slice(0, limit),
+    entities,
     total: matched.length,
     limit,
     meta: {
