@@ -38,16 +38,13 @@ export interface Requirement {
 export interface Control {
   control_id: string;
   name: string;
-  name_en?: string;
   domain: string;
   control_type: string;
   abstraction_level: string;
   applicable_lifecycle_phases: string[];
-  source_practice_ids: string[];
   /** Chapter slugs this control covers (e.g. ["06-desenvolvimento-seguro"]) */
   chapter_ids?: string[];
   description?: string;
-  aliases?: string[];
 }
 
 export interface CanonicalRole {
@@ -207,20 +204,16 @@ export function getOntologyData(): OntologyData {
     }
 
     if (rt === "control") {
-      const cNameEn = strOf(item, "name_en");
-      const cDesc   = strOf(item, "description");
+      const cDesc = strOf(item, "description");
       controls.push({
         control_id:                  strOf(item, "control_id"),
         name:                        strOf(item, "name"),
-        ...(cNameEn ? { name_en: cNameEn }       : {}),
         domain:                      strOf(item, "domain"),
         control_type:                strOf(item, "control_type"),
         abstraction_level:           strOf(item, "abstraction_level"),
         applicable_lifecycle_phases: arrStr(item, "applicable_lifecycle_phases"),
-        source_practice_ids:         arrStr(item, "source_practice_ids"),
         chapter_ids:                 arrStr(item, "chapter_ids"),
-        ...(cDesc   ? { description: cDesc }     : {}),
-        aliases:                     arrStr(item, "aliases"),
+        ...(cDesc ? { description: cDesc } : {}),
       });
       continue;
     }

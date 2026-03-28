@@ -70,6 +70,9 @@ resolve_entities                 ← low-level ontology filter engine
 is structured ("what requirements apply at L2?", "which controls are active for auth?").
 Use `search_sbd_toe_manual` for narrative/conceptual questions.
 
+**Output size:** L1 ≈ 22k chars, L2 ≈ 36k chars, L3 ≈ 36k chars (may exceed context).
+**Always use `concerns` to scope L2/L3 queries** — reduces to ~9k chars per concern set.
+
 #### Valid `concerns` values (ontology-controlled vocabulary)
 
 | concern | Categories resolved | Meaning |
