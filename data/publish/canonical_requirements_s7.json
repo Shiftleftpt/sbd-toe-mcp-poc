@@ -1,0 +1,1859 @@
+{
+  "metadata": {
+    "generation_date": "2026-03-28",
+    "total_requirements": 130,
+    "catalogs": [
+      {
+        "name": "Base Catalog (Cap 02)",
+        "count": 104,
+        "categories": [
+          "SES",
+          "ERR",
+          "DST",
+          "LOG",
+          "API",
+          "AUT",
+          "INT",
+          "REQ",
+          "IDE",
+          "CFG",
+          "VAL",
+          "ACC",
+          "ENC"
+        ]
+      },
+      {
+        "name": "Architecture (Cap 04)",
+        "count": 13,
+        "prefix": "ARC"
+      },
+      {
+        "name": "Infrastructure-as-Code (Cap 08)",
+        "count": 13,
+        "prefix": "IAC"
+      }
+    ]
+  },
+  "requirements": [
+    {
+      "requirement_id": "AUT-001",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "MFA obrigatório",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-002",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Política de passwords",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-003",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Proteção contra brute force",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-004",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Revogação ativa de sessões",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-005",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Expiração automática de sessão",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-006",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Proibição de credenciais em claro",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-007",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Suporte a autenticação federada",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-008",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Step-up para ações sensíveis",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-009",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Reautenticação para alterações críticas",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "AUT-010",
+      "type": "base",
+      "category": "AUT",
+      "domain": null,
+      "name": "Alerta de acessos suspeitos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-001",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Controlo de acesso RBAC",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-002",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Princípio do menor privilégio",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-003",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Bloqueio e auditoria de acessos ilegítimos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-004",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Separação de perfis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-005",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Controlo de acesso a APIs e serviços",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-006",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Proteção de recursos sensíveis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-007",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Validação do modelo de acesso",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-008",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Revogação em tempo real",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-009",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Autorização baseada em atributos (ABAC)",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ACC-010",
+      "type": "base",
+      "category": "ACC",
+      "domain": null,
+      "name": "Revisão periódica de permissões",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-001",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Registo de eventos críticos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-002",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Atributos mínimos em logs",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-003",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Proteção de integridade e acesso aos logs",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-004",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Análise periódica de logs",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-005",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Retenção mínima dos logs",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-006",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Envio para sistema centralizado",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-007",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Classificação e deteção de anomalias",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-008",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Alarme em falhas do mecanismo de logging",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-009",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Logs suportam resposta a incidentes",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "LOG-010",
+      "type": "base",
+      "category": "LOG",
+      "domain": null,
+      "name": "Logging de eventos críticos de negócio",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-001",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Expiração automática por inatividade",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-002",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Logout manual e após alteração de credenciais",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-003",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Identificadores de sessão imprevisíveis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-004",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Transmissão segura dos tokens",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-005",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Ligação da sessão ao contexto do cliente",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-006",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Revogação explícita da sessão",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-007",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Prevenção de sessões long-lived",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "SES-008",
+      "type": "base",
+      "category": "SES",
+      "domain": null,
+      "name": "Scope, TTL e revogação de tokens JWT",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-001",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Validação geral de entradas externas",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-002",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Uso de whitelists em vez de blacklists",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-003",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Validadores de esquema (ex: JSON/XML schema)",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-004",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Sanitização contra injeções",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-005",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Validação antes do uso interno",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-006",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Mensagens de erro seguras na validação",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "VAL-007",
+      "type": "base",
+      "category": "VAL",
+      "domain": null,
+      "name": "Testes automáticos contra entradas maliciosas",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-001",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Erros não expõem dados sensíveis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-002",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Mensagens genéricas no cliente",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-003",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Não revelar existência de recursos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-004",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Mensagens localizadas e seguras",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-005",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Gestão padronizada e centralizada",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-006",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Testes automáticos para erros excessivos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ERR-007",
+      "type": "base",
+      "category": "ERR",
+      "domain": null,
+      "name": "Logs de erro com ID de sessão/contexto seguro",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-001",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Debug e flags desativados em produção",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-002",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Separação de ambientes com validação automática",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-003",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Sem hardcoded de parâmetros",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-004",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Configuração externa e com permissões controladas",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-005",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Validação de configuração no arranque",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-006",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Uso de cofres e gestão segura de segredos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "CFG-007",
+      "type": "base",
+      "category": "CFG",
+      "domain": null,
+      "name": "Monitorização de drift de configuração",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-001",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Autenticação e autorização de chamadas API",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-002",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Endpoints desnecessários ocultos ou removidos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-003",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Validação de input em APIs",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-004",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Rate limiting e deteção de abusos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-005",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Proteção por TLS e certificados atualizados",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-006",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Verificação de SDKs e wrappers usados",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "API-007",
+      "type": "base",
+      "category": "API",
+      "domain": null,
+      "name": "Logging e auditoria de chamadas externas",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-001",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Validação de mensagens entre sistemas",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-002",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Autenticação mútua ou tokens seguros",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-003",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Transmissão cifrada com TLS",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-004",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Proibição de protocolos inseguros",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-005",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Assinatura e integridade de mensagens",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-006",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Validação cruzada de origem e destino",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-007",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Monitorização e deteção de padrões anómalos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "INT-008",
+      "type": "base",
+      "category": "INT",
+      "domain": null,
+      "name": "Revisão de segurança e contrato em integrações",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-001",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Inclusão de requisitos de segurança",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-002",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Revisão formal de segurança dos requisitos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-003",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Alinhamento com classificação de risco",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-004",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Versionamento e gestão de requisitos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-005",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Nova análise de ameaça após alteração de requisito",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-006",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Rastreabilidade requisito → ameaça → teste",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "REQ-007",
+      "type": "base",
+      "category": "REQ",
+      "domain": null,
+      "name": "Revisão iterativa com equipas",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-001",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Repositórios autenticados e auditáveis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-002",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Aprovação para publicação pública",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-003",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Assinatura digital ou checksum",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-004",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Inclusão de SBOM nos artefactos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-005",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Acesso segregado por role e ambiente",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-006",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Deploy apenas via pipeline validado",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "DST-007",
+      "type": "base",
+      "category": "DST",
+      "domain": null,
+      "name": "Revogação e limpeza de artefactos comprometidos",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "IDE-001",
+      "type": "base",
+      "category": "IDE",
+      "domain": null,
+      "name": "Ferramentas e IDEs autorizadas",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "IDE-002",
+      "type": "base",
+      "category": "IDE",
+      "domain": null,
+      "name": "Atualização e gestão de vulnerabilidades",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "IDE-003",
+      "type": "base",
+      "category": "IDE",
+      "domain": null,
+      "name": "Auditoria de código gerado por ferramentas",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "IDE-004",
+      "type": "base",
+      "category": "IDE",
+      "domain": null,
+      "name": "Extensões e plugins de fontes confiáveis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "IDE-005",
+      "type": "base",
+      "category": "IDE",
+      "domain": null,
+      "name": "Controlo de permissões de extensões",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "IDE-006",
+      "type": "base",
+      "category": "IDE",
+      "domain": null,
+      "name": "Evitar uso de ambientes locais sem controlo",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "02-lista-requisitos-base.md"
+    },
+    {
+      "requirement_id": "ARC-001",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "A arquitetura deve identificar e documentar zonas de confiança e fronteiras de segurança",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-002",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "A exposição externa de componentes deve ser minimizada e justificada",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-003",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Deve existir uma revisão de arquitetura com foco em segurança, proporcional ao risco da aplicação",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-004",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "As decisões de arquitetura devem ser documentadas com responsáveis, datas e justificações",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-005",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "A arquitetura deve considerar threat modeling nos fluxos e nos componentes críticos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-006",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "A arquitetura deve integrar controlos técnicos para isolar domínios sensíveis",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-007",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Devem existir padrões de arquitetura segura reutilizáveis, aprovados por segurança",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-008",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Devem ser identificados e protegidos os fluxos de dados entre zonas de confiança",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-009",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Alterações significativas na arquitetura devem desencadear nova revisão de segurança",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-010",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Diagrama(s) de arquitetura devem ser versionados, revistos periodicamente e acessíveis às equipas",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-011",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "A arquitetura de aplicações críticas deve implementar segmentação lógica e física entre ambientes",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-012",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Devem ser definidos critérios formais de aprovação da arquitetura para aplicações de risco elevado",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "ARC-013",
+      "type": "domain-specific",
+      "category": "ARC",
+      "domain": "architecture",
+      "name": "Devem existir mecanismos de validação automática da topologia em CI/CD ou repositórios como código",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 4,
+      "source_file": "01-catalogo-requisitos.md"
+    },
+    {
+      "requirement_id": "IAC-001",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Backend remoto autenticado com *locking* ativo para controlo de estado",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-002",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Ambientes (`dev`, `staging`, `prod`) segregados e versionados",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-003",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Validações automáticas obrigatórias (syntax, lint, segurança, policy)",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-004",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Módulos reutilizados com origem confiável e versão imutável",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-005",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Histórico completo com versionamento, *tags* e *releases*",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-006",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Convenções formais de naming, tagging e layout de diretórios",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-007",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "*Plan* rastreável e aprovado antes de qualquer *apply*",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-008",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Rastreabilidade ficheiro → recurso → ambiente",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-009",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Enforcement automático de políticas em pipeline",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-010",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Artefactos (`plan`, `apply`, manifests) versionados e com hash",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-011",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Gestão segura de segredos (sem *hardcoding*)",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-012",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Deteção automatizada de *drift* entre IaC e estado real",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "IAC-013",
+      "type": "domain-specific",
+      "category": "IAC",
+      "domain": "infrastructure-as-code",
+      "name": "Revisão periódica formal de módulos e templates IaC",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 8,
+      "source_file": "08-matriz-requisitos-iac.md"
+    },
+    {
+      "requirement_id": "ENC-001",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Encriptação de dados em trânsito",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-002",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Encriptação de dados em repouso",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-003",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Uso de algoritmos criptográficos robustos",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-004",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Proteção de passwords com hashing seguro",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-005",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Gestão segura de chaves e segredos (cofre)",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-006",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Prevenção de exportação indevida de dados sensíveis",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-007",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Mascaramento de dados sensíveis em logs",
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-008",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Rotação periódica de segredos e chaves",
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-009",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Deteção de segredos expostos em repositórios",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    },
+    {
+      "requirement_id": "ENC-010",
+      "type": "base",
+      "category": "ENC",
+      "domain": null,
+      "name": "Prevenção de caching de dados sensíveis no browser",
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "source_chapter": 2,
+      "source_file": "10-validacao-requisitos.md"
+    }
+  ]
+}

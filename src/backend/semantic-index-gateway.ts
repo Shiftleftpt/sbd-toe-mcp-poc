@@ -216,7 +216,7 @@ function booleanValue(value: unknown): boolean | undefined {
   return undefined;
 }
 
-function truncate(text: string, maxLength = 420): string {
+function truncate(text: string, maxLength = 900): string {
   if (text.length <= maxLength) {
     return text;
   }
