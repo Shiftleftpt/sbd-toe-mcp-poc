@@ -1485,7 +1485,52 @@ class McpRuntime {
   }
 }
 
+function verifyArtifactIntegrity(): void {
+  const manifestPath = resolveAppPath("data/publish/artifact-manifest.json");
+  let manifestText: string;
+  try {
+    manifestText = readFileSync(manifestPath, "utf-8");
+  } catch {
+    // Manifest absent — acceptable in dev/source mode; warn and continue
+    process.stderr.write(
+      "[sbd-toe-mcp] WARN: artifact-manifest.json not found — integrity check skipped (dev mode?)\n"
+    );
+    return;
+  }
+
+  const manifest = JSON.parse(manifestText) as {
+    artifact_version?: string;
+    files?: Record<string, string>;
+  };
+
+  if (!manifest.files || typeof manifest.files !== "object") {
+    throw new Error("artifact-manifest.json is malformed — missing 'files' field");
+  }
+
+  const publishDir = resolveAppPath("data/publish");
+  for (const [filename, expectedHash] of Object.entries(manifest.files)) {
+    const filePath = `${publishDir}/${filename}`;
+    let contents: Buffer;
+    try {
+      contents = readFileSync(filePath);
+    } catch {
+      throw new Error(`Artifact integrity check failed: missing file data/publish/${filename}`);
+    }
+    const actualHash = createHash("sha256").update(contents).digest("hex");
+    if (actualHash !== expectedHash) {
+      throw new Error(
+        `Artifact integrity check failed: data/publish/${filename} hash mismatch — artifact may have been tampered with`
+      );
+    }
+  }
+
+  process.stderr.write(
+    `[sbd-toe-mcp] Artifact integrity OK (${Object.keys(manifest.files).length} files, version ${manifest.artifact_version ?? "unknown"})\n`
+  );
+}
+
 function main(): void {
+  verifyArtifactIntegrity();
   new McpRuntime();
 }
 
