@@ -70,6 +70,25 @@ resolve_entities                 ← low-level ontology filter engine
 is structured ("what requirements apply at L2?", "which controls are active for auth?").
 Use `search_sbd_toe_manual` for narrative/conceptual questions.
 
+#### Valid `concerns` values (ontology-controlled vocabulary)
+
+| concern | Categories resolved | Meaning |
+|---|---|---|
+| `auth` | AUT, ACC, SES | Authentication, access control, sessions |
+| `logging` | LOG | Audit logging, monitoring |
+| `validation` | VAL, ERR | Input validation, error handling |
+| `api` | API | API security |
+| `config` | CFG | Configuration & environment hardening |
+| `integrity` | INT | Integrity & integration |
+| `distribution` | DST | Supply chain, packaging |
+| `ide` | IDE | Development environment |
+| `requirements` | REQ | Security requirements in SDLC |
+| `architecture` | ARC | Secure architecture |
+| `iac` | IAC | Infrastructure-as-Code |
+| `encryption` | ENC | Cryptography & sensitive data |
+
+Pass concerns as exact lowercase strings from the table above.
+
 ### GUIDE mode
 Use when the user asks *how to implement, design, structure, document, or review* something
 according to the manual.
@@ -90,8 +109,34 @@ get_guide_by_role            ← deterministic: practice assignments + user stor
 get_threat_landscape         ← deterministic: threats relevant to a risk level / concern set
                                 params: risk_level (L1|L2|L3), concerns? (string[])
                                 returns: threats[] with mitigation_confidence + mitigated_by[]
+                                NOTE: runs consult internally — do NOT call consult first
                                 use for: threat modelling context, "what threats apply to auth?"
 ```
+
+#### Valid `role` values for `get_guide_by_role`
+
+Canonical role IDs (pass exact or common alias — resolved automatically):
+
+`developer` · `appsec` · `devops` · `grc` · `qa` · `security_champion` · `software_architect`
+· `product_owner` · `scrum_master` · `team_lead` · `ciso` · `executive_management`
+· `ops` · `pentester` · `compliance` · `auditor` · `ir` · `sre`
+
+#### Interpreting tool output
+
+| Field | What to communicate |
+|---|---|
+| `rule_trace` contains `CONCERNS_FILTER_REQUIREMENTS` | Tell user scope was narrowed to the specified concerns |
+| `mitigation_confidence: "heuristic"` | Flag as inferred linkage — not structural evidence |
+| `mitigation_confidence: "derived"` | Structural chapter-match — reliable |
+| `assignments: []` / `threats: []` | Say "manual-grounded: not applicable in this scope" — do not invent |
+| `active_domains` | List the security domains active at this risk level |
+
+#### Pattern for complex answers (threat model / security plan / checklist)
+
+1. `consult_security_requirements(risk_level, concerns?)` — anchor active requirements & controls
+2. `get_threat_landscape(risk_level, concerns?)` — relevant threats + mitigating controls
+3. `get_guide_by_role(risk_level, role?, phase?)` — practices per role/phase
+4. Generate document grounded on steps 1–3 — label each claim as manual-grounded
 
 > **The MCP surfaces what the manual says — the LLM generates content.**
 > Use CONSULT tools to retrieve artefact descriptions, required sections, and controls.
