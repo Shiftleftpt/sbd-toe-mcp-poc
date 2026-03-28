@@ -19,7 +19,6 @@ import {
   handleMapSbdToeApplicability,
   handleQuerySbdToeEntities
 } from "./tools/structured-tools.js";
-import { handleGenerateDocument } from "./tools/generate-document.js";
 import { handleGenerateSbdToeSkill } from "./tools/generate-sbd-toe-skill.js";
 import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
 import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
@@ -551,68 +550,23 @@ class McpRuntime {
         },
         {
           name: "plan_sbd_toe_repo_governance",
-          title: "Plan SbD-ToE Repo Governance",
+          title: "List SbD-ToE Manual Artefacts",
           description:
-            "Dado o tipo de repositório, plataforma e nível de risco, devolve um plano de governança com controlos aplicáveis, checkpoints de baseline, checklist de evidências e recomendações de plataforma.",
+            "Returns the list of artefacts/documents identified in the SbD-ToE manual, " +
+            "grouped by chapter, with risk level applicability. " +
+            "Optionally filter by riskLevel (L1/L2/L3). " +
+            "All data comes from the manual indices — nothing is invented. " +
+            "The manual does not provide templates; ask the LLM to generate one if needed.",
           inputSchema: {
             type: "object",
             properties: {
-              repoType: {
-                type: "string",
-                enum: ["library", "service", "webapp", "infrastructure", "pipeline", "monorepo"],
-                description: "Tipo de repositório."
-              },
-              platform: {
-                type: "string",
-                enum: ["github", "gitlab"],
-                description: "Plataforma de hosting do repositório."
-              },
               riskLevel: {
                 type: "string",
                 enum: ["L1", "L2", "L3"],
-                description: "Nível de risco do projecto."
-              },
-              organizationContext: {
-                type: "object",
-                description: "Contexto organizacional opcional.",
-                properties: {
-                  scale:            { type: "string", enum: ["startup", "mid-size", "enterprise"] },
-                  teamSize:         { type: "integer", minimum: 1 },
-                  enforcementLevel: { type: "string", enum: ["advisory", "enforced", "strict"] }
-                },
-                additionalProperties: false
+                description: "Optional. If provided, only artefacts applicable at this risk level are returned."
               }
             },
-            required: ["repoType", "platform", "riskLevel"],
-            additionalProperties: false
-          },
-          annotations: { readOnlyHint: true }
-        },
-        {
-          name: "generate_document",
-          title: "Generate SbD-ToE Document",
-          description:
-            "Gera o esqueleto estruturado de um documento SbD-ToE (secções, campos obrigatórios, critérios de aceitação) para um tipo e nível de risco.",
-          inputSchema: {
-            type: "object",
-            properties: {
-              type: {
-                type: "string",
-                enum: ["classification-template", "threat-model-template", "checklist", "training-plan", "secure-config"],
-                description: "Tipo de documento a gerar."
-              },
-              riskLevel: {
-                type: "string",
-                enum: ["L1", "L2", "L3"],
-                description: "Nível de risco do projecto."
-              },
-              context: {
-                type: "object",
-                description: "Contexto adicional do projecto (reservado, não usado na estrutura).",
-                additionalProperties: true
-              }
-            },
-            required: ["type", "riskLevel"],
+            required: [],
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -1176,21 +1130,7 @@ class McpRuntime {
           return;
         }
         case "plan_sbd_toe_repo_governance": {
-          const result = handlePlanRepoGovernance(args);
-          this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-          });
-          await this.log("info", {
-            event_type: "tool.call",
-            outcome: "succeeded",
-            duration_ms: Date.now() - startedAt,
-            ...metadata,
-            message: "Tool invocation completed"
-          });
-          return;
-        }
-        case "generate_document": {
-          const result = handleGenerateDocument(args);
+          const result = handlePlanRepoGovernance(args, getSnapshotCache());
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });
