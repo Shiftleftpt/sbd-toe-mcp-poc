@@ -19,7 +19,6 @@ import {
   handleMapSbdToeApplicability,
   handleQuerySbdToeEntities
 } from "./tools/structured-tools.js";
-import { handleGenerateDocument } from "./tools/generate-document.js";
 import { handleGenerateSbdToeSkill } from "./tools/generate-sbd-toe-skill.js";
 import { handleMapSbdToeReviewScope } from "./tools/map-review-scope.js";
 import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
@@ -417,23 +416,23 @@ class McpRuntime {
           name: "search_sbd_toe_manual",
           title: "Search SbD-ToE Manual",
           description:
-            "Recupera contexto grounded do manual SbD-ToE a partir do snapshot semântico local embutido.",
+            "Retrieves grounded context from the SbD-ToE manual using the embedded local semantic snapshot.",
           inputSchema: {
             type: "object",
             properties: {
               question: {
                 type: "string",
-                description: "Pergunta em linguagem natural sobre o manual."
+                description: "Natural-language question about the manual."
               },
               debug: {
                 type: "boolean",
-                description: "Quando true, anexa o debug completo do retrieval."
+                description: "When true, appends full retrieval debug information."
               },
               topK: {
                 type: "integer",
                 minimum: 1,
                 maximum: 15,
-                description: "Número máximo de records usados como contexto."
+                description: "Maximum number of records used as context."
               }
             },
             required: ["question"],
@@ -447,23 +446,23 @@ class McpRuntime {
           name: "answer_sbd_toe_manual",
           title: "Answer SbD-ToE Manual",
           description:
-            "Faz retrieval do manual SbD-ToE e pede a resposta final ao modelo configurado no cliente via sampling MCP.",
+            "Retrieves SbD-ToE manual context and requests the final answer from the client's model via MCP sampling.",
           inputSchema: {
             type: "object",
             properties: {
               question: {
                 type: "string",
-                description: "Pergunta em linguagem natural sobre o manual."
+                description: "Natural-language question about the manual."
               },
               debug: {
                 type: "boolean",
-                description: "Quando true, anexa o debug completo."
+                description: "When true, appends full debug information."
               },
               topK: {
                 type: "integer",
                 minimum: 1,
                 maximum: 15,
-                description: "Número máximo de records usados como contexto."
+                description: "Maximum number of records used as context."
               }
             },
             required: ["question"],
@@ -477,19 +476,19 @@ class McpRuntime {
           name: "inspect_sbd_toe_retrieval",
           title: "Inspect SbD-ToE Retrieval",
           description:
-            "Inspeciona retrieval, seleção de contexto e prompt final sem pedir resposta ao modelo do cliente.",
+            "Inspects retrieval, context selection and final prompt without requesting an answer from the client model.",
           inputSchema: {
             type: "object",
             properties: {
               question: {
                 type: "string",
-                description: "Pergunta a usar na inspeção do retrieval."
+                description: "Question to use for the retrieval inspection."
               },
               topK: {
                 type: "integer",
                 minimum: 1,
                 maximum: 15,
-                description: "Número máximo de records selecionados para o prompt."
+                description: "Maximum number of records selected for the prompt."
               }
             },
             required: ["question"],
@@ -502,14 +501,14 @@ class McpRuntime {
         {
           name: "list_sbd_toe_chapters",
           title: "List SbD-ToE Chapters",
-          description: "Lista os capítulos do manual SbD-ToE com id, título e aplicabilidade.",
+          description: "Lists SbD-ToE manual chapters with id, title and applicability.",
           inputSchema: {
             type: "object",
             properties: {
               riskLevel: {
                 type: "string",
                 enum: ["L1", "L2", "L3"],
-                description: "Filtrar por nível de risco."
+                description: "Filter by risk level."
               }
             },
             additionalProperties: false
@@ -519,7 +518,7 @@ class McpRuntime {
         {
           name: "query_sbd_toe_entities",
           title: "Query SbD-ToE Entities",
-          description: "Consulta entidades do manual por query, tipo, capítulo ou nível de risco.",
+          description: "Queries manual entities by text, entity type, chapter or risk level.",
           inputSchema: {
             type: "object",
             properties: {
@@ -538,7 +537,7 @@ class McpRuntime {
           name: "get_sbd_toe_chapter_brief",
           title: "Get SbD-ToE Chapter Brief",
           description:
-            "Devolve resumo operacional de um capítulo: papel, fases, artefactos, intent_topics.",
+            "Returns an operational summary of a chapter: role, phases, artefacts, intent_topics.",
           inputSchema: {
             type: "object",
             properties: {
@@ -551,68 +550,23 @@ class McpRuntime {
         },
         {
           name: "plan_sbd_toe_repo_governance",
-          title: "Plan SbD-ToE Repo Governance",
+          title: "List SbD-ToE Manual Artefacts",
           description:
-            "Dado o tipo de repositório, plataforma e nível de risco, devolve um plano de governança com controlos aplicáveis, checkpoints de baseline, checklist de evidências e recomendações de plataforma.",
+            "Returns the list of artefacts/documents identified in the SbD-ToE manual, " +
+            "grouped by chapter, with risk level applicability. " +
+            "Optionally filter by riskLevel (L1/L2/L3). " +
+            "All data comes from the manual indices — nothing is invented. " +
+            "The manual does not provide templates; ask the LLM to generate one if needed.",
           inputSchema: {
             type: "object",
             properties: {
-              repoType: {
-                type: "string",
-                enum: ["library", "service", "webapp", "infrastructure", "pipeline", "monorepo"],
-                description: "Tipo de repositório."
-              },
-              platform: {
-                type: "string",
-                enum: ["github", "gitlab"],
-                description: "Plataforma de hosting do repositório."
-              },
               riskLevel: {
                 type: "string",
                 enum: ["L1", "L2", "L3"],
-                description: "Nível de risco do projecto."
-              },
-              organizationContext: {
-                type: "object",
-                description: "Contexto organizacional opcional.",
-                properties: {
-                  scale:            { type: "string", enum: ["startup", "mid-size", "enterprise"] },
-                  teamSize:         { type: "integer", minimum: 1 },
-                  enforcementLevel: { type: "string", enum: ["advisory", "enforced", "strict"] }
-                },
-                additionalProperties: false
+                description: "Optional. If provided, only artefacts applicable at this risk level are returned."
               }
             },
-            required: ["repoType", "platform", "riskLevel"],
-            additionalProperties: false
-          },
-          annotations: { readOnlyHint: true }
-        },
-        {
-          name: "generate_document",
-          title: "Generate SbD-ToE Document",
-          description:
-            "Gera o esqueleto estruturado de um documento SbD-ToE (secções, campos obrigatórios, critérios de aceitação) para um tipo e nível de risco.",
-          inputSchema: {
-            type: "object",
-            properties: {
-              type: {
-                type: "string",
-                enum: ["classification-template", "threat-model-template", "checklist", "training-plan", "secure-config"],
-                description: "Tipo de documento a gerar."
-              },
-              riskLevel: {
-                type: "string",
-                enum: ["L1", "L2", "L3"],
-                description: "Nível de risco do projecto."
-              },
-              context: {
-                type: "object",
-                description: "Contexto adicional do projecto (reservado, não usado na estrutura).",
-                additionalProperties: true
-              }
-            },
-            required: ["type", "riskLevel"],
+            required: [],
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -639,7 +593,7 @@ class McpRuntime {
           name: "map_sbd_toe_review_scope",
           title: "Map SbD-ToE Review Scope",
           description:
-            "Dado um conjunto de ficheiros alterados, mapeia quais knowledge bundles SbD-ToE devem ser revistos, com reasoning explícito por path.",
+            "Given a set of changed files, maps which SbD-ToE knowledge bundles should be reviewed, with explicit reasoning per path.",
           inputSchema: {
             type: "object",
             properties: {
@@ -647,16 +601,16 @@ class McpRuntime {
                 type: "array",
                 items: { type: "string" },
                 minItems: 1,
-                description: "Lista de paths relativos ao raiz do repositório."
+                description: "List of paths relative to the repository root."
               },
               riskLevel: {
                 type: "string",
                 enum: ["L1", "L2", "L3"],
-                description: "Nível de risco do projecto."
+                description: "Project risk level."
               },
               projectContext: {
                 type: "object",
-                description: "Contexto adicional do projecto (opcional).",
+                description: "Additional project context (optional).",
                 properties: {
                   repoRole:          { type: "string" },
                   runtimeModel:      { type: "string" },
@@ -667,7 +621,7 @@ class McpRuntime {
               },
               diffSummary: {
                 type: "string",
-                description: "Resumo do diff (truncado a 500 chars)."
+                description: "Diff summary (truncated to 500 chars)."
               }
             },
             required: ["changedFiles", "riskLevel"],
@@ -679,7 +633,7 @@ class McpRuntime {
           name: "map_sbd_toe_applicability",
           title: "Map SbD-ToE Applicability",
           description:
-            "Mapeia capítulos/controlos activos, condicionais e excluídos para um nível de risco L1/L2/L3. Suporta contexto de projecto para activar bundles relevantes.",
+            "Maps active, conditional and excluded chapters/controls for a given risk level L1/L2/L3. Supports project context to activate relevant bundles.",
           inputSchema: {
             type: "object",
             properties: {
@@ -695,20 +649,20 @@ class McpRuntime {
                     "network-segmentation", "cryptography"
                   ]
                 },
-                description: "Tecnologias usadas no projecto."
+                description: "Technologies used in the project."
               },
               hasPersonalData: {
                 type: "boolean",
-                description: "O projecto processa dados pessoais?"
+                description: "Does the project process personal data?"
               },
               isPublicFacing: {
                 type: "boolean",
-                description: "O projecto tem exposição pública?"
+                description: "Does the project have public-facing exposure?"
               },
               projectRole: {
                 type: "string",
                 enum: ["developer", "architect", "security", "devops", "manager"],
-                description: "Papel do utilizador no projecto."
+                description: "User role in the project."
               }
             },
             required: ["riskLevel"],
@@ -725,11 +679,11 @@ class McpRuntime {
       name: "ask_sbd_toe_manual",
       title: "Ask SbD-ToE Manual",
       description:
-        "Prompt MCP para orientar o chat do VS Code a responder perguntas sobre o manual SbD-ToE com grounding.",
+        "MCP prompt to guide the AI chat to answer questions about the SbD-ToE manual with grounding.",
       arguments: [
         {
           name: "question",
-          description: "Pergunta sobre o manual SbD-ToE.",
+          description: "Question about the SbD-ToE manual.",
           required: true
         }
       ]
@@ -744,16 +698,16 @@ class McpRuntime {
           name: "setup_sbd_toe_agent",
           title: "Setup SbD-ToE Agent",
           description:
-            "Prompt MCP para configurar um agente com o contexto e regras do manual SbD-ToE para um nível de risco.",
+            "MCP prompt to configure an agent with SbD-ToE manual context and rules for a given risk level.",
           arguments: [
             {
               name: "riskLevel",
-              description: "Nível de risco do projecto: L1, L2 ou L3.",
+              description: "Project risk level: L1, L2 or L3.",
               required: true
             },
             {
               name: "projectRole",
-              description: "Papel ou descrição do projecto (opcional).",
+              description: "Project role or description (optional).",
               required: false
             }
           ]
@@ -773,10 +727,10 @@ class McpRuntime {
       const question = typeof args.question === "string" ? args.question : "";
       const promptText =
         `${loadSystemPromptTemplate()}\n\n` +
-        "Use a ferramenta `search_sbd_toe_manual` antes de responder.\n" +
+        "Use the `search_sbd_toe_manual` tool before answering.\n" +
         `Question: ${question}`;
       this.sendResponse(request.id, {
-        description: "Prompt grounded para perguntas sobre o manual SbD-ToE.",
+        description: "Grounded prompt for questions about the SbD-ToE manual.",
         messages: [
           {
             role: "user",
@@ -796,7 +750,7 @@ class McpRuntime {
         this.sendError(
           request.id,
           -32602,
-          'O argumento "riskLevel" é obrigatório e deve ser L1, L2 ou L3.'
+          'The "riskLevel" argument is required and must be L1, L2 or L3.'
         );
         return;
       }
@@ -804,7 +758,7 @@ class McpRuntime {
         typeof args["projectRole"] === "string" ? args["projectRole"] : undefined;
       const promptText = buildSetupAgentPrompt(riskLevel, projectRole);
       this.sendResponse(request.id, {
-        description: "Prompt para configurar um agente com o contexto SbD-ToE.",
+        description: "Prompt to configure an agent with SbD-ToE context.",
         messages: [
           {
             role: "user",
@@ -818,7 +772,7 @@ class McpRuntime {
       return;
     }
 
-    this.sendError(request.id, -32602, `Prompt desconhecida: ${name}`);
+    this.sendError(request.id, -32602, `Unknown prompt: ${name}`);
   }
 
   private handleResourcesList(request: JsonRpcRequest): void {
@@ -861,7 +815,7 @@ class McpRuntime {
         this.sendError(
           request.id,
           -32602,
-          `riskLevel inválido: "${riskLevel}". Valores permitidos: L1, L2, L3.`
+          `Invalid riskLevel: "${riskLevel}". Allowed values: L1, L2, L3.`
         );
         return;
       }
@@ -878,7 +832,7 @@ class McpRuntime {
       try {
         indexText = readFileSync(indexPath, "utf-8");
       } catch {
-        this.sendError(request.id, -32603, "Não foi possível ler o índice compacto SbD-ToE.");
+        this.sendError(request.id, -32603, "Could not read the SbD-ToE compact index.");
         return;
       }
       this.sendResponse(request.id, {
@@ -902,13 +856,13 @@ class McpRuntime {
       return;
     }
 
-    this.sendError(request.id, -32602, `URI de resource desconhecida: ${uri}`);
+    this.sendError(request.id, -32602, `Unknown resource URI: ${uri}`);
   }
 
   private getStringArg(args: Record<string, unknown>, key: string): string {
     const value = args[key];
     if (typeof value !== "string" || value.trim().length === 0) {
-      throw new Error(`O argumento "${key}" é obrigatório.`);
+      throw new Error(`The "${key}" argument is required.`);
     }
     return value;
   }
@@ -935,7 +889,7 @@ class McpRuntime {
     text: string;
   }> {
     if (!this.supportsSampling()) {
-      throw new Error("O cliente MCP atual não declarou suporte para sampling.");
+      throw new Error("The current MCP client has not declared sampling support.");
     }
 
     const startedAt = Date.now();
@@ -1086,11 +1040,11 @@ class McpRuntime {
           const topK = this.getOptionalIntegerArg(args, "topK");
 
           if (!this.supportsSampling()) {
-            // Fallback gracioso: devolver top-3 documentos sem sampling
+            // Graceful fallback: return top-3 documents without sampling
             const bundle = await retrievePublishedContext(question, 3);
             const fallbackResult = {
               sampling_unavailable: true,
-              note: "Sampling não disponível neste cliente. Apresentando os 3 documentos mais relevantes como contexto.",
+              note: "Sampling is not available in this client. Returning the 3 most relevant documents as context.",
               results: bundle.retrieved
             };
             this.sendResponse(request.id, {
@@ -1176,21 +1130,7 @@ class McpRuntime {
           return;
         }
         case "plan_sbd_toe_repo_governance": {
-          const result = handlePlanRepoGovernance(args);
-          this.sendResponse(request.id, {
-            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
-          });
-          await this.log("info", {
-            event_type: "tool.call",
-            outcome: "succeeded",
-            duration_ms: Date.now() - startedAt,
-            ...metadata,
-            message: "Tool invocation completed"
-          });
-          return;
-        }
-        case "generate_document": {
-          const result = handleGenerateDocument(args);
+          const result = handlePlanRepoGovernance(args, getSnapshotCache());
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });
@@ -1255,10 +1195,10 @@ class McpRuntime {
             error_code: -32602,
             message: "Unknown tool requested"
           });
-          this.sendError(request.id, -32602, `Tool desconhecida: ${name}`);
+          this.sendError(request.id, -32602, `Unknown tool: ${name}`);
       }
     } catch (error) {
-      // Erros com rpcError emitem JSON-RPC error (ex: -32602 para input inválido)
+      // Errors with rpcError emit JSON-RPC error (e.g. -32602 for invalid input)
       if (
         error instanceof Error &&
         "rpcError" in error &&
@@ -1278,7 +1218,7 @@ class McpRuntime {
         return;
       }
 
-      const message = error instanceof Error ? error.message : "Erro inesperado.";
+      const message = error instanceof Error ? error.message : "Unexpected error.";
       await this.log("error", {
         event_type: "tool.call",
         outcome: "failed",
