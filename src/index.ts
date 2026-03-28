@@ -166,6 +166,14 @@ class McpRuntime {
     };
   }
 
+  private sanitizeErrorMessage(message: string): string {
+    // Strip absolute paths to avoid leaking filesystem layout to MCP clients
+    return message
+      .replace(/\/(?:Users|home|Volumes|tmp|var|etc|opt|root)[^\s,'")}]*/g, "[path]")
+      .replace(/[A-Za-z]:\\[^\s,'")}]*/g, "[path]")
+      .split("\n", 1)[0] ?? "Unexpected error";
+  }
+
   private summarizeError(error: unknown): Pick<LogEvent, "error_name" | "message"> {
     if (error instanceof Error) {
       return {
@@ -291,7 +299,7 @@ class McpRuntime {
       this.sendError(
         message.id,
         -32603,
-        error instanceof Error ? error.message : "Internal error"
+        error instanceof Error ? this.sanitizeErrorMessage(error.message) : "Internal error"
       );
     }
   }
@@ -1469,7 +1477,7 @@ class McpRuntime {
         return;
       }
 
-      const message = error instanceof Error ? error.message : "Unexpected error.";
+      const rawMessage = error instanceof Error ? error.message : "Unexpected error.";
       await this.log("error", {
         event_type: "tool.call",
         outcome: "failed",
@@ -1479,7 +1487,7 @@ class McpRuntime {
       });
       this.sendResponse(request.id, {
         isError: true,
-        content: [{ type: "text", text: message }]
+        content: [{ type: "text", text: this.sanitizeErrorMessage(rawMessage) }]
       });
     }
   }
