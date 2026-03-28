@@ -54,7 +54,8 @@ export function handlePlanRepoGovernance(
     riskLevel = riskLevelArg;
   }
 
-  // Extract artefacts from entities index
+  // Extract artefacts by joining base entities (chapter_id, risk_levels)
+  // with the enriched lookup (artifact_ids — only present in enriched index).
   const items: unknown[] = Array.isArray(cache.entities.items)
     ? cache.entities.items
     : [];
@@ -64,7 +65,11 @@ export function handlePlanRepoGovernance(
   for (const item of items) {
     if (typeof item !== "object" || item === null) continue;
     const rec = item as Record<string, unknown>;
-    const artifactIds = Array.isArray(rec["artifact_ids"]) ? rec["artifact_ids"] : [];
+
+    // artifact_ids live in the enriched index — look them up via objectID
+    const objectId = typeof rec["objectID"] === "string" ? rec["objectID"] : undefined;
+    const enriched = objectId ? cache.entitiesEnrichedLookup.get(objectId) : undefined;
+    const artifactIds: readonly string[] = enriched?.artifact_ids ?? [];
     if (artifactIds.length === 0) continue;
 
     const chapterId = typeof rec["chapter_id"] === "string" ? rec["chapter_id"] : "";
