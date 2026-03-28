@@ -140,6 +140,12 @@ const PATTERN_RULES: PatternRule[] = [
     matches: (p) => p.startsWith(".github/workflows/")
   },
   {
+    pattern: ".github/**/*.yml / .github/**/*.yaml",
+    bundles: ["07-cicd-seguro", "10-testes-seguranca"],
+    matches: (p) =>
+      p.startsWith(".github/") && (p.endsWith(".yml") || p.endsWith(".yaml"))
+  },
+  {
     pattern: "package.json / *-lock.json / yarn.lock",
     bundles: ["05-dependencias-sbom-sca"],
     matches: (p) =>

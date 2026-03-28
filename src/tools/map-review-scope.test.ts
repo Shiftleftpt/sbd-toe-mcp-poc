@@ -122,6 +122,20 @@ describe("handleMapSbdToeReviewScope — path mapping", () => {
     expect(ids).toContain("14-governanca-contratacao");
   });
 
+  it(".github/cicd.yaml → 07-cicd-seguro (non-standard CI file in .github root)", () => {
+    const result = call({ changedFiles: [".github/cicd.yaml"], riskLevel: "L1" });
+    const ids = bundleIds(result);
+    expect(ids).toContain("07-cicd-seguro");
+    expect(ids).toContain("10-testes-seguranca");
+    // must NOT fall through to guardrail only
+    expect(ids).not.toContain("01-classificacao-aplicacoes");
+  });
+
+  it(".github/dependabot.yml → 07-cicd-seguro (pipeline-adjacent config)", () => {
+    const result = call({ changedFiles: [".github/dependabot.yml"], riskLevel: "L1" });
+    expect(bundleIds(result)).toContain("07-cicd-seguro");
+  });
+
   it("unmapped path triggers guardrail bundles", () => {
     const result = call({ changedFiles: ["random/unknown/file.txt"], riskLevel: "L1" });
     const ids = bundleIds(result);

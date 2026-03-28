@@ -62,18 +62,32 @@ according to the manual.
 
 ```
 1. Obtain applicable guidance first (CONSULT mode)
-2. Then apply it to generate, structure, or review the artefact
+2. Then apply that guidance to generate, structure, or review the artefact
 
-generate_document            ← structured document skeleton for a type + risk level
-plan_sbd_toe_repo_governance ← governance plan for a repository
+plan_sbd_toe_repo_governance ← list artefacts the manual identifies, grouped by chapter
 map_sbd_toe_review_scope     ← which SbD-ToE bundles to review given changed files
 ```
+
+> **The MCP surfaces what the manual says — the LLM generates content.**
+> Use CONSULT tools to retrieve artefact descriptions, required sections, and controls.
+> Then generate the actual document, template, or checklist based on that grounded context.
 
 > In governance, assessment, or planning tasks: **present the target artefact plan before
 > modifying any files.**
 >
 > In implementation tasks: **obtain applicable secure implementation guidance before
 > generating code** when security-relevant behaviour is involved.
+
+### SETUP mode
+Use when the user wants to configure their AI client to use SbD-ToE natively.
+
+```
+generate_sbd_toe_skill  ← returns canonical skill/instructions content from sbd://toe/agent-guide
+                           save to the appropriate file for the client:
+                           Claude Code  → .claude/skills/sbd-toe.md
+                           GitHub Copilot → .github/copilot-instructions.md
+                           Cursor       → .cursorrules
+```
 
 ---
 
@@ -132,16 +146,18 @@ Always distinguish between:
 
 ### By question type
 
-| Question | Tool |
+| Question | Approach |
 |---|---|
 | "What is X?" / "How does Y work?" | `search_sbd_toe_manual` |
 | "What applies to my project?" | `map_sbd_toe_applicability` → `get_sbd_toe_chapter_brief` |
 | "What does chapter N cover?" | `get_sbd_toe_chapter_brief` |
 | "List all chapters" | `list_sbd_toe_chapters` |
 | "Find control / artefact / practice" | `query_sbd_toe_entities` |
-| "Generate a threat model / checklist / plan" | `generate_document` |
-| "Governance plan for this repo" | `plan_sbd_toe_repo_governance` |
+| "Generate a threat model / checklist / plan" | `search_sbd_toe_manual` or `get_sbd_toe_chapter_brief` to retrieve what the manual says it should contain → then generate it |
+| "What artefacts does the manual require?" | `plan_sbd_toe_repo_governance` |
+| "Governance plan for this repo" | `plan_sbd_toe_repo_governance` → generate plan from returned artefact list |
 | "What to review given these changed files?" | `map_sbd_toe_review_scope` |
+| "Set up SbD-ToE for this client / create a skill" | `generate_sbd_toe_skill` |
 
 ---
 
@@ -151,7 +167,6 @@ Always distinguish between:
 |---|---|
 | `sbd://toe/agent-guide` | This document — full operational guide |
 | `sbd://toe/index-compact` | Full chapter map as JSON — fast structured lookup |
-| `sbd://toe/skill-template/{riskLevel}/{projectRole}` | Role + risk specific instructions |
 | `sbd://toe/chapter-applicability/{riskLevel}` | Active/excluded chapters for a risk level |
 
 ---
@@ -162,18 +177,6 @@ Always distinguish between:
 |---|---|
 | `setup_sbd_toe_agent(riskLevel, projectRole)` | Session setup — active chapters + risk-specific rules |
 | `ask_sbd_toe_manual(question)` | Direct grounded Q&A |
-
----
-
-## `generate_document` types
-
-| type | Description |
-|---|---|
-| `classification-template` | Application risk classification document |
-| `threat-model-template` | Threat model with required sections per risk level |
-| `checklist` | Security checklist for the risk level |
-| `training-plan` | Security training plan |
-| `secure-config` | Secure configuration reference |
 
 ---
 
