@@ -956,6 +956,12 @@ class McpRuntime {
             "and entity schemas. Read once per session to understand the deterministic resolution model " +
             "before calling consult_security_requirements, get_threat_landscape or get_guide_by_role.",
           mimeType: "application/yaml"
+        },
+        {
+          uri: "sbd://toe/version",
+          name: "SbD-ToE MCP Version",
+          description: "Current version of the running SbD-ToE MCP server (name, version, description).",
+          mimeType: "application/json"
         }
       ]
     });
@@ -1025,6 +1031,23 @@ class McpRuntime {
       }
       this.sendResponse(request.id, {
         contents: [{ uri, mimeType: "application/yaml", text: ontologyText }]
+      });
+      return;
+    }
+
+    if (uri === "sbd://toe/version") {
+      const pkgPath = resolveAppPath("package.json");
+      let pkgText: string;
+      try {
+        pkgText = readFileSync(pkgPath, "utf-8");
+      } catch {
+        this.sendError(request.id, -32603, "Could not read package.json.");
+        return;
+      }
+      const pkg = JSON.parse(pkgText) as { name?: string; version?: string; description?: string };
+      const payload = JSON.stringify({ name: pkg.name ?? "", version: pkg.version ?? "", description: pkg.description ?? "" });
+      this.sendResponse(request.id, {
+        contents: [{ uri, mimeType: "application/json", text: payload }]
       });
       return;
     }
