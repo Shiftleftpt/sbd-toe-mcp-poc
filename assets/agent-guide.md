@@ -49,12 +49,26 @@ Use when the user asks *what the manual says*, what applies, how to classify a p
 what controls or artefacts are required, or whether something is aligned with the manual.
 
 ```
-search_sbd_toe_manual       ← conceptual questions, narrative context
-map_sbd_toe_applicability   ← which chapters/controls apply to this project
-get_sbd_toe_chapter_brief   ← what a specific chapter covers (phases, artefacts, topics)
-list_sbd_toe_chapters       ← chapter discovery and navigation
-query_sbd_toe_entities      ← specific controls (CTRL-*), artefacts (ART-*), practices
+search_sbd_toe_manual            ← conceptual questions, narrative context
+map_sbd_toe_applicability        ← which chapters/controls apply to this project
+get_sbd_toe_chapter_brief        ← what a specific chapter covers (phases, artefacts, topics)
+list_sbd_toe_chapters            ← chapter discovery and navigation
+query_sbd_toe_entities           ← specific controls (CTRL-*), artefacts (ART-*), practices
+
+consult_security_requirements    ← deterministic: requirements + controls for a risk level
+                                    params: risk_level (L1|L2|L3), concerns? (string[])
+                                    returns: requirements[], controls[], active_domains[],
+                                             active_categories[], rule_trace[]
+
+resolve_entities                 ← low-level ontology filter engine
+                                    params: record_type, filters? (dot-notation), limit?
+                                    use for: enumerating roles, finding controls by domain,
+                                    listing requirements by category, exploring the ontology
 ```
+
+**Prefer `consult_security_requirements` over `search_sbd_toe_manual`** when the question
+is structured ("what requirements apply at L2?", "which controls are active for auth?").
+Use `search_sbd_toe_manual` for narrative/conceptual questions.
 
 ### GUIDE mode
 Use when the user asks *how to implement, design, structure, document, or review* something
@@ -66,6 +80,17 @@ according to the manual.
 
 plan_sbd_toe_repo_governance ← list artefacts the manual identifies, grouped by chapter
 map_sbd_toe_review_scope     ← which SbD-ToE bundles to review given changed files
+
+get_guide_by_role            ← deterministic: practice assignments + user stories
+                                params: risk_level (L1|L2|L3), role? (string), phase? (string)
+                                returns: assignments[], by_role{}, by_phase{}, user stories joined
+                                use for: "what should a developer do at L2?",
+                                         "what practices apply in the design phase?"
+
+get_threat_landscape         ← deterministic: threats relevant to a risk level / concern set
+                                params: risk_level (L1|L2|L3), concerns? (string[])
+                                returns: threats[] with mitigation_confidence + mitigated_by[]
+                                use for: threat modelling context, "what threats apply to auth?"
 ```
 
 > **The MCP surfaces what the manual says — the LLM generates content.**
@@ -153,7 +178,15 @@ Always distinguish between:
 | "What does chapter N cover?" | `get_sbd_toe_chapter_brief` |
 | "List all chapters" | `list_sbd_toe_chapters` |
 | "Find control / artefact / practice" | `query_sbd_toe_entities` |
-| "Generate a threat model / checklist / plan" | `search_sbd_toe_manual` or `get_sbd_toe_chapter_brief` to retrieve what the manual says it should contain → then generate it |
+| "What requirements apply at L1/L2/L3?" | `consult_security_requirements(risk_level)` |
+| "Which controls are active for auth / logging / …?" | `consult_security_requirements(risk_level, concerns=[…])` |
+| "What threats apply to this project?" | `get_threat_landscape(risk_level)` |
+| "What threats are relevant for auth / logging / …?" | `get_threat_landscape(risk_level, concerns=[…])` |
+| "What should a developer / architect / … do?" | `get_guide_by_role(risk_level, role=…)` |
+| "What practices apply in design / implement / …?" | `get_guide_by_role(risk_level, phase=…)` |
+| "What roles exist in the manual?" | `resolve_entities(record_type="role")` |
+| "List all controls in domain X" | `resolve_entities(record_type="control", filters={domain: X})` |
+| "Generate a threat model / checklist / plan" | `get_threat_landscape` + `get_guide_by_role` → then generate content |
 | "What artefacts does the manual require?" | `plan_sbd_toe_repo_governance` |
 | "Governance plan for this repo" | `plan_sbd_toe_repo_governance` → generate plan from returned artefact list |
 | "What to review given these changed files?" | `map_sbd_toe_review_scope` |
@@ -168,6 +201,7 @@ Always distinguish between:
 | `sbd://toe/agent-guide` | This document — full operational guide |
 | `sbd://toe/index-compact` | Full chapter map as JSON — fast structured lookup |
 | `sbd://toe/chapter-applicability/{riskLevel}` | Active/excluded chapters for a risk level |
+| `sbd://toe/ontology` | Full ontology YAML — domain_mapping, concerns, inference rules |
 
 ---
 
