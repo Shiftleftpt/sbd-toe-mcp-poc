@@ -66,7 +66,15 @@ export interface GetGuideByRoleResult {
 }
 
 /** Lean public output — no by_role/by_phase duplication, slim assignment objects */
+export interface McpProvenance {
+  content_type: "canonical" | "derived" | "inferred";
+  produced_by: string;
+  source_data: string;
+  note: string;
+}
+
 export interface GetGuideByRoleOutput {
+  provenance: McpProvenance;
   risk_level: string;
   roleFilter: string | null;
   canonicalRole: string | null;
@@ -238,6 +246,12 @@ export function handleGetGuideByRole(
       " No role/phase filter — assignments omitted. Specify role= or phase= for details.";
 
   return {
+    provenance: {
+      content_type: "derived",
+      produced_by: "guide_resolution_pipeline",
+      source_data: "practice_assignments.json + lifecycle_user_stories.json (algolia_entities_records_enriched)",
+      note: "Assignments are derived from the SbD-ToE practice data joined with user stories. role/phase filtering is structural (index lookup), not inference.",
+    },
     risk_level: full.risk_level,
     roleFilter: full.roleFilter,
     canonicalRole: full.canonicalRole,

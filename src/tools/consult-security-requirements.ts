@@ -78,7 +78,15 @@ export interface ConsultSecurityRequirementsResult {
 }
 
 /** Lean public result — safe for agent context windows */
+export interface McpProvenance {
+  content_type: "canonical" | "derived" | "inferred";
+  produced_by: string;
+  source_data: string;
+  note: string;
+}
+
 export interface ConsultSecurityRequirementsOutput {
+  provenance: McpProvenance;
   risk_level: string;
   active_categories: string[];
   active_domains: string[];
@@ -206,6 +214,12 @@ export function handleConsultSecurityRequirements(
 ): ConsultSecurityRequirementsOutput {
   const full = _resolveConsultResult(args, getOntologyData());
   return {
+    provenance: {
+      content_type: "derived",
+      produced_by: "ontology_resolution",
+      source_data: "algolia_entities_records_enriched + sbdtoe-ontology.yaml (domain_mapping)",
+      note: "Requirements are canonical SbD-ToE index entries. Controls are derived via domain_mapping traversal — confidence reflects match type (direct|derived).",
+    },
     risk_level: full.risk_level,
     active_categories: full.active_categories,
     active_domains: full.active_domains,
