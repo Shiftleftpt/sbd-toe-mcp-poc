@@ -25,6 +25,7 @@ import { handlePlanRepoGovernance } from "./tools/plan-repo-governance.js";
 import { handleConsultSecurityRequirements } from "./tools/consult-security-requirements.js";
 import { handleGetThreatLandscape } from "./tools/get-threat-landscape.js";
 import { handleGetGuideByRole } from "./tools/get-guide-by-role.js";
+import { handleResolveEntities } from "./tools/resolve-entities.js";
 import {
   buildChapterApplicabilityJson,
   buildSetupAgentPrompt
@@ -775,6 +776,47 @@ class McpRuntime {
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
+        },
+        {
+          name: "resolve_entities",
+          title: "Resolve SbD-ToE Entities",
+          description:
+            "Low-level entity resolver over the SbD-ToE enriched index. " +
+            "Query any entity type by record_type with optional field filters. " +
+            "Supports dot-notation for nested fields (e.g. 'applicable_levels.L2'), " +
+            "comparison operators ({gte, lte} for numbers, {in: [...]} for set membership), " +
+            "and array membership checks. " +
+            "Use this when the high-level tools (consult_security_requirements, get_threat_landscape, " +
+            "get_guide_by_role) do not cover your specific query. " +
+            "All data from the SbD-ToE enriched entities index — nothing is invented.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              record_type: {
+                type: "string",
+                description:
+                  "Entity type to query. Well-known types: requirement, control, practice, threat, " +
+                  "user_story, assignment, role, phase, maturity_mapping, chapter_bundle. " +
+                  "Read sbd://toe/ontology to see all entity schemas."
+              },
+              filters: {
+                type: "object",
+                description:
+                  "Key-value filters on entity fields. " +
+                  "Dot-notation for nested fields: {\"applicable_levels.L2\": true}. " +
+                  "Comparison ops: {cvss_score: {gte: 7.0}} or {risk_level: {in: [\"L2\",\"L3\"]}}. " +
+                  "Array fields: {roles_normalized: \"developer\"} checks membership.",
+                additionalProperties: true
+              },
+              limit: {
+                type: "number",
+                description: "Max results to return. Default: 50, max: 200."
+              }
+            },
+            required: ["record_type"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
         }
       ]
     });
@@ -1346,6 +1388,20 @@ class McpRuntime {
         }
         case "get_guide_by_role": {
           const result = handleGetGuideByRole(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
+          });
+          await this.log("info", {
+            event_type: "tool.call",
+            outcome: "succeeded",
+            duration_ms: Date.now() - startedAt,
+            ...metadata,
+            message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "resolve_entities": {
+          const result = handleResolveEntities(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result, null, 2) }]
           });
