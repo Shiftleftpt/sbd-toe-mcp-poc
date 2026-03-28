@@ -119,6 +119,11 @@ export function buildSetupAgentPrompt(riskLevel: string, projectRole?: string): 
     "2. Use search_sbd_toe_manual for grounding before answering about the manual.",
     "3. Never assert compliance without evidence in the codebase or manual.",
     "4. Never invent citations, chapter references, control IDs, or links.",
-    "5. Treat AI-generated code as untrusted — require human review."
+    "5. Treat AI-generated code as untrusted — require human review.",
+    "",
+    "Recommended next step:",
+    `Call plan_sbd_toe_repo_governance(riskLevel="${riskLevel}") to get the full list of artefacts/documents`,
+    "the manual identifies for this risk level, grouped by chapter.",
+    "Use that list as the basis for any governance, documentation, or audit planning — do not invent artefacts."
   ].join("\n");
 }

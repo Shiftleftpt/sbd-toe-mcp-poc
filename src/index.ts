@@ -12,7 +12,7 @@ import {
   searchManualQuestion
 } from "./orchestrator/ask-manual.js";
 import { loadSystemPromptTemplate } from "./prompt/system-prompt.js";
-import { getSnapshotCache, retrievePublishedContext } from "./backend/semantic-index-gateway.js";
+import { getSnapshotCache } from "./backend/semantic-index-gateway.js";
 import {
   handleGetSbdToeChapterBrief,
   handleListSbdToeChapters,
@@ -446,7 +446,10 @@ class McpRuntime {
           name: "answer_sbd_toe_manual",
           title: "Answer SbD-ToE Manual",
           description:
-            "Retrieves SbD-ToE manual context and requests the final answer from the client's model via MCP sampling.",
+            "Retrieves SbD-ToE manual context and requests the final answer from the client's model via MCP sampling. " +
+            "Requires sampling support from the MCP client. " +
+            "Without sampling, falls back to formatted retrieval output (same as search_sbd_toe_manual). " +
+            "Prefer search_sbd_toe_manual for clients without sampling support.",
           inputSchema: {
             type: "object",
             properties: {
@@ -1040,15 +1043,14 @@ class McpRuntime {
           const topK = this.getOptionalIntegerArg(args, "topK");
 
           if (!this.supportsSampling()) {
-            // Graceful fallback: return top-3 documents without sampling
-            const bundle = await retrievePublishedContext(question, 3);
-            const fallbackResult = {
-              sampling_unavailable: true,
-              note: "Sampling is not available in this client. Returning the 3 most relevant documents as context.",
-              results: bundle.retrieved
-            };
+            // Graceful fallback: delegate to searchManualQuestion (same retrieval, formatted output)
+            const fallback = await searchManualQuestion(question, debug, topK ?? 3);
+            const fallbackText =
+              "**Note: MCP sampling not available in this client — returning formatted retrieval results. " +
+              "For a synthesised answer, use `search_sbd_toe_manual` directly.**\n\n" +
+              fallback.text;
             this.sendResponse(request.id, {
-              content: [{ type: "text", text: JSON.stringify(fallbackResult, null, 2) }]
+              content: [{ type: "text", text: fallbackText }]
             });
             await this.log("info", {
               event_type: "tool.call",
