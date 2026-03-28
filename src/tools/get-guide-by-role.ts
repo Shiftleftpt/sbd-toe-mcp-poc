@@ -38,8 +38,8 @@ export interface GetGuideByRoleResult {
   canonicalRole: string | null;
   phaseFilter: string | null;
   assignments: AssignmentWithStory[];
-  byRole: Record<string, AssignmentWithStory[]>;
-  byPhase: Record<string, AssignmentWithStory[]>;
+  by_role: Record<string, AssignmentWithStory[]>;
+  by_phase: Record<string, AssignmentWithStory[]>;
   meta: {
     assignmentCount: number;
     userStoryCount: number;
@@ -117,11 +117,11 @@ export function _resolveGuideByRole(
   });
 
   // Step 6: group by role and by phase
-  const byRole: Record<string, AssignmentWithStory[]> = {};
-  const byPhase: Record<string, AssignmentWithStory[]> = {};
+  const by_role: Record<string, AssignmentWithStory[]> = {};
+  const by_phase: Record<string, AssignmentWithStory[]> = {};
   for (const a of assignments) {
-    (byRole[a.role] ??= []).push(a);
-    (byPhase[a.phase] ??= []).push(a);
+    (by_role[a.role] ??= []).push(a);
+    (by_phase[a.phase] ??= []).push(a);
   }
 
   // Compute known roles and phases from the full assignment set at this risk level
@@ -137,8 +137,8 @@ export function _resolveGuideByRole(
     canonicalRole,
     phaseFilter: phaseArg,
     assignments,
-    byRole,
-    byPhase,
+    by_role,
+    by_phase,
     meta: {
       assignmentCount: assignments.length,
       userStoryCount,

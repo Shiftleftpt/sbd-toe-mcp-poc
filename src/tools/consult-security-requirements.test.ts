@@ -70,11 +70,11 @@ describe("_resolveConsultResult", () => {
   it("derives active domains from requirement categories", () => {
     const result = _resolveConsultResult({ risk_level: "L1" }, makeOntologyData());
     // L1 has LOG → monitoring and VAL → code_integrity
-    expect(result.activeDomains).toContain("monitoring");
-    expect(result.activeDomains).toContain("code_integrity");
+    expect(result.active_domains).toContain("monitoring");
+    expect(result.active_domains).toContain("code_integrity");
     // AUT not in L1 → identity not derived from AUT
     // (governance could come from AUT if L2, but not L1)
-    expect(result.activeDomains).not.toContain("identity");
+    expect(result.active_domains).not.toContain("identity");
   });
 
   it("selects controls matching active domains", () => {
@@ -125,10 +125,10 @@ describe("_resolveConsultResult", () => {
     expect(result.meta.note.length).toBeGreaterThan(0);
   });
 
-  it("activeCategories sorted and unique", () => {
+  it("active_categories sorted and unique", () => {
     const result = _resolveConsultResult({ risk_level: "L1" }, makeOntologyData());
-    const sorted = [...result.activeCategories].sort();
-    expect(result.activeCategories).toEqual(sorted);
+    const sorted = [...result.active_categories].sort();
+    expect(result.active_categories).toEqual(sorted);
   });
 
   it("rule_trace always includes REQUIREMENT_APPLIES_BY_RISK", () => {

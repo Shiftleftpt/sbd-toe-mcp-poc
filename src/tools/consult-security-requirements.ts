@@ -36,8 +36,8 @@ export interface ControlWithConfidence extends Control {
 
 export interface ConsultSecurityRequirementsResult {
   risk_level: string;
-  activeCategories: string[];
-  activeDomains: string[];
+  active_categories: string[];
+  active_domains: string[];
   requirements: Requirement[];
   controls: ControlWithConfidence[];
   rule_trace: string[];
@@ -92,14 +92,15 @@ export function _resolveConsultResult(
   }
 
   // Step 3: collect active categories
-  const activeCategories = [...new Set(filteredReqs.map((r) => r.category))].sort();
+  const active_categories = [...new Set(filteredReqs.map((r) => r.category))].sort();
 
   // Step 4: map categories → domains
-  const activeDomains = new Set<string>();
-  for (const cat of activeCategories) {
+  const activeDomainsSet = new Set<string>();
+  for (const cat of active_categories) {
     const domains = domainMapping[cat] ?? [];
-    for (const d of domains) activeDomains.add(d);
+    for (const d of domains) activeDomainsSet.add(d);
   }
+  const active_domains = [...activeDomainsSet].sort();
 
   // Collect categories that have a direct requirement→domain link (requirement.domain is set)
   const directDomains = new Set<string>(
@@ -110,7 +111,7 @@ export function _resolveConsultResult(
 
   // Step 5: select controls by domain
   const controls: ControlWithConfidence[] = allControls
-    .filter((c) => activeDomains.has(c.domain))
+    .filter((c) => activeDomainsSet.has(c.domain))
     .map((c) => ({
       ...c,
       _confidence: directDomains.has(c.domain) ? "direct" : "derived"
@@ -125,8 +126,8 @@ export function _resolveConsultResult(
     rule_trace.push(`CONTROL_ACTIVE_DIRECT_LINK: ${directDomains.size} direct domain(s) found → confidence=direct`);
   }
   // Priority 90 — fires when there are active categories to derive domains from
-  if (activeCategories.length > 0) {
-    rule_trace.push(`CONTROL_ACTIVE_BY_DOMAIN: ${activeCategories.length} categories → ${activeDomains.size} domains → ${controls.length} controls`);
+  if (active_categories.length > 0) {
+    rule_trace.push(`CONTROL_ACTIVE_BY_DOMAIN: ${active_categories.length} categories → ${activeDomainsSet.size} domains → ${controls.length} controls`);
   }
   // Priority 60, restrictive — fires when concerns narrowing was applied
   if (concernsApplied && concernsApplied.length > 0) {
@@ -135,8 +136,8 @@ export function _resolveConsultResult(
 
   return {
     risk_level: riskLevel,
-    activeCategories,
-    activeDomains: [...activeDomains].sort(),
+    active_categories,
+    active_domains,
     requirements: filteredReqs,
     controls,
     rule_trace,

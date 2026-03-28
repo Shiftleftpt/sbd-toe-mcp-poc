@@ -74,12 +74,12 @@ describe("_resolveGuideByRole", () => {
     expect(result.assignments[0]?.action).toBe("Implement C");
   });
 
-  it("groups assignments byRole and byPhase", () => {
+  it("groups assignments by_role and by_phase", () => {
     const result = _resolveGuideByRole({ risk_level: "L1" }, makeOntologyData());
-    expect(result.byRole["developer"]).toBeDefined();
-    expect(result.byRole["security-champion"]).toBeDefined();
-    expect(result.byPhase["design"]).toBeDefined();
-    expect(result.byPhase["test"]).toBeDefined();
+    expect(result.by_role["developer"]).toBeDefined();
+    expect(result.by_role["security-champion"]).toBeDefined();
+    expect(result.by_phase["design"]).toBeDefined();
+    expect(result.by_phase["test"]).toBeDefined();
   });
 
   it("joins user stories via practice_id", () => {
@@ -112,7 +112,7 @@ describe("_resolveGuideByRole", () => {
   it("returns empty assignments for a role with no matches", () => {
     const result = _resolveGuideByRole({ risk_level: "L1", role: "gestao-executiva" }, makeOntologyData());
     expect(result.assignments).toHaveLength(0);
-    expect(result.byRole).toEqual({});
+    expect(result.by_role).toEqual({});
   });
 
   it("meta.note is non-empty string", () => {

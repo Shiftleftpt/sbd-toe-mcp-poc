@@ -63,16 +63,16 @@ describe("_resolveThreatLandscape", () => {
     expect(ids).toContain("MT-002"); // chapter 2
   });
 
-  it("all threats have _confidence field set", () => {
+  it("all threats have mitigation_confidence field set", () => {
     const result = _resolveThreatLandscape({ risk_level: "L2" }, makeOntologyData());
     for (const t of result.threats) {
-      expect(["derived", "heuristic"]).toContain(t._confidence);
+      expect(["derived", "heuristic"]).toContain(t.mitigation_confidence);
     }
   });
 
   it("derived threats appear before heuristic in sorted output", () => {
     const result = _resolveThreatLandscape({ risk_level: "L2" }, makeOntologyData());
-    const confidences = result.threats.map((t) => t._confidence);
+    const confidences = result.threats.map((t) => t.mitigation_confidence);
     const firstHeuristicIdx = confidences.indexOf("heuristic");
     const lastDerivedIdx = confidences.lastIndexOf("derived");
     if (firstHeuristicIdx !== -1 && lastDerivedIdx !== -1) {

@@ -31,8 +31,11 @@ export interface MitigatingControl {
 }
 
 export interface ThreatWithConfidence extends Threat {
-  _confidence: "derived" | "heuristic";
-  _active_chapter: string;
+  /** Spec-aligned ID field: mirrors mitigated_threat_id */
+  id: string;
+  /** Spec-aligned name field: mirrors threat_label_raw */
+  name: string;
+  mitigation_confidence: "derived" | "heuristic";
   mitigated_by: MitigatingControl[];
 }
 
@@ -79,7 +82,7 @@ export function _resolveThreatLandscape(
   );
 
   // Collect active domains for heuristic fallback
-  const activeDomains = new Set(consult.activeDomains);
+  const activeDomains = new Set(consult.active_domains);
 
   // Build control lookup by chapter_id slug for mitigated_by resolution.
   // Uses all controls (not just active ones) — chapter_ids is the authoritative
@@ -100,11 +103,15 @@ export function _resolveThreatLandscape(
     const chNum = chapterNumber(chId);
     const mitigated_by = controlsByChapter.get(chId) ?? [];
 
+    const threatId   = threat.mitigated_threat_id ?? threat.object_id ?? "";
+    const threatName = threat.threat_label_raw ?? "";
+
     if (!isNaN(chNum) && activeChapterNumbers.has(chNum)) {
       threats.push({
         ...threat,
-        _confidence: "derived",
-        _active_chapter: chId,
+        id: threatId,
+        name: threatName,
+        mitigation_confidence: "derived",
         mitigated_by
       });
       continue;
@@ -122,8 +129,9 @@ export function _resolveThreatLandscape(
     if (heuristicMatch) {
       threats.push({
         ...threat,
-        _confidence: "heuristic",
-        _active_chapter: chId,
+        id: threatId,
+        name: threatName,
+        mitigation_confidence: "heuristic",
         mitigated_by
       });
     }
@@ -131,8 +139,8 @@ export function _resolveThreatLandscape(
 
   // Sort: derived first, then heuristic; within group by chapter_id
   threats.sort((a, b) => {
-    if (a._confidence !== b._confidence) {
-      return a._confidence === "derived" ? -1 : 1;
+    if (a.mitigation_confidence !== b.mitigation_confidence) {
+      return a.mitigation_confidence === "derived" ? -1 : 1;
     }
     return (a.chapter_id ?? "").localeCompare(b.chapter_id ?? "");
   });
