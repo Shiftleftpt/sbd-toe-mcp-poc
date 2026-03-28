@@ -105,9 +105,9 @@ map_sbd_toe_review_scope     ← which SbD-ToE bundles to review given changed f
 
 get_guide_by_role            ← deterministic: practice assignments + user stories
                                 params: risk_level (L1|L2|L3), role? (string), phase? (string)
-                                returns: assignments[], by_role{}, by_phase{}, user stories joined
-                                use for: "what should a developer do at L2?",
-                                         "what practices apply in the design phase?"
+                                WITHOUT role/phase: returns role_summary{} + phase_summary{} counts only
+                                WITH role or phase: returns assignments[] (slim) + user stories joined
+                                ALWAYS use role= or phase= to get assignment details
 
 get_threat_landscape         ← deterministic: threats relevant to a risk level / concern set
                                 params: risk_level (L1|L2|L3), concerns? (string[])
