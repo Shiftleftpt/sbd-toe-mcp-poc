@@ -36,7 +36,15 @@ function isComparisonOp(v: unknown): v is ComparisonOp {
   return keys.some((k) => k === "gte" || k === "lte" || k === "in");
 }
 
+export interface McpProvenance {
+  content_type: "canonical" | "derived" | "inferred";
+  produced_by: string;
+  source_data: string;
+  note: string;
+}
+
 export interface ResolveEntitiesResult {
+  provenance: McpProvenance;
   record_type: string;
   entities: unknown[];
   total: number;
@@ -127,7 +135,7 @@ function matchesAllFilters(item: unknown, filters: Record<string, unknown>): boo
 export function _resolveEntities(
   args: Record<string, unknown>,
   items: unknown[]
-): ResolveEntitiesResult {
+): Omit<ResolveEntitiesResult, "provenance"> {
   const recordType = args["record_type"];
   if (typeof recordType !== "string" || recordType.trim().length === 0) {
     throw Object.assign(
@@ -204,5 +212,14 @@ export function _resolveEntities(
 export function handleResolveEntities(
   args: Record<string, unknown>
 ): ResolveEntitiesResult {
-  return _resolveEntities(args, loadEnrichedItems());
+  const result = _resolveEntities(args, loadEnrichedItems());
+  return {
+    provenance: {
+      content_type: "canonical",
+      produced_by: "direct_index_lookup",
+      source_data: "algolia_entities_records_enriched.json (kg v1.4.0+)",
+      note: "Entities are canonical SbD-ToE index records, unmodified except for field projection and array capping.",
+    },
+    ...result,
+  };
 }

@@ -39,7 +39,15 @@ export interface ThreatWithConfidence extends Threat {
   mitigated_by: MitigatingControl[];
 }
 
+export interface McpProvenance {
+  content_type: "canonical" | "derived" | "inferred";
+  produced_by: string;
+  source_data: string;
+  note: string;
+}
+
 export interface GetThreatLandscapeResult {
+  provenance: McpProvenance;
   risk_level: string;
   threats: ThreatWithConfidence[];
   meta: {
@@ -70,7 +78,7 @@ function chapterNumber(chapterId: string): number {
 export function _resolveThreatLandscape(
   args: Record<string, unknown>,
   ontologyData: ReturnType<typeof getOntologyData>
-): GetThreatLandscapeResult {
+): Omit<GetThreatLandscapeResult, "provenance"> {
   const { threats: allThreats, controls: allControls } = ontologyData;
 
   // Run consult pipeline to get filtered requirements
@@ -179,6 +187,12 @@ export function handleGetThreatLandscape(
   const full = _resolveThreatLandscape(args, getOntologyData());
   return {
     ...full,
+    provenance: {
+      content_type: "derived",
+      produced_by: "threat_resolution_pipeline",
+      source_data: "algolia_entities_records_enriched (threats + controls)",
+      note: "Threat entries are canonical index records. mitigated_by is derived: canonical_control_ids when present (structural), chapter-based heuristic otherwise (inferred). mitigation_confidence reflects this.",
+    },
     threats: full.threats.map((t) => {
       const slim: ThreatWithConfidence = {
         id: t.id,

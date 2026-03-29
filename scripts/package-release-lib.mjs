@@ -4,6 +4,7 @@ import {
   cp,
   mkdtemp,
   mkdir,
+  readdir,
   readFile,
   rm,
   stat,
@@ -180,6 +181,30 @@ export async function writeChecksumFile(outputDir, archivePaths, archiveBaseName
   return checksumPath;
 }
 
+export async function generateArtifactManifest(bundleRoot, version) {
+  const publishDir = path.join(bundleRoot, "data", "publish");
+  const entries = await readdir(publishDir);
+  const files = {};
+
+  for (const entry of entries.sort()) {
+    if (entry === "artifact-manifest.json") continue;
+    const filePath = path.join(publishDir, entry);
+    const fileStat = await stat(filePath);
+    if (!fileStat.isFile()) continue;
+    files[entry] = await computeSha256(filePath);
+  }
+
+  const manifest = {
+    generated_at: new Date().toISOString(),
+    artifact_version: version,
+    files
+  };
+
+  const manifestPath = path.join(publishDir, "artifact-manifest.json");
+  await writeFile(manifestPath, JSON.stringify(manifest, null, 2) + "\n", "utf8");
+  return manifestPath;
+}
+
 export async function buildReleaseBundle(options = {}) {
   const repoRoot = options.repoRoot ?? process.cwd();
   const outputDir = path.resolve(repoRoot, options.outputDir ?? "release");
@@ -201,6 +226,8 @@ export async function buildReleaseBundle(options = {}) {
     for (const entry of REQUIRED_BUNDLE_ENTRIES) {
       await copyEntry(repoRoot, bundleRoot, entry);
     }
+
+    await generateArtifactManifest(bundleRoot, version);
 
     const tarPath = path.join(outputDir, `${archiveBaseName}.tar.gz`);
     const zipPath = path.join(outputDir, `${archiveBaseName}.zip`);
