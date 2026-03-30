@@ -1,8 +1,8 @@
 {
-  "run_id": "20260324T130416Z",
-  "generated_at": "2026-03-24T13:04:16Z",
+  "run_id": "20260330T011527Z",
+  "generated_at": "2026-03-30T01:15:27Z",
   "branch": "master",
-  "commit_sha": "e2465c6420d1cbb16208913ac5b24c35fa209e42",
+  "commit_sha": "6c9fbbf2614600ec5b46ba9258577bf75bdb2323",
   "corpus_root": "manuals_src/docs/sbd-toe",
   "repo_url": "https://github.com/Shiftleftpt/SbD-ToE-Manual",
   "sync_mode": "reuse",
