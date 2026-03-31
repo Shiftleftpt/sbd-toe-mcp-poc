@@ -13,6 +13,8 @@ import {
   classifyQueryIntent,
   computeIntentScore,
   buildEnrichedLookup,
+  resolveSupportProfiles,
+  retrievePublishedContext,
   tryReadSnapshotFile,
   normalizeHit
 } from "../backend/semantic-index-gateway.js";
@@ -256,6 +258,20 @@ describe("semantic-index-gateway.ts", () => {
       const result = classifyQueryIntent("");
 
       expect(result).toBe("generic");
+    });
+  });
+
+  describe("resolveSupportProfiles", () => {
+    it("maps threat questions to threats first", () => {
+      expect(resolveSupportProfiles("what threats apply to authentication?")).toContain("threats");
+    });
+
+    it("maps implementation questions to guide", () => {
+      expect(resolveSupportProfiles("how to implement secure logging")).toContain("guide");
+    });
+
+    it("defaults consult for applicability-style questions", () => {
+      expect(resolveSupportProfiles("what requirements apply at L2")).toContain("consult");
     });
   });
 
@@ -503,6 +519,19 @@ describe("semantic-index-gateway.ts", () => {
 
       expect(result.role).toBe("Developer");
       expect(result.phase).toBe("Build");
+    });
+  });
+
+  describe("retrievePublishedContext", () => {
+    it("retrieves V2 MCP chunks with traceability from published artefacts", async () => {
+      const result = await retrievePublishedContext("how to implement authentication", 3);
+
+      expect(result.selected.length).toBeGreaterThan(0);
+      expect(result.consultedIndices).toContain("sbdtoe-ontology.yaml");
+      expect(result.backendSnapshot.mcpChunksFile).toContain("mcp_chunks.jsonl");
+      expect(result.backendSnapshot.substrateVersion).toBeDefined();
+      expect(result.selected[0]?.citationId.startsWith("M")).toBe(true);
+      expect(result.selected[0]?.traceability).toBeDefined();
     });
   });
 });

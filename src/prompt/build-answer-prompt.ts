@@ -47,7 +47,7 @@ export function buildAnswerPrompt(
     "",
     "Output requirements:",
     "1. Answer only from this retrieved context.",
-    "2. Cite factual claims with [D1], [E1], etc.",
+    "2. Cite factual claims with the retrieved citation ids ([M1], [D1], [E1], etc.).",
     "3. If the answer is not in the retrieved context, say the information is not available.",
     "4. When a documentation URL exists in the retrieved context, include it without inventing anchors.",
     "5. Prefer the structure Role, Phase, Action, Artifact."

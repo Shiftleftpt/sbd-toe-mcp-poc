@@ -1,6 +1,9 @@
+import { readFileSync } from "node:fs";
 import type { SnapshotCache } from "../backend/semantic-index-gateway.js";
 import { retrievePublishedContext } from "../backend/semantic-index-gateway.js";
+import { resolveAppPath } from "../config.js";
 import type { LooseRecord } from "../types.js";
+import { getOntologyData } from "./ontology-loader.js";
 
 const VALID_RISK_LEVELS = ["L1", "L2", "L3"] as const;
 type RiskLevel = (typeof VALID_RISK_LEVELS)[number];
@@ -23,6 +26,43 @@ const READABLE_TITLES: Record<string, string> = {
   "14-governanca-contratacao":   "Governança e Contratação"
 };
 
+const ACTIVE_CHAPTERS_BY_RISK: Record<RiskLevel, string[]> = {
+  L1: [
+    "00-fundamentos",
+    "01-classificacao-aplicacoes",
+    "02-requisitos-seguranca",
+    "03-threat-modeling",
+    "04-arquitetura-segura",
+    "05-dependencias-sbom-sca",
+    "07-cicd-seguro",
+    "08-iac-infraestrutura",
+    "09-containers-imagens",
+    "10-testes-seguranca",
+    "12-monitorizacao-operacoes",
+    "14-governanca-contratacao"
+  ],
+  L2: [
+    "00-fundamentos",
+    "01-classificacao-aplicacoes",
+    "02-requisitos-seguranca",
+    "03-threat-modeling",
+    "04-arquitetura-segura",
+    "05-dependencias-sbom-sca",
+    "06-desenvolvimento-seguro",
+    "07-cicd-seguro",
+    "08-iac-infraestrutura",
+    "09-containers-imagens",
+    "10-testes-seguranca",
+    "11-deploy-seguro",
+    "12-monitorizacao-operacoes",
+    "14-governanca-contratacao"
+  ],
+  L3: Object.keys(READABLE_TITLES),
+};
+
+let cachedBundleCatalog: LooseRecord[] | undefined;
+let cachedMcpChunks: LooseRecord[] | undefined;
+
 function isValidRiskLevel(value: unknown): value is RiskLevel {
   return typeof value === "string" && (VALID_RISK_LEVELS as readonly string[]).includes(value);
 }
@@ -42,9 +82,46 @@ function getEntityItems(cache: SnapshotCache): LooseRecord[] {
   return cache.entities.items ?? [];
 }
 
+function hasProvidedCache(cache: SnapshotCache | undefined): cache is SnapshotCache {
+  return cache !== undefined;
+}
+
+function loadJsonLines(relativePath: string): LooseRecord[] {
+  const path = resolveAppPath(relativePath);
+  return readFileSync(path, "utf8")
+    .split(/\r?\n/u)
+    .map((line: string) => line.trim())
+    .filter((line: string) => line.length > 0)
+    .map((line: string) => JSON.parse(line) as LooseRecord);
+}
+
+function loadBundleCatalog(): LooseRecord[] {
+  if (!cachedBundleCatalog) {
+    cachedBundleCatalog = loadJsonLines("data/publish/indexes/bundle_catalog.jsonl");
+  }
+  return cachedBundleCatalog;
+}
+
+function loadMcpChunks(): LooseRecord[] {
+  if (!cachedMcpChunks) {
+    cachedMcpChunks = loadJsonLines("data/publish/indexes/mcp_chunks.jsonl");
+  }
+  return cachedMcpChunks;
+}
+
+function summarizeChunkText(text: string | undefined): string | undefined {
+  if (!text) return undefined;
+  const compact = text
+    .replace(/^#+\s.*$/gmu, "")
+    .replace(/^---$/gmu, "")
+    .replace(/\s+/gu, " ")
+    .trim();
+  return compact.length > 0 ? compact : undefined;
+}
+
 export function handleListSbdToeChapters(
   args: Record<string, unknown>,
-  cache: SnapshotCache
+  cache?: SnapshotCache
 ): unknown {
   const riskLevelArg = args["riskLevel"];
   if (riskLevelArg !== undefined && !isValidRiskLevel(riskLevelArg)) {
@@ -54,42 +131,61 @@ export function handleListSbdToeChapters(
   }
   const riskLevel = isValidRiskLevel(riskLevelArg) ? riskLevelArg : undefined;
 
-  const items = getEntityItems(cache);
-  const seen = new Set<string>();
-  const chapters: Array<{ id: string; title: string; readableTitle: string }> = [];
+  if (hasProvidedCache(cache)) {
+    const items = getEntityItems(cache);
+    const seen = new Set<string>();
+    const chapters: Array<{ id: string; title: string; readableTitle: string }> = [];
 
-  for (const item of items) {
-    const oid = getStr(item, "objectID") ?? "";
-    const entityType = getStr(item, "entity_type");
-    const chapterId = getStr(item, "chapter_id");
+    for (const item of items) {
+      const oid = getStr(item, "objectID") ?? "";
+      const entityType = getStr(item, "entity_type");
+      const chapterId = getStr(item, "chapter_id");
 
-    const isChapterRecord =
-      entityType === "chapter_bundle" ||
-      oid.startsWith("cap-") ||
-      oid.startsWith("ch-") ||
-      oid.toLowerCase().includes("chapter");
+      const isChapterRecord =
+        entityType === "chapter_bundle" ||
+        oid.startsWith("cap-") ||
+        oid.startsWith("ch-") ||
+        oid.toLowerCase().includes("chapter");
 
-    if (!isChapterRecord) continue;
+      if (!isChapterRecord) continue;
 
-    const id = chapterId ?? oid;
-    if (!id || seen.has(id)) continue;
+      const id = chapterId ?? oid;
+      if (!id || seen.has(id)) continue;
 
-    if (riskLevel !== undefined) {
-      const riskLevels = getStrArr(item, "risk_levels");
-      if (!riskLevels.includes(riskLevel)) continue;
+      if (riskLevel !== undefined) {
+        const riskLevels = getStrArr(item, "risk_levels");
+        if (!riskLevels.includes(riskLevel)) continue;
+      }
+
+      seen.add(id);
+      const title = getStr(item, "title") ?? id;
+      chapters.push({ id, title, readableTitle: READABLE_TITLES[id] ?? title });
     }
 
-    seen.add(id);
-    const title = getStr(item, "title") ?? id;
-    chapters.push({ id, title, readableTitle: READABLE_TITLES[id] ?? title });
+    return { chapters };
   }
+
+  const titleByChapter = new Map(
+    loadBundleCatalog()
+      .map((item) => [getStr(item, "bundle_id"), getStr(item, "title")] as const)
+      .filter((entry): entry is [string, string] => Boolean(entry[0] && entry[1]))
+  );
+
+  const chapterIds = Object.keys(READABLE_TITLES).filter((chapterId) =>
+    riskLevel === undefined ? true : ACTIVE_CHAPTERS_BY_RISK[riskLevel].includes(chapterId)
+  );
+
+  const chapters = chapterIds.map((id) => {
+    const title = titleByChapter.get(id) ?? READABLE_TITLES[id] ?? id;
+    return { id, title, readableTitle: READABLE_TITLES[id] ?? title };
+  });
 
   return { chapters };
 }
 
 export async function handleQuerySbdToeEntities(
   args: Record<string, unknown>,
-  cache: SnapshotCache
+  cache?: SnapshotCache
 ): Promise<unknown> {
   void cache;
 
@@ -163,51 +259,98 @@ export async function handleQuerySbdToeEntities(
 
 export function handleGetSbdToeChapterBrief(
   args: Record<string, unknown>,
-  cache: SnapshotCache
+  cache?: SnapshotCache
 ): unknown {
   const chapterId = args["chapterId"];
   if (typeof chapterId !== "string" || chapterId.trim().length === 0) {
     throw new Error('O argumento "chapterId" é obrigatório e não pode ser vazio.');
   }
 
-  const items = getEntityItems(cache);
-  const enrichedLookup = cache.entitiesEnrichedLookup;
+  if (hasProvidedCache(cache)) {
+    const items = getEntityItems(cache);
+    const enrichedLookup = cache.entitiesEnrichedLookup;
 
-  let found: LooseRecord | undefined;
-  for (const item of items) {
-    const oid = getStr(item, "objectID") ?? "";
-    const cid = getStr(item, "chapter_id") ?? "";
-    if (oid === chapterId || cid === chapterId) {
-      found = item;
-      break;
+    let found: LooseRecord | undefined;
+    for (const item of items) {
+      const oid = getStr(item, "objectID") ?? "";
+      const cid = getStr(item, "chapter_id") ?? "";
+      if (oid === chapterId || cid === chapterId) {
+        found = item;
+        break;
+      }
     }
+
+    if (found === undefined) {
+      return { id: chapterId, found: false };
+    }
+
+    const oid = getStr(found, "objectID");
+    const enriched = oid !== undefined ? enrichedLookup.get(oid) : undefined;
+
+    const phases = getStrArr(found, "related_phases");
+    const intentTopics = enriched?.intent_topics
+      ? [...enriched.intent_topics]
+      : getStrArr(found, "intent_topics");
+    const artifacts = enriched?.artifact_ids
+      ? [...enriched.artifact_ids]
+      : getStrArr(found, "artifact_ids");
+    const objective =
+      getStr(found, "summary") ?? getStr(found, "searchable_text");
+
+    return {
+      id: chapterId,
+      found: true,
+      title: getStr(found, "title") ?? chapterId,
+      ...(objective !== undefined ? { objective } : {}),
+      ...(phases.length > 0 ? { phases } : {}),
+      ...(artifacts.length > 0 ? { artifacts } : {}),
+      ...(intentTopics.length > 0 ? { intent_topics: intentTopics } : {})
+    };
   }
 
-  if (found === undefined) {
+  const bundle = loadBundleCatalog().find((item) => getStr(item, "bundle_id") === chapterId);
+  if (!bundle && READABLE_TITLES[chapterId] === undefined) {
     return { id: chapterId, found: false };
   }
 
-  const oid = getStr(found, "objectID");
-  const enriched = oid !== undefined ? enrichedLookup.get(oid) : undefined;
+  const ontology = getOntologyData();
+  const phases = Array.from(
+    new Set(
+      ontology.assignments
+        .filter((assignment) => assignment.chapter_id === chapterId && assignment.phase.length > 0)
+        .map((assignment) => assignment.phase)
+    )
+  ).sort();
+  const artifacts = Array.from(
+    new Set(
+      (ontology.artifactRequirements ?? [])
+        .filter((artifactRequirement) => (artifactRequirement.chapter_ids ?? []).includes(chapterId))
+        .map((artifactRequirement) => artifactRequirement.artifact_type_id)
+    )
+  ).sort();
+  const introChunk = loadMcpChunks().find((item) => {
+    const bundleId = getStr(item, "bundle_id");
+    const documentRole = getStr(item, "document_role");
+    const documentId = getStr(item, "document_id");
+    const summaryDocumentId = bundle ? getStr(bundle, "summary_document_id") : undefined;
+    return (
+      bundleId === chapterId &&
+      (documentRole === "intro" || documentId === summaryDocumentId)
+    );
+  });
 
-  const phases = getStrArr(found, "related_phases");
-  const intentTopics = enriched?.intent_topics
-    ? [...enriched.intent_topics]
-    : getStrArr(found, "intent_topics");
-  const artifacts = enriched?.artifact_ids
-    ? [...enriched.artifact_ids]
-    : getStrArr(found, "artifact_ids");
-  const objective =
-    getStr(found, "summary") ?? getStr(found, "searchable_text");
+  const objective = summarizeChunkText(
+    (introChunk ? getStr(introChunk, "text") : undefined) ??
+      (introChunk ? getStr(introChunk, "vector_text") : undefined)
+  );
 
   return {
     id: chapterId,
     found: true,
-    title: getStr(found, "title") ?? chapterId,
+    title: (bundle ? getStr(bundle, "title") : undefined) ?? READABLE_TITLES[chapterId] ?? chapterId,
     ...(objective !== undefined ? { objective } : {}),
     ...(phases.length > 0 ? { phases } : {}),
-    ...(artifacts.length > 0 ? { artifacts } : {}),
-    ...(intentTopics.length > 0 ? { intent_topics: intentTopics } : {})
+    ...(artifacts.length > 0 ? { artifacts } : {})
   };
 }
 
@@ -323,7 +466,7 @@ function buildActivatedBundles(
 
 export function handleMapSbdToeApplicability(
   args: Record<string, unknown>,
-  cache: SnapshotCache
+  cache?: SnapshotCache
 ): unknown {
   const riskLevelArg = args["riskLevel"];
   if (!isValidRiskLevel(riskLevelArg)) {
@@ -368,27 +511,37 @@ export function handleMapSbdToeApplicability(
     throw Object.assign(new Error(err.message), { rpcError: err });
   }
 
-  const items = getEntityItems(cache);
+  let active: string[];
+  let excluded: string[];
 
-  const allChapterIds = new Set<string>();
-  for (const item of items) {
-    if (getStr(item, "entity_type") === "chapter_bundle") {
-      const cid = getStr(item, "chapter_id");
-      if (cid !== undefined) allChapterIds.add(cid);
+  if (hasProvidedCache(cache)) {
+    const items = getEntityItems(cache);
+
+    const allChapterIds = new Set<string>();
+    for (const item of items) {
+      if (getStr(item, "entity_type") === "chapter_bundle") {
+        const cid = getStr(item, "chapter_id");
+        if (cid !== undefined) allChapterIds.add(cid);
+      }
     }
-  }
 
-  const activeChapterIds = new Set<string>();
-  for (const item of items) {
-    const rls = getStrArr(item, "risk_levels");
-    if (rls.includes(riskLevel)) {
-      const cid = getStr(item, "chapter_id");
-      if (cid !== undefined) activeChapterIds.add(cid);
+    const activeChapterIds = new Set<string>();
+    for (const item of items) {
+      const rls = getStrArr(item, "risk_levels");
+      if (rls.includes(riskLevel)) {
+        const cid = getStr(item, "chapter_id");
+        if (cid !== undefined) activeChapterIds.add(cid);
+      }
     }
-  }
 
-  const active = [...activeChapterIds].sort();
-  const excluded = [...allChapterIds].filter((id) => !activeChapterIds.has(id)).sort();
+    active = [...activeChapterIds].sort();
+    excluded = [...allChapterIds].filter((id) => !activeChapterIds.has(id)).sort();
+  } else {
+    active = [...ACTIVE_CHAPTERS_BY_RISK[riskLevel]].sort();
+    excluded = Object.keys(READABLE_TITLES)
+      .filter((id) => !ACTIVE_CHAPTERS_BY_RISK[riskLevel].includes(id))
+      .sort();
+  }
 
   const activatedBundles = buildActivatedBundles(riskLevel, technologies);
 

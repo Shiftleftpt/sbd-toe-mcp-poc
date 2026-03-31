@@ -2,27 +2,27 @@
  * get_threat_landscape
  *
  * Deterministic threat resolution for a given application context using the
- * SbD-ToE ontology threats pipeline.
+ * published SbD-ToE runtime bundle.
  *
- * Algorithm (from mcp_ontology_integration.md §4 — threats pipeline):
- *   1. Run consult pipeline to get active requirements (risk_level + optional concerns)
- *   2. Collect active source chapters from filtered requirements
- *   3. For each threat: derive relevance by matching threat.chapter_id chapter number
- *      against active source chapters → confidence "derived"
- *
- * NOTE (§10, constraint 3): threat.associated_controls are file paths, not IDs.
- * Relevance is derived via chapter_id and active domains — not control ID matching.
- *
- * All data is read from data/publish/ — nothing is invented.
+ * Resolution order:
+ *   1. Resolve consult-mode requirements and controls
+ *   2. Scope threats by active requirement bundle/chapter context
+ *   3. Resolve mitigated_by with direct > derived > heuristic confidence
+ *   4. Enrich threats with related antipatterns and violated requirements
  */
 
-import type { Threat } from "./ontology-loader.js";
-import { getOntologyData } from "./ontology-loader.js";
+import type {
+  AntiPattern,
+  AntiPatternRequirementLink,
+  AntiPatternThreatLink,
+  Threat
+} from "./ontology-loader.js";
+import {
+  getOntologyData,
+  resolveRequirementBundle,
+  resolveThreatChapterNumber
+} from "./ontology-loader.js";
 import { _resolveConsultResult } from "./consult-security-requirements.js";
-
-// ---------------------------------------------------------------------------
-// Types
-// ---------------------------------------------------------------------------
 
 export interface MitigatingControl {
   control_id: string;
@@ -30,13 +30,18 @@ export interface MitigatingControl {
   domain: string;
 }
 
+export interface RelatedAntiPattern {
+  antipattern_id: string;
+  label: string;
+  violated_requirement_ids: string[];
+}
+
 export interface ThreatWithConfidence extends Threat {
-  /** Spec-aligned ID field: mirrors mitigated_threat_id */
   id: string;
-  /** Spec-aligned name field: mirrors threat_label_raw */
   name: string;
-  mitigation_confidence: "derived" | "heuristic";
+  mitigation_confidence: "direct" | "derived" | "heuristic";
   mitigated_by: MitigatingControl[];
+  related_antipatterns: RelatedAntiPattern[];
 }
 
 export interface McpProvenance {
@@ -53,114 +58,183 @@ export interface GetThreatLandscapeResult {
   meta: {
     threatCount: number;
     activeChapters: string[];
+    activeBundles: string[];
     concernsApplied: string[] | null;
     note: string;
   };
 }
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/**
- * Extract chapter number prefix from a chapter_id like "02-requisitos-seguranca" → "02" → 2.
- * Returns NaN if the format is not recognized.
- */
 function chapterNumber(chapterId: string): number {
   const match = /^(\d+)/.exec(chapterId);
-  return match?.[1] !== undefined ? parseInt(match[1], 10) : NaN;
+  return match?.[1] !== undefined ? Number.parseInt(match[1], 10) : NaN;
 }
 
-// ---------------------------------------------------------------------------
-// Internal (exported for testability)
-// ---------------------------------------------------------------------------
+function buildAntipatternIndexes(
+  antipatterns: AntiPattern[],
+  antipatternRequirementLinks: AntiPatternRequirementLink[],
+  antipatternThreatLinks: AntiPatternThreatLink[]
+): {
+  antipatternById: Map<string, AntiPattern>;
+  requirementIdsByAntipattern: Map<string, string[]>;
+  antipatternIdsByThreat: Map<string, string[]>;
+} {
+  const antipatternById = new Map(
+    antipatterns.map((antipattern) => [antipattern.antipattern_id, antipattern])
+  );
+
+  const requirementIdsByAntipattern = new Map<string, string[]>();
+  for (const link of antipatternRequirementLinks) {
+    const existing = requirementIdsByAntipattern.get(link.source_id) ?? [];
+    existing.push(link.target_id);
+    requirementIdsByAntipattern.set(link.source_id, existing);
+  }
+
+  const antipatternIdsByThreat = new Map<string, string[]>();
+  for (const link of antipatternThreatLinks) {
+    const existing = antipatternIdsByThreat.get(link.target_id) ?? [];
+    existing.push(link.source_id);
+    antipatternIdsByThreat.set(link.target_id, existing);
+  }
+
+  return { antipatternById, requirementIdsByAntipattern, antipatternIdsByThreat };
+}
 
 export function _resolveThreatLandscape(
   args: Record<string, unknown>,
   ontologyData: ReturnType<typeof getOntologyData>
 ): Omit<GetThreatLandscapeResult, "provenance"> {
-  const { threats: allThreats, controls: allControls } = ontologyData;
+  const {
+    threats: allThreats,
+    antipatterns = [],
+    antipatternRequirementLinks = [],
+    antipatternThreatLinks = [],
+  } = ontologyData;
 
-  // Run consult pipeline to get filtered requirements
   const consult = _resolveConsultResult(args, ontologyData);
-
-  // Collect active source chapter numbers from requirements
-  const activeChapterNumbers = new Set<number>(
-    consult.requirements.map((r) => r.source_chapter).filter((n) => !isNaN(n))
+  const activeRequirementIds = new Set(
+    consult.requirements.map((requirement) => requirement.requirement_id)
   );
-
-  // Collect active domains for heuristic fallback
+  const activeBundles = new Set(
+    consult.requirements
+      .map((requirement) => resolveRequirementBundle(requirement))
+      .filter((bundle): bundle is string => typeof bundle === "string" && bundle.length > 0)
+  );
+  const activeChapterNumbers = new Set<number>(
+    consult.requirements
+      .map((requirement) => requirement.source_chapter)
+      .filter((chapter) => !Number.isNaN(chapter))
+  );
   const activeDomains = new Set(consult.active_domains);
+  const activeControls = consult.controls.map((control) => ({
+    control_id: control.control_id,
+    name: control.name,
+    domain: control.domain,
+    chapter_ids: control.chapter_ids ?? [],
+  }));
+  const activeControlIds = new Set(activeControls.map((control) => control.control_id));
 
-  // Build control lookup by control_id for canonical mitigated_by resolution.
-  const controlById = new Map<string, MitigatingControl>();
-  for (const ctrl of allControls) {
-    controlById.set(ctrl.control_id, { control_id: ctrl.control_id, name: ctrl.name, domain: ctrl.domain });
-  }
-
-  // Fallback: control lookup by chapter_id slug (used when canonical_control_ids absent).
   const controlsByChapter = new Map<string, MitigatingControl[]>();
-  for (const ctrl of allControls) {
-    for (const chId of ctrl.chapter_ids ?? []) {
-      const list = controlsByChapter.get(chId) ?? [];
-      list.push({ control_id: ctrl.control_id, name: ctrl.name, domain: ctrl.domain });
-      controlsByChapter.set(chId, list);
+  for (const control of activeControls) {
+    for (const chapterId of control.chapter_ids) {
+      const existing = controlsByChapter.get(chapterId) ?? [];
+      existing.push({
+        control_id: control.control_id,
+        name: control.name,
+        domain: control.domain,
+      });
+      controlsByChapter.set(chapterId, existing);
     }
   }
 
-  // Filter threats and resolve mitigated_by
+  const {
+    antipatternById,
+    requirementIdsByAntipattern,
+    antipatternIdsByThreat,
+  } = buildAntipatternIndexes(antipatterns, antipatternRequirementLinks, antipatternThreatLinks);
+
   const threats: ThreatWithConfidence[] = [];
+
   for (const threat of allThreats) {
-    const chId = threat.chapter_id ?? "";
-    const chNum = chapterNumber(chId);
-
-    const threatId   = threat.id ?? threat.mitigated_threat_id ?? "";
+    const threatId = threat.id ?? threat.mitigated_threat_id ?? "";
     const threatName = threat.title ?? threat.threat_label_raw ?? "";
+    const threatChapterId = threat.chapter_id ?? "";
+    const threatChapterNumber = resolveThreatChapterNumber(threat);
+    const directControlIds = (threat.canonical_control_ids ?? []).filter((controlId) =>
+      activeControlIds.has(controlId)
+    );
+    const derivedControls = controlsByChapter.get(threatChapterId) ?? [];
 
-    // Prefer canonical_control_ids (direct structural reference) for mitigated_by.
-    // Fall back to chapter-based lookup if not available.
-    const canonicalIds = threat.canonical_control_ids ?? [];
-    const mitigated_by: MitigatingControl[] = canonicalIds.length > 0
-      ? canonicalIds.flatMap((id) => { const c = controlById.get(id); return c ? [c] : []; })
-      : (controlsByChapter.get(chId) ?? []);
+    const relatedAntipatternIds = antipatternIdsByThreat.get(threatId) ?? [];
+    const related_antipatterns: RelatedAntiPattern[] = relatedAntipatternIds
+      .map((antipatternId) => {
+        const antipattern = antipatternById.get(antipatternId);
+        if (!antipattern) return undefined;
+        const violatedRequirementIds = [
+          ...new Set(requirementIdsByAntipattern.get(antipatternId) ?? []),
+        ];
+        return {
+          antipattern_id: antipattern.antipattern_id,
+          label: antipattern.label,
+          violated_requirement_ids: violatedRequirementIds,
+        };
+      })
+      .filter((item): item is RelatedAntiPattern => item !== undefined);
 
-    if (!isNaN(chNum) && activeChapterNumbers.has(chNum)) {
-      threats.push({
-        ...threat,
-        id: threatId,
-        name: threatName,
-        mitigation_confidence: canonicalIds.length > 0 ? "derived" : "derived",
-        mitigated_by
-      });
+    const hasActiveRequirementLink = related_antipatterns.some((antipattern) =>
+      antipattern.violated_requirement_ids.some((requirementId) =>
+        activeRequirementIds.has(requirementId)
+      )
+    );
+
+    const directMatch = directControlIds.length > 0;
+    const bundleMatch = threatChapterId.length > 0 && activeBundles.has(threatChapterId);
+    const chapterMatch =
+      !Number.isNaN(threatChapterNumber) && activeChapterNumbers.has(threatChapterNumber);
+    const derivedMatch = bundleMatch || chapterMatch || hasActiveRequirementLink;
+
+    const lowerThreatChapter = threatChapterId.toLowerCase();
+    const heuristicMatch = [...activeDomains].some((domain) =>
+      lowerThreatChapter.includes(domain.replace(/_/g, "-"))
+    );
+
+    if (!directMatch && !derivedMatch && !heuristicMatch) {
       continue;
     }
 
-    // Heuristic fallback: threat chapter_id contains a domain keyword
-    const lowerChId = chId.toLowerCase();
-    let heuristicMatch = false;
-    for (const domain of activeDomains) {
-      if (lowerChId.includes(domain.replace(/_/g, "-"))) {
-        heuristicMatch = true;
-        break;
-      }
+    let mitigation_confidence: ThreatWithConfidence["mitigation_confidence"];
+    let mitigated_by: MitigatingControl[];
+
+    if (directMatch) {
+      mitigation_confidence = "direct";
+      mitigated_by = activeControls
+        .filter((control) => directControlIds.includes(control.control_id))
+        .map(({ chapter_ids: _chapterIds, ...control }) => control);
+    } else if (derivedControls.length > 0) {
+      mitigation_confidence = "derived";
+      mitigated_by = derivedControls;
+    } else if (derivedMatch) {
+      mitigation_confidence = "derived";
+      mitigated_by = [];
+    } else {
+      mitigation_confidence = "heuristic";
+      mitigated_by = [];
     }
-    if (heuristicMatch) {
-      threats.push({
-        ...threat,
-        id: threatId,
-        name: threatName,
-        mitigation_confidence: "heuristic",
-        mitigated_by
-      });
-    }
+
+    threats.push({
+      ...threat,
+      id: threatId,
+      name: threatName,
+      mitigation_confidence,
+      mitigated_by,
+      related_antipatterns,
+    });
   }
 
-  // Sort: derived first, then heuristic; within group by chapter_id
-  threats.sort((a, b) => {
-    if (a.mitigation_confidence !== b.mitigation_confidence) {
-      return a.mitigation_confidence === "derived" ? -1 : 1;
-    }
-    return (a.chapter_id ?? "").localeCompare(b.chapter_id ?? "");
+  threats.sort((left, right) => {
+    const rank = { direct: 0, derived: 1, heuristic: 2 } as const;
+    const confidenceOrder = rank[left.mitigation_confidence] - rank[right.mitigation_confidence];
+    if (confidenceOrder !== 0) return confidenceOrder;
+    return (left.chapter_id ?? "").localeCompare(right.chapter_id ?? "");
   });
 
   return {
@@ -169,17 +243,13 @@ export function _resolveThreatLandscape(
     meta: {
       threatCount: threats.length,
       activeChapters: [...activeChapterNumbers].sort((a, b) => a - b).map(String),
+      activeBundles: [...activeBundles].sort(),
       concernsApplied: consult.meta.concernsApplied,
       note:
-        "mitigated_by: direct from canonical_control_ids when available, chapter-match otherwise. " +
-        "heuristic = domain keyword match on chapter_id."
-    }
+        "Threat applicability resolves from consult-mode requirement scope. mitigation_confidence uses direct control references first, then chapter/bundle or antipattern-derived alignment, then heuristic domain fallback.",
+    },
   };
 }
-
-// ---------------------------------------------------------------------------
-// Public handler — lean projection (strips internal/null fields)
-// ---------------------------------------------------------------------------
 
 export function handleGetThreatLandscape(
   args: Record<string, unknown>
@@ -190,23 +260,24 @@ export function handleGetThreatLandscape(
     provenance: {
       content_type: "derived",
       produced_by: "threat_resolution_pipeline",
-      source_data: "algolia_entities_records_enriched (threats + controls)",
-      note: "Threat entries are canonical index records. mitigated_by is derived: canonical_control_ids when present (structural), chapter-based heuristic otherwise (inferred). mitigation_confidence reflects this.",
+      source_data:
+        "runtime/threats.json + runtime/requirement_control_links.json + runtime/antipatterns.json + runtime/antipattern_requirement_links.json + runtime/antipattern_threat_links.json",
+      note:
+        "Threat entries are canonical runtime entities. Mitigation and antipattern enrichment are derived structurally from the published deterministic runtime bundle.",
     },
-    threats: full.threats.map((t) => {
-      const slim: ThreatWithConfidence = {
-        id: t.id,
-        name: t.name,
-        mitigation_confidence: t.mitigation_confidence,
-        mitigated_by: t.mitigated_by,
-        associated_controls: [],  // stripped — file paths not useful to agent
-        ...(t.chapter_id ? { chapter_id: t.chapter_id } : {}),
-        ...(t.mitigation_summary ? { mitigation_summary: t.mitigation_summary } : {}),
-        ...(t.how_it_arises ? { how_it_arises: t.how_it_arises } : {}),
-        ...(t.methodology ? { methodology: t.methodology } : {}),
-        ...(t.essence ? { essence: t.essence } : {}),
-      };
-      return slim;
-    }),
+    threats: full.threats.map((threat) => ({
+      id: threat.id,
+      name: threat.name,
+      mitigation_confidence: threat.mitigation_confidence,
+      mitigated_by: threat.mitigated_by,
+      related_antipatterns: threat.related_antipatterns,
+      associated_controls: [],
+      ...(threat.mitigated_threat_id ? { mitigated_threat_id: threat.mitigated_threat_id } : {}),
+      ...(threat.chapter_id ? { chapter_id: threat.chapter_id } : {}),
+      ...(threat.mitigation_summary ? { mitigation_summary: threat.mitigation_summary } : {}),
+      ...(threat.how_it_arises ? { how_it_arises: threat.how_it_arises } : {}),
+      ...(threat.methodology ? { methodology: threat.methodology } : {}),
+      ...(threat.essence ? { essence: threat.essence } : {}),
+    })),
   };
 }

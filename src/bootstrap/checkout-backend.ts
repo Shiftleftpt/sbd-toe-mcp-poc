@@ -1,17 +1,9 @@
-import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { getAppRoot, getConfig, resolveAppPath } from "../config.js";
 import { checkoutFromRelease } from "./release-checkout.js";
-import type { BackendCheckout, PublishedIndexContract } from "../types.js";
-
-interface UpstreamIndexSettingsPayload {
-  items?: Array<{
-    index_name?: string;
-    record_family?: string;
-    settings?: Record<string, unknown>;
-  }>;
-}
+import type { BackendCheckout } from "../types.js";
 
 interface UpstreamRunManifestPayload {
   run_id?: string;
@@ -35,26 +27,9 @@ interface PublicRunManifestPayload {
   version?: string;
 }
 
-export function ensurePublishedIndex(
-  items: UpstreamIndexSettingsPayload["items"],
-  recordFamily: string,
-  fallbackIndexName: string
-): PublishedIndexContract {
-  const match =
-    items?.find((item) => item.record_family === recordFamily) ??
-    items?.find((item) => item.index_name === fallbackIndexName);
-
-  if (!match?.index_name) {
-    throw new Error(
-      `O upstream não publicou um índice utilizável para "${recordFamily}" em data/publish/algolia_index_settings.json.`
-    );
-  }
-
-  return {
-    indexName: match.index_name,
-    recordFamily,
-    settings: match.settings ?? {}
-  };
+interface PublicationManifestPayload {
+  primary_artifact?: string;
+  substrate_version?: string;
 }
 
 async function readJsonFile<T>(filePath: string): Promise<T> {
@@ -109,42 +84,69 @@ async function main(): Promise<void> {
   // source === "local" → fluxo existente continua inalterado
   const upstreamRepoPath = resolveAppPath(config.backend.upstreamRepoDir);
   const checkoutFilePath = resolveAppPath(config.backend.checkoutFile);
-  const localDocsSnapshot = resolveAppPath(config.backend.docsSnapshotFile);
-  const localEntitiesSnapshot = resolveAppPath(config.backend.entitiesSnapshotFile);
-  const localDocsEnrichedSnapshot = resolveAppPath(config.backend.docsEnrichedSnapshotFile);
-  const localEntitiesEnrichedSnapshot = resolveAppPath(config.backend.entitiesEnrichedSnapshotFile);
-  const localIndexSettings = resolveAppPath(config.backend.indexSettingsFile);
+  const localPublishedIndexesDir = resolveAppPath(config.backend.publishedIndexesDir);
+  const localPublishedRuntimeDir = resolveAppPath(config.backend.publishedRuntimeDir);
+  const localPublicationManifest = resolveAppPath(config.backend.publicationManifestFile);
+  const localDeterministicManifest = resolveAppPath(config.backend.deterministicManifestFile);
+  const localBundleCatalog = resolveAppPath("data/publish/indexes/bundle_catalog.jsonl");
+  const localMcpChunks = resolveAppPath(config.backend.mcpChunksFile);
+  const localCanonicalChunks = resolveAppPath(config.backend.canonicalChunksFile);
+  const localChunkEntityMentions = resolveAppPath(config.backend.chunkEntityMentionsFile);
+  const localChunkRelationHints = resolveAppPath(config.backend.chunkRelationHintsFile);
+  const localCompactIndex = resolveAppPath("data/publish/sbd-toe-index-compact.json");
+  const localOntologyFile = resolveAppPath(config.backend.ontologyFile);
   const localRunManifest = resolveAppPath(config.backend.runManifestFile);
-
-  const upstreamDocsSnapshot = path.join(
+  const upstreamPublishedIndexesDir = path.join(
     upstreamRepoPath,
     "data",
     "publish",
-    "algolia_docs_records.json"
+    "indexes"
   );
-  const upstreamEntitiesSnapshot = path.join(
+  const upstreamPublishedRuntimeDir = path.join(
     upstreamRepoPath,
     "data",
     "publish",
-    "algolia_entities_records.json"
+    "runtime"
   );
-  const upstreamDocsEnrichedSnapshot = path.join(
-    upstreamRepoPath,
-    "data",
-    "publish",
-    "algolia_docs_records_enriched.json"
+  const upstreamPublicationManifest = path.join(
+    upstreamPublishedIndexesDir,
+    "publication_manifest.json"
   );
-  const upstreamEntitiesEnrichedSnapshot = path.join(
-    upstreamRepoPath,
-    "data",
-    "publish",
-    "algolia_entities_records_enriched.json"
+  const upstreamDeterministicManifest = path.join(
+    upstreamPublishedRuntimeDir,
+    "deterministic_manifest.json"
   );
-  const upstreamIndexSettings = path.join(
+  const upstreamBundleCatalog = path.join(
+    upstreamPublishedIndexesDir,
+    "bundle_catalog.jsonl"
+  );
+  const upstreamMcpChunks = path.join(
+    upstreamPublishedIndexesDir,
+    "mcp_chunks.jsonl"
+  );
+  const upstreamCanonicalChunks = path.join(
+    upstreamPublishedIndexesDir,
+    "canonical_chunks.jsonl"
+  );
+  const upstreamChunkEntityMentions = path.join(
+    upstreamPublishedIndexesDir,
+    "chunk_entity_mentions.jsonl"
+  );
+  const upstreamChunkRelationHints = path.join(
+    upstreamPublishedIndexesDir,
+    "chunk_relation_hints.jsonl"
+  );
+  const upstreamCompactIndex = path.join(
     upstreamRepoPath,
     "data",
     "publish",
-    "algolia_index_settings.json"
+    "sbd-toe-index-compact.json"
+  );
+  const upstreamOntologyFile = path.join(
+    upstreamRepoPath,
+    "data",
+    "publish",
+    "sbdtoe-ontology.yaml"
   );
   const upstreamRunManifest = path.join(
     upstreamRepoPath,
@@ -153,17 +155,21 @@ async function main(): Promise<void> {
     "run_manifest.json"
   );
 
-  const [indexSettings, runManifest] = await Promise.all([
-    readJsonFile<UpstreamIndexSettingsPayload>(upstreamIndexSettings),
-    readJsonFile<UpstreamRunManifestPayload>(upstreamRunManifest)
+  const [runManifest, publicationManifest] = await Promise.all([
+    readJsonFile<UpstreamRunManifestPayload>(upstreamRunManifest),
+    readJsonFile<PublicationManifestPayload>(upstreamPublicationManifest)
   ]);
 
   await Promise.all([
-    ensureParent(localDocsSnapshot),
-    ensureParent(localEntitiesSnapshot),
-    ensureParent(localDocsEnrichedSnapshot),
-    ensureParent(localEntitiesEnrichedSnapshot),
-    ensureParent(localIndexSettings),
+    ensureParent(localPublicationManifest),
+    ensureParent(localDeterministicManifest),
+    ensureParent(localBundleCatalog),
+    ensureParent(localMcpChunks),
+    ensureParent(localCanonicalChunks),
+    ensureParent(localChunkEntityMentions),
+    ensureParent(localChunkRelationHints),
+    ensureParent(localCompactIndex),
+    ensureParent(localOntologyFile),
     ensureParent(localRunManifest),
     ensureParent(checkoutFilePath)
   ]);
@@ -171,11 +177,17 @@ async function main(): Promise<void> {
   const publicRunManifest = sanitizeRunManifest(runManifest);
 
   await Promise.all([
-    copyFile(upstreamDocsSnapshot, localDocsSnapshot),
-    copyFile(upstreamEntitiesSnapshot, localEntitiesSnapshot),
-    copyFile(upstreamDocsEnrichedSnapshot, localDocsEnrichedSnapshot),
-    copyFile(upstreamEntitiesEnrichedSnapshot, localEntitiesEnrichedSnapshot),
-    copyFile(upstreamIndexSettings, localIndexSettings),
+    copyFile(upstreamPublicationManifest, localPublicationManifest),
+    copyFile(upstreamBundleCatalog, localBundleCatalog),
+    copyFile(upstreamMcpChunks, localMcpChunks),
+    copyFile(upstreamCanonicalChunks, localCanonicalChunks),
+    copyFile(upstreamChunkEntityMentions, localChunkEntityMentions),
+    copyFile(upstreamChunkRelationHints, localChunkRelationHints),
+    cp(path.join(upstreamPublishedRuntimeDir, "."), localPublishedRuntimeDir, {
+      recursive: true
+    }),
+    copyFile(upstreamCompactIndex, localCompactIndex),
+    copyFile(upstreamOntologyFile, localOntologyFile),
     writeFile(localRunManifest, `${JSON.stringify(publicRunManifest, null, 2)}\n`, "utf8")
   ]);
 
@@ -184,12 +196,17 @@ async function main(): Promise<void> {
     checkedOutAt: new Date().toISOString(),
     upstreamRepoPath,
     contractFiles: {
-      docsSnapshot: localDocsSnapshot,
-      entitiesSnapshot: localEntitiesSnapshot,
-      docsEnrichedSnapshot: localDocsEnrichedSnapshot,
-      entitiesEnrichedSnapshot: localEntitiesEnrichedSnapshot,
-      indexSettings: localIndexSettings,
-      runManifest: localRunManifest
+      runManifest: localRunManifest,
+      publishedIndexesDir: localPublishedIndexesDir,
+      publishedRuntimeDir: localPublishedRuntimeDir,
+      publicationManifest: localPublicationManifest,
+      deterministicManifest: localDeterministicManifest,
+      bundleCatalog: localBundleCatalog,
+      mcpChunks: localMcpChunks,
+      canonicalChunks: localCanonicalChunks,
+      chunkEntityMentions: localChunkEntityMentions,
+      chunkRelationHints: localChunkRelationHints,
+      ontologyFile: localOntologyFile
     },
     runManifest: {
       runId: runManifest.run_id,
@@ -198,17 +215,9 @@ async function main(): Promise<void> {
       commitSha: runManifest.commit_sha,
       repoUrl: runManifest.repo_url
     },
-    indices: {
-      docs: ensurePublishedIndex(
-        indexSettings.items,
-        "documents",
-        config.backend.docsIndex
-      ),
-      entities: ensurePublishedIndex(
-        indexSettings.items,
-        "entities",
-        config.backend.entitiesIndex
-      )
+    substrate: {
+      primaryArtifact: publicationManifest.primary_artifact,
+      substrateVersion: publicationManifest.substrate_version
     }
   };
 
@@ -217,14 +226,20 @@ async function main(): Promise<void> {
   process.stdout.write(
     [
       `Backend checkout criado em ${checkoutFilePath}`,
-      `docs_snapshot=${localDocsSnapshot}`,
-      `entities_snapshot=${localEntitiesSnapshot}`,
-      `docs_enriched_snapshot=${localDocsEnrichedSnapshot}`,
-      `entities_enriched_snapshot=${localEntitiesEnrichedSnapshot}`,
+      `published_indexes_dir=${localPublishedIndexesDir}`,
+      `published_runtime_dir=${localPublishedRuntimeDir}`,
+      `publication_manifest=${localPublicationManifest}`,
+      `deterministic_manifest=${localDeterministicManifest}`,
+      `bundle_catalog=${localBundleCatalog}`,
+      `mcp_chunks=${localMcpChunks}`,
+      `canonical_chunks=${localCanonicalChunks}`,
+      `chunk_entity_mentions=${localChunkEntityMentions}`,
+      `chunk_relation_hints=${localChunkRelationHints}`,
+      `compact_index=${localCompactIndex}`,
+      `ontology_file=${localOntologyFile}`,
+      `substrate_version=${checkout.substrate?.substrateVersion ?? "n/d"}`,
       `run_id=${checkout.runManifest.runId ?? "n/d"}`,
-      `commit_sha=${checkout.runManifest.commitSha ?? "n/d"}`,
-      `docs_index=${checkout.indices.docs.indexName}`,
-      `entities_index=${checkout.indices.entities.indexName}`
+      `commit_sha=${checkout.runManifest.commitSha ?? "n/d"}`
     ].join("\n") + "\n"
   );
 }

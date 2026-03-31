@@ -1,4 +1,4 @@
-export type RetrievalSource = "docs" | "entities";
+export type RetrievalSource = "docs" | "entities" | "mcp";
 
 export type LooseRecord = Record<string, unknown> & {
   objectID?: string;
@@ -12,11 +12,15 @@ export interface AppConfig {
     maxContextRecords: number;
     upstreamRepoDir: string;
     checkoutFile: string;
-    docsSnapshotFile: string;
-    entitiesSnapshotFile: string;
-    docsEnrichedSnapshotFile: string;
-    entitiesEnrichedSnapshotFile: string;
-    indexSettingsFile: string;
+    publishedIndexesDir: string;
+    publishedRuntimeDir: string;
+    publicationManifestFile: string;
+    deterministicManifestFile: string;
+    mcpChunksFile: string;
+    canonicalChunksFile: string;
+    chunkEntityMentionsFile: string;
+    chunkRelationHintsFile: string;
+    ontologyFile: string;
     runManifestFile: string;
     readonly upstreamSource: "local" | "release";
     readonly upstreamReleaseTag: string;
@@ -59,13 +63,13 @@ export interface NormalizedRecord {
   authority_level?: string | undefined;
   algoliaRank: number;
   localScore: number;
+  traceability?: {
+    sourcePath?: string | undefined;
+    lineStart?: number | undefined;
+    lineEnd?: number | undefined;
+    unitId?: string | undefined;
+  } | undefined;
   raw: LooseRecord;
-}
-
-export interface PublishedIndexContract {
-  indexName: string;
-  recordFamily: string;
-  settings: Record<string, unknown>;
 }
 
 export interface BackendCheckout {
@@ -73,12 +77,17 @@ export interface BackendCheckout {
   checkedOutAt: string;
   upstreamRepoPath: string;
   contractFiles: {
-    docsSnapshot: string;
-    entitiesSnapshot: string;
-    docsEnrichedSnapshot: string;
-    entitiesEnrichedSnapshot: string;
-    indexSettings: string;
     runManifest: string;
+    publishedIndexesDir?: string | undefined;
+    publishedRuntimeDir?: string | undefined;
+    publicationManifest?: string | undefined;
+    deterministicManifest?: string | undefined;
+    bundleCatalog?: string | undefined;
+    mcpChunks?: string | undefined;
+    canonicalChunks?: string | undefined;
+    chunkEntityMentions?: string | undefined;
+    chunkRelationHints?: string | undefined;
+    ontologyFile?: string | undefined;
   };
   runManifest: {
     runId?: string | undefined;
@@ -87,10 +96,10 @@ export interface BackendCheckout {
     commitSha?: string | undefined;
     repoUrl?: string | undefined;
   };
-  indices: {
-    docs: PublishedIndexContract;
-    entities: PublishedIndexContract;
-  };
+  substrate?: {
+    primaryArtifact?: string | undefined;
+    substrateVersion?: string | undefined;
+  } | undefined;
 }
 
 export interface SnapshotPayload {
@@ -109,10 +118,14 @@ export interface RetrievalBundle {
     runId?: string | undefined;
     commitSha?: string | undefined;
     upstreamRepoPath?: string | undefined;
-    docsSnapshotFile: string;
-    entitiesSnapshotFile: string;
-    docsEnrichedSnapshotFile: string;
-    entitiesEnrichedSnapshotFile: string;
+    publicationManifestFile?: string | undefined;
+    deterministicManifestFile?: string | undefined;
+    ontologyFile?: string | undefined;
+    mcpChunksFile?: string | undefined;
+    canonicalChunksFile?: string | undefined;
+    chunkEntityMentionsFile?: string | undefined;
+    chunkRelationHintsFile?: string | undefined;
+    substrateVersion?: string | undefined;
   };
 }
 
@@ -134,10 +147,14 @@ export interface ManualToolResult {
       runId?: string | undefined;
       commitSha?: string | undefined;
       upstreamRepoPath?: string | undefined;
-      docsSnapshotFile: string;
-      entitiesSnapshotFile: string;
-      docsEnrichedSnapshotFile: string;
-      entitiesEnrichedSnapshotFile: string;
+      publicationManifestFile?: string | undefined;
+      deterministicManifestFile?: string | undefined;
+      ontologyFile?: string | undefined;
+      mcpChunksFile?: string | undefined;
+      canonicalChunksFile?: string | undefined;
+      chunkEntityMentionsFile?: string | undefined;
+      chunkRelationHintsFile?: string | undefined;
+      substrateVersion?: string | undefined;
     };
     prompt: string;
     selectedCitationIds: string[];
@@ -160,6 +177,12 @@ export interface ManualToolResult {
       documentPath?: string | undefined;
       chapterPath?: string | undefined;
       excerpt: string;
+      traceability?: {
+        sourcePath?: string | undefined;
+        lineStart?: number | undefined;
+        lineEnd?: number | undefined;
+        unitId?: string | undefined;
+      } | undefined;
     }>;
     finalAnswer?: string | undefined;
   };

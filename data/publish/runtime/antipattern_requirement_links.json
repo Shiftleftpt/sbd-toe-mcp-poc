@@ -1,0 +1,81 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 2,
+  "entity_type": "AntiPatternRequirementLink",
+  "items": [
+    {
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "confidence": 0.7,
+      "evidence_unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:antipattern:ambientes-mal-segregados|violates|IAC-002",
+      "link_type": "violates",
+      "matched_requirement_field": "name",
+      "matched_requirement_text": "Ambientes segregados e versionados",
+      "score_components": {
+        "bundle_overlap": [
+          "08-iac-infraestrutura"
+        ],
+        "shared_salient_tokens": [
+          "ambiente",
+          "segregado"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:antipattern:ambientes-mal-segregados",
+      "source_label": "Ambientes mal segregados",
+      "source_type": "AntiPattern",
+      "target_id": "IAC-002",
+      "target_label": "Ambientes segregados e versionados",
+      "target_source_bundle": "08-iac-infraestrutura",
+      "target_source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "target_type": "Requirement"
+    },
+    {
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "confidence": 0.7,
+      "evidence_unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:antipattern:logs-nao-estruturados|violates|OPS-001",
+      "link_type": "violates",
+      "matched_requirement_field": "name",
+      "matched_requirement_text": "Logging estruturado e persistente para todos os componentes em produção",
+      "score_components": {
+        "bundle_overlap": [
+          "12-monitorizacao-operacoes"
+        ],
+        "shared_salient_tokens": [
+          "estruturado",
+          "log"
+        ],
+        "token_similarity": 0.3333
+      },
+      "source_id": "sem:antipattern:logs-nao-estruturados",
+      "source_label": "Logs não estruturados",
+      "source_type": "AntiPattern",
+      "target_id": "OPS-001",
+      "target_label": "Logging estruturado e persistente para todos os componentes em produção",
+      "target_source_bundle": "12-monitorizacao-operacoes",
+      "target_source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "target_type": "Requirement"
+    }
+  ],
+  "profiles": [
+    "threats"
+  ],
+  "source_artifact": "data/publish/semantic/antipattern_requirement_links.jsonl"
+}

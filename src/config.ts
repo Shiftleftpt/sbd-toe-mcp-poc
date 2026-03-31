@@ -72,25 +72,41 @@ export function getConfig(): AppConfig {
         "BACKEND_CHECKOUT_FILE",
         "./data/upstream/backend-checkout.json"
       ),
-      docsSnapshotFile: getEnv(
-        "DOCS_SNAPSHOT_FILE",
-        "./data/publish/algolia_docs_records.json"
+      publishedIndexesDir: getEnv(
+        "PUBLISHED_INDEXES_DIR",
+        "./data/publish/indexes"
       ),
-      entitiesSnapshotFile: getEnv(
-        "ENTITIES_SNAPSHOT_FILE",
-        "./data/publish/algolia_entities_records.json"
+      publishedRuntimeDir: getEnv(
+        "PUBLISHED_RUNTIME_DIR",
+        "./data/publish/runtime"
       ),
-      docsEnrichedSnapshotFile: getEnv(
-        "DOCS_ENRICHED_SNAPSHOT_FILE",
-        "./data/publish/algolia_docs_records_enriched.json"
+      publicationManifestFile: getEnv(
+        "PUBLICATION_MANIFEST_FILE",
+        "./data/publish/indexes/publication_manifest.json"
       ),
-      entitiesEnrichedSnapshotFile: getEnv(
-        "ENTITIES_ENRICHED_SNAPSHOT_FILE",
-        "./data/publish/algolia_entities_records_enriched.json"
+      deterministicManifestFile: getEnv(
+        "DETERMINISTIC_MANIFEST_FILE",
+        "./data/publish/runtime/deterministic_manifest.json"
       ),
-      indexSettingsFile: getEnv(
-        "INDEX_SETTINGS_FILE",
-        "./data/publish/algolia_index_settings.json"
+      mcpChunksFile: getEnv(
+        "MCP_CHUNKS_FILE",
+        "./data/publish/indexes/mcp_chunks.jsonl"
+      ),
+      canonicalChunksFile: getEnv(
+        "CANONICAL_CHUNKS_FILE",
+        "./data/publish/indexes/canonical_chunks.jsonl"
+      ),
+      chunkEntityMentionsFile: getEnv(
+        "CHUNK_ENTITY_MENTIONS_FILE",
+        "./data/publish/indexes/chunk_entity_mentions.jsonl"
+      ),
+      chunkRelationHintsFile: getEnv(
+        "CHUNK_RELATION_HINTS_FILE",
+        "./data/publish/indexes/chunk_relation_hints.jsonl"
+      ),
+      ontologyFile: getEnv(
+        "ONTOLOGY_FILE",
+        "./data/publish/sbdtoe-ontology.yaml"
       ),
       runManifestFile: getEnv(
         "RUN_MANIFEST_FILE",

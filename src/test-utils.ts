@@ -95,12 +95,17 @@ export const mockBackendCheckout = {
   checkedOutAt: new Date().toISOString(),
   upstreamRepoPath: "/upstream/repo",
   contractFiles: {
-    docsSnapshot: "data/publish/docs.json",
-    entitiesSnapshot: "data/publish/entities.json",
-    docsEnrichedSnapshot: "data/publish/docs_enriched.json",
-    entitiesEnrichedSnapshot: "data/publish/entities_enriched.json",
-    indexSettings: "data/publish/index_settings.json",
-    runManifest: "data/reports/run_manifest.json"
+    runManifest: "data/reports/run_manifest.json",
+    publishedIndexesDir: "data/publish/indexes",
+    publishedRuntimeDir: "data/publish/runtime",
+    publicationManifest: "data/publish/indexes/publication_manifest.json",
+    deterministicManifest: "data/publish/runtime/deterministic_manifest.json",
+    bundleCatalog: "data/publish/indexes/bundle_catalog.jsonl",
+    mcpChunks: "data/publish/indexes/mcp_chunks.jsonl",
+    canonicalChunks: "data/publish/indexes/canonical_chunks.jsonl",
+    chunkEntityMentions: "data/publish/indexes/chunk_entity_mentions.jsonl",
+    chunkRelationHints: "data/publish/indexes/chunk_relation_hints.jsonl",
+    ontologyFile: "data/publish/sbdtoe-ontology.yaml"
   },
   runManifest: {
     runId: "test-run-001",
@@ -108,18 +113,6 @@ export const mockBackendCheckout = {
     branch: "main",
     commitSha: "abc123def456",
     repoUrl: "https://github.com/test/repo"
-  },
-  indices: {
-    docs: {
-      indexName: "sbd_toe_docs_test",
-      recordFamily: "documents",
-      settings: {}
-    },
-    entities: {
-      indexName: "sbd_toe_entities_test",
-      recordFamily: "entities",
-      settings: {}
-    }
   }
 };
 
