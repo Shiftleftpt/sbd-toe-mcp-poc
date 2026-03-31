@@ -18,6 +18,11 @@ function getEnv(name: string, fallback?: string): string {
   throw new Error(`Falta definir a variável de ambiente ${name}.`);
 }
 
+function getOptionalEnv(name: string): string | undefined {
+  const value = process.env[name];
+  return value !== undefined && value.trim().length > 0 ? value.trim() : undefined;
+}
+
 function parseBoolean(value: string): boolean {
   return ["1", "true", "yes", "on"].includes(value.trim().toLowerCase());
 }
@@ -67,6 +72,10 @@ export function getConfig(): AppConfig {
       upstreamRepoDir: getEnv(
         "UPSTREAM_KNOWLEDGE_GRAPH_DIR",
         "../sbd-toe-knowledge-graph"
+      ),
+      localCheckoutLockFile: getEnv(
+        "LOCAL_CHECKOUT_LOCK_FILE",
+        "./data/upstream/graph-runtime-lock.json"
       ),
       checkoutFile: getEnv(
         "BACKEND_CHECKOUT_FILE",
@@ -119,7 +128,7 @@ export function getConfig(): AppConfig {
         }
         return v;
       })(),
-      upstreamReleaseTag: getEnv("UPSTREAM_RELEASE_TAG", "latest"),
+      upstreamReleaseTag: getOptionalEnv("UPSTREAM_RELEASE_TAG") ?? "",
       upstreamReleaseMaxBytes: 100 * 1024 * 1024,
       upstreamReleaseTimeoutMs: 60_000
     },

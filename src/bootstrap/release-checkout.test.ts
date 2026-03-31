@@ -3,6 +3,7 @@ import path from "node:path";
 import {
   assertSafeAssetUrl,
   assertSafeDestPath,
+  assertPinnedReleaseTag,
   fetchReleaseAssetUrl,
 } from "./release-checkout.js";
 
@@ -71,6 +72,32 @@ describe("assertSafeDestPath", () => {
 });
 
 // ---------------------------------------------------------------------------
+// assertPinnedReleaseTag
+// ---------------------------------------------------------------------------
+
+describe("assertPinnedReleaseTag", () => {
+  it("accepts a stable semver tag", () => {
+    expect(() => assertPinnedReleaseTag("v2.0.0")).not.toThrow();
+  });
+
+  it("accepts an explicit prerelease tag", () => {
+    expect(() => assertPinnedReleaseTag("v2.0.0-rc.1")).not.toThrow();
+  });
+
+  it("rejects latest", () => {
+    expect(() => assertPinnedReleaseTag("latest")).toThrow(
+      "UPSTREAM_RELEASE_TAG='latest' não é permitido"
+    );
+  });
+
+  it("rejects range-like tags", () => {
+    expect(() => assertPinnedReleaseTag(">v2.*")).toThrow(
+      "UPSTREAM_RELEASE_TAG inválida"
+    );
+  });
+});
+
+// ---------------------------------------------------------------------------
 // fetchReleaseAssetUrl  (mocked fetch)
 // ---------------------------------------------------------------------------
 
@@ -88,7 +115,7 @@ describe("fetchReleaseAssetUrl", () => {
       new Response(null, { status: 404 })
     );
 
-    await expect(fetchReleaseAssetUrl("latest", 5000)).rejects.toThrow(
+    await expect(fetchReleaseAssetUrl("v2.0.0", 5000)).rejects.toThrow(
       "GitHub API respondeu 404"
     );
   });
@@ -101,7 +128,7 @@ describe("fetchReleaseAssetUrl", () => {
       })
     );
 
-    await expect(fetchReleaseAssetUrl("latest", 5000)).rejects.toThrow(
+    await expect(fetchReleaseAssetUrl("v2.0.0", 5000)).rejects.toThrow(
       "Nenhum asset de bundle encontrado"
     );
   });
@@ -114,7 +141,7 @@ describe("fetchReleaseAssetUrl", () => {
       })
     );
 
-    await expect(fetchReleaseAssetUrl("latest", 5000)).rejects.toThrow(
+    await expect(fetchReleaseAssetUrl("v2.0.0", 5000)).rejects.toThrow(
       "Nenhum asset de bundle encontrado"
     );
   });
@@ -138,7 +165,7 @@ describe("fetchReleaseAssetUrl", () => {
       )
     );
 
-    await expect(fetchReleaseAssetUrl("latest", 5000)).rejects.toThrow(
+    await expect(fetchReleaseAssetUrl("v2.0.0", 5000)).rejects.toThrow(
       "URL de asset não autorizada"
     );
   });
@@ -164,12 +191,12 @@ describe("fetchReleaseAssetUrl", () => {
       )
     );
 
-    const result = await fetchReleaseAssetUrl("latest", 5000);
+    const result = await fetchReleaseAssetUrl("v1.0.0", 5000);
     expect(result.assetUrl).toBe(downloadUrl);
     expect(result.assetName).toBe("bundle.tar.gz");
   });
 
-  it("uses tag-specific URL when tag is not 'latest'", async () => {
+  it("always uses the tag-specific release URL", async () => {
     const downloadUrl =
       "https://github.com/Shiftleftpt/sbd-toe-knowledge-graph/releases/download/v2.0.0/bundle.tar.gz";
 

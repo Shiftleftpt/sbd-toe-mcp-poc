@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { sanitizeRunManifest } from "../bootstrap/checkout-backend.js";
+import {
+  sanitizeRunManifest,
+  validateLocalCheckoutLock,
+} from "../bootstrap/checkout-backend.js";
 
 interface UpstreamRunManifestPayload {
   run_id?: string;
@@ -119,6 +122,59 @@ describe("checkout-backend.ts", () => {
       expect(result.repo_url).toBe("https://github.com/test/repo");
       expect(result.sync_mode).toBe("full");
       expect(result.version).toBe("1.0.0");
+    });
+  });
+
+  describe("validateLocalCheckoutLock", () => {
+    it("accepts a matching local lock state", () => {
+      expect(() =>
+        validateLocalCheckoutLock(
+          {
+            upstreamRepoPath: "/tmp/graph",
+            expectedGraphBranch: "ontology_llm_codex",
+            expectedGraphCommitSha: "abc123",
+            expectedRunId: "run-001",
+            expectedSubstrateVersion: "v2-draft",
+            expectedPrimaryArtifact: "canonical_chunks.jsonl",
+          },
+          {
+            upstreamRepoPath: "/tmp/graph",
+            graphBranch: "ontology_llm_codex",
+            graphCommitSha: "abc123",
+            runId: "run-001",
+            substrateVersion: "v2-draft",
+            primaryArtifact: "canonical_chunks.jsonl",
+          }
+        )
+      ).not.toThrow();
+    });
+
+    it("fails clearly when the graph commit sha differs", () => {
+      expect(() =>
+        validateLocalCheckoutLock(
+          {
+            expectedGraphCommitSha: "abc123",
+          },
+          {
+            upstreamRepoPath: "/tmp/graph",
+            graphCommitSha: "def456",
+          }
+        )
+      ).toThrow("graph commit esperado=abc123 observado=def456");
+    });
+
+    it("fails clearly when the run id differs", () => {
+      expect(() =>
+        validateLocalCheckoutLock(
+          {
+            expectedRunId: "run-001",
+          },
+          {
+            upstreamRepoPath: "/tmp/graph",
+            runId: "run-002",
+          }
+        )
+      ).toThrow("run_id esperado=run-001 observado=run-002");
     });
   });
 });

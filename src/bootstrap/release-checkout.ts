@@ -16,6 +16,9 @@ const ALLOWED_ASSET_URL_PREFIXES = [
   "https://objects.githubusercontent.com/",
 ];
 
+const PINNED_RELEASE_TAG_RE =
+  /^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/;
+
 // Fixed list of files to copy from the extracted bundle to destDir.
 // SECURITY: Only known paths are copied; no dynamic traversal of extracted content.
 const KNOWN_ENTRIES: Array<{ kind: "file" | "dir"; src: string; dest: string }> = [
@@ -88,18 +91,30 @@ export function assertSafeDestPath(destPath: string, baseDir: string): void {
   }
 }
 
+export function assertPinnedReleaseTag(tag: string): void {
+  if (tag === "latest") {
+    throw new Error(
+      "UPSTREAM_RELEASE_TAG='latest' não é permitido. Usa sempre uma tag exata."
+    );
+  }
+
+  if (!PINNED_RELEASE_TAG_RE.test(tag)) {
+    throw new Error(
+      `UPSTREAM_RELEASE_TAG inválida: '${tag}'. Usa uma tag exata do tipo vX.Y.Z ou vX.Y.Z-rc.1.`
+    );
+  }
+}
+
 export async function fetchReleaseAssetUrl(
   tag: string,
   timeoutMs: number
 ): Promise<{ assetUrl: string; assetName: string }> {
+  assertPinnedReleaseTag(tag);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const releaseUrl =
-      tag === "latest"
-        ? `${HARDCODED_API_BASE}/releases/latest`
-        : `${HARDCODED_API_BASE}/releases/tags/${encodeURIComponent(tag)}`;
+    const releaseUrl = `${HARDCODED_API_BASE}/releases/tags/${encodeURIComponent(tag)}`;
 
     const resp = await fetch(releaseUrl, {
       signal: controller.signal,

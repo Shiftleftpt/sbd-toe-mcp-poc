@@ -1,0 +1,66 @@
+name: Preview Bundle
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "epic/**"
+      - "feat/**"
+      - "feature/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-preview-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      PREVIEW_OUTPUT_DIR: preview-release
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate preview branch
+        run: |
+          npm run check
+          npm run build
+          npm run check:npm-package
+          npm run test:qualitative-smoke
+
+      - name: Derive preview version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE_VERSION=$(node -p "JSON.parse(require('node:fs').readFileSync('package.json','utf8')).version")
+          PREVIEW_VERSION="v${PACKAGE_VERSION}-preview.${GITHUB_RUN_NUMBER}"
+          echo "preview_version=${PREVIEW_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build preview bundle
+        run: node scripts/package-release.mjs --version "${{ steps.version.outputs.preview_version }}" --output-dir "${PREVIEW_OUTPUT_DIR}"
+
+      - name: Upload preview bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbd-toe-mcp-preview-${{ github.ref_name }}-${{ github.sha }}
+          path: ${{ env.PREVIEW_OUTPUT_DIR }}/*
+          if-no-files-found: error

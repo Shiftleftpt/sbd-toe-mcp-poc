@@ -68,9 +68,13 @@
     "check": "tsc --noEmit -p tsconfig.json && node scripts/validate-ai-disclosure.mjs --check",
     "check:npm-package": "node scripts/check-npm-package.mjs",
     "checkout:backend": "tsc -p tsconfig.json && node dist/bootstrap/checkout-backend.js",
+    "eval:qualitative": "node scripts/run-qualitative-eval.mjs",
+    "eval:qualitative:interactive": "node scripts/run-qualitative-eval.mjs --interactive",
+    "lock:graph-runtime": "node scripts/write-graph-runtime-lock.mjs",
     "package:release": "node scripts/package-release.mjs",
     "prepack": "npm run build",
     "test": "vitest run",
+    "test:qualitative-smoke": "vitest run src/qualitative-eval-smoke.test.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage"
   },
