@@ -43,6 +43,7 @@ jobs:
         run: |
           npm run check
           npm run build
+          npm run check:npm-package
 
       - name: Verify tag is on master
         run: |

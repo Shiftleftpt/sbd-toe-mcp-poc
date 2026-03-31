@@ -101,30 +101,30 @@ describe("package-release", () => {
     }
   });
 
-  it("fails clearly when algolia_docs_records_enriched.json is missing", async () => {
+  it("fails clearly when mcp_chunks.jsonl is missing", async () => {
     const packageReleaseLib = await loadPackageReleaseLib();
     const repoRoot = await createFixtureRepo(packageReleaseLib.REQUIRED_PUBLISH_FILES);
 
     try {
-      await removeFile(repoRoot, "data/publish/algolia_docs_records_enriched.json");
+      await removeFile(repoRoot, "data/publish/indexes/mcp_chunks.jsonl");
 
       await expect(packageReleaseLib.ensureRequiredBundleInputs(repoRoot)).rejects.toThrow(
-        "Falta o artefacto publish obrigatório: data/publish/algolia_docs_records_enriched.json"
+        "Falta o artefacto publish obrigatório: data/publish/indexes/mcp_chunks.jsonl"
       );
     } finally {
       await rm(repoRoot, { recursive: true, force: true });
     }
   });
 
-  it("fails clearly when algolia_entities_records_enriched.json is missing", async () => {
+  it("fails clearly when deterministic_manifest.json is missing", async () => {
     const packageReleaseLib = await loadPackageReleaseLib();
     const repoRoot = await createFixtureRepo(packageReleaseLib.REQUIRED_PUBLISH_FILES);
 
     try {
-      await removeFile(repoRoot, "data/publish/algolia_entities_records_enriched.json");
+      await removeFile(repoRoot, "data/publish/runtime/deterministic_manifest.json");
 
       await expect(packageReleaseLib.ensureRequiredBundleInputs(repoRoot)).rejects.toThrow(
-        "Falta o artefacto publish obrigatório: data/publish/algolia_entities_records_enriched.json"
+        "Falta o artefacto publish obrigatório: data/publish/runtime/deterministic_manifest.json"
       );
     } finally {
       await rm(repoRoot, { recursive: true, force: true });
