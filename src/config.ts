@@ -101,6 +101,10 @@ export function getConfig(): AppConfig {
         "MCP_CHUNKS_FILE",
         "./data/publish/indexes/mcp_chunks.jsonl"
       ),
+      vectorChunksFile: getEnv(
+        "VECTOR_CHUNKS_FILE",
+        "./data/publish/indexes/vector_chunks.jsonl"
+      ),
       canonicalChunksFile: getEnv(
         "CANONICAL_CHUNKS_FILE",
         "./data/publish/indexes/canonical_chunks.jsonl"

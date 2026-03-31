@@ -7,7 +7,8 @@ import type {
   NormalizedRecord,
   RetrievalBundle,
   RetrievalSource,
-  SnapshotPayload
+  SnapshotPayload,
+  VectorRecallMode
 } from "../types.js";
 import { tryLoadBackendCheckout } from "../upstream/backend-contract.js";
 
@@ -58,12 +59,14 @@ const DOCUMENT_TITLE_KEYS = ["document_title"] as const;
 
 const SOURCE_PRIORITY: Record<RetrievalSource, number> = {
   mcp: 0,
+  vector: 0,
   docs: 1,
   entities: 2
 };
 
 const SOURCE_PREFIX: Record<RetrievalSource, string> = {
   mcp: "M",
+  vector: "V",
   docs: "D",
   entities: "E"
 };
@@ -97,8 +100,13 @@ interface PublishedSubstrateCache {
   ontology: Record<string, unknown>;
   publicationManifest: PublicationManifestPayload;
   mcpChunks: LooseRecord[];
+  vectorChunks: LooseRecord[];
   entityMentionTokensByChunk: ReadonlyMap<string, readonly string[]>;
   relationHintTokensByChunk: ReadonlyMap<string, readonly string[]>;
+}
+
+export interface RetrievePublishedContextOptions {
+  vectorMode?: VectorRecallMode;
 }
 
 let cachedPublishedSubstrate: PublishedSubstrateCache | undefined;
@@ -255,6 +263,12 @@ function tokenize(value: string): string[] {
     .filter((token) => token.length > 2);
 }
 
+function extractExplicitChapterSlugs(query: string): string[] {
+  const matches =
+    normalizeForSearch(query).match(/\b\d{2}-[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)+\b/gu) ?? [];
+  return uniqueStrings(matches);
+}
+
 function uniqueStrings(values: Iterable<string | undefined>): string[] {
   const seen = new Set<string>();
   const result: string[] = [];
@@ -339,6 +353,21 @@ function readJsonLinesFileRequired(filePath: string): LooseRecord[] {
     .map((line) => JSON.parse(line) as LooseRecord);
 }
 
+function readJsonLinesFileOptional(filePath: string): LooseRecord[] {
+  const absolutePath = resolveAppPath(filePath);
+
+  try {
+    const raw = readFileSync(absolutePath, "utf8");
+    return raw
+      .split(/\r?\n/u)
+      .map((line: string) => line.trim())
+      .filter((line: string) => line.length > 0)
+      .map((line: string) => JSON.parse(line) as LooseRecord);
+  } catch {
+    return [];
+  }
+}
+
 function parseSupportProfiles(value: unknown): SupportProfile[] {
   if (!Array.isArray(value)) {
     return [];
@@ -369,7 +398,7 @@ export function resolveSupportProfiles(query: string): SupportProfile[] {
   }
 
   if (
-    /(?:como|how|implement|design|arquitet|configure|configurar|document|estrutura|pattern|playbook|guia)/u.test(
+    /(?:como|how|implement|design|arquitet|configure|configurar|document|estrutura|pattern|playbook|guia|mostra|mostrar|show|user stor(?:y|ies)|story|stories|pratic|assignment|role|papel|phase|fase)/u.test(
       normalized
     )
   ) {
@@ -471,6 +500,10 @@ export function expandQueryWithAliases(query: string): string {
 export function classifyQueryIntent(query: string): QueryIntent {
   const normalized = normalizeForSearch(query);
   const tokens = tokenize(query);
+
+  if (/(?:mostra|mostrar|show|user stor(?:y|ies)|story|stories|pratic|assignment|role|phase|fase)/u.test(normalized)) {
+    return "canonical_guidance";
+  }
 
   for (const [intent, keywords] of Object.entries(INTENT_KEYWORDS) as Array<[QueryIntent, readonly string[]]>) {
     if (intent === "generic") continue;
@@ -606,7 +639,9 @@ function buildLocalScore(query: string, record: Omit<NormalizedRecord, "localSco
   const expandedQuery = expandQueryWithAliases(query);
   const queryText = normalizeForSearch(expandedQuery);
   const tokens = Array.from(new Set(tokenize(expandedQuery)));
+  const explicitChapterSlugs = extractExplicitChapterSlugs(query);
   const intent = classifyQueryIntent(query);
+  const requestsUserStories = /user stor(?:y|ies)|story|stories/u.test(queryText);
 
   const title = normalizeForSearch(record.title);
   const metadata = normalizeForSearch(
@@ -662,6 +697,35 @@ function buildLocalScore(query: string, record: Omit<NormalizedRecord, "localSco
 
   if (booleanValue(record.raw.is_primary_source)) {
     score += 2;
+  }
+
+  if (explicitChapterSlugs.length > 0) {
+    const recordChapter = record.chapter ? normalizeForSearch(record.chapter) : "";
+    if (recordChapter.length > 0 && explicitChapterSlugs.includes(recordChapter)) {
+      score += 8;
+    }
+  }
+
+  if (requestsUserStories) {
+    const chunkKind = flattenUnknown(record.raw.chunk_kind);
+    const documentRole = flattenUnknown(record.raw.document_role);
+    const authorityClass = flattenUnknown(record.raw.authority_class);
+
+    if (title.includes("user stor")) {
+      score += 5;
+    }
+    if (/^us-\d+/iu.test(record.title)) {
+      score += 4;
+    }
+    if (chunkKind === "user_story") {
+      score += 4;
+    }
+    if (documentRole === "aplicacao_lifecycle") {
+      score += 3;
+    }
+    if (authorityClass === "normative") {
+      score += 1;
+    }
   }
 
   const intentBoost = computeIntentScore(record, intent, tokens);
@@ -739,8 +803,13 @@ function dedupeRecords(records: NormalizedRecord[]): NormalizedRecord[] {
   const deduped: NormalizedRecord[] = [];
 
   for (const record of records) {
+    const traceFingerprint =
+      record.traceability?.unitId ??
+      (record.traceability?.sourcePath
+        ? `${record.traceability.sourcePath}|${record.title}|${record.chapter ?? ""}`
+        : undefined);
     const fingerprint = normalizeForSearch(
-      `${record.objectID}|${record.title}|${record.chapter ?? ""}|${record.excerpt}`
+      traceFingerprint ?? `${record.objectID}|${record.title}|${record.chapter ?? ""}|${record.excerpt}`
     );
     if (seen.has(fingerprint)) {
       continue;
@@ -837,6 +906,7 @@ function loadPublishedSubstrate(): PublishedSubstrateCache {
     config.backend.publicationManifestFile
   );
   const mcpChunks = readJsonLinesFileRequired(config.backend.mcpChunksFile);
+  const vectorChunks = readJsonLinesFileOptional(config.backend.vectorChunksFile);
   const chunkEntityMentions = readJsonLinesFileRequired(config.backend.chunkEntityMentionsFile);
   const chunkRelationHints = readJsonLinesFileRequired(config.backend.chunkRelationHintsFile);
 
@@ -844,6 +914,7 @@ function loadPublishedSubstrate(): PublishedSubstrateCache {
     ontology,
     publicationManifest,
     mcpChunks,
+    vectorChunks,
     entityMentionTokensByChunk: buildChunkTokenLookup(chunkEntityMentions, (record) => [
       record.entity_id,
       record.entity_type,
@@ -899,6 +970,117 @@ function computeAssociationBoost(
   }
 
   return Number(boost.toFixed(2));
+}
+
+function shouldUseVectorRecall(
+  query: string,
+  selected: readonly NormalizedRecord[],
+  mode: VectorRecallMode
+): boolean {
+  if (mode === "prefer") {
+    return true;
+  }
+
+  if (mode === "off") {
+    return false;
+  }
+
+  const normalized = normalizeForSearch(query);
+  const vagueRecallPattern =
+    /(?:onde|where|procura|search|passagens|trechos|related|relacionad|provenance|supply chain|segrega|explicar|explain|rationale)/u;
+
+  if (vagueRecallPattern.test(normalized)) {
+    return true;
+  }
+
+  return selected.length === 0 || selected.every((record) => record.localScore < 16);
+}
+
+function normalizeVectorChunk(
+  chunk: LooseRecord,
+  rank: number,
+  citationId: string,
+  query: string,
+  preferredProfiles: readonly SupportProfile[]
+): NormalizedRecord {
+  const traceability = extractTraceability(chunk);
+  const supportProfiles = parseSupportProfiles(chunk.support_profiles);
+  const sectionPath = Array.isArray(chunk.section_path)
+    ? flattenTokenArray(chunk.section_path, 6)
+    : [];
+  const filterTags =
+    typeof chunk.filter_tags === "object" && chunk.filter_tags !== null
+      ? flattenTokenArray(Object.values(chunk.filter_tags as Record<string, unknown>), 10)
+      : [];
+  const entityTokens = flattenTokenArray(
+    [
+      ...(Array.isArray(chunk.entity_ids) ? chunk.entity_ids : []),
+      ...(Array.isArray(chunk.entity_types) ? chunk.entity_types : [])
+    ],
+    12
+  );
+  const relationTokens = flattenTokenArray(
+    Array.isArray(chunk.relation_hints) ? chunk.relation_hints : [],
+    12
+  );
+  const lineLabel = buildLineLabel(traceability);
+  const documentPath = traceability?.sourcePath;
+  const objectId = flattenUnknown(chunk.record_id) ?? flattenUnknown(chunk.chunk_id);
+
+  const pseudoHit: LooseRecord = {
+    ...chunk,
+    ...(objectId === undefined ? {} : { objectID: objectId }),
+    content:
+      firstString(chunk, ["embedding_text"]) ??
+      firstString(chunk, ["text"]) ??
+      firstString(chunk, ["vector_text"]),
+    summary: flattenUnknown(chunk.title),
+    chapter_title: flattenUnknown(chunk.bundle_id),
+    section_title: sectionPath.at(-1),
+    document_title: flattenUnknown(chunk.document_id),
+    document_path: documentPath,
+    page_label: lineLabel ?? documentPath,
+    tags: uniqueStrings([
+      ...filterTags,
+      ...supportProfiles,
+      ...entityTokens.slice(0, 6),
+      ...relationTokens.slice(0, 6)
+    ]),
+    authority_level: flattenUnknown(chunk.authority_class),
+    is_primary_source: true
+  };
+
+  const normalized = normalizeHit(
+    pseudoHit,
+    "vector",
+    "vector_chunks",
+    rank,
+    citationId,
+    query
+  );
+
+  const associationBoost = computeAssociationBoost(
+    query,
+    supportProfiles,
+    preferredProfiles,
+    entityTokens,
+    relationTokens
+  );
+  const vectorRecallBoost = 1.5;
+
+  return {
+    ...normalized,
+    pageLabel: lineLabel ?? normalized.pageLabel,
+    traceability,
+    raw: {
+      ...pseudoHit,
+      traceability: chunk.traceability,
+      support_profiles: supportProfiles,
+      entity_mentions_flat: entityTokens,
+      relation_hints_flat: relationTokens
+    },
+    localScore: Number((normalized.localScore + associationBoost + vectorRecallBoost).toFixed(2))
+  };
 }
 
 function normalizeMcpChunk(
@@ -994,33 +1176,69 @@ function createCitationIds(source: RetrievalSource, total: number): string[] {
 
 export async function retrievePublishedContext(
   query: string,
-  topK?: number
+  topK?: number,
+  options: RetrievePublishedContextOptions = {}
 ): Promise<RetrievalBundle> {
   const config = getConfig();
   const checkout = await tryLoadBackendCheckout();
   const substrate = loadPublishedSubstrate();
   const preferredProfiles = resolveSupportProfiles(query);
-  const preferredChunks = substrate.mcpChunks.filter((chunk) => {
+  const vectorMode = options.vectorMode ?? "off";
+  const explicitChapterSlugs = extractExplicitChapterSlugs(query);
+  const filterByProfiles = (chunk: LooseRecord) => {
     const supportProfiles = parseSupportProfiles(chunk.support_profiles);
     return supportProfiles.some((profile) => preferredProfiles.includes(profile));
-  });
-  const candidateChunks =
-    preferredChunks.length > 0 ? preferredChunks : substrate.mcpChunks;
-  const citationIds = createCitationIds("mcp", candidateChunks.length);
+  };
+  const filterByExplicitChapter = (chunk: LooseRecord) => {
+    if (explicitChapterSlugs.length === 0) {
+      return true;
+    }
 
-  const retrieved = dedupeRecords(
-    sortByPriority(
-      candidateChunks.map((chunk, index) =>
-        normalizeMcpChunk(
-          chunk,
-          index,
-          citationIds[index]!,
-          query,
-          substrate,
-          preferredProfiles
-        )
-      )
+    const bundleId = normalizeForSearch(flattenUnknown(chunk.bundle_id) ?? "");
+    return bundleId.length === 0 || explicitChapterSlugs.includes(bundleId);
+  };
+  const preferredChunks = substrate.mcpChunks.filter(filterByProfiles);
+  const candidateChunks = preferredChunks.length > 0 ? preferredChunks : substrate.mcpChunks;
+  const mcpCitationIds = createCitationIds("mcp", candidateChunks.length);
+  const normalizedMcpRecords = candidateChunks.map((chunk, index) =>
+    normalizeMcpChunk(
+      chunk,
+      index,
+      mcpCitationIds[index]!,
+      query,
+      substrate,
+      preferredProfiles
     )
+  );
+  const initialRetrieved = dedupeRecords(sortByPriority(normalizedMcpRecords));
+  const initialSelected = initialRetrieved.slice(
+    0,
+    Math.min(topK ?? config.backend.maxContextRecords, config.backend.maxContextRecords)
+  );
+  const shouldRunVector =
+    substrate.vectorChunks.length > 0 &&
+    shouldUseVectorRecall(query, initialSelected, vectorMode);
+  const vectorCandidates = shouldRunVector
+    ? (() => {
+        const preferredVectorChunks = substrate.vectorChunks.filter(
+          (chunk) => filterByProfiles(chunk) && filterByExplicitChapter(chunk)
+        );
+        if (preferredVectorChunks.length > 0) {
+          return preferredVectorChunks;
+        }
+
+        const chapterScopedVectorChunks = substrate.vectorChunks.filter(filterByExplicitChapter);
+        return chapterScopedVectorChunks.length > 0
+          ? chapterScopedVectorChunks
+          : substrate.vectorChunks;
+      })()
+    : [];
+  const vectorCitationIds = createCitationIds("vector", vectorCandidates.length);
+  const normalizedVectorRecords = vectorCandidates.map((chunk, index) =>
+    normalizeVectorChunk(chunk, index, vectorCitationIds[index]!, query, preferredProfiles)
+  );
+  const retrieved = dedupeRecords(
+    sortByPriority([...normalizedMcpRecords, ...normalizedVectorRecords])
   );
   const selected = retrieved.slice(
     0,
@@ -1039,6 +1257,7 @@ export async function retrievePublishedContext(
       "sbdtoe-ontology.yaml",
       "publication_manifest.json",
       "mcp_chunks.jsonl",
+      ...(shouldRunVector ? ["vector_chunks.jsonl"] : []),
       "chunk_entity_mentions.jsonl",
       "chunk_relation_hints.jsonl"
     ],
@@ -1050,6 +1269,9 @@ export async function retrievePublishedContext(
       deterministicManifestFile: config.backend.deterministicManifestFile,
       ontologyFile: config.backend.ontologyFile,
       mcpChunksFile: config.backend.mcpChunksFile,
+      ...(substrate.vectorChunks.length > 0
+        ? { vectorChunksFile: config.backend.vectorChunksFile }
+        : {}),
       canonicalChunksFile: config.backend.canonicalChunksFile,
       chunkEntityMentionsFile: config.backend.chunkEntityMentionsFile,
       chunkRelationHintsFile: config.backend.chunkRelationHintsFile,

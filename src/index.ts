@@ -444,6 +444,11 @@ class McpRuntime {
                 minimum: 1,
                 maximum: 15,
                 description: "Maximum number of records used as context."
+              },
+              useVectorRecall: {
+                type: "boolean",
+                description:
+                  "When true, enables optional vector-skin recall as a secondary grounding layer after structured MCP retrieval."
               }
             },
             required: ["question"],
@@ -477,6 +482,11 @@ class McpRuntime {
                 minimum: 1,
                 maximum: 15,
                 description: "Maximum number of records used as context."
+              },
+              useVectorRecall: {
+                type: "boolean",
+                description:
+                  "When true, enables optional vector-skin recall as a secondary grounding layer after structured MCP retrieval."
               }
             },
             required: ["question"],
@@ -503,6 +513,11 @@ class McpRuntime {
                 minimum: 1,
                 maximum: 15,
                 description: "Maximum number of records selected for the prompt."
+              },
+              useVectorRecall: {
+                type: "boolean",
+                description:
+                  "When true, enables optional vector-skin recall as a secondary grounding layer after structured MCP retrieval."
               }
             },
             required: ["question"],
@@ -1208,7 +1223,10 @@ class McpRuntime {
           const question = this.getStringArg(args, "question");
           const debug = this.getOptionalBooleanArg(args, "debug");
           const topK = this.getOptionalIntegerArg(args, "topK");
-          const result = await searchManualQuestion(question, debug, topK);
+          const useVectorRecall = this.getOptionalBooleanArg(args, "useVectorRecall");
+          const result = await searchManualQuestion(question, debug, topK, {
+            vectorMode: useVectorRecall ? "prefer" : "off"
+          });
           this.sendResponse(request.id, {
             content: [{ type: "text", text: result.text }]
           });
@@ -1224,7 +1242,10 @@ class McpRuntime {
         case "inspect_sbd_toe_retrieval": {
           const question = this.getStringArg(args, "question");
           const topK = this.getOptionalIntegerArg(args, "topK");
-          const result = await inspectManualRetrieval(question, topK);
+          const useVectorRecall = this.getOptionalBooleanArg(args, "useVectorRecall");
+          const result = await inspectManualRetrieval(question, topK, {
+            vectorMode: useVectorRecall ? "prefer" : "off"
+          });
           this.sendResponse(request.id, {
             content: [{ type: "text", text: result.text }]
           });
@@ -1241,10 +1262,13 @@ class McpRuntime {
           const question = this.getStringArg(args, "question");
           const debug = this.getOptionalBooleanArg(args, "debug");
           const topK = this.getOptionalIntegerArg(args, "topK");
+          const useVectorRecall = this.getOptionalBooleanArg(args, "useVectorRecall");
 
           if (!this.supportsSampling()) {
             // Graceful fallback: delegate to searchManualQuestion (same retrieval, formatted output)
-            const fallback = await searchManualQuestion(question, debug, topK ?? 3);
+            const fallback = await searchManualQuestion(question, debug, topK ?? 3, {
+              vectorMode: useVectorRecall ? "prefer" : "off"
+            });
             const fallbackText =
               "**Note: MCP sampling not available in this client — returning formatted retrieval results. " +
               "For a synthesised answer, use `search_sbd_toe_manual` directly.**\n\n" +
@@ -1262,7 +1286,9 @@ class McpRuntime {
             return;
           }
 
-          const prepared = await prepareManualAnsweringContext(question, topK);
+          const prepared = await prepareManualAnsweringContext(question, topK, {
+            vectorMode: useVectorRecall ? "prefer" : "off"
+          });
           const sampled = await this.requestSampling(
             prepared.prompt.systemPrompt,
             prepared.prompt.userPrompt
