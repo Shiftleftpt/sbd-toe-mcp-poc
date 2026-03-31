@@ -77,6 +77,7 @@ describe("qualitative eval smoke", () => {
     expect(result.selected.every((record) => record.citationId.startsWith("M"))).toBe(true);
     expect(result.selected.every((record) => record.traceability?.sourcePath)).toBe(true);
     expect(result.consultedIndices.some((entry) => /algolia/i.test(entry))).toBe(false);
+    expect(result.consultedIndices).not.toContain("vector_chunks.jsonl");
     expect(JSON.stringify(result.backendSnapshot)).not.toContain("algolia");
   });
 
@@ -115,6 +116,48 @@ describe("qualitative eval smoke", () => {
     expect(byPhase.assignments.every((assignment) => assignment.canonical_phase === "design")).toBe(
       true
     );
+  });
+
+  it("keeps developer guidance spanning governance and training, not only coding chapters", () => {
+    const byRole = handleGetGuideByRole({ risk_level: "L2", role: "developer" });
+    const chapterIds = [...new Set(byRole.assignments.map((assignment) => assignment.chapter_id))];
+
+    expect(chapterIds).toEqual(
+      expect.arrayContaining([
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "09-containers-imagens",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ])
+    );
+  });
+
+  it("keeps governance and training chapter briefs exposing the expected evidence artifacts", () => {
+    const governance = handleGetSbdToeChapterBrief({
+      chapterId: "14-governanca-contratacao"
+    }) as { found: boolean; artifacts?: string[] };
+    const training = handleGetSbdToeChapterBrief({
+      chapterId: "13-formacao-onboarding"
+    }) as { found: boolean; artifacts?: string[] };
+    const governanceArtifacts = governance.artifacts ?? [];
+    const trainingArtifacts = training.artifacts ?? [];
+
+    expect(governance.found).toBe(true);
+    expect(training.found).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-supplier-assessment-"))).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-approval-record-"))).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-exception-record-"))).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-access-review-"))).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-sbom-"))).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-artifact-provenance-"))).toBe(true);
+    expect(governanceArtifacts.some((artifact) => artifact.startsWith("ART-pipeline-config-"))).toBe(true);
+
+    expect(trainingArtifacts.some((artifact) => artifact.startsWith("ART-onboarding-checklist-"))).toBe(true);
+    expect(trainingArtifacts.some((artifact) => artifact.startsWith("ART-quiz-result-"))).toBe(true);
+    expect(trainingArtifacts.some((artifact) => artifact.startsWith("ART-training-plan-"))).toBe(true);
   });
 
   it("keeps threat mode scoped to active bundles with explicit confidence", () => {
@@ -166,5 +209,23 @@ describe("qualitative eval smoke", () => {
     expect(signals.total).toBeGreaterThan(0);
     expect(evidencePatterns.entities[0]).toHaveProperty("maps_to_requirement_id");
     expect(signals.entities[0]).toHaveProperty("signal_id");
+  });
+
+  it("can use vector recall as explicit secondary grounding for vague provenance queries", async () => {
+    const query = "Procura passagens relacionadas com provenance e supply chain.";
+    const withoutVector = await retrievePublishedContext(query, 1);
+    const withVector = await retrievePublishedContext(query, 1, {
+      vectorMode: "prefer"
+    });
+
+    expect(withoutVector.consultedIndices).not.toContain("vector_chunks.jsonl");
+    expect(withVector.consultedIndices).toContain("vector_chunks.jsonl");
+    expect(withVector.selected[0]?.source).toBe("vector");
+    expect(withVector.selected[0]?.citationId.startsWith("V")).toBe(true);
+    expect(withVector.selected[0]?.title).toBe(withoutVector.selected[0]?.title);
+    expect((withVector.selected[0]?.excerpt.length ?? 0)).toBeGreaterThanOrEqual(
+      withoutVector.selected[0]?.excerpt.length ?? 0
+    );
+    expect(withVector.selected[0]?.excerpt.startsWith(withVector.selected[0]?.title ?? "")).toBe(true);
   });
 });

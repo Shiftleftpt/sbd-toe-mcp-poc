@@ -1,4 +1,5 @@
-export type RetrievalSource = "docs" | "entities" | "mcp";
+export type RetrievalSource = "docs" | "entities" | "mcp" | "vector";
+export type VectorRecallMode = "off" | "fallback" | "prefer";
 
 export type LooseRecord = Record<string, unknown> & {
   objectID?: string;
@@ -18,6 +19,7 @@ export interface AppConfig {
     publicationManifestFile: string;
     deterministicManifestFile: string;
     mcpChunksFile: string;
+    vectorChunksFile: string;
     canonicalChunksFile: string;
     chunkEntityMentionsFile: string;
     chunkRelationHintsFile: string;
@@ -89,6 +91,7 @@ export interface BackendCheckout {
     deterministicManifest?: string | undefined;
     bundleCatalog?: string | undefined;
     mcpChunks?: string | undefined;
+    vectorChunks?: string | undefined;
     canonicalChunks?: string | undefined;
     chunkEntityMentions?: string | undefined;
     chunkRelationHints?: string | undefined;
@@ -127,6 +130,7 @@ export interface RetrievalBundle {
     deterministicManifestFile?: string | undefined;
     ontologyFile?: string | undefined;
     mcpChunksFile?: string | undefined;
+    vectorChunksFile?: string | undefined;
     canonicalChunksFile?: string | undefined;
     chunkEntityMentionsFile?: string | undefined;
     chunkRelationHintsFile?: string | undefined;
@@ -156,6 +160,7 @@ export interface ManualToolResult {
       deterministicManifestFile?: string | undefined;
       ontologyFile?: string | undefined;
       mcpChunksFile?: string | undefined;
+      vectorChunksFile?: string | undefined;
       canonicalChunksFile?: string | undefined;
       chunkEntityMentionsFile?: string | undefined;
       chunkRelationHintsFile?: string | undefined;

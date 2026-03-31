@@ -1,7 +1,12 @@
 import { getConfig } from "../config.js";
 import { retrievePublishedContext } from "../backend/semantic-index-gateway.js";
 import { buildAnswerPrompt } from "../prompt/build-answer-prompt.js";
-import type { ManualToolResult, PromptBundle, RetrievalBundle } from "../types.js";
+import type {
+  ManualToolResult,
+  PromptBundle,
+  RetrievalBundle,
+  VectorRecallMode
+} from "../types.js";
 
 function formatRecordDebug(retrieval: RetrievalBundle): string {
   if (retrieval.retrieved.length === 0) {
@@ -96,6 +101,7 @@ function formatDebugAppendix(
     `- Deterministic manifest: ${retrieval.backendSnapshot.deterministicManifestFile ?? "n/d"}`,
     `- Ontology: ${retrieval.backendSnapshot.ontologyFile ?? "n/d"}`,
     `- MCP chunks: ${retrieval.backendSnapshot.mcpChunksFile ?? "n/d"}`,
+    `- Vector chunks: ${retrieval.backendSnapshot.vectorChunksFile ?? "n/d"}`,
     `- Canonical chunks: ${retrieval.backendSnapshot.canonicalChunksFile ?? "n/d"}`,
     `- Chunk entity mentions: ${retrieval.backendSnapshot.chunkEntityMentionsFile ?? "n/d"}`,
     `- Chunk relation hints: ${retrieval.backendSnapshot.chunkRelationHintsFile ?? "n/d"}`,
@@ -119,14 +125,15 @@ function formatDebugAppendix(
 
 export async function prepareManualAnsweringContext(
   question: string,
-  topK?: number
+  topK?: number,
+  options: { vectorMode?: VectorRecallMode } = {}
 ): Promise<{
   retrieval: RetrievalBundle;
   prompt: PromptBundle;
   retrievalText: string;
   debugText: string;
 }> {
-  const retrieval = await retrievePublishedContext(question, topK);
+  const retrieval = await retrievePublishedContext(question, topK, options);
   const prompt = buildAnswerPrompt(question, retrieval.selected);
   const retrievalText = formatContextForChat(retrieval);
   const debugText = formatDebugAppendix(question, retrieval, prompt.fullPrompt);
@@ -142,10 +149,11 @@ export async function prepareManualAnsweringContext(
 export async function searchManualQuestion(
   question: string,
   debugOverride?: boolean,
-  topK?: number
+  topK?: number,
+  options: { vectorMode?: VectorRecallMode } = {}
 ): Promise<ManualToolResult> {
   const config = getConfig();
-  const prepared = await prepareManualAnsweringContext(question, topK);
+  const prepared = await prepareManualAnsweringContext(question, topK, options);
   const text =
     debugOverride ?? config.debugMode
       ? `${prepared.retrievalText}\n\n---\n\n${prepared.debugText}`
@@ -188,9 +196,10 @@ export async function searchManualQuestion(
 
 export async function inspectManualRetrieval(
   question: string,
-  topK?: number
+  topK?: number,
+  options: { vectorMode?: VectorRecallMode } = {}
 ): Promise<ManualToolResult> {
-  const prepared = await prepareManualAnsweringContext(question, topK);
+  const prepared = await prepareManualAnsweringContext(question, topK, options);
 
   return {
     text: prepared.debugText,

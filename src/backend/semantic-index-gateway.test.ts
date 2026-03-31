@@ -248,6 +248,14 @@ describe("semantic-index-gateway.ts", () => {
       expect(intents).toEqual(["canonical_guidance", "canonical_guidance", "canonical_guidance"]);
     });
 
+    it("classifies chapter-scoped user story prompts as canonical_guidance", () => {
+      const result = classifyQueryIntent(
+        "Mostra user stories relevantes para 13-formacao-onboarding."
+      );
+
+      expect(result).toBe("canonical_guidance");
+    });
+
     it("defaults to generic for unrelated queries", () => {
       const result = classifyQueryIntent("qual é a capital de Portugal?");
 
@@ -272,6 +280,16 @@ describe("semantic-index-gateway.ts", () => {
 
     it("defaults consult for applicability-style questions", () => {
       expect(resolveSupportProfiles("what requirements apply at L2")).toContain("consult");
+    });
+
+    it("routes chapter-scoped user story prompts to guide first", () => {
+      const result = resolveSupportProfiles(
+        "Mostra user stories relevantes para 13-formacao-onboarding."
+      );
+
+      expect(result).toContain("guide");
+      expect(result).not.toContain("review");
+      expect(result).not.toContain("threats");
     });
   });
 
@@ -532,6 +550,42 @@ describe("semantic-index-gateway.ts", () => {
       expect(result.backendSnapshot.substrateVersion).toBeDefined();
       expect(result.selected[0]?.citationId.startsWith("M")).toBe(true);
       expect(result.selected[0]?.traceability).toBeDefined();
+      expect(result.consultedIndices).not.toContain("vector_chunks.jsonl");
+    });
+
+    it("prefers the explicitly requested chapter for chapter-scoped user story prompts", async () => {
+      const result = await retrievePublishedContext(
+        "Mostra user stories relevantes para 13-formacao-onboarding.",
+        3
+      );
+
+      expect(result.selected.length).toBeGreaterThan(0);
+      expect(result.selected[0]?.chapter).toBe("13-formacao-onboarding");
+      expect(
+        /user stor|us-/iu.test(`${result.selected[0]?.title ?? ""} ${result.selected[0]?.section ?? ""}`)
+      ).toBe(true);
+      expect(result.promptChapters).toContain("13-formacao-onboarding");
+      expect(
+        result.selected.some(
+          (record) =>
+            record.chapter === "13-formacao-onboarding" &&
+            /user stor|us-/iu.test(`${record.title} ${record.excerpt}`)
+        )
+      ).toBe(true);
+    });
+
+    it("can enable vector recall explicitly as a secondary grounding layer", async () => {
+      const query = "Procura passagens relacionadas com provenance e supply chain.";
+      const withoutVector = await retrievePublishedContext(query, 1);
+      const withVector = await retrievePublishedContext(query, 1, {
+        vectorMode: "prefer"
+      });
+
+      expect(withoutVector.consultedIndices).not.toContain("vector_chunks.jsonl");
+      expect(withVector.consultedIndices).toContain("vector_chunks.jsonl");
+      expect(withVector.selected[0]?.source).toBe("vector");
+      expect(withVector.selected[0]?.citationId.startsWith("V")).toBe(true);
+      expect(withVector.selected[0]?.title).toBe(withoutVector.selected[0]?.title);
     });
   });
 });
