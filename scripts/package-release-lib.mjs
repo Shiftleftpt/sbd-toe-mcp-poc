@@ -19,17 +19,78 @@ const execFileAsync = promisify(execFile);
 export const PROJECT_NAME = "sbd-toe-mcp";
 
 export const REQUIRED_PUBLISH_FILES = [
-  "data/publish/algolia_docs_records.json",
-  "data/publish/algolia_entities_records.json",
-  "data/publish/algolia_docs_records_enriched.json",
-  "data/publish/algolia_entities_records_enriched.json",
-  "data/publish/algolia_index_settings.json",
+  "data/publish/sbdtoe-ontology.yaml",
+  "data/publish/sbd-toe-index-compact.json",
+  "data/publish/indexes/publication_manifest.json",
+  "data/publish/indexes/bundle_catalog.jsonl",
+  "data/publish/indexes/mcp_chunks.jsonl",
+  "data/publish/indexes/canonical_chunks.jsonl",
+  "data/publish/indexes/chunk_entity_mentions.jsonl",
+  "data/publish/indexes/chunk_relation_hints.jsonl",
+  "data/publish/runtime/deterministic_manifest.json",
+  "data/publish/runtime/requirements.json",
+  "data/publish/runtime/controls.json",
+  "data/publish/runtime/practices.json",
+  "data/publish/runtime/assignments.json",
+  "data/publish/runtime/user_stories.json",
+  "data/publish/runtime/roles.json",
+  "data/publish/runtime/phases.json",
+  "data/publish/runtime/artifacts.json",
+  "data/publish/runtime/artifact_requirements.json",
+  "data/publish/runtime/threats.json",
+  "data/publish/runtime/evidence_patterns.json",
+  "data/publish/runtime/requirement_control_links.json",
+  "data/publish/runtime/signals.json",
+  "data/publish/runtime/signal_evidence_links.json",
+  "data/publish/runtime/antipatterns.json",
+  "data/publish/runtime/antipattern_requirement_links.json",
+  "data/publish/runtime/antipattern_threat_links.json",
   "data/reports/run_manifest.json"
 ];
 
 export const REQUIRED_BUNDLE_ENTRIES = [
   { kind: "dir", src: "dist", dest: "dist" },
-  { kind: "dir", src: "data/publish", dest: "data/publish" },
+  {
+    kind: "file",
+    src: "data/publish/sbdtoe-ontology.yaml",
+    dest: "data/publish/sbdtoe-ontology.yaml"
+  },
+  {
+    kind: "file",
+    src: "data/publish/sbd-toe-index-compact.json",
+    dest: "data/publish/sbd-toe-index-compact.json"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/publication_manifest.json",
+    dest: "data/publish/indexes/publication_manifest.json"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/bundle_catalog.jsonl",
+    dest: "data/publish/indexes/bundle_catalog.jsonl"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/mcp_chunks.jsonl",
+    dest: "data/publish/indexes/mcp_chunks.jsonl"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/canonical_chunks.jsonl",
+    dest: "data/publish/indexes/canonical_chunks.jsonl"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/chunk_entity_mentions.jsonl",
+    dest: "data/publish/indexes/chunk_entity_mentions.jsonl"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/chunk_relation_hints.jsonl",
+    dest: "data/publish/indexes/chunk_relation_hints.jsonl"
+  },
+  { kind: "dir", src: "data/publish/runtime", dest: "data/publish/runtime" },
   {
     kind: "file",
     src: "data/reports/run_manifest.json",

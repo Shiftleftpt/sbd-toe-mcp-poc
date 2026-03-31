@@ -102,5 +102,8 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Check npm package contents
+        run: npm run check:npm-package
+
       - name: Package release bundle smoke test
         run: npm run package:release -- --version v0.0.0-ci
