@@ -1,0 +1,317 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 9,
+  "entity_type": "SignalEvidenceLink",
+  "items": [
+    {
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:checklist-completo|supports_evidence|ART-onboarding-checklist-3f28bb1e95",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "checklist",
+      "score_components": {
+        "bundle_overlap": [
+          "13-formacao-onboarding"
+        ],
+        "shared_salient_tokens": [
+          "checklist"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:checklist-completo",
+      "source_label": "Checklist Completo",
+      "source_type": "Signal",
+      "target_category": "evidence",
+      "target_id": "ART-onboarding-checklist-3f28bb1e95",
+      "target_label": "Onboarding Checklist",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:checklist-completo|supports_evidence|ART-review-checklist-de29054201",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "checklist",
+      "score_components": {
+        "bundle_overlap": [
+          "13-formacao-onboarding"
+        ],
+        "shared_salient_tokens": [
+          "checklist"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:checklist-completo",
+      "source_label": "Checklist Completo",
+      "source_type": "Signal",
+      "target_category": "evidence",
+      "target_id": "ART-review-checklist-de29054201",
+      "target_label": "Review Checklist",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:kpis-consolidados|supports_evidence|ART-governance-kpi-a03cc67a9e",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "kpi",
+      "score_components": {
+        "bundle_overlap": [
+          "14-governanca-contratacao"
+        ],
+        "shared_salient_tokens": [
+          "kpi"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:kpis-consolidados",
+      "source_label": "KPIs consolidados",
+      "source_type": "Signal",
+      "target_category": "operational_record",
+      "target_id": "ART-governance-kpi-a03cc67a9e",
+      "target_label": "Governance Kpi",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:kpis-de-formacao|supports_evidence|ART-governance-kpi-a03cc67a9e",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "kpi",
+      "score_components": {
+        "bundle_overlap": [
+          "13-formacao-onboarding"
+        ],
+        "shared_salient_tokens": [
+          "kpi"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:kpis-de-formacao",
+      "source_label": "KPIs de Formação",
+      "source_type": "Signal",
+      "target_category": "operational_record",
+      "target_id": "ART-governance-kpi-a03cc67a9e",
+      "target_label": "Governance Kpi",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:kpis-de-formacao|supports_evidence|ART-training-plan-e44b3c44f1",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "formacao",
+      "score_components": {
+        "bundle_overlap": [
+          "13-formacao-onboarding"
+        ],
+        "shared_salient_tokens": [
+          "formacao"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:kpis-de-formacao",
+      "source_label": "KPIs de Formação",
+      "source_type": "Signal",
+      "target_category": "evidence",
+      "target_id": "ART-training-plan-e44b3c44f1",
+      "target_label": "Training Plan",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:kpis-de-governacao|supports_evidence|ART-governance-kpi-a03cc67a9e",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "kpi",
+      "score_components": {
+        "bundle_overlap": [
+          "14-governanca-contratacao"
+        ],
+        "shared_salient_tokens": [
+          "kpi"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:kpis-de-governacao",
+      "source_label": "KPIs de governação",
+      "source_type": "Signal",
+      "target_category": "operational_record",
+      "target_id": "ART-governance-kpi-a03cc67a9e",
+      "target_label": "Governance Kpi",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "confidence": 0.98,
+      "evidence_unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:logs|supports_evidence|ART-log-stream-b67ee06f7e",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "logs",
+      "score_components": {
+        "bundle_overlap": [
+          "12-monitorizacao-operacoes"
+        ],
+        "shared_salient_tokens": [
+          "log"
+        ],
+        "token_similarity": 1.0
+      },
+      "source_id": "sem:signal:logs",
+      "source_label": "Logs",
+      "source_type": "Signal",
+      "target_category": "operational_record",
+      "target_id": "ART-log-stream-b67ee06f7e",
+      "target_label": "Log Stream",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:metricas-mttd-mttr|supports_evidence|ART-governance-kpi-a03cc67a9e",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "metricas",
+      "score_components": {
+        "bundle_overlap": [
+          "12-monitorizacao-operacoes"
+        ],
+        "shared_salient_tokens": [
+          "metrica"
+        ],
+        "token_similarity": 0.5
+      },
+      "source_id": "sem:signal:metricas-mttd-mttr",
+      "source_label": "Métricas MTTD/MTTR",
+      "source_type": "Signal",
+      "target_category": "operational_record",
+      "target_id": "ART-governance-kpi-a03cc67a9e",
+      "target_label": "Governance Kpi",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    },
+    {
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "confidence": 0.66,
+      "evidence_unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding"
+      ],
+      "link_id": "sem:signal:registo-e-aprovacao-de-excecoes|supports_evidence|ART-approval-record-6fe32eb803",
+      "link_type": "supports_evidence",
+      "matched_artifact_field": "alias",
+      "matched_artifact_text": "registo de aprovacao",
+      "score_components": {
+        "bundle_overlap": [
+          "14-governanca-contratacao"
+        ],
+        "shared_salient_tokens": [
+          "aprovacao"
+        ],
+        "token_similarity": 0.6667
+      },
+      "source_id": "sem:signal:registo-e-aprovacao-de-excecoes",
+      "source_label": "registo e aprovação de exceções",
+      "source_type": "Signal",
+      "target_category": "governance_record",
+      "target_id": "ART-approval-record-6fe32eb803",
+      "target_label": "Approval Record",
+      "target_source_basis": "artifact_catalog_fallback",
+      "target_type": "Artifact"
+    }
+  ],
+  "profiles": [
+    "review"
+  ],
+  "source_artifact": "data/publish/semantic/signal_evidence_links.jsonl"
+}

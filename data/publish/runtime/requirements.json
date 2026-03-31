@@ -1,0 +1,4008 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 235,
+  "entity_type": "Requirement",
+  "items": [
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Perfis e permissões mapeados; role com privilégio reduzido não acede a recursos restritos.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Controlo de acesso RBAC",
+      "requirement_id": "ACC-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Contas sem permissões desnecessárias; auditoria evidencia restrição efectiva.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Princípio do menor privilégio",
+      "requirement_id": "ACC-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Tentativas de acesso não autorizado são bloqueadas e registadas com contexto suficiente.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Bloqueio e auditoria de acessos ilegítimos",
+      "requirement_id": "ACC-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Perfis de utilizador, administrador e serviço são distintos; acções de cada perfil são rastreáveis.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Separação de perfis",
+      "requirement_id": "ACC-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Endpoints rejeitam chamadas não autenticadas ou não autorizadas; logs registam rejeições.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Controlo de acesso a APIs e serviços",
+      "requirement_id": "ACC-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Acesso não autorizado a dados críticos é impedido e registado; teste de bypasse falha.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Protecção de recursos sensíveis",
+      "requirement_id": "ACC-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Modelo de permissões revisto e documentado; ameaças de controlo de acesso mapeadas.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação do modelo de acesso",
+      "requirement_id": "ACC-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Remoção de acesso reflecte-se imediatamente; teste de permissão falha após revogação.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revogação em tempo real",
+      "requirement_id": "ACC-008",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Decisão de acesso depende de atributos dinâmicos; logs evidenciam avaliação de política.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Autorização baseada em atributos (ABAC)",
+      "requirement_id": "ACC-009",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ACC",
+      "description": "Auditorias periódicas removem permissões obsoletas; registos de revisão mantidos e datados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revisão periódica de permissões",
+      "requirement_id": "ACC-010",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Endpoints rejeitam chamadas sem autenticação/autorização válida; chamadas anónimas falham.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Autenticação e autorização de chamadas API",
+      "requirement_id": "API-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Endpoints de debug ou legacy não expostos em produção; apenas em ambientes de teste controlados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Endpoints desnecessários removidos ou ocultos",
+      "requirement_id": "API-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Inputs malformados são rejeitados; logs registam tentativa com contexto mínimo.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação de input em APIs",
+      "requirement_id": "API-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Limite configurado e activo; chamadas excessivas resultam em 429 ou bloqueio temporário.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Rate limiting e detecção de abusos",
+      "requirement_id": "API-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Canal TLS obrigatório; certificados válidos; cabeçalhos de segurança (HSTS, etc.) activos.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Protecção por TLS e certificados actualizados",
+      "requirement_id": "API-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Dependências e versões documentadas em SBOM; auditoria de licenças e vulnerabilidades conhecidas.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Verificação de SDKs e wrappers utilizados",
+      "requirement_id": "API-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "API",
+      "description": "Chamadas externas registadas com dados essenciais (origem, destino, resultado, timestamp).",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Logging e auditoria de chamadas externas",
+      "requirement_id": "API-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Diagrama com zonas de confiança delimitadas, identificadas e justificadas; versionado em repositório; revisto na última revisão de arquitectura.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Zonas de confiança identificadas e documentadas",
+      "requirement_id": "ARC-001",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Inventário de componentes expostos externamente; cada exposição acompanhada de justificação técnica e controlo associado (gateway, proxy, WAF, ACL).",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Exposição externa minimizada e justificada",
+      "requirement_id": "ARC-002",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Registo formal de revisão (ata, checklist ou relatório AppSec) com data, participantes e decisões; proporcional ao nível de risco da aplicação.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Revisão de arquitectura com foco em segurança",
+      "requirement_id": "ARC-003",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "ADR (Architecture Decision Record) ou equivalente para cada decisão estrutural significativa; campos: responsável, data, alternativas consideradas e justificação.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Decisões de arquitectura documentadas",
+      "requirement_id": "ARC-004",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Resultado de threat modeling disponível com ameaças identificadas, fluxos de dados críticos cobertos e mitigações registadas; ligado ao diagrama de arquitectura.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Threat modeling integrado nos fluxos críticos",
+      "requirement_id": "ARC-005",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Evidência de isolamento activo entre domínios sensíveis: políticas de rede, firewalls lógicos ou segmentação de APIs; testável e auditável.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Controlos técnicos de isolamento entre domínios sensíveis",
+      "requirement_id": "ARC-006",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Repositório de padrões aprovados com data de última revisão; evidência de uso de padrão aprovado registada em revisão de arquitectura.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Padrões de arquitectura reutilizáveis e aprovados",
+      "requirement_id": "ARC-007",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Diagrama de fluxo de dados (DFD) com controlos explícitos em cada fronteira de confiança; actualizado e versionado.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Fluxos de dados entre zonas de confiança protegidos",
+      "requirement_id": "ARC-008",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Processo documentado que define o limiar de \"alteração significativa\"; evidência de revisão executada após a última alteração que atingiu esse limiar.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Alterações significativas desencadeiam nova revisão",
+      "requirement_id": "ARC-009",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Diagrama no repositório com histórico de versões; acessível às equipas relevantes; revisto pelo menos anualmente ou por release significativo.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Diagramas de arquitectura versionados e acessíveis",
+      "requirement_id": "ARC-010",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Evidência de segregação de rede, permissões e identidade entre dev, staging e prod; documentada e verificável.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Segmentação lógica e física entre ambientes",
+      "requirement_id": "ARC-011",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Checklist formal de aprovação preenchido e assinado por responsável de segurança; registo de aprovação anterior ao deploy em produção.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Critérios formais de aprovação para aplicações de risco elevado",
+      "requirement_id": "ARC-012",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "ARC",
+      "description": "Job de CI com output de validação de topologia (ex: Cartography, diagramas-como-código, checkov para topologia); logs de execução disponíveis.",
+      "domain": "architecture",
+      "evidence_types": [],
+      "name": "Validação automática de topologia em CI/CD ou como código",
+      "requirement_id": "ARC-013",
+      "source_bundle": "04-arquitetura-segura",
+      "source_chapter": 4,
+      "source_file": "04-arquitetura-segura/addon/01-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Login sem segundo factor é rejeitado; evidência de bloqueio em logs.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "MFA obrigatório",
+      "requirement_id": "AUT-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Sistema rejeita passwords que não cumpram a política; bloqueio evidenciado em teste.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Política de passwords",
+      "requirement_id": "AUT-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Conta bloqueada ou acesso atrasado após N tentativas falhadas; logs evidenciam o evento.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Protecção contra brute force",
+      "requirement_id": "AUT-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Logout invalida token/sessão imediatamente; reutilização resulta em erro autenticado.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revogação activa de sessões",
+      "requirement_id": "AUT-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Sessão termina após período de inactividade configurado; redirect para autenticação.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Expiração automática de sessão",
+      "requirement_id": "AUT-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Auditoria confirma hashing com salt; ausência de credenciais em claro em armazenamento e transmissão.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Proibição de credenciais em claro",
+      "requirement_id": "AUT-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Fluxo SAML/OIDC funcional e testado; log de autenticação via IdP externo disponível.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Suporte a autenticação federada",
+      "requirement_id": "AUT-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Operações críticas requerem factor adicional; teste evidencia bloqueio sem step-up.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Step-up para acções sensíveis",
+      "requirement_id": "AUT-008",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Alterações de credenciais ou dados sensíveis exigem confirmação da identidade activa.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Reautenticação para alterações críticas",
+      "requirement_id": "AUT-009",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "AUT",
+      "description": "Acessos anómalos geram alerta ou notificação ao utilizador; log do evento disponível.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Alerta de acessos suspeitos",
+      "requirement_id": "AUT-010",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Parâmetros de debug, trace e dev_mode desligados em produção; verificação automática no pipeline.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Debug e flags desactivados em produção",
+      "requirement_id": "CFG-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Deploys e testes apenas em ambientes segregados; logs evidenciam segregação efectiva.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Separação de ambientes com validação automática",
+      "requirement_id": "CFG-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Código fonte não contém segredos nem parâmetros sensíveis em claro; scan automatizado confirma.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Ausência de parâmetros hardcoded",
+      "requirement_id": "CFG-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Configuração é externa ao código; permissões de acesso ao repositório de configuração são restritivas.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Configuração externa com permissões controladas",
+      "requirement_id": "CFG-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Sistema falha arranque quando parâmetros obrigatórios estão em falta ou incorrectos; erro explícito.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação de configuração no arranque",
+      "requirement_id": "CFG-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Segredos existem apenas em cofres seguros; auditoria evidencia ausência de segredos no repositório.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Uso de cofres e gestão segura de segredos",
+      "requirement_id": "CFG-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "CFG",
+      "description": "Alterações inesperadas em configuração crítica disparam alertas; baseline documentada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Monitorização de drift de configuração",
+      "requirement_id": "CFG-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Definição de pipeline em ficheiros versionados no repositório (YAML, HCL, etc.); alterações sujeitas a pull request com revisão; sem pipelines geridos manualmente fora do controlo de versão.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Pipelines como código, versionados e sujeitos a revisão",
+      "requirement_id": "CIC-001",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Execuções desencadeadas apenas por eventos de fontes autorizadas (branches protegidos, tags assinadas, merges aprovados); execuções originadas em forks externos desactivadas ou mediadas por aprovação manual.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Triggers controlados e restritos a fontes autorizadas",
+      "requirement_id": "CIC-002",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Segredos injectados via cofre ou variáveis de ambiente protegidas pela plataforma; ausência de segredos em YAML de pipeline, logs ou ficheiros versionados; mascaramento de valores sensíveis activo nos logs.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Gestão segura de segredos no pipeline",
+      "requirement_id": "CIC-003",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Etapas de validação de segurança (SAST, SCA, lint, secrets scan) configuradas como bloqueantes; promoção de artefactos entre ambientes requer aprovação humana explícita para acções irreversíveis; sem bypass automatizado.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Gates de segurança obrigatórios antes de promoção entre ambientes",
+      "requirement_id": "CIC-004",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Cada execução identificável por ID único; logs retidos pelo período definido em política; possível reconstruir o que correu, quando, com que inputs, com que resultado e quem aprovou.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Rastreabilidade completa de cada execução de pipeline",
+      "requirement_id": "CIC-005",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Runners sem acesso directo a dados ou credenciais de produção; execução em ambientes efémeros ou isolados; sem partilha de estado persistente entre jobs de repositórios distintos.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Isolamento de runners e ambientes de execução",
+      "requirement_id": "CIC-006",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Artefactos assinados digitalmente ou com hash verificável gerado no momento do build; proveniência (commit SHA, pipeline run ID, build environment) associada ao artefacto e verificável antes de promoção.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Integridade e proveniência verificável dos artefactos produzidos",
+      "requirement_id": "CIC-007",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Jobs distintos para as fases de build, test e deploy; sem permissões cruzadas desnecessárias entre stages; identidade e âmbito de credenciais por stage documentados e enforced.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Separação de responsabilidades entre build, test e deploy",
+      "requirement_id": "CIC-008",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Tokens e credenciais usados pelo pipeline com âmbito mínimo necessário; rotação periódica definida e evidenciada; sem credenciais partilhadas entre pipelines de aplicações distintas.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Credenciais do pipeline com âmbito mínimo e rotação definida",
+      "requirement_id": "CIC-009",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "CIC",
+      "description": "Runners com isolamento forte (containers efémeros, VMs descartáveis); sem acesso ao Docker socket por jobs não privilegiados; sem capacidades de escalonamento de privilégios; logs de tentativas bloqueadas disponíveis.",
+      "domain": "cicd",
+      "evidence_types": [],
+      "name": "Protecção contra execução de código não autorizado em runners",
+      "requirement_id": "CIC-010",
+      "source_bundle": "07-cicd-seguro",
+      "source_chapter": 7,
+      "source_file": "07-cicd-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "Cada aplicação tem classificação de criticidade formalizada segundo os eixos de exposição, sensibilidade de dados e impacto de incidente; a classificação está documentada, aprovada pelo owner de segurança e registada em inventário ou ferramenta GRC; é utilizada como entrada directa para selecção de controlos e gates de pipeline.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Classificação formal segundo o modelo de eixos de risco",
+      "requirement_id": "CLA-001",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "A classificação de cada aplicação é aprovada pela entidade proporcional ao risco: L1 pelo tech lead ou equivalente, L2 pelo AppSec referente da equipa, L3 pelo CISO ou equivalente; a aprovação é documentada, datada e rastreável ao responsável.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Aprovação proporcional ao nível de risco atribuído",
+      "requirement_id": "CLA-002",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "O nível de classificação determina o conjunto de controlos base obrigatórios — incluindo gates de CI/CD, requisitos de testes, frequência de revisões e obrigações de monitorização; a activação dos controlos é verificável por rastreabilidade entre a classificação e o pipeline ou backlog actuais.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Activação de controlos base determinada pela classificação",
+      "requirement_id": "CLA-003",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "Existem critérios explícitos de reclassificação documentados: novos fluxos de dados sensíveis, integração com sistemas de maior criticidade, exposição a novos contextos regulatórios, incidente de segurança relevante ou mudança de modelo de ameaça; cada critério tem trigger de revisão associado.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Critérios de reclassificação documentados e monitorizados",
+      "requirement_id": "CLA-004",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "Aplicações L1 revistas anualmente, L2 semestralmente, L3 trimestralmente; cada revisão produz evidência rastreável com data, revisor e conclusão; em caso de manutenção da classificação, a justificação é documentada; revisão em atraso é tratada como não conformidade activa.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Ciclo periódico de revisão de classificação diferenciado por nível",
+      "requirement_id": "CLA-005",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "Após mudança significativa — nova integração crítica, alteração de exposição, incidente de segurança ou alteração regulatória relevante — a classificação é reavaliada no prazo máximo de 30 dias; a reavaliação é rastreável ao evento que a desencadeou e ao responsável que a conduziu.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Reavaliação de classificação após evento de mudança significativa",
+      "requirement_id": "CLA-006",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "Quando a classificação resulta em controlos parcialmente aplicados (desvio aceite), o risco residual é documentado com compensação explícita, owner da excepção, prazo de resolução e data de expiração; excepção expirada sem renovação é tratada como não conformidade activa e reportada ao owner de segurança.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Risco residual com compensação formalizada, owner e TTL",
+      "requirement_id": "CLA-007",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CLA",
+      "description": "Existe inventário central ou GRC com registo de cada aplicação, incluindo nível de classificação actual, data de última revisão, owner de segurança e estado de conformidade; o inventário é actualizado após cada alteração de classificação ou transferência de responsabilidade; acessível para auditoria sem preparação manual.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Inventário de aplicações actualizado e acessível para auditoria",
+      "requirement_id": "CLA-008",
+      "source_bundle": "01-classificacao-aplicacoes",
+      "source_chapter": 1,
+      "source_file": "01-classificacao-aplicacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Imagens base provenientes de lista de origens aprovadas e mantida; imagens de origem não aprovada rejeitadas em pipeline ou por admission control; decisão de selecção documentada com justificação técnica.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Imagens base de origem confiável e aprovada",
+      "requirement_id": "CNT-001",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Scanner de containers activo em pipeline (ex: Trivy, Grype); CVEs de severidade crítica bloqueiam a promoção da imagem; relatório de scan disponível e ligado ao build.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Scanning de vulnerabilidades em imagens no CI/CD",
+      "requirement_id": "CNT-002",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Ausência de binários interactivos (curl, bash, wget, ping) não justificados; imagem distroless, scratch ou alpine como base sempre que possível; verificável por análise de layers do artefacto.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Imagens minimalistas - ausência de componentes não necessários",
+      "requirement_id": "CNT-003",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Directiva USER com utilizador não-root no Dockerfile ou equivalente; política de admission que rejeita containers a executar como root; evidência de enforcement activo.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Execução como utilizador não-root",
+      "requirement_id": "CNT-004",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "readOnlyRootFilesystem: true ou equivalente configurado; volumes com permissão de escrita limitados ao estritamente necessário e explicitamente declarados; verificável por inspecção de configuração.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Sistema de ficheiros em modo de leitura em runtime",
+      "requirement_id": "CNT-005",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "drop: ALL como padrão com capabilities adicionadas explicitamente e justificadas; seccomp profile activo (runtime default ou personalizado); ausência de --privileged ou hostPID/hostNetwork não justificados.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Restrição de capabilities do kernel e perfis de syscall",
+      "requirement_id": "CNT-006",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Imagens assinadas (ex: Sigstore/Cosign, Notary v2) antes de publicação em registry; verificação de assinatura enforced por admission controller antes de deploy; imagens sem assinatura válida rejeitadas.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Assinatura e verificação de proveniência de imagens",
+      "requirement_id": "CNT-007",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "SBOM gerado e anexado a cada imagem publicada no registry; formato CycloneDX ou SPDX; acessível para auditoria e resposta a incidentes sem necessidade de rebuild.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "SBOM por imagem publicada",
+      "requirement_id": "CNT-008",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Admission controller activo (OPA/Gatekeeper, Kyverno ou equivalente); políticas que bloqueiam containers privilegiados, sem user definido, com host networking ou volumes sensíveis não autorizados; logs de admissão e rejeição disponíveis.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Políticas de admission control activas",
+      "requirement_id": "CNT-009",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Rebuild periódico ou trigger automático por actualização da imagem base para incorporar patches de segurança; imagens com mais de X dias sem rebuild sinalizadas; política de renovação definida, documentada e cumprida.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Renovação periódica de imagens base",
+      "requirement_id": "CNT-010",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Push e pull requerem autenticação; logs de acesso retidos pelo período definido; publicação em registries públicos requer aprovação explícita; credenciais de registry com âmbito mínimo e rotação definida.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Acesso ao registry com autenticação e rastreabilidade",
+      "requirement_id": "CNT-011",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "CNT",
+      "description": "Network policies activas por namespace; sem acesso inter-namespace por omissão; workloads críticos em namespaces dedicados com políticas de rede explícitas; evidência de enforcement activo.",
+      "domain": "containers-and-images",
+      "evidence_types": [],
+      "name": "Isolamento de namespace e políticas de rede em Kubernetes",
+      "requirement_id": "CNT-012",
+      "source_bundle": "09-containers-imagens",
+      "source_chapter": 9,
+      "source_file": "09-containers-imagens/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "SBOM presente e acessível para cada build, em formato CycloneDX ou SPDX; inclui dependências directas e transitivas; artefacto versionado e ligado ao build que o gerou.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "SBOM gerado por build, em formato standardizado",
+      "requirement_id": "DEP-001",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Scanner SCA activo no CI/CD; política de severidade documentada; CVEs de severidade crítica ou elevada bloqueiam a promoção; relatório de scan disponível por execução.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "SCA integrado em pipeline com bloqueio por política de severidade",
+      "requirement_id": "DEP-002",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Lockfile presente, versionado e actualizado; ausência de referências sem versão (*, latest, ranges não limitados); integridade verificável por hash (ex: integrity field em npm, --hash em pip).",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Versões de dependências fixas e auditáveis",
+      "requirement_id": "DEP-003",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Ausência de bibliotecas de terceiros copiadas directamente para o repositório fora do package manager; verificável por scan de estrutura; processo documentado que o proíbe explicitamente.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Proibição de dependências introduzidas por cópia manual",
+      "requirement_id": "DEP-004",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Lista de registries e repositórios permitidos definida e enforced; downloads de fontes não aprovadas bloqueados em pipeline ou por política de rede; evidência de enforcement activo.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Registries e repositórios de origem controlados",
+      "requirement_id": "DEP-005",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Processo documentado de aprovação de novas bibliotecas com critérios mínimos: actividade de manutenção, licença compatível, ausência de CVEs activos, popularidade verificada; registo de aprovação disponível por dependência.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Aprovação formal para introdução de novas dependências",
+      "requirement_id": "DEP-006",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "SLA de actualização definido por nível de severidade de CVE (ex: crítico ≤ 48h, elevado ≤ 7 dias, médio ≤ 30 dias); evidência de cumprimento nos ciclos mais recentes; excepções formalizadas quando aplicável.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Política de actualização com SLA definido por severidade",
+      "requirement_id": "DEP-007",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Bot de actualização activo (ex: Dependabot, Renovate); PRs gerados automaticamente com informação de impacto semver, changelogs e testes; intervenção humana obrigatória para breaking changes; PRs não integrados automaticamente sem revisão.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Actualização automatizada com análise de impacto",
+      "requirement_id": "DEP-008",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Processo definido para detectar dependências introduzidas via tooling, geração de código, pipelines ou runtime loading; fronteiras de inventário documentadas; desvios detectados e tratados.",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Detecção de dependências não-intencionais ou emergentes",
+      "requirement_id": "DEP-009",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEP",
+      "description": "Evidência rastreável desde o componente identificado no SBOM até à CVE associada e à acção tomada (PR de correcção, actualização de versão ou excepção formalizada com justificação e data de revisão).",
+      "domain": "dependencies-sbom-sca",
+      "evidence_types": [],
+      "name": "Rastreabilidade SBOM → vulnerabilidade → correcção",
+      "requirement_id": "DEP-010",
+      "source_bundle": "05-dependencias-sbom-sca",
+      "source_chapter": 5,
+      "source_file": "05-dependencias-sbom-sca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Guidelines por linguagem/stack publicadas em repositório versionado; aprovação formal por Gestor Técnico e AppSec documentada; data de última revisão disponível e dentro do período de validade.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Guidelines de código seguro versionadas e aprovadas por stack",
+      "requirement_id": "DEV-001",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Linter com regras de segurança activo localmente e em pipeline; ruleset versionado no repositório do projecto; tailoring documentado e aprovado; violações de padrões críticos bloqueiam commit ou merge.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Linters e rulesets de segurança configurados e enforced",
+      "requirement_id": "DEV-002",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Scanner SAST activo em cada PR ou commit; findings de severidade alta ou crítica bloqueam merge; perfil de regras versionado; baseline de falsos positivos documentada e aprovada por AppSec.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Análise estática (SAST) integrada como gate de integração",
+      "requirement_id": "DEV-003",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "PRs com alterações em componentes de segurança, autenticação, autorização ou dados sensíveis sujeitos a revisão com checklist formal; evidência de checklist preenchido disponível por PR.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Revisão de código com checklist de segurança em componentes críticos",
+      "requirement_id": "DEV-004",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Excepções documentadas com: justificação técnica, mitigação definida, aprovação explícita por papel autorizado e prazo de validade; registo de excepções activas revisto periodicamente e disponível para auditoria.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Gestão formal de excepções técnicas e desvios a guidelines",
+      "requirement_id": "DEV-005",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Código de origem externa (reutilizado, adaptado, gerado por ferramentas de IA) identificado antes de incorporação; política de proveniência documentada; evidência de revisão humana por PR para código de proveniência não interna.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Proveniência do código incorporado identificada e controlada",
+      "requirement_id": "DEV-006",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Política de uso de ferramentas de IA generativa no desenvolvimento documentada, versionada e comunicada à equipa; constrangimentos técnicos (âmbito, validação, aprovação) definidos e verificáveis; sem incorporação automática de sugestões sem revisão explícita.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Constrangimentos técnicos explícitos para código gerado por IA",
+      "requirement_id": "DEV-007",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Perfis de qualidade (ex: SonarQube Quality Gates) com thresholds mínimos definidos por nível de risco; desvios bloqueam pipeline ou requerem aprovação explícita documentada; perfis versionados.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Perfis de qualidade com thresholds mínimos de segurança por nível de risco",
+      "requirement_id": "DEV-008",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "DEV",
+      "description": "Decisões de segurança relevantes e excepções anotadas no código com referência rastreável ao requisito canónico ou decisão documentada (ex: // SEC-L3-VAL-SQLI, @sec:exception:DEV-005); possível auditar a ligação entre código e requisito sem contexto externo.",
+      "domain": "secure-development",
+      "evidence_types": [],
+      "name": "Anotações de segurança rastreáveis no código e nos testes",
+      "requirement_id": "DEV-009",
+      "source_bundle": "06-desenvolvimento-seguro",
+      "source_chapter": 6,
+      "source_file": "06-desenvolvimento-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Deploy em produção requer aprovação explícita de papel autorizado; aprovação registada com timestamp e identidade do aprovador; sem promoção automática para produção sem gate de aprovação humana.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Aprovação formal obrigatória antes de deploy em produção",
+      "requirement_id": "DPL-001",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Artefactos promovidos a produção com assinatura digital ou hash verificado no momento do deploy; proveniência rastreável (commit SHA, pipeline run ID); artefactos sem proveniência verificável rejeitados automaticamente.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Promoção apenas de artefactos com proveniência verificada",
+      "requirement_id": "DPL-002",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Gates que verificam ausência de CVEs críticos, testes de segurança passados e ausência de segredos detectados executam antes de cada promoção; falha em qualquer gate bloqueia deploy; evidência de execução disponível por deploy.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Gates automáticos de segurança como condição de promoção",
+      "requirement_id": "DPL-003",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Cada deploy identificável por ID único com registo de: quem aprovou, o que foi deployed (artefacto + commit SHA), quando, para que ambiente e que gates foram executados; rastreabilidade a partir de incidente até ao commit original.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Rastreabilidade end-to-end de cada deploy",
+      "requirement_id": "DPL-004",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Procedimento de rollback definido, documentado e testado periodicamente (pelo menos uma vez por ciclo de release ou anualmente); tempo máximo de rollback definido e verificado em teste; último teste de rollback com data registada.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Rollback configurado, testado e com SLA definido",
+      "requirement_id": "DPL-005",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Credenciais usadas no deploy com âmbito limitado ao necessário e duração mínima (tokens de curta duração preferidos a credenciais permanentes); sem credenciais de deploy partilhadas entre aplicações; logs de uso de credenciais disponíveis.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Credenciais de deploy com âmbito mínimo e vida curta",
+      "requirement_id": "DPL-006",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Ambiente de staging com validação funcional e de segurança antes de promoção; critérios de aceitação de staging documentados e evidenciados; staging suficientemente representativo de produção para os fins de validação.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Validação em staging antes de promoção a produção",
+      "requirement_id": "DPL-007",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Métricas de saúde e alertas activos durante a janela de deploy e no período de observação pós-deploy; período de observação definido por nível de risco; anomalias nesse período disparam rollback automático ou alerta urgente com SLA de resposta.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Monitorização activa durante e após deploy",
+      "requirement_id": "DPL-008",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "DPL",
+      "description": "Deploy progressivo implementado para releases de componentes críticos (canary, blue-green, feature flags); thresholds de promoção automática e critérios de rollback definidos; capacidade de contenção sem rollback completo verificável.",
+      "domain": "secure-deploy",
+      "evidence_types": [],
+      "name": "Deploy progressivo com contenção de impacto para aplicações críticas",
+      "requirement_id": "DPL-009",
+      "source_bundle": "11-deploy-seguro",
+      "source_chapter": 11,
+      "source_file": "11-deploy-seguro/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "Autenticação obrigatória e logs activos para acesso a repositórios de artefactos.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Repositórios autenticados e auditáveis",
+      "requirement_id": "DST-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "Publicação em registry público requer aprovação e documentação formal do processo.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Aprovação para publicação pública",
+      "requirement_id": "DST-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "Artefactos assinados ou validados por hash antes de publicação; verificação automatizada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Assinatura digital ou checksum",
+      "requirement_id": "DST-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "SBOM gerado e anexado a cada release; rastreabilidade de dependências disponível.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Inclusão de SBOM nos artefactos",
+      "requirement_id": "DST-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "Apenas utilizadores e automações autorizados acedem a artefactos de produção.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Acesso segregado por role e ambiente",
+      "requirement_id": "DST-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "Artefactos só deployados por pipeline controlado e auditado; sem deploy manual em produção.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Deploy apenas via pipeline validado",
+      "requirement_id": "DST-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "DST",
+      "description": "Versões comprometidas são removidas prontamente; utilizadores e dependentes notificados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revogação e limpeza de artefactos comprometidos",
+      "requirement_id": "DST-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Toda a comunicação entre cliente e servidor e entre serviços internos usa TLS com versão mínima definida; versões inseguras (TLS 1.0, 1.1, SSLv3) desactivadas e verificáveis por configuração.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Encriptação de todas as comunicações em trânsito",
+      "requirement_id": "ENC-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Dados classificados como sensíveis (PII, credenciais, dados financeiros) encriptados em armazenamento persistente; chaves de encriptação geridas separadamente dos dados; evidência de aplicação a todos os datastores relevantes.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Encriptação de dados sensíveis em repouso",
+      "requirement_id": "ENC-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Apenas algoritmos aprovados e tamanhos de chave adequados em uso (ex: AES-256, RSA ≥ 2048, curvas elípticas aprovadas); algoritmos fracos ou deprecados (MD5, SHA-1 para integridade, DES) ausentes; lista de primitivas aprovadas documentada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Algoritmos e configurações criptográficas robustas",
+      "requirement_id": "ENC-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Passwords armazenadas com algoritmo adaptativo resistente a força bruta (bcrypt, Argon2, PBKDF2); factor de custo configurado e revisto periodicamente; ausência de hashing estático ou reversível confirmada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Hashing adaptativo de passwords",
+      "requirement_id": "ENC-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Passwords, tokens, números de cartão, dados pessoais sensíveis não aparecem em claro em logs, respostas de erro ou outputs de debugging; cobertura verificada por análise de logs e teste.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Mascaramento de dados sensíveis em logs, outputs e respostas API",
+      "requirement_id": "ENC-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Ferramenta de detecção de segredos activa no pipeline (ex: truffleHog, gitleaks, detect-secrets); commits com segredos detectados bloqueados ou alertados; sem segredos em claro no histórico do repositório.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Detecção e prevenção de segredos expostos em repositórios",
+      "requirement_id": "ENC-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Política de rotação definida por tipo de segredo; rotação executada nos prazos definidos; evidência de rotação auditável; ausência de chaves sem data de expiração para material crítico.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Rotação periódica de chaves e segredos",
+      "requirement_id": "ENC-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Respostas com dados sensíveis incluem cabeçalhos que inibem caching (Cache-Control: no-store, etc.); configuração verificável por análise de headers em ambiente de teste.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Prevenção de caching de dados sensíveis no cliente",
+      "requirement_id": "ENC-008",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "ENC",
+      "description": "Dados críticos com mecanismo de verificação de integridade (MACs, assinaturas, checksums); adulterações detectadas e registadas; cobertura aplicada a dados com impacto de negócio ou regulatório.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Integridade verificável de dados críticos",
+      "requirement_id": "ENC-009",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Mensagens ao cliente são abstractas; logs internos detalhados nunca expostos externamente.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Erros não expõem dados sensíveis",
+      "requirement_id": "ERR-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Cliente recebe sempre mensagem genérica; stack traces e detalhes internos não transmitidos.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Mensagens genéricas no cliente",
+      "requirement_id": "ERR-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Respostas de erro são idênticas para recursos existentes e inexistentes (sem enumeração).",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Não revelar existência de recursos",
+      "requirement_id": "ERR-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Mensagens traduzidas sem conteúdo executável ou referências a lógica interna.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Mensagens localizadas e seguras",
+      "requirement_id": "ERR-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Framework de erros centraliza tratamento e logging; ausência de tratamento ad-hoc disperso.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Gestão padronizada e centralizada",
+      "requirement_id": "ERR-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Testes garantem que erros são tratados e não há fuga de informação; cobertura de casos limite.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Testes automáticos para erros excessivos",
+      "requirement_id": "ERR-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "ERR",
+      "description": "Logs incluem IDs contextuais; dados pessoais ou credenciais nunca registados em logs de erro.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Logs de erro com contexto pseudonimizado",
+      "requirement_id": "ERR-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Modelo documentado e aprovado formalmente pela direcção, com papéis, responsabilidades e ciclo de decisão definidos; acessível e comunicado às equipas relevantes; revisto pelo menos anualmente ou após alteração organizacional significativa.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Modelo formal de governação de segurança aprovado",
+      "requirement_id": "GOV-001",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Cada aplicação ou projecto tem um owner de segurança formalmente designado e registado; o owner tem competência e autoridade para tomar decisões de segurança no âmbito do projecto; designação actualizada em mudanças de equipa ou responsabilidade.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Ownership de segurança atribuído por aplicação ou projecto",
+      "requirement_id": "GOV-002",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Alçadas de aprovação para decisões de risco, excepções e compensações estão documentadas por nível (L1/L2/L3); a cadeia de autoridade é conhecida pelos decisores; decisões fora de alçada são escaladas de forma definida e rastreável.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Alçadas de aprovação definidas e conhecidas por nível de risco",
+      "requirement_id": "GOV-003",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Existe processo formal de excepções documentado e em uso; toda a não-aplicação de um controlo é registada com justificação, compensação, aprovador e prazo; excepções sem registo são tratadas como não conformidade activa; o processo cobre a cadeia de autoridade completa.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Processo formal de gestão de excepções activo",
+      "requirement_id": "GOV-004",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Todas as excepções activas têm data de expiração definida; existe mecanismo de alerta antes de expiração; excepções expiradas sem renovação são tratadas como não conformidade; a lista de excepções activas é revista em cada ciclo de auditoria.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Excepções com validade, monitorização e revalidação obrigatória",
+      "requirement_id": "GOV-005",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Contratos com fornecedores, outsourcing e contratados incluem cláusulas de segurança proporcionais ao nível de risco; cláusulas revistas em renovações; evidência de cláusulas aplicadas disponível por contrato activo.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Cláusulas de segurança proporcionais ao risco em contratos com terceiros",
+      "requirement_id": "GOV-006",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Fornecedores com acesso a dados, código ou pipelines são validados com questionário ou checklist antes de onboarding; validação proporcional ao risco (L3: SBOM, SLA de incidentes, direito de auditoria formal); registo de validação retido e rastreável.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Validação formal de fornecedores antes de onboarding",
+      "requirement_id": "GOV-007",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Existe registo consolidado por aplicação que liga: classificação de risco → requisitos aplicados → excepções aprovadas → fornecedores validados → owner de segurança; registo actualizado em cada release relevante ou mudança de risco; disponível para auditoria.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Rastreabilidade organizacional de decisões de segurança por aplicação",
+      "requirement_id": "GOV-008",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Toda a decisão de risco ou excepção tem artefactos de evidência referenciáveis (ticket, nota, registo GRC, ADR ou equivalente); a cadeia de autoridade - quem pediu, quem avaliou, quem aprovou - é verificável; evidência retida pelo período definido em política.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Evidência de decisões rastreável, referenciável e retida",
+      "requirement_id": "GOV-009",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Ciclo de revisão periódica definido por tipo de activo (aplicações L3: trimestral; L2: semestral; fornecedores críticos: anual); revisões produzem evidência rastreável; desvios identificados geram acções correctivas com owner e prazo definidos.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Ciclo de validação contínua e revisão periódica de conformidade",
+      "requirement_id": "GOV-010",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "KPIs de governação estão definidos, são recolhidos periodicamente e reportados à gestão; desvios face a thresholds definidos geram acção correctiva; KPIs incluem pelo menos: excepções activas por domínio, % aplicações com owner atribuído, % contratos com cláusulas de segurança.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "KPIs de governação definidos, recolhidos e reportados",
+      "requirement_id": "GOV-011",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "GOV",
+      "description": "Avaliação de maturidade de segurança activa (SAMM, DSOMM ou equivalente); realizada pelo menos anualmente; resultados documentados com plano de evolução e metas definidas; evolução comparada com ciclo anterior e reportada à gestão.",
+      "domain": "governance-and-procurement",
+      "evidence_types": [],
+      "name": "Modelo de maturidade activo com evolução medida e planeada",
+      "requirement_id": "GOV-012",
+      "source_bundle": "14-governanca-contratacao",
+      "source_chapter": 14,
+      "source_file": "14-governanca-contratacao/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "backend configurado com autenticação e locking; tentativa de apply concorrente resulta em bloqueio; logs de lock disponíveis.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Backend remoto autenticado com locking activo",
+      "requirement_id": "IAC-001",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Configurações de dev, staging e prod distintas, versionadas em directórios ou workspaces separados; deploy não pode cruzar ambientes sem aprovação explícita.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Ambientes segregados e versionados",
+      "requirement_id": "IAC-002",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Pipeline com etapas de lint, análise de segurança (ex: tfsec, checkov) e validação de política; falha em qualquer etapa bloqueia o apply.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Validações automáticas obrigatórias em pipeline",
+      "requirement_id": "IAC-003",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Referências de módulos com versão semântica fixa ou hash; ausência de referências sem versão (latest, master, HEAD); origem documentada.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Módulos reutilizados com origem confiável e versão imutável",
+      "requirement_id": "IAC-004",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Repositório Git com histórico intacto, tags semânticas por release e notas de versão; sem squash obrigatório em branches principais.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Histórico completo com versionamento, tags e releases",
+      "requirement_id": "IAC-005",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Linter ou política automática que valida convenções de nomes e tags obrigatórias; recursos sem tags de identificação obrigatórias são rejeitados.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Convenções formais de naming, tagging e layout",
+      "requirement_id": "IAC-006",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "PR com output de plan anexado e revisível; aprovação registada antes de apply; evidência de que o apply ocorreu após aprovação e sobre o mesmo plan.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Plan rastreável e aprovado antes de qualquer apply",
+      "requirement_id": "IAC-007",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Possível identificar, para qualquer recurso provisionado, o ficheiro IaC de origem, o ambiente e o pipeline que o criou; evidência disponível em auditoria.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Rastreabilidade ficheiro → recurso → ambiente",
+      "requirement_id": "IAC-008",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Regras de política (ex: OPA/Rego, Sentinel) activas no pipeline; logs de bloqueio por violação de política disponíveis; política versionada com o código.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Enforcement automático de políticas em pipeline",
+      "requirement_id": "IAC-009",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Plans e manifests armazenados com hash verificável; integridade confirmada antes do apply; artefactos não reutilizáveis entre ambientes distintos.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Artefactos de plan e manifests versionados e com hash",
+      "requirement_id": "IAC-010",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Ausência de segredos em código, variáveis de ambiente não protegidas ou ficheiros versionados; integração com cofre de segredos (Vault, KMS, OIDC) verificável; scan automatizado de segredos no pipeline.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Gestão segura de segredos - proibição de hardcoding",
+      "requirement_id": "IAC-011",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Relatórios periódicos de drift disponíveis; alertas activos para divergência entre estado definido em IaC e estado real da infraestrutura.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Detecção automatizada de drift entre IaC e estado real",
+      "requirement_id": "IAC-012",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "IAC",
+      "description": "Registos de revisão com data, responsável e findings; ciclo de revisão definido e evidência de cumprimento; módulos obsoletos ou com vulnerabilidades conhecidas retirados de serviço.",
+      "domain": "infrastructure-as-code",
+      "evidence_types": [],
+      "name": "Revisão periódica formal de módulos e templates",
+      "requirement_id": "IAC-013",
+      "source_bundle": "08-iac-infraestrutura",
+      "source_chapter": 8,
+      "source_file": "08-iac-infraestrutura/addon/08-matriz-requisitos-iac.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IDE",
+      "description": "Apenas ferramentas aprovadas são utilizadas; lista mantida e actualizada pela organização.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Ferramentas e IDEs autorizadas",
+      "requirement_id": "IDE-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IDE",
+      "description": "IDEs e ferramentas mantidas actualizadas; histórico de actualizações disponível.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Actualização e gestão de vulnerabilidades",
+      "requirement_id": "IDE-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IDE",
+      "description": "Código gerado por ferramentas ou assistentes é revisto antes de integração em produção.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Auditoria de código gerado por ferramentas",
+      "requirement_id": "IDE-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IDE",
+      "description": "Apenas extensões de fontes reconhecidas e verificadas são instaladas; logs de instalação.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Extensões e plugins de fontes confiáveis",
+      "requirement_id": "IDE-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IDE",
+      "description": "Permissões de extensões revistas; apenas as necessárias concedidas; execução sandboxed.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Controlo de permissões de extensões",
+      "requirement_id": "IDE-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "IDE",
+      "description": "Utilização de ambientes locais controlada; logs de rede ou proxy disponíveis quando aplicável.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Limitação de ambientes locais sem controlo",
+      "requirement_id": "IDE-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Mensagens malformadas são rejeitadas ou tratadas de forma controlada; sem processamento cego.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação de mensagens entre sistemas",
+      "requirement_id": "INT-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Integrações só aceites de fontes autenticadas; tokens verificados e com TTL definido.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Autenticação mútua ou tokens seguros",
+      "requirement_id": "INT-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Todo o tráfego entre sistemas cifrado com TLS; versões inseguras desactivadas.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Transmissão cifrada com TLS",
+      "requirement_id": "INT-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Protocolos sem cifra (HTTP, FTP, Telnet) rejeitados ou redirecionados para equivalente seguro.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Proibição de protocolos inseguros",
+      "requirement_id": "INT-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Mensagens sensíveis assinadas e verificadas; logs evidenciam verificação de integridade.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Assinatura e integridade de mensagens",
+      "requirement_id": "INT-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Apenas origens e destinos autorizados aceites; logs de rejeição mantidos.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação cruzada de origem e destino",
+      "requirement_id": "INT-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Comportamento anómalo nos canais de integração dispara alertas; logs analisados periodicamente.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Monitorização e detecção de padrões anómalos",
+      "requirement_id": "INT-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "INT",
+      "description": "Integrações documentadas com cláusulas de segurança; checklist de revisão executada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revisão de segurança e contrato em integrações",
+      "requirement_id": "INT-008",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Acessos, alterações e falhas de segurança críticas são registados; logs verificados por amostragem.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Registo de eventos críticos",
+      "requirement_id": "LOG-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Cada entrada inclui: quem, quando, o quê e onde; ausência de qualquer atributo falha auditoria.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Atributos mínimos em logs",
+      "requirement_id": "LOG-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Logs não alteráveis por utilizadores comuns; protecção por permissões ou assinatura verificável.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Protecção de integridade e acesso aos logs",
+      "requirement_id": "LOG-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Processo de análise periódica documentado e evidenciado; frequência proporcional ao risco.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Análise periódica de logs",
+      "requirement_id": "LOG-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Logs mantidos pelo período definido em política; verificação de retenção efectiva.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Retenção mínima dos logs",
+      "requirement_id": "LOG-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Eventos críticos enviados e registados em agregador central (SIEM ou equivalente).",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Envio para sistema centralizado",
+      "requirement_id": "LOG-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Política de severidade definida; anomalias disparam alertas configurados e testados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Classificação e detecção de anomalias",
+      "requirement_id": "LOG-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Falhas do sistema de logging geram alerta; ausência de logs é detectada e notificada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Alarme em falhas do mecanismo de logging",
+      "requirement_id": "LOG-008",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Logs com detalhe suficiente para reconstrução de incidente; testado em exercício ou simulação.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Logs suportam resposta a incidentes",
+      "requirement_id": "LOG-009",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "LOG",
+      "description": "Eventos de impacto no negócio (transacções, autorizações críticas) registados e rastreáveis.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Logging de eventos críticos de negócio",
+      "requirement_id": "LOG-010",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Logs de todos os componentes em produção em formato estruturado (JSON, CEF ou equivalente); persistidos fora da instância (não apenas locais); acessíveis sem acesso directo ao host; cobertura verificável por inventário.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Logging estruturado e persistente para todos os componentes em produção",
+      "requirement_id": "OPS-001",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Catálogo de eventos críticos definido por aplicação (autenticação, alteração de permissões, erros de autorização, acessos a dados sensíveis, etc.); evidência de que esses eventos são efectivamente gerados e retidos; revisto com cada release significativo.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Catálogo de eventos críticos de segurança definido e verificado",
+      "requirement_id": "OPS-002",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Política de retenção documentada por tipo de log e contexto regulatório aplicável; logs retidos pelo período mínimo obrigatório; processo de arquivo e purga documentado e auditável; evidência de cumprimento disponível.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Retenção de logs conforme política e requisitos regulatórios",
+      "requirement_id": "OPS-003",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Logs enviados para sistema de monitorização centralizado com ingestion verificável; sem dependência exclusiva de logs locais para análise de segurança; evidência de logs recebidos por fonte; falhas de envio detectadas e alertadas.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Centralização de logs em sistema SIEM ou equivalente",
+      "requirement_id": "OPS-004",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Alertas configurados para eventos críticos definidos no OPS-002; thresholds documentados e revistos periodicamente; canal de notificação testado; alertas não silenciados sem justificação.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Alertas automáticos para eventos de segurança críticos",
+      "requirement_id": "OPS-005",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "SLA de resposta (time-to-acknowledge e time-to-resolve) definido por severidade de alerta; métricas de MTTD e MTTR recolhidas e reportadas periodicamente; desvios ao SLA documentados e tratados.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "SLA de resposta a alertas definido e medido",
+      "requirement_id": "OPS-006",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Runbooks ou playbooks de resposta definidos para tipos de alerta críticos; integração entre sistema de alertas e sistema de gestão de incidentes; evidência de activação em incidente real ou exercício documentado no último ciclo.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Integração com processo formal de resposta a incidentes",
+      "requirement_id": "OPS-007",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Regras de correlação activas no SIEM para eventos distribuídos (ex: acesso + alteração suspeita correlacionados por session ID, IP ou user ID); dashboards ou queries que agregam eventos correlacionados disponíveis; regras documentadas e mantidas.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Correlação de eventos entre múltiplas fontes",
+      "requirement_id": "OPS-008",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "Mecanismos de deteção baseados em comportamento (UEBA, baselines de actividade) activos para fontes críticas; anomalias comportamentais geram alertas accionáveis; baseline documentada, actualizada periodicamente e com processo de aprovação de desvios.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Deteção comportamental e baseline de actividade normal",
+      "requirement_id": "OPS-009",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "OPS",
+      "description": "MTTD e MTTR medidos, reportados e comparados com ciclos anteriores; cobertura de alertas por tipo de evento mapeada contra o catálogo de ameaças relevantes; revisão periódica de thresholds, regras e cobertura com evidência de melhoria contínua.",
+      "domain": "operations-monitoring",
+      "evidence_types": [],
+      "name": "Métricas de eficácia da monitorização medidas e revistas",
+      "requirement_id": "OPS-010",
+      "source_bundle": "12-monitorizacao-operacoes",
+      "source_chapter": 12,
+      "source_file": "12-monitorizacao-operacoes/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Requisitos de segurança explícitos em backlog/documentação; marcados e rastreáveis.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Inclusão de requisitos de segurança",
+      "requirement_id": "REQ-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Processo de revisão documentado e evidenciado; responsável identificado.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revisão formal de segurança dos requisitos",
+      "requirement_id": "REQ-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Mapeamento entre requisitos e nível de criticidade disponível e actualizado.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Alinhamento com classificação de risco",
+      "requirement_id": "REQ-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Histórico de alterações disponível; controlo de versões aplicado ao catálogo do projecto.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Versionamento e gestão de requisitos",
+      "requirement_id": "REQ-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Alterações relevantes disparam revisão de threat modeling; registo da decisão disponível.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Nova análise de ameaça após alteração de requisito",
+      "requirement_id": "REQ-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Matriz ou ferramenta demonstra ligação entre requisitos, ameaças identificadas e testes.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Rastreabilidade requisito → ameaça → teste",
+      "requirement_id": "REQ-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "REQ",
+      "description": "Alterações de requisitos discutidas, revistas e registadas em ciclos definidos.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revisão iterativa com equipas",
+      "requirement_id": "REQ-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "Sessão termina após período configurado de inactividade; redirect para autenticação.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Expiração automática por inactividade",
+      "requirement_id": "SES-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "Logout termina todas as sessões activas; alteração de password invalida tokens anteriores.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Logout manual e após alteração de credenciais",
+      "requirement_id": "SES-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "Tokens/sessões com entropia adequada; análise de previsibilidade não revela padrão.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Identificadores de sessão imprevisíveis",
+      "requirement_id": "SES-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "Tokens transmitidos apenas por canais TLS; cookies com flags Secure e HttpOnly.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Transmissão segura dos tokens",
+      "requirement_id": "SES-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "Mudança de IP ou user-agent termina sessão ou exige revalidação; teste evidencia comportamento.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Ligação da sessão ao contexto do cliente",
+      "requirement_id": "SES-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "Sessão pode ser terminada a pedido do utilizador ou do sistema; token fica inválido imediatamente.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Revogação explícita da sessão",
+      "requirement_id": "SES-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "TTL máximo configurado e aplicado; sessões com duração excessiva não são possíveis.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Prevenção de sessões long-lived",
+      "requirement_id": "SES-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "SES",
+      "description": "JWTs incluem claims de âmbito e expiração; mecanismo de revogação implementado e testado.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Scope, TTL e revogação de tokens JWT",
+      "requirement_id": "SES-008",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "Aplicações com classificação L2 ou superior têm threat model formal documentado; o processo é aplicado em novas aplicações antes de go-live e em alterações arquitecturais significativas (novo componente, nova integração externa, nova superfície de exposição); o artefacto é rastreável à versão de arquitectura avaliada.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Threat modeling formal em aplicações L2+ e alterações arquitecturais significativas",
+      "requirement_id": "THR-001",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "O threat model inclui Data Flow Diagrams (DFDs) actualizados que reflectem a arquitectura real em produção; trust boundaries são explicitamente marcadas e justificadas; cada fluxo de dados sensíveis identifica origem, destino, canal e nível de confiança; DFDs desactualizados invalidam a validade do threat model.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Arquitectura actual representada com DFDs e trust boundaries explícitos",
+      "requirement_id": "THR-002",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "O processo utiliza uma metodologia estruturada — STRIDE como baseline; LINDDUN em aplicações com fluxos de dados pessoais ou contexto de privacidade; PASTA ou equivalente para contextos de alto risco; a metodologia escolhida é declarada no artefacto, aplicada de forma consistente e cobre no mínimo os elementos críticos identificados nos DFDs.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Metodologia estruturada aplicada com cobertura mínima garantida",
+      "requirement_id": "THR-003",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "Cada ameaça identificada tem disposição explícita documentada — mitigado, aceite, transferido ou excluído — com justificação racional, controlo ou compensação associado e owner nomeado; ameaças sem disposição declarada são tratadas como lacuna de controlo activa; a lista de ameaças é parte do artefacto de evidência.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Disposição formal de cada ameaça identificada com owner",
+      "requirement_id": "THR-004",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "As ameaças identificadas com disposição de mitigação geram requisitos de segurança rastreáveis; esses requisitos estão registados no backlog com referência ao threat ID de origem; a validação do requisito em test ou review referencia o threat ID correspondente; a cadeia é verificável sem reconstrução manual.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Rastreabilidade ameaça → requisito → backlog → validação",
+      "requirement_id": "THR-005",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "O threat model tem controlo de versão explícito; é revisto e actualizado no máximo a cada ciclo de release significativo ou no prazo máximo de 30 dias após trigger de mudança (nova integração, alteração de trust boundary, incidente de segurança ou nova ameaça com impacto relevante); a versão do threat model é referenciada nos artefactos de arquitectura e no processo de go-live.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Threat model versionado e actualizado dentro do ciclo ou após trigger",
+      "requirement_id": "THR-006",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "THR",
+      "description": "Antes de go-live de novas aplicações L2+ ou de alterações arquitecturais com impacto material num sistema L2+, o threat model é revisto por AppSec ou elemento com competência equivalente independente da equipa; a revisão produz evidência (registo, aprovação ou lista de desvios com plano); ausência de revisão bloqueia o go-live.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Revisão independente por AppSec antes de go-live em L2 e L3",
+      "requirement_id": "THR-007",
+      "source_bundle": "03-threat-modeling",
+      "source_chapter": 3,
+      "source_file": "03-threat-modeling/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "Existem trilhos de formação de segurança definidos por perfil de colaborador (developer, ops, PO, QA, tech lead) e por nível de criticidade do projecto (L1, L2, L3); os trilhos especificam módulos obrigatórios, duração estimada e periodicidade de renovação; os trilhos são documentados e acessíveis.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Trilhos de formação de segurança definidos por perfil e nível de criticidade",
+      "requirement_id": "TRN-001",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "Todo o colaborador com acesso a código, pipelines ou ambientes de produção completa o onboarding de segurança antes de operar de forma autónoma; o onboarding inclui: políticas e boas práticas relevantes ao perfil, manuseamento de segredos, processo de incidentes e controlos básicos de desenvolvimento seguro ou operações seguras conforme o papel.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Onboarding de segurança obrigatório antes de trabalho autónomo",
+      "requirement_id": "TRN-002",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "A conclusão do onboarding é verificada com critério objectivo — quiz, exercício prático ou outra forma de avaliação com taxa de aceitação mínima definida; o resultado é registado e rastreável ao colaborador e à versão do conteúdo administrada; resultados abaixo do limiar têm caminho de remediação definido.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Validação objectiva do onboarding com critério de aceitação definido",
+      "requirement_id": "TRN-003",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "O acesso a repositórios, pipelines de produção ou ambientes classificados como L2+ é condicionado à evidência de onboarding de segurança válido; a condição é verificável — o registo de onboarding é verificado no processo de onboarding de acesso; acesso sem onboarding válido é bloqueado ou escalado ao owner de segurança.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Acesso a ambientes críticos condicionado a onboarding validado",
+      "requirement_id": "TRN-004",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "Colaboradores em projectos L2+ recebem formação de segurança contínua — no mínimo uma sessão ou módulo relevante por semestre (L2) ou trimestre (L3); a formação contínua cobre evolução de ameaças, novas técnicas de ataque relevantes ao contexto e actualizações de políticas; a participação é registada e rastreável.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Formação de segurança contínua para equipas em projectos L2 e L3",
+      "requirement_id": "TRN-005",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "O conteúdo de formação e onboarding tem controlo de versão explícito; é revisto e actualizado após incidentes de segurança relevantes, alterações de política ou identificação de novas classes de vulnerabilidades no contexto do projecto; a versão do conteúdo administrada é rastreável ao registo de formação de cada colaborador.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Conteúdo formativo versionado e actualizado após triggers definidos",
+      "requirement_id": "TRN-006",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "Terceiros, contratados e parceiros com acesso a código, pipelines ou dados sensíveis completam um onboarding de segurança equivalente ao dos colaboradores internos, proporcional ao seu perfil de acesso; o processo de validação e registo é o mesmo; ausência de onboarding válido bloqueia o acesso.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Onboarding de segurança equivalente para terceiros e contratados",
+      "requirement_id": "TRN-007",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "Equipas em projectos L3 têm um ou mais Security Champions formalmente designados — com papel documentado, responsabilidades definidas, acesso a recursos AppSec e participação em comunidade de prática ou equivalente; o Champion não substitui o AppSec centralizado, mas amplifica a competência de segurança na equipa; a designação é rastreável e actualizada.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "Programa formal de Security Champions em equipas L3",
+      "requirement_id": "TRN-008",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TRN",
+      "description": "KPIs de eficácia formativa são definidos, recolhidos periodicamente e analisados — incluindo pelo menos: % cobertura de onboarding por equipa, taxa de aprovação em validações objectivas, tempo médio de onboarding e taxa de actualização de conteúdo; desvios face a thresholds definidos geram acção correctiva com owner e prazo.",
+      "domain": null,
+      "evidence_types": [],
+      "name": "KPIs de formação definidos, recolhidos e accionados",
+      "requirement_id": "TRN-009",
+      "source_bundle": "13-formacao-onboarding",
+      "source_chapter": 13,
+      "source_file": "13-formacao-onboarding/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Documento de estratégia com tipologias de teste, frequência, responsáveis e critérios de aceitação por nível de risco; revisto pelo menos anualmente ou após alteração significativa de risco ou arquitectura.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Estratégia formal de testes de segurança por nível de risco",
+      "requirement_id": "TST-001",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Scanner SAST com perfil de regras documentado e versionado; baseline de falsos positivos aprovada por AppSec; evidência de cobertura de componentes críticos; taxa de falsos positivos revista periodicamente.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "SAST com perfil de cobertura gerido e baseline de falsos positivos",
+      "requirement_id": "TST-002",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "SLA de correcção definido por severidade (ex: crítico ≤ 7 dias, elevado ≤ 30 dias); rastreabilidade finding → ticket → correcção → verificação; findings não resolvidos no SLA com excepção formalizada.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Gestão formal de findings com SLA de correcção por severidade",
+      "requirement_id": "TST-003",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Relatórios de testes de segurança associados ao build que os gerou; reproduzíveis a partir do mesmo estado do código; retidos pelo período definido em política; disponíveis para auditoria sem necessidade de re-execução.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Evidência de testes reproduzível, auditável e ligada ao build",
+      "requirement_id": "TST-004",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Scanner DAST activo em ambiente de staging representativo de produção; política de findings definida (o que bloqueia vs. o que alerta); evidência de execução por release; ambiente de staging com dados não reais.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "DAST integrado em ambiente de staging antes de promoção",
+      "requirement_id": "TST-005",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Cada vulnerabilidade corrigida origina um teste de regressão que comprova a correcção e previne recorrência; testes de regressão integrados no pipeline; evidência de cobertura disponível.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Testes de regressão de segurança para vulnerabilidades corrigidas",
+      "requirement_id": "TST-006",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Critérios de cobertura mínima definidos por nível de risco (ex: componentes de autenticação, autorização, validação de input); cobertura medida e reportada; desvios documentados e tratados.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Thresholds mínimos de cobertura de testes de segurança por risco",
+      "requirement_id": "TST-007",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Pentesting executado com frequência mínima definida por nível de risco (ex: anual para L2, semestral para L3); escopo documentado; relatório com findings, severidade e plano de correcção; correcções verificadas em reteste.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Testes de penetração periódicos com escopo e metodologia definidos",
+      "requirement_id": "TST-008",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "Fuzzing integrado no pipeline ou executado periodicamente para parsers, deserializadores, APIs com input estruturado ou lógica com alta entropia de input; corpus gerido e evidência de execução disponível.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "Fuzzing sistemático em componentes de processamento de input complexo",
+      "requirement_id": "TST-009",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": false,
+        "L3": true
+      },
+      "category": "TST",
+      "description": "IAST instrumentado em ambiente de staging para aplicações L3; coverage de fluxos críticos verificada; findings de IAST processados com a mesma política de gestão que outros findings de testes.",
+      "domain": "security-testing",
+      "evidence_types": [],
+      "name": "IAST em ambiente de staging para validação comportamental em runtime",
+      "requirement_id": "TST-010",
+      "source_bundle": "10-testes-seguranca",
+      "source_chapter": 10,
+      "source_file": "10-testes-seguranca/addon/00-catalogo-requisitos.md",
+      "type": "domain-specific"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Inputs inválidos são rejeitados com código de erro adequado; logs evidenciam bloqueio.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação geral de entradas externas",
+      "requirement_id": "VAL-001",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Apenas valores explicitamente aceites são permitidos; valores não previstos são rejeitados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Uso de whitelists em vez de blacklists",
+      "requirement_id": "VAL-002",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Payloads malformados são rejeitados automaticamente; logs de parsing disponíveis.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validadores de esquema (JSON/XML schema)",
+      "requirement_id": "VAL-003",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Inputs potencialmente perigosos são neutralizados; ataques de injecção resultam em falha controlada.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Sanitização contra injecções",
+      "requirement_id": "VAL-004",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Dados são validados antes de uso em lógica de negócio ou persistência; não há caminhos não validados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Validação antes do uso interno",
+      "requirement_id": "VAL-005",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": true,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Erros de validação não expõem lógica interna nem dados sensíveis ao cliente.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Mensagens de erro seguras na validação",
+      "requirement_id": "VAL-006",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    },
+    {
+      "applicable_levels": {
+        "L1": false,
+        "L2": true,
+        "L3": true
+      },
+      "category": "VAL",
+      "description": "Testes automatizados cobrem XSS, SQLi e outras injecções relevantes; resultados registados.",
+      "domain": "application-security-requirements",
+      "evidence_types": [],
+      "name": "Testes automáticos contra entradas maliciosas",
+      "requirement_id": "VAL-007",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_chapter": 2,
+      "source_file": "02-requisitos-seguranca/addon/02-lista-requisitos-base.md",
+      "type": "base"
+    }
+  ],
+  "profiles": [
+    "consult",
+    "guide",
+    "review"
+  ],
+  "source_artifact": "data/entities/canonical_requirements_s7.json"
+}

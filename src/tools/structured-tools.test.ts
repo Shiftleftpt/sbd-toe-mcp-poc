@@ -75,12 +75,7 @@ function makeBundle(records: unknown[] = []) {
     retrieved: records,
     promptChapters: [],
     consultedIndices: [],
-    backendSnapshot: {
-      docsSnapshotFile: "",
-      entitiesSnapshotFile: "",
-      docsEnrichedSnapshotFile: "",
-      entitiesEnrichedSnapshotFile: ""
-    }
+    backendSnapshot: {}
   };
 }
 

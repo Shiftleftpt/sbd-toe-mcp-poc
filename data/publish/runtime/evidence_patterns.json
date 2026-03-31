@@ -1,0 +1,4299 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 107,
+  "entity_type": "EvidencePattern",
+  "items": [
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de rejeição. Mapeamento de roles documentado.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-identity-binding-f96a2a528c",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-identity-binding-f96a2a528c",
+          "confidence": 0.52,
+          "name": "Identity Binding",
+          "shared_salient_tokens": [
+            "rbac"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-ACC-001",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-001",
+      "requirement_category": "ACC",
+      "requirement_name": "Controlo de acesso RBAC",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar acesso com role de privilégio reduzido a recurso restrito. Confirmar rejeição.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Relatório de auditoria de permissões.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-policy-report-7e52280504"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "auditoria"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        }
+      ],
+      "id": "EP-ACC-002",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-002",
+      "requirement_category": "ACC",
+      "requirement_name": "Princípio do menor privilégio",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Auditar permissões de contas de utilizador e serviço. Confirmar ausência de privilégios desnecessários.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Log de rejeição com dados de contexto.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-ACC-003",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-003",
+      "requirement_category": "ACC",
+      "requirement_name": "Bloqueio e auditoria de acessos ilegítimos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar acesso não autorizado. Confirmar bloqueio e registo com contexto suficiente.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Logs com perfil identificado. Teste cruzado de perfis.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-ACC-004",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-004",
+      "requirement_category": "ACC",
+      "requirement_name": "Separação de perfis",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar separação efectiva de perfis. Confirmar que acções de cada perfil são rastreáveis.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de rejeição. Testes automatizados de endpoints.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-ACC-005",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-005",
+      "requirement_category": "ACC",
+      "requirement_name": "Controlo de acesso a APIs e serviços",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar endpoints sem autenticação/autorização. Confirmar rejeição com código adequado.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de controlo efectivo. Log do evento.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-ACC-006",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-006",
+      "requirement_category": "ACC",
+      "requirement_name": "Protecção de recursos sensíveis",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar acesso a dados críticos com role não autorizado. Confirmar bloqueio e log.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Documentação do modelo. Registo de revisão datada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-ACC-007",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-007",
+      "requirement_category": "ACC",
+      "requirement_name": "Validação do modelo de acesso",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar existência de modelo de permissões revisto e documentado.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de tentativa falhada após revogação. Timestamp de revogação.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-ACC-008",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-008",
+      "requirement_category": "ACC",
+      "requirement_name": "Revogação em tempo real",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Revogar acesso. Testar imediatamente após revogação. Confirmar falha.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Logs com avaliação de atributos. Teste com variação de contexto.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-ACC-009",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-009",
+      "requirement_category": "ACC",
+      "requirement_name": "Autorização baseada em atributos (ABAC)",
+      "responsible_roles": [],
+      "risk_level_hint": "L3",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar decisão de acesso com atributos distintos. Confirmar aplicação de política dinâmica.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Registos de revisão datados. Evidência de limpeza de permissões.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-ACC-010",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "ACC-010",
+      "requirement_category": "ACC",
+      "requirement_name": "Revisão periódica de permissões",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar existência de processo de revisão periódica. Confirmar remoção de permissões obsoletas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Logs de rejeição. Testes automatizados de endpoints.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-API-001",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "API-001",
+      "requirement_category": "API",
+      "requirement_name": "Autenticação e autorização de chamadas API",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar endpoints sem credenciais. Confirmar rejeição 401/403.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Inventário de endpoints activos. Ausência de endpoints não intencionais.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-API-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "API-002",
+      "requirement_category": "API",
+      "requirement_name": "Endpoints desnecessários removidos ou ocultos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Inventariar endpoints expostos em produção. Confirmar ausência de debug ou legacy.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Logs de rejeição. Testes com payloads malformados.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-API-003",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "API-003",
+      "requirement_category": "API",
+      "requirement_name": "Validação de input em APIs",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Enviar payloads inválidos. Confirmar rejeição com código adequado.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de rate limiting em runtime ou logs.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-API-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "API-004",
+      "requirement_category": "API",
+      "requirement_name": "Rate limiting e detecção de abusos",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Executar burst de chamadas. Confirmar resposta 429 ou bloqueio temporário.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "config"
+      ],
+      "evidence_expectation": "Scanner TLS. Headers de resposta.",
+      "evidence_type": "config",
+      "expected_artifact_type_ids": [
+        "ART-sca-report-da2c6d2413",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-sca-report-da2c6d2413",
+          "confidence": 0.52,
+          "name": "Sca Report",
+          "shared_salient_tokens": [
+            "scan"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "scan"
+          ]
+        }
+      ],
+      "id": "EP-API-005",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "API-005",
+      "requirement_category": "API",
+      "requirement_name": "Protecção por TLS e certificados actualizados",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar certificados e versão TLS. Confirmar cabeçalhos de segurança activos.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "SBOM. Relatório de auditoria de dependências.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-policy-report-7e52280504"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "auditoria"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        }
+      ],
+      "id": "EP-API-006",
+      "maps_to_control_id": "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb",
+      "maps_to_control_name": "Inventário e análise de dependências",
+      "maps_to_requirement_id": "API-006",
+      "requirement_category": "API",
+      "requirement_name": "Verificação de SDKs e wrappers utilizados",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar SBOM e dependências documentadas. Confirmar auditoria de vulnerabilidades conhecidas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Logs com origem, destino, resultado e timestamp.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-API-007",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "API-007",
+      "requirement_category": "API",
+      "requirement_name": "Logging e auditoria de chamadas externas",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar logs de chamadas externas. Confirmar presença de dados essenciais.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "documentation"
+      ],
+      "evidence_expectation": "Zonas de confiança identificadas e documentadas",
+      "evidence_type": "document",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ARC-001",
+      "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
+      "maps_to_control_name": "Segmentação e controlo arquitetural",
+      "maps_to_requirement_id": "ARC-001",
+      "requirement_category": "ARC",
+      "requirement_name": "Zonas de confiança identificadas e documentadas",
+      "responsible_roles": [
+        "Arquitecto técnico"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Diagrama com zonas assinaladas, justificadas e versionado em repositório",
+      "verification_when": "Design inicial; após alteração de topologia ou fronteiras"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Exposição externa minimizada e justificada",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ARC-002",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-002",
+      "requirement_category": "ARC",
+      "requirement_name": "Exposição externa minimizada e justificada",
+      "responsible_roles": [
+        "AppSec",
+        "Arquitecto"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Inventário de componentes expostos; cada exposição com controlo associado e justificação técnica documentada",
+      "verification_when": "Revisão de arquitectura; auditoria de exposição"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Revisão de arquitectura com foco em segurança",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-onboarding-checklist-3f28bb1e95"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-onboarding-checklist-3f28bb1e95",
+          "confidence": 0.52,
+          "name": "Onboarding Checklist",
+          "shared_salient_tokens": [
+            "checklist"
+          ]
+        }
+      ],
+      "id": "EP-ARC-003",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-003",
+      "requirement_category": "ARC",
+      "requirement_name": "Revisão de arquitectura com foco em segurança",
+      "responsible_roles": [
+        "AppSec"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Registo formal de revisão (ata, checklist ou relatório AppSec) com data, participantes e decisões",
+      "verification_when": "Antes de release significativo; após alteração estrutural"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Decisões de arquitectura documentadas",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ARC-004",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-004",
+      "requirement_category": "ARC",
+      "requirement_name": "Decisões de arquitectura documentadas",
+      "responsible_roles": [
+        "Arquitecto técnico"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "ADR ou equivalente com contexto, alternativas, decisão tomada, trade-offs aceites e responsável",
+      "verification_when": "Sempre que ocorre decisão estrutural com impacto em segurança, isolamento ou dependências"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "documentation"
+      ],
+      "evidence_expectation": "Threat modeling integrado nos fluxos críticos",
+      "evidence_type": "document",
+      "expected_artifact_type_ids": [
+        "ART-threat-model-3a09510d13"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-threat-model-3a09510d13",
+          "confidence": 0.52,
+          "name": "Threat Model",
+          "shared_salient_tokens": [
+            "threat"
+          ]
+        }
+      ],
+      "id": "EP-ARC-005",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-005",
+      "requirement_category": "ARC",
+      "requirement_name": "Threat modeling integrado nos fluxos críticos",
+      "responsible_roles": [
+        "AppSec",
+        "Arquitecto"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Resultado de threat modeling com ameaças identificadas, fluxos cobertos e mitigações registadas; ligado ao diagrama de arquitectura",
+      "verification_when": "Design inicial; após alteração significativa de fluxo ou componente"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd",
+        "config"
+      ],
+      "evidence_expectation": "Controlos técnicos de isolamento entre domínios sensíveis",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-policy-report-7e52280504"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        }
+      ],
+      "id": "EP-ARC-006",
+      "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
+      "maps_to_control_name": "Segmentação e controlo arquitetural",
+      "maps_to_requirement_id": "ARC-006",
+      "requirement_category": "ARC",
+      "requirement_name": "Controlos técnicos de isolamento entre domínios sensíveis",
+      "responsible_roles": [
+        "AppSec",
+        "DevSecOps"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Evidência de isolamento activo (políticas de rede, firewalls lógicos, segmentação de APIs); configuração testável e auditável",
+      "verification_when": "Revisão de arquitectura; inspecção de configuração de rede"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Padrões de arquitectura reutilizáveis e aprovados",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-review-checklist-de29054201",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-review-checklist-de29054201",
+          "confidence": 0.52,
+          "name": "Review Checklist",
+          "shared_salient_tokens": [
+            "revisao"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-ARC-007",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-007",
+      "requirement_category": "ARC",
+      "requirement_name": "Padrões de arquitectura reutilizáveis e aprovados",
+      "responsible_roles": [
+        "Equipa de arquitectura"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Repositório de padrões com data de última revisão; evidência de uso de padrão aprovado registada em revisão de arquitectura",
+      "verification_when": "Início de projecto; introdução de novo componente estrutural"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Fluxos de dados entre zonas de confiança protegidos",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ARC-008",
+      "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
+      "maps_to_control_name": "Segmentação e controlo arquitetural",
+      "maps_to_requirement_id": "ARC-008",
+      "requirement_category": "ARC",
+      "requirement_name": "Fluxos de dados entre zonas de confiança protegidos",
+      "responsible_roles": [
+        "AppSec",
+        "Arquitecto"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "DFD com controlos explícitos em cada fronteira de confiança; actualizado e versionado em repositório",
+      "verification_when": "Design inicial; após alteração de fluxos de dados"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Alterações significativas desencadeiam nova revisão",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-review-checklist-de29054201",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-review-checklist-de29054201",
+          "confidence": 0.52,
+          "name": "Review Checklist",
+          "shared_salient_tokens": [
+            "revisao"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-ARC-009",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-009",
+      "requirement_category": "ARC",
+      "requirement_name": "Alterações significativas desencadeiam nova revisão",
+      "responsible_roles": [
+        "Arquitecto",
+        "PO"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Processo documentado com definição do limiar de \"alteração significativa\"; evidência de revisão executada após a última alteração relevante",
+      "verification_when": "Após cada alteração que atinja o limiar definido no processo"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "documentation"
+      ],
+      "evidence_expectation": "Diagramas de arquitectura versionados e acessíveis",
+      "evidence_type": "document",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ARC-010",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-010",
+      "requirement_category": "ARC",
+      "requirement_name": "Diagramas de arquitectura versionados e acessíveis",
+      "responsible_roles": [
+        "Arquitecto",
+        "DevOps"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Diagrama no repositório com histórico de versões; acessível a equipas relevantes; revisto no período definido",
+      "verification_when": "Revisão periódica (pelo menos anual ou por release significativo)"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Segmentação lógica e física entre ambientes",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-environment-inventory-154c4568fd",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-environment-inventory-154c4568fd",
+          "confidence": 0.52,
+          "name": "Environment Inventory",
+          "shared_salient_tokens": [
+            "ambiente"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "auditoria"
+          ]
+        }
+      ],
+      "id": "EP-ARC-011",
+      "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
+      "maps_to_control_name": "Segmentação e controlo arquitetural",
+      "maps_to_requirement_id": "ARC-011",
+      "requirement_category": "ARC",
+      "requirement_name": "Segmentação lógica e física entre ambientes",
+      "responsible_roles": [
+        "AppSec",
+        "Engenharia de plataforma"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Evidência de segregação de rede, permissões e identidade entre dev, staging e prod; documentada e verificável por auditoria",
+      "verification_when": "Revisão de infraestrutura; auditoria de permissões cross-environment"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "documentation"
+      ],
+      "evidence_expectation": "Critérios formais de aprovação para aplicações de risco elevado",
+      "evidence_type": "document",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-deployment-plan-945b804751"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "aprovacao"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-deployment-plan-945b804751",
+          "confidence": 0.52,
+          "name": "Deployment Plan",
+          "shared_salient_tokens": [
+            "deploy"
+          ]
+        }
+      ],
+      "id": "EP-ARC-012",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-012",
+      "requirement_category": "ARC",
+      "requirement_name": "Critérios formais de aprovação para aplicações de risco elevado",
+      "responsible_roles": [
+        "AppSec",
+        "Responsável de segurança"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Checklist formal preenchido e assinado por responsável de segurança; registo de aprovação anterior ao deploy em produção",
+      "verification_when": "Gate de release para aplicações L3"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Validação automática de topologia em CI/CD ou como código",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-artifact-provenance-8b1bffca3c",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-artifact-provenance-8b1bffca3c",
+          "confidence": 0.52,
+          "name": "Artifact Provenance",
+          "shared_salient_tokens": [
+            "pipeline"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-ARC-013",
+      "maps_to_control_id": "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+      "maps_to_control_name": "Arquitetura segura e rastreável",
+      "maps_to_requirement_id": "ARC-013",
+      "requirement_category": "ARC",
+      "requirement_name": "Validação automática de topologia em CI/CD ou como código",
+      "responsible_roles": [
+        "Arquitecto",
+        "DevSecOps"
+      ],
+      "risk_level_hint": null,
+      "source_bundle": "04-arquitetura-segura",
+      "source_document": "010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Job de CI com output de validação de topologia; logs de execução disponíveis; falhas bloqueiam promoção",
+      "verification_when": "Por execução de pipeline; revisão periódica de cobertura"
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de autenticação falhada sem MFA. Captura do bloqueio.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-AUT-001",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "AUT-001",
+      "requirement_category": "AUT",
+      "requirement_name": "MFA obrigatório",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar login sem segundo factor. Confirmar rejeição e logs de falha.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Política documentada. Log de erro ou rejeição.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-AUT-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "AUT-002",
+      "requirement_category": "AUT",
+      "requirement_name": "Política de passwords",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever política activa. Tentar definir password inválida. Confirmar rejeição.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Log com contagem de falhas. Evidência de bloqueio ou atraso.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-AUT-003",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "AUT-003",
+      "requirement_category": "AUT",
+      "requirement_name": "Protecção contra brute force",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular tentativas repetidas falhadas. Confirmar bloqueio, CAPTCHA ou atraso progressivo.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de sessão revogada. Erro de autenticação na reutilização.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-AUT-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "AUT-004",
+      "requirement_category": "AUT",
+      "requirement_name": "Revogação activa de sessões",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Efectuar logout. Tentar reutilizar sessão ou token. Confirmar rejeição.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de timeout. Captura de expiração automática.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-AUT-005",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "AUT-005",
+      "requirement_category": "AUT",
+      "requirement_name": "Expiração automática de sessão",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular inactividade pelo período configurado. Confirmar expiração e redirect.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "config"
+      ],
+      "evidence_expectation": "Output de configuração. Resultado de scan. Ausência em repositório.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-sca-report-da2c6d2413",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-sca-report-da2c6d2413",
+          "confidence": 0.52,
+          "name": "Sca Report",
+          "shared_salient_tokens": [
+            "output"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "scan"
+          ]
+        }
+      ],
+      "id": "EP-AUT-006",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "AUT-006",
+      "requirement_category": "AUT",
+      "requirement_name": "Proibição de credenciais em claro",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Validar hashing com salt. Verificar ausência de credenciais em claro em armazenamento e transmissão.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de autenticação via IdP externo. Captura de login bem-sucedido.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-AUT-007",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "AUT-007",
+      "requirement_category": "AUT",
+      "requirement_name": "Suporte a autenticação federada",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular login federado via SAML/OIDC. Confirmar fluxo completo e logging.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Captura de step-up. Log associado à acção crítica.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-AUT-008",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "AUT-008",
+      "requirement_category": "AUT",
+      "requirement_name": "Step-up para acções sensíveis",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular acção sensível. Confirmar exigência de factor adicional.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Log da tentativa bloqueada. Evidência de verificação da sessão activa.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-AUT-009",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "AUT-009",
+      "requirement_category": "AUT",
+      "requirement_name": "Reautenticação para alterações críticas",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar alterar credenciais sem reautenticação. Confirmar bloqueio.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "documentation"
+      ],
+      "evidence_expectation": "Exemplo de notificação enviada. Log do evento crítico detectado.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-approval-record-6fe32eb803"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "alerta"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-AUT-010",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "AUT-010",
+      "requirement_category": "AUT",
+      "requirement_name": "Alerta de acessos suspeitos",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular login anómalo. Confirmar notificação ao utilizador e registo.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Resposta 403/404 ou exigência de autenticação.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-CFG-001",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "CFG-001",
+      "requirement_category": "CFG",
+      "requirement_name": "Debug e flags desactivados em produção",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar aceder a endpoints de debug, tracing ou interfaces admin. Confirmar desactivação ou protecção.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Logs com ambiente identificado. Confirmação de segregação.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-deployment-plan-945b804751",
+        "ART-environment-inventory-154c4568fd"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-deployment-plan-945b804751",
+          "confidence": 0.52,
+          "name": "Deployment Plan",
+          "shared_salient_tokens": [
+            "deploy"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-environment-inventory-154c4568fd",
+          "confidence": 0.52,
+          "name": "Environment Inventory",
+          "shared_salient_tokens": [
+            "ambiente"
+          ]
+        }
+      ],
+      "id": "EP-CFG-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "CFG-002",
+      "requirement_category": "CFG",
+      "requirement_name": "Separação de ambientes com validação automática",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar separação de ambientes. Confirmar que deploys e testes só ocorrem em ambientes segregados.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Relatório de scan limpo. Ausência de segredos no histórico.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-policy-report-7e52280504",
+        "ART-sast-report-0358e14566"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-sast-report-0358e14566",
+          "confidence": 0.52,
+          "name": "Sast Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        }
+      ],
+      "id": "EP-CFG-003",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "CFG-003",
+      "requirement_category": "CFG",
+      "requirement_name": "Ausência de parâmetros hardcoded",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Executar scan de segredos no repositório e no código. Confirmar ausência de hardcoded secrets.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "config"
+      ],
+      "evidence_expectation": "Configuração externa e versionada. Permissões auditadas.",
+      "evidence_type": "config",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-CFG-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "CFG-004",
+      "requirement_category": "CFG",
+      "requirement_name": "Configuração externa com permissões controladas",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar que configuração é externa ao código. Confirmar permissões restritivas no repositório de configuração.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Log de falha de arranque com causa identificada.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "validacao"
+          ]
+        }
+      ],
+      "id": "EP-CFG-005",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "CFG-005",
+      "requirement_category": "CFG",
+      "requirement_name": "Validação de configuração no arranque",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Remover parâmetro obrigatório. Confirmar que arranque falha com erro explícito.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "config"
+      ],
+      "evidence_expectation": "Configuração do cofre. Políticas de acesso. Ausência de segredos locais.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-policy-report-7e52280504"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        }
+      ],
+      "id": "EP-CFG-006",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "CFG-006",
+      "requirement_category": "CFG",
+      "requirement_name": "Uso de cofres e gestão segura de segredos",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever gestão de segredos. Confirmar uso de cofre e ausência local.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "config"
+      ],
+      "evidence_expectation": "Alerta de drift. Log de alteração inesperada.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "alerta"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-CFG-007",
+      "maps_to_control_id": "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+      "maps_to_control_name": "Infraestrutura como código governada",
+      "maps_to_requirement_id": "CFG-007",
+      "requirement_category": "CFG",
+      "requirement_name": "Monitorização de drift de configuração",
+      "responsible_roles": [],
+      "risk_level_hint": "L3",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Alterar configuração crítica fora do processo normal. Confirmar detecção e alerta.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Rejeição de acesso anónimo. Logs de acesso.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-DST-001",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "DST-001",
+      "requirement_category": "DST",
+      "requirement_name": "Repositórios autenticados e auditáveis",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar acesso a repositório sem autenticação. Confirmar rejeição e logs activos.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "documentation"
+      ],
+      "evidence_expectation": "Registo de aprovação. Documentação do processo.",
+      "evidence_type": "document",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "aprovacao"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-DST-002",
+      "maps_to_control_id": "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+      "maps_to_control_name": "Infraestrutura como código governada",
+      "maps_to_requirement_id": "DST-002",
+      "requirement_category": "DST",
+      "requirement_name": "Aprovação para publicação pública",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar processo de aprovação para publicação pública. Confirmar documentação.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Artefactos assinados. Script ou pipeline de verificação.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-artifact-provenance-8b1bffca3c",
+        "ART-artifact-signature-1d67811ec5"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-artifact-provenance-8b1bffca3c",
+          "confidence": 0.52,
+          "name": "Artifact Provenance",
+          "shared_salient_tokens": [
+            "pipeline"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-artifact-signature-1d67811ec5",
+          "confidence": 0.52,
+          "name": "Artifact Signature",
+          "shared_salient_tokens": [
+            "digital"
+          ]
+        }
+      ],
+      "id": "EP-DST-003",
+      "maps_to_control_id": "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb",
+      "maps_to_control_name": "Inventário e análise de dependências",
+      "maps_to_requirement_id": "DST-003",
+      "requirement_category": "DST",
+      "requirement_name": "Assinatura digital ou checksum",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar assinatura ou checksum dos artefactos. Confirmar verificação automatizada.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "SBOM disponível e rastreável por versão.",
+      "evidence_type": "artifact",
+      "expected_artifact_type_ids": [
+        "ART-container-image-51e2624252",
+        "ART-pipeline-config-f8f2ba893d"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-container-image-51e2624252",
+          "confidence": 0.52,
+          "name": "Container Image",
+          "shared_salient_tokens": [
+            "release"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-pipeline-config-f8f2ba893d",
+          "confidence": 0.52,
+          "name": "Pipeline Config",
+          "shared_salient_tokens": [
+            "release"
+          ]
+        }
+      ],
+      "id": "EP-DST-004",
+      "maps_to_control_id": "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb",
+      "maps_to_control_name": "Inventário e análise de dependências",
+      "maps_to_requirement_id": "DST-004",
+      "requirement_category": "DST",
+      "requirement_name": "Inclusão de SBOM nos artefactos",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Confirmar geração e anexação de SBOM por release.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Políticas de acesso. Auditoria de permissões.",
+      "evidence_type": "artifact",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-environment-inventory-154c4568fd"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-environment-inventory-154c4568fd",
+          "confidence": 0.52,
+          "name": "Environment Inventory",
+          "shared_salient_tokens": [
+            "ambiente"
+          ]
+        }
+      ],
+      "id": "EP-DST-005",
+      "maps_to_control_id": "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+      "maps_to_control_name": "Infraestrutura como código governada",
+      "maps_to_requirement_id": "DST-005",
+      "requirement_category": "DST",
+      "requirement_name": "Acesso segregado por role e ambiente",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar que apenas utilizadores e automações autorizados acedem a artefactos de produção.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de pipeline como único caminho de deploy.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-artifact-provenance-8b1bffca3c",
+        "ART-deployment-plan-945b804751"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-artifact-provenance-8b1bffca3c",
+          "confidence": 0.52,
+          "name": "Artifact Provenance",
+          "shared_salient_tokens": [
+            "pipeline"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-deployment-plan-945b804751",
+          "confidence": 0.52,
+          "name": "Deployment Plan",
+          "shared_salient_tokens": [
+            "deploy"
+          ]
+        }
+      ],
+      "id": "EP-DST-006",
+      "maps_to_control_id": "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+      "maps_to_control_name": "Infraestrutura como código governada",
+      "maps_to_requirement_id": "DST-006",
+      "requirement_category": "DST",
+      "requirement_name": "Deploy apenas via pipeline validado",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar deploy manual em produção. Confirmar bloqueio.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Registo de revogação. Evidência de notificação.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-DST-007",
+      "maps_to_control_id": "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb",
+      "maps_to_control_name": "Inventário e análise de dependências",
+      "maps_to_requirement_id": "DST-007",
+      "requirement_category": "DST",
+      "requirement_name": "Revogação e limpeza de artefactos comprometidos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar processo de remoção e notificação para artefactos comprometidos.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Resposta genérica ao cliente. Log interno detalhado separado.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-ERR-001",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-001",
+      "requirement_category": "ERR",
+      "requirement_name": "Erros não expõem dados sensíveis",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Provocar erros intencionais. Confirmar que cliente recebe mensagem abstrata sem dados internos.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Captura de mensagens de erro em diferentes cenários.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ERR-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-002",
+      "requirement_category": "ERR",
+      "requirement_name": "Mensagens genéricas no cliente",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar todas as superfícies de erro. Confirmar ausência de stack trace ou informação técnica.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Respostas iguais para recursos existentes e inexistentes.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ERR-003",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-003",
+      "requirement_category": "ERR",
+      "requirement_name": "Não revelar existência de recursos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar recursos existentes e inexistentes. Confirmar respostas de erro idênticas (sem enumeração).",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Mensagens traduzidas sem referências técnicas ou executáveis.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ERR-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-004",
+      "requirement_category": "ERR",
+      "requirement_name": "Mensagens localizadas e seguras",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar mensagens em diferentes locales. Confirmar ausência de conteúdo executável.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Código com handler centralizado. Ausência de tratamento ad-hoc disperso.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-ERR-005",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-005",
+      "requirement_category": "ERR",
+      "requirement_name": "Gestão padronizada e centralizada",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever arquitectura de tratamento de erros. Confirmar centralização.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "documentation"
+      ],
+      "evidence_expectation": "Cobertura de testes de erro. Relatório de execução.",
+      "evidence_type": "test",
+      "expected_artifact_type_ids": [
+        "ART-policy-report-7e52280504",
+        "ART-sast-report-0358e14566"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-sast-report-0358e14566",
+          "confidence": 0.52,
+          "name": "Sast Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        }
+      ],
+      "id": "EP-ERR-006",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-006",
+      "requirement_category": "ERR",
+      "requirement_name": "Testes automáticos para erros excessivos",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Executar testes automáticos de cenários de erro. Confirmar que erros são tratados sem fuga.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Logs sem dados sensíveis. IDs contextuais pseudonimizados.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-ERR-007",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "ERR-007",
+      "requirement_category": "ERR",
+      "requirement_name": "Logs de erro com contexto pseudonimizado",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever logs de erro. Confirmar ausência de dados pessoais, tokens ou credenciais.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Lista mantida. Evidência de aprovação das ferramentas em uso.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-release-gate-57ec988cdb"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "aprovacao"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-release-gate-57ec988cdb",
+          "confidence": 0.52,
+          "name": "Release Gate",
+          "shared_salient_tokens": [
+            "aprovacao"
+          ]
+        }
+      ],
+      "id": "EP-IDE-001",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "IDE-001",
+      "requirement_category": "IDE",
+      "requirement_name": "Ferramentas e IDEs autorizadas",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar lista de ferramentas e IDEs autorizadas e se está actualizada.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Histórico de actualizações. Versões actuais documentadas.",
+      "evidence_type": "artifact",
+      "expected_artifact_type_ids": [
+        "ART-sca-report-da2c6d2413"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-sca-report-da2c6d2413",
+          "confidence": 0.52,
+          "name": "Sca Report",
+          "shared_salient_tokens": [
+            "vulnerabilidade"
+          ]
+        }
+      ],
+      "id": "EP-IDE-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "IDE-002",
+      "requirement_category": "IDE",
+      "requirement_name": "Actualização e gestão de vulnerabilidades",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar versões de IDEs e ferramentas em uso. Confirmar actualizações aplicadas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de revisão de código gerado. Pull request com revisão documentada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-review-checklist-de29054201"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "auditoria"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-review-checklist-de29054201",
+          "confidence": 0.52,
+          "name": "Review Checklist",
+          "shared_salient_tokens": [
+            "revisao"
+          ]
+        }
+      ],
+      "id": "EP-IDE-003",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "IDE-003",
+      "requirement_category": "IDE",
+      "requirement_name": "Auditoria de código gerado por ferramentas",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever amostras de código gerado. Confirmar existência de processo de revisão antes de integração.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Lista de extensões com origem documentada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-IDE-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "IDE-004",
+      "requirement_category": "IDE",
+      "requirement_name": "Extensões e plugins de fontes confiáveis",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar lista de extensões instaladas. Confirmar que são de fontes reconhecidas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Permissões revistas. Execução sandboxed confirmada.",
+      "evidence_type": "artifact",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-IDE-005",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "IDE-005",
+      "requirement_category": "IDE",
+      "requirement_name": "Controlo de permissões de extensões",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar permissões concedidas a extensões. Confirmar que apenas as necessárias estão activas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Política de uso de ambientes locais. Logs de rede ou proxy.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-environment-inventory-154c4568fd"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-environment-inventory-154c4568fd",
+          "confidence": 0.52,
+          "name": "Environment Inventory",
+          "shared_salient_tokens": [
+            "ambiente"
+          ]
+        }
+      ],
+      "id": "EP-IDE-006",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "IDE-006",
+      "requirement_category": "IDE",
+      "requirement_name": "Limitação de ambientes locais sem controlo",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar controlo sobre uso de ambientes locais. Confirmar existência de logs ou proxy quando aplicável.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de rejeição. Sem processamento cego de mensagens inválidas.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia",
+            "validacao"
+          ]
+        }
+      ],
+      "id": "EP-INT-001",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-001",
+      "requirement_category": "INT",
+      "requirement_name": "Validação de mensagens entre sistemas",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Enviar mensagem malformada a integração. Confirmar rejeição ou tratamento controlado.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de rejeição. Teste de token expirado.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-INT-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-002",
+      "requirement_category": "INT",
+      "requirement_name": "Autenticação mútua ou tokens seguros",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar integração sem token ou com token inválido. Confirmar rejeição.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Scanner de TLS. Logs de conexão cifrada.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-sca-report-da2c6d2413"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-sca-report-da2c6d2413",
+          "confidence": 0.52,
+          "name": "Sca Report",
+          "shared_salient_tokens": [
+            "scan"
+          ]
+        }
+      ],
+      "id": "EP-INT-003",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-003",
+      "requirement_category": "INT",
+      "requirement_name": "Transmissão cifrada com TLS",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Interceptar tráfego entre sistemas. Confirmar cifra TLS activa. Verificar versões suportadas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Erro ou redirect para protocolo seguro. Log de rejeição.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-INT-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-004",
+      "requirement_category": "INT",
+      "requirement_name": "Proibição de protocolos inseguros",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar comunicação por protocolo inseguro. Confirmar rejeição ou redirect.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de verificação de integridade. Log de falha de validação.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-artifact-signature-1d67811ec5",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-artifact-signature-1d67811ec5",
+          "confidence": 0.52,
+          "name": "Artifact Signature",
+          "shared_salient_tokens": [
+            "assinatura"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-INT-005",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-005",
+      "requirement_category": "INT",
+      "requirement_name": "Assinatura e integridade de mensagens",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Enviar mensagem com assinatura inválida ou em falta. Confirmar rejeição e log.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de rejeição com origem identificada. Lista de origens autorizadas.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "validacao"
+          ]
+        }
+      ],
+      "id": "EP-INT-006",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-006",
+      "requirement_category": "INT",
+      "requirement_name": "Validação cruzada de origem e destino",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Enviar mensagem de origem não autorizada. Confirmar rejeição.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "documentation"
+      ],
+      "evidence_expectation": "Alerta disparado. Log com contexto do padrão detectado.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "alerta"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-INT-007",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "INT-007",
+      "requirement_category": "INT",
+      "requirement_name": "Monitorização e detecção de padrões anómalos",
+      "responsible_roles": [],
+      "risk_level_hint": "L3",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular padrão de comunicação anómalo. Confirmar alerta.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Documentação de integração. Cláusulas contratuais de segurança.",
+      "evidence_type": "document",
+      "expected_artifact_type_ids": [
+        "ART-review-checklist-de29054201"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-review-checklist-de29054201",
+          "confidence": 0.52,
+          "name": "Review Checklist",
+          "shared_salient_tokens": [
+            "revisao"
+          ]
+        }
+      ],
+      "id": "EP-INT-008",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "INT-008",
+      "requirement_category": "INT",
+      "requirement_name": "Revisão de segurança e contrato em integrações",
+      "responsible_roles": [],
+      "risk_level_hint": "L3",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar documentação de integrações e cláusulas de segurança nos contratos.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "config"
+      ],
+      "evidence_expectation": "Logs auditáveis com eventos mapeados por tipo e contexto.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-LOG-001",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-001",
+      "requirement_category": "LOG",
+      "requirement_name": "Registo de eventos críticos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever configuração de logging. Confirmar cobertura de acessos, alterações e falhas críticas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Amostras de log com todos os atributos obrigatórios.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-LOG-002",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-002",
+      "requirement_category": "LOG",
+      "requirement_name": "Atributos mínimos em logs",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Analisar estrutura de logs. Confirmar presença de quem, quando, o quê e onde em cada entrada.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Evidência de WORM, syslog remoto ou mecanismo de detecção de tamper.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-LOG-003",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-003",
+      "requirement_category": "LOG",
+      "requirement_name": "Protecção de integridade e acesso aos logs",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar alterar log em disco. Verificar mecanismos de protecção (hash, write-once, syslog remoto).",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Registo de análise datado. Procedimento documentado.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-LOG-004",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-004",
+      "requirement_category": "LOG",
+      "requirement_name": "Análise periódica de logs",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Confirmar existência de processo de análise periódica documentado e executado.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd",
+        "config"
+      ],
+      "evidence_expectation": "Configuração de retenção. Evidência de logs no período exigido.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "politica"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-LOG-005",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-005",
+      "requirement_category": "LOG",
+      "requirement_name": "Retenção mínima dos logs",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar período de retenção efectivo contra política definida.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "config"
+      ],
+      "evidence_expectation": "Visualização centralizada com logs por aplicação.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-LOG-006",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-006",
+      "requirement_category": "LOG",
+      "requirement_name": "Envio para sistema centralizado",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Confirmar envio para agregador central. Verificar configuração de forwarding.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log do alerta disparado com timestamp e detalhe.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "alerta"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-LOG-007",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-007",
+      "requirement_category": "LOG",
+      "requirement_name": "Classificação e detecção de anomalias",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Gerar evento anómalo. Confirmar disparo de alerta com threshold e canal configurados.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Alerta de falha de logging. Log da detecção.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-alert-policy-c55180d8ab",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-alert-policy-c55180d8ab",
+          "confidence": 0.52,
+          "name": "Alert Policy",
+          "shared_salient_tokens": [
+            "alerta"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-LOG-008",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-008",
+      "requirement_category": "LOG",
+      "requirement_name": "Alarme em falhas do mecanismo de logging",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Desactivar ou bloquear o sistema de logging. Confirmar que falha é detectada e alertada.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Capacidade demonstrada de reconstrução de timeline de evento.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-incident-metrics-946f5d7447",
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-incident-metrics-946f5d7447",
+          "confidence": 0.52,
+          "name": "Incident Metrics",
+          "shared_salient_tokens": [
+            "incidente"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-LOG-009",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-009",
+      "requirement_category": "LOG",
+      "requirement_name": "Logs suportam resposta a incidentes",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular incidente ou revisão forense. Confirmar que logs têm detalhe suficiente para reconstrução.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Logs com eventos de negócio identificados e rastreáveis.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-LOG-010",
+      "maps_to_control_id": "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+      "maps_to_control_name": "Monitorização e resposta operacional",
+      "maps_to_requirement_id": "LOG-010",
+      "requirement_category": "LOG",
+      "requirement_name": "Logging de eventos críticos de negócio",
+      "responsible_roles": [],
+      "risk_level_hint": "L3",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar registo de eventos críticos de negócio (transacções, autorizações de alto impacto).",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Requisitos marcados e rastreáveis no backlog.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-REQ-001",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "REQ-001",
+      "requirement_category": "REQ",
+      "requirement_name": "Inclusão de requisitos de segurança",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar existência de requisitos de segurança em backlog/documentação.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Registo de revisão com responsável identificado.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-REQ-002",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "REQ-002",
+      "requirement_category": "REQ",
+      "requirement_name": "Revisão formal de segurança dos requisitos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar existência de processo de revisão executado e documentado.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Matriz de aplicabilidade actualizada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-risk-acceptance-record-ebea5da638",
+        "ART-risk-matrix-6dafdd25fc"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-risk-acceptance-record-ebea5da638",
+          "confidence": 0.52,
+          "name": "Risk Acceptance Record",
+          "shared_salient_tokens": [
+            "risco"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-risk-matrix-6dafdd25fc",
+          "confidence": 0.52,
+          "name": "Risk Matrix",
+          "shared_salient_tokens": [
+            "matriz",
+            "risco"
+          ]
+        }
+      ],
+      "id": "EP-REQ-003",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "REQ-003",
+      "requirement_category": "REQ",
+      "requirement_name": "Alinhamento com classificação de risco",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Confirmar mapeamento entre requisitos e nível de criticidade.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Controlo de versões activo. Histórico disponível.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-REQ-004",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "REQ-004",
+      "requirement_category": "REQ",
+      "requirement_name": "Versionamento e gestão de requisitos",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar histórico de alterações ao catálogo do projecto.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Registo de decisão associado à alteração.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-REQ-005",
+      "maps_to_control_id": "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf",
+      "maps_to_control_name": "Capacitação e onboarding de segurança",
+      "maps_to_requirement_id": "REQ-005",
+      "requirement_category": "REQ",
+      "requirement_name": "Nova análise de ameaça após alteração de requisito",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Confirmar que alterações relevantes desencadeiam revisão de threat model.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Matriz ou ferramenta com ligações explícitas.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-artifact-provenance-8b1bffca3c",
+        "ART-risk-matrix-6dafdd25fc"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-artifact-provenance-8b1bffca3c",
+          "confidence": 0.52,
+          "name": "Artifact Provenance",
+          "shared_salient_tokens": [
+            "rastreabilidade"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-risk-matrix-6dafdd25fc",
+          "confidence": 0.52,
+          "name": "Risk Matrix",
+          "shared_salient_tokens": [
+            "matriz"
+          ]
+        }
+      ],
+      "id": "EP-REQ-006",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "REQ-006",
+      "requirement_category": "REQ",
+      "requirement_name": "Rastreabilidade requisito → ameaça → teste",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar rastreabilidade requisito → ameaça → teste.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Registos de revisão iterativa datados.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-approval-record-6fe32eb803",
+        "ART-finding-register-b39d52b4e7"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-approval-record-6fe32eb803",
+          "confidence": 0.52,
+          "name": "Approval Record",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-finding-register-b39d52b4e7",
+          "confidence": 0.52,
+          "name": "Finding Register",
+          "shared_salient_tokens": [
+            "registo"
+          ]
+        }
+      ],
+      "id": "EP-REQ-007",
+      "maps_to_control_id": "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
+      "maps_to_control_name": "Classificação e governação por risco",
+      "maps_to_requirement_id": "REQ-007",
+      "requirement_category": "REQ",
+      "requirement_name": "Revisão iterativa com equipas",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Confirmar existência de ciclos de revisão com equipas.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Log de timeout. Captura de sessão terminada.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-SES-001",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-001",
+      "requirement_category": "SES",
+      "requirement_name": "Expiração automática por inactividade",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Simular inactividade pelo período configurado. Confirmar expiração e redirect.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Erro de autenticação na reutilização. Log de invalidação.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-SES-002",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-002",
+      "requirement_category": "SES",
+      "requirement_name": "Logout manual e após alteração de credenciais",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Efectuar logout. Tentar reutilizar token. Alterar password e tentar usar token anterior.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Análise de tokens. Ausência de previsibilidade demonstrada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-SES-003",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-003",
+      "requirement_category": "SES",
+      "requirement_name": "Identificadores de sessão imprevisíveis",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Analisar tokens gerados. Confirmar entropia adequada e ausência de padrão previsível.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "config"
+      ],
+      "evidence_expectation": "Headers de resposta. Flags Secure e HttpOnly confirmados.",
+      "evidence_type": "config",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-SES-004",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-004",
+      "requirement_category": "SES",
+      "requirement_name": "Transmissão segura dos tokens",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Interceptar tráfego com proxy. Confirmar que tokens apenas transitam por TLS. Verificar flags de cookies.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Log de terminação de sessão por mudança de contexto.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-SES-005",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-005",
+      "requirement_category": "SES",
+      "requirement_name": "Ligação da sessão ao contexto do cliente",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Alterar IP ou user-agent durante sessão activa. Confirmar terminação ou exigência de revalidação.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Erro de autenticação imediato. Log de revogação explícita.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        }
+      ],
+      "id": "EP-SES-006",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-006",
+      "requirement_category": "SES",
+      "requirement_name": "Revogação explícita da sessão",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Revogar sessão via interface de gestão. Testar imediatamente após revogação.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "config"
+      ],
+      "evidence_expectation": "Configuração de TTL. Evidência de expiração forçada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "evidencia"
+          ]
+        }
+      ],
+      "id": "EP-SES-007",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-007",
+      "requirement_category": "SES",
+      "requirement_name": "Prevenção de sessões long-lived",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Verificar TTL máximo configurado. Tentar manter sessão para além do limite.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "config"
+      ],
+      "evidence_expectation": "JWT decoded com claims correctos. Falha após revogação.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [],
+      "expected_artifacts": [],
+      "id": "EP-SES-008",
+      "maps_to_control_id": "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+      "maps_to_control_name": "Gestão de identidades, acessos e ownership",
+      "maps_to_requirement_id": "SES-008",
+      "requirement_category": "SES",
+      "requirement_name": "Scope, TTL e revogação de tokens JWT",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Inspecionar JWTs. Confirmar claims de âmbito e expiração. Testar token após revogação.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs"
+      ],
+      "evidence_expectation": "Testes de input inválido. Código com validações. Logs de rejeição.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-log-stream-b67ee06f7e",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-log-stream-b67ee06f7e",
+          "confidence": 0.52,
+          "name": "Log Stream",
+          "shared_salient_tokens": [
+            "log"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-VAL-001",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-001",
+      "requirement_category": "VAL",
+      "requirement_name": "Validação geral de entradas externas",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever código de validação. Enviar inputs inválidos (tipo, tamanho, formato). Confirmar rejeição.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd"
+      ],
+      "evidence_expectation": "Código com whitelist explícita. Testes com valores não previstos.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-VAL-002",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-002",
+      "requirement_category": "VAL",
+      "requirement_name": "Uso de whitelists em vez de blacklists",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Tentar enviar valores fora da lista permitida. Confirmar rejeição e ausência de tratamento implícito.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Rejeições consistentes. Testes de contrato.",
+      "evidence_type": "test",
+      "expected_artifact_type_ids": [
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-VAL-003",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-003",
+      "requirement_category": "VAL",
+      "requirement_name": "Validadores de esquema (JSON/XML schema)",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Enviar payloads malformados ou com campos em falta. Confirmar rejeição automática.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Relatórios de scanner. Ausência de concatenação em queries.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-policy-report-7e52280504",
+        "ART-sast-report-0358e14566"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-sast-report-0358e14566",
+          "confidence": 0.52,
+          "name": "Sast Report",
+          "shared_salient_tokens": [
+            "relatorio",
+            "sast"
+          ]
+        }
+      ],
+      "id": "EP-VAL-004",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-004",
+      "requirement_category": "VAL",
+      "requirement_name": "Sanitização contra injecções",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Rever uso de prepared statements. Executar SAST e testes de injecção SQL.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [],
+      "evidence_expectation": "Testes com payloads XSS. Sanitização de output observável.",
+      "evidence_type": "test",
+      "expected_artifact_type_ids": [
+        "ART-sca-report-da2c6d2413",
+        "ART-test-report-b11c5dfb8a"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-sca-report-da2c6d2413",
+          "confidence": 0.52,
+          "name": "Sca Report",
+          "shared_salient_tokens": [
+            "output"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-test-report-b11c5dfb8a",
+          "confidence": 0.52,
+          "name": "Test Report",
+          "shared_salient_tokens": [
+            "teste"
+          ]
+        }
+      ],
+      "id": "EP-VAL-005",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-005",
+      "requirement_category": "VAL",
+      "requirement_name": "Validação antes do uso interno",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Testar output em campos renderizados no browser. Confirmar escaping correcto.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "logs",
+        "ci_cd"
+      ],
+      "evidence_expectation": "Mensagens de erro genéricas. Ausência de detalhe técnico no cliente.",
+      "evidence_type": "log",
+      "expected_artifact_type_ids": [
+        "ART-validation-evidence-79f6aaf0ec"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+          "confidence": 0.52,
+          "name": "Validation Evidence",
+          "shared_salient_tokens": [
+            "validacao"
+          ]
+        }
+      ],
+      "id": "EP-VAL-006",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-006",
+      "requirement_category": "VAL",
+      "requirement_name": "Mensagens de erro seguras na validação",
+      "responsible_roles": [],
+      "risk_level_hint": "L1+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Forçar erro de validação. Confirmar que mensagem ao cliente não expõe lógica interna.",
+      "verification_when": null
+    },
+    {
+      "authority_class": "normative",
+      "confidence_model": "deterministic",
+      "detectable_in": [
+        "ci_cd",
+        "documentation"
+      ],
+      "evidence_expectation": "Relatórios de execução. Cobertura de casos documentada.",
+      "evidence_type": "workflow",
+      "expected_artifact_type_ids": [
+        "ART-policy-report-7e52280504",
+        "ART-sast-report-0358e14566"
+      ],
+      "expected_artifacts": [
+        {
+          "artifact_type_id": "ART-policy-report-7e52280504",
+          "confidence": 0.52,
+          "name": "Policy Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        },
+        {
+          "artifact_type_id": "ART-sast-report-0358e14566",
+          "confidence": 0.52,
+          "name": "Sast Report",
+          "shared_salient_tokens": [
+            "relatorio"
+          ]
+        }
+      ],
+      "id": "EP-VAL-007",
+      "maps_to_control_id": "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+      "maps_to_control_name": "Desenvolvimento seguro e validação de código",
+      "maps_to_requirement_id": "VAL-007",
+      "requirement_category": "VAL",
+      "requirement_name": "Testes automáticos contra entradas maliciosas",
+      "responsible_roles": [],
+      "risk_level_hint": "L2+",
+      "source_bundle": "02-requisitos-seguranca",
+      "source_document": "010-sbd-manual/02-requisitos-seguranca/addon/07-validacao-requisitos.md",
+      "source_mode": "explicit",
+      "supported_signal_ids": [],
+      "verification_logic": "Executar testes automatizados com payloads maliciosos (XSS, SQLi, path traversal).",
+      "verification_when": null
+    }
+  ],
+  "profiles": [
+    "review"
+  ],
+  "source_artifact": "data/entities/evidence_patterns.json"
+}

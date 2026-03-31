@@ -1,0 +1,235 @@
+{
+  "artifacts": [
+    {
+      "count": 235,
+      "entity_type": "Requirement",
+      "file": "requirements.json",
+      "name": "requirements",
+      "profiles": [
+        "consult",
+        "guide",
+        "review"
+      ],
+      "source_artifact": "data/entities/canonical_requirements_s7.json"
+    },
+    {
+      "count": 16,
+      "entity_type": "Control",
+      "file": "controls.json",
+      "name": "controls",
+      "profiles": [
+        "consult",
+        "guide",
+        "review",
+        "threats"
+      ],
+      "source_artifact": "data/entities/canonical_controls.json"
+    },
+    {
+      "count": 204,
+      "entity_type": "Practice",
+      "file": "practices.json",
+      "name": "practices",
+      "profiles": [
+        "guide"
+      ],
+      "source_artifact": "data/entities/practices.json"
+    },
+    {
+      "count": 999,
+      "entity_type": "PracticeAssignment",
+      "file": "assignments.json",
+      "name": "assignments",
+      "profiles": [
+        "guide"
+      ],
+      "source_artifact": "data/entities/practice_assignments.json"
+    },
+    {
+      "count": 204,
+      "entity_type": "UserStory",
+      "file": "user_stories.json",
+      "name": "user_stories",
+      "profiles": [
+        "guide"
+      ],
+      "source_artifact": "data/entities/lifecycle_user_stories.json"
+    },
+    {
+      "count": 13,
+      "entity_type": "Role",
+      "file": "roles.json",
+      "name": "roles",
+      "profiles": [
+        "guide"
+      ],
+      "source_artifact": "data/entities/canonical_roles_s5.json"
+    },
+    {
+      "count": 8,
+      "entity_type": "SDLCPhase",
+      "file": "phases.json",
+      "name": "phases",
+      "profiles": [
+        "guide"
+      ],
+      "source_artifact": "data/entities/sdlc_phases_canonical_s6.json"
+    },
+    {
+      "count": 37,
+      "entity_type": "Artifact",
+      "file": "artifacts.json",
+      "name": "artifacts",
+      "profiles": [
+        "consult",
+        "review"
+      ],
+      "source_artifact": "data/entities/artifact_catalog.json"
+    },
+    {
+      "count": 233,
+      "entity_type": "Threat",
+      "file": "threats.json",
+      "name": "threats",
+      "profiles": [
+        "threats"
+      ],
+      "source_artifact": "data/entities/mitigated_threats.json"
+    },
+    {
+      "count": 107,
+      "entity_type": "EvidencePattern",
+      "file": "evidence_patterns.json",
+      "name": "evidence_patterns",
+      "profiles": [
+        "review"
+      ],
+      "source_artifact": "data/entities/evidence_patterns.json"
+    },
+    {
+      "count": 37,
+      "entity_type": "ArtifactRequirement",
+      "file": "artifact_requirements.json",
+      "name": "artifact_requirements",
+      "profiles": [
+        "consult",
+        "review"
+      ],
+      "source_artifact": "data/entities/artifact_requirements.json"
+    },
+    {
+      "count": 242,
+      "entity_type": "RequirementControlLink",
+      "file": "requirement_control_links.json",
+      "name": "requirement_control_links",
+      "profiles": [
+        "consult",
+        "review",
+        "threats"
+      ],
+      "source_artifact": "data/publish/semantic/requirement_control_links.jsonl"
+    },
+    {
+      "count": 23,
+      "entity_type": "Signal",
+      "file": "signals.json",
+      "name": "signals",
+      "profiles": [
+        "review"
+      ],
+      "source_artifact": "data/publish/semantic/signals.jsonl"
+    },
+    {
+      "count": 9,
+      "entity_type": "SignalEvidenceLink",
+      "file": "signal_evidence_links.json",
+      "name": "signal_evidence_links",
+      "profiles": [
+        "review"
+      ],
+      "source_artifact": "data/publish/semantic/signal_evidence_links.jsonl"
+    },
+    {
+      "count": 26,
+      "entity_type": "AntiPattern",
+      "file": "antipatterns.json",
+      "name": "antipatterns",
+      "profiles": [
+        "threats"
+      ],
+      "source_artifact": "data/publish/semantic/antipatterns.jsonl"
+    },
+    {
+      "count": 2,
+      "entity_type": "AntiPatternRequirementLink",
+      "file": "antipattern_requirement_links.json",
+      "name": "antipattern_requirement_links",
+      "profiles": [
+        "threats"
+      ],
+      "source_artifact": "data/publish/semantic/antipattern_requirement_links.jsonl"
+    },
+    {
+      "count": 5,
+      "entity_type": "AntiPatternThreatLink",
+      "file": "antipattern_threat_links.json",
+      "name": "antipattern_threat_links",
+      "profiles": [
+        "threats"
+      ],
+      "source_artifact": "data/publish/semantic/antipattern_threat_links.jsonl"
+    }
+  ],
+  "bundle_type": "deterministic_runtime_bundle",
+  "notes": {
+    "mcp_chunks": "retrieval and grounding skin; not deterministic source of truth",
+    "vector_chunks": "optional vector recall skin; not deterministic source of truth"
+  },
+  "ontology_artifact": "data/publish/sbdtoe-ontology.yaml",
+  "profiles": {
+    "consult": {
+      "required_artifacts": [
+        "requirements.json",
+        "controls.json",
+        "artifacts.json",
+        "artifact_requirements.json",
+        "requirement_control_links.json"
+      ]
+    },
+    "guide": {
+      "required_artifacts": [
+        "requirements.json",
+        "controls.json",
+        "practices.json",
+        "assignments.json",
+        "user_stories.json",
+        "roles.json",
+        "phases.json"
+      ]
+    },
+    "review": {
+      "required_artifacts": [
+        "requirements.json",
+        "controls.json",
+        "artifacts.json",
+        "artifact_requirements.json",
+        "evidence_patterns.json",
+        "signals.json",
+        "signal_evidence_links.json",
+        "requirement_control_links.json"
+      ]
+    },
+    "threats": {
+      "required_artifacts": [
+        "requirements.json",
+        "controls.json",
+        "threats.json",
+        "requirement_control_links.json",
+        "antipatterns.json",
+        "antipattern_requirement_links.json",
+        "antipattern_threat_links.json"
+      ]
+    }
+  },
+  "version": "v2-draft"
+}

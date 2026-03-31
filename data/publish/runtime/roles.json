@@ -1,0 +1,124 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 13,
+  "entity_type": "Role",
+  "items": [
+    {
+      "aliases": [
+        "developer",
+        "scrum_master",
+        "software_architect",
+        "team_lead"
+      ],
+      "canonical": true,
+      "role_id": "developer",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "auditor",
+        "internal_auditor"
+      ],
+      "canonical": true,
+      "role_id": "auditores",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [],
+      "canonical": true,
+      "role_id": "arquitetos-software",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "appsec"
+      ],
+      "canonical": true,
+      "role_id": "appsec-engineer",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "security-champions",
+        "security-monitoring-team",
+        "security_champion"
+      ],
+      "canonical": true,
+      "role_id": "security-champion",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [],
+      "canonical": true,
+      "role_id": "scrum-master",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "product_owner",
+        "qa",
+        "tester"
+      ],
+      "canonical": true,
+      "role_id": "qa",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [],
+      "canonical": true,
+      "role_id": "product-owner",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [],
+      "canonical": true,
+      "role_id": "operacoes",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "compliance",
+        "grc"
+      ],
+      "canonical": true,
+      "role_id": "grc-compliance",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "ciso",
+        "executive_management",
+        "gestao"
+      ],
+      "canonical": true,
+      "role_id": "gestao-executiva",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "ir",
+        "third_party"
+      ],
+      "canonical": true,
+      "role_id": "fornecedores-terceiros",
+      "source": "00-fundamentos/roles-responsabilidades"
+    },
+    {
+      "aliases": [
+        "devops",
+        "devops-automatico-se-via-dependabot",
+        "devops-bloqueio",
+        "devops-lead",
+        "ops",
+        "sre"
+      ],
+      "canonical": true,
+      "role_id": "devops-sre",
+      "source": "00-fundamentos/roles-responsabilidades"
+    }
+  ],
+  "profiles": [
+    "guide"
+  ],
+  "source_artifact": "data/entities/canonical_roles_s5.json"
+}

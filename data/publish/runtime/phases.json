@@ -1,0 +1,121 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 8,
+  "entity_type": "SDLCPhase",
+  "items": [
+    {
+      "aliases": [
+        "planeamento",
+        "planning",
+        "requirements"
+      ],
+      "canonical": true,
+      "description": "Requirements gathering, classification, planning",
+      "label": "Planning & Requirements",
+      "manual_chapter": 1,
+      "phase_id": "plan",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "design",
+        "architecture",
+        "design_planning"
+      ],
+      "canonical": true,
+      "description": "Threat modeling, architecture design, security design",
+      "label": "Design & Architecture",
+      "manual_chapter": 3,
+      "phase_id": "design",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "dev",
+        "development",
+        "coding"
+      ],
+      "canonical": true,
+      "description": "Secure coding, dependency management, code review",
+      "label": "Development",
+      "manual_chapter": 5,
+      "phase_id": "develop",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "build",
+        "ci",
+        "cd",
+        "pipeline"
+      ],
+      "canonical": true,
+      "description": "CI/CD pipelines, IaC, containerization",
+      "label": "Build & CI/CD",
+      "manual_chapter": 7,
+      "phase_id": "build",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "test",
+        "qa",
+        "validation",
+        "staging"
+      ],
+      "canonical": true,
+      "description": "Security testing, QA, validation, staging",
+      "label": "Testing & Validation",
+      "manual_chapter": 10,
+      "phase_id": "test",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "deploy",
+        "deployment",
+        "release",
+        "production"
+      ],
+      "canonical": true,
+      "description": "Release management, deployment to production",
+      "label": "Deployment & Release",
+      "manual_chapter": 11,
+      "phase_id": "deploy",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "ops",
+        "operations",
+        "monitoring",
+        "operacoes"
+      ],
+      "canonical": true,
+      "description": "Operations, monitoring, patching, incident response",
+      "label": "Operations & Monitoring",
+      "manual_chapter": 12,
+      "phase_id": "operate",
+      "source": "s6-consolidation"
+    },
+    {
+      "aliases": [
+        "govern",
+        "governance",
+        "audit",
+        "compliance",
+        "grc"
+      ],
+      "canonical": true,
+      "description": "Governance, compliance, audit, training, offboarding",
+      "label": "Governance & Audit",
+      "manual_chapter": 14,
+      "phase_id": "govern",
+      "source": "s6-consolidation"
+    }
+  ],
+  "profiles": [
+    "guide"
+  ],
+  "source_artifact": "data/entities/sdlc_phases_canonical_s6.json"
+}

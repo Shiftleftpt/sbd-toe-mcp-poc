@@ -1,0 +1,1012 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 23,
+  "entity_type": "Signal",
+  "items": [
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "01-classificacao-aplicacoes"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:alteracao-na-exposicao-dados-impacto-ou-forma-de-decisoes-e-validacoes",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "01-classificacao-aplicacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-01-classificacao-aplicacoes-intro--classificacao-da-criticidade-aplicacional"
+        ]
+      },
+      "label": "alteração na exposição, dados, impacto ou forma de decisões e validações",
+      "normalized_key": "alteracao-dado-decisoe-exposicao-forma-impacto-validacoe",
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "signal_id": "sem:signal:alteracao-na-exposicao-dados-impacto-ou-forma-de-decisoes-e-validacoes",
+      "signal_type": "indicador para considerar ferramentas de automação e IA na classificação",
+      "signal_types": [
+        "indicador para considerar ferramentas de automação e IA na classificação"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "Signal": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-01-classificacao-aplicacoes-intro--classificacao-da-criticidade-aplicacional"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:catalogo-de-modulos-certificados",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+        ]
+      },
+      "label": "Catálogo de módulos certificados",
+      "normalized_key": "catalogo-certificado-modulo",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:catalogo-de-modulos-certificados",
+      "signal_type": "indicação de controle de qualidade",
+      "signal_types": [
+        "indicação de controle de qualidade"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "Signal": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:signal:checklist-completo",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "13-formacao-onboarding"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "Checklist Completo",
+      "normalized_key": "checklist-completo",
+      "run_labels": [
+        "20260330_ch13_sample"
+      ],
+      "signal_id": "sem:signal:checklist-completo",
+      "signal_type": "evidência de conformidade",
+      "signal_types": [
+        "evidência de conformidade"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "Signal": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:clausulas-contratuais-rastreadas",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+        ]
+      },
+      "label": "Cláusulas contratuais rastreadas",
+      "normalized_key": "clausula-contratuai-rastreada",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:clausulas-contratuais-rastreadas",
+      "signal_type": "rastreamento",
+      "signal_types": [
+        "rastreamento"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:dashboards-de-validacao",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+        ]
+      },
+      "label": "Dashboards de validação",
+      "normalized_key": "dashboard-validacao",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:dashboards-de-validacao",
+      "signal_type": "indicação de monitoramento contínuo",
+      "signal_types": [
+        "indicação de monitoramento contínuo"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:excecoes-registadas-e-aprovadas",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+        ]
+      },
+      "label": "Exceções registadas e aprovadas",
+      "normalized_key": "aprovada-excecoe-registada",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:excecoes-registadas-e-aprovadas",
+      "signal_type": "registro",
+      "signal_types": [
+        "registro"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:excecoes-as-praticas-prescritas",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--2-prescricao-pratica"
+        ]
+      },
+      "label": "exceções às práticas prescritas",
+      "normalized_key": "excecoe-pratica-prescrita",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:excecoes-as-praticas-prescritas",
+      "signal_type": "evento de exceção",
+      "signal_types": [
+        "evento de exceção"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--2-prescricao-pratica"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "addon"
+      ],
+      "entity_id": "sem:signal:falhas-de-login",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-addon-03-alertas-eventos-criticos--alertas-baseados-em-eventos-criticos--como-definir-um-alerta-eficaz"
+        ]
+      },
+      "label": "Falhas de login",
+      "normalized_key": "falha-login",
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "signal_id": "sem:signal:falhas-de-login",
+      "signal_type": "evento de segurança",
+      "signal_types": [
+        "evento de segurança"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 0.8,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-addon-03-alertas-eventos-criticos--alertas-baseados-em-eventos-criticos--como-definir-um-alerta-eficaz"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:gestao-centralizada-de-excecoes",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+        ]
+      },
+      "label": "Gestão centralizada de exceções",
+      "normalized_key": "centralizada-excecoe-gestao",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:gestao-centralizada-de-excecoes",
+      "signal_type": "indicação de controle formal",
+      "signal_types": [
+        "indicação de controle formal"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:kpis-consolidados",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+        ]
+      },
+      "label": "KPIs consolidados",
+      "normalized_key": "consolidado-kpis",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:kpis-consolidados",
+      "signal_type": "monitorização",
+      "signal_types": [
+        "monitorização"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:kpis-de-eficacia-formativa",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "13-formacao-onboarding"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-13-formacao-onboarding-intro--formacao-e-capacitacao"
+        ]
+      },
+      "label": "KPIs de eficácia formativa",
+      "normalized_key": "eficacia-formativa-kpis",
+      "run_labels": [
+        "20260330_ch13_sample"
+      ],
+      "signal_id": "sem:signal:kpis-de-eficacia-formativa",
+      "signal_type": "medição de desempenho",
+      "signal_types": [
+        "medição de desempenho"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-intro--formacao-e-capacitacao"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:signal:kpis-de-formacao",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "13-formacao-onboarding"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "KPIs de Formação",
+      "normalized_key": "formacao-kpis",
+      "run_labels": [
+        "20260330_ch13_sample"
+      ],
+      "signal_id": "sem:signal:kpis-de-formacao",
+      "signal_type": "indicador de melhoria contínua",
+      "signal_types": [
+        "indicador de melhoria contínua"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:kpis-de-governacao",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+        ]
+      },
+      "label": "KPIs de governação",
+      "normalized_key": "governacao-kpis",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:kpis-de-governacao",
+      "signal_type": "indicadores de desempenho",
+      "signal_types": [
+        "indicadores de desempenho"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:ligacao-explicita-a-frameworks-normativos",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+        ]
+      },
+      "label": "Ligação explícita a frameworks normativos",
+      "normalized_key": "explicita-framework-ligacao-normativo",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:ligacao-explicita-a-frameworks-normativos",
+      "signal_type": "conformidade",
+      "signal_types": [
+        "conformidade"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--rastreabilidade-organizacional"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:logs",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes"
+        ]
+      },
+      "label": "Logs",
+      "normalized_key": "log",
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "signal_id": "sem:signal:logs",
+      "signal_type": "dados técnicos",
+      "signal_types": [
+        "dados técnicos"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:signal:metricas-mttd-mttr",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "Métricas MTTD/MTTR",
+      "normalized_key": "metrica-mttd/mttr",
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "signal_id": "sem:signal:metricas-mttd-mttr",
+      "signal_type": "tempo de detecção e recuperação",
+      "signal_types": [
+        "tempo de detecção e recuperação"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:pipelines-ci-cd-obrigatorios",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+        ]
+      },
+      "label": "Pipelines CI/CD obrigatórios",
+      "normalized_key": "ci/cd-obrigatorio-pipeline",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:pipelines-ci-cd-obrigatorios",
+      "signal_type": "indicação de processo disciplinado",
+      "signal_types": [
+        "indicação de processo disciplinado"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:registo-e-aprovacao-de-excecoes",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+        ]
+      },
+      "label": "registo e aprovação de exceções",
+      "normalized_key": "aprovacao-excecoe-registo",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:registo-e-aprovacao-de-excecoes",
+      "signal_type": "evidência de controlo",
+      "signal_types": [
+        "evidência de controlo"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:reporting-periodico-a-gestao",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--2-prescricao-pratica"
+        ]
+      },
+      "label": "reporting periódico à gestão",
+      "normalized_key": "gestao-periodico-reporting",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:reporting-periodico-a-gestao",
+      "signal_type": "frequência de comunicação",
+      "signal_types": [
+        "frequência de comunicação"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--2-prescricao-pratica"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:signal:resultados-de-quiz",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "13-formacao-onboarding"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "Resultados de Quizzes",
+      "normalized_key": "quiz-resultado",
+      "run_labels": [
+        "20260330_ch13_sample"
+      ],
+      "signal_id": "sem:signal:resultados-de-quiz",
+      "signal_type": "evidência de retenção de conhecimento",
+      "signal_types": [
+        "evidência de retenção de conhecimento"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "07-cicd-seguro"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:sinal-automatico",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "07-cicd-seguro"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+        ]
+      },
+      "label": "sinal automático",
+      "normalized_key": "automatico-sinal",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:sinal-automatico",
+      "signal_type": "indicação para promoção de artefactos",
+      "signal_types": [
+        "indicação para promoção de artefactos"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:uso-de-ferramentas-de-scanning",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+        ]
+      },
+      "label": "Uso de ferramentas de scanning",
+      "normalized_key": "ferramenta-scanning-uso",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:uso-de-ferramentas-de-scanning",
+      "signal_type": "indicação de controle automatizado",
+      "signal_types": [
+        "indicação de controle automatizado"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "detection_surfaces": [],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:signal:validacao-continua-de-fornecedores",
+      "entity_type": "Signal",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+        ]
+      },
+      "label": "validação contínua de fornecedores",
+      "normalized_key": "continua-fornecedore-validacao",
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "signal_id": "sem:signal:validacao-continua-de-fornecedores",
+      "signal_type": "evidência de conformidade",
+      "signal_types": [
+        "evidência de conformidade"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao"
+      ]
+    }
+  ],
+  "profiles": [
+    "review"
+  ],
+  "source_artifact": "data/publish/semantic/signals.jsonl"
+}

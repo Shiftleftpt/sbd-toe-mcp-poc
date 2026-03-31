@@ -1,5 +1,5 @@
 import { createWriteStream } from "node:fs";
-import { copyFile, mkdir, mkdtemp, rm } from "node:fs/promises";
+import { cp, mkdir, mkdtemp, rm } from "node:fs/promises";
 import { Readable } from "node:stream";
 import os from "node:os";
 import path from "node:path";
@@ -18,36 +18,54 @@ const ALLOWED_ASSET_URL_PREFIXES = [
 
 // Fixed list of files to copy from the extracted bundle to destDir.
 // SECURITY: Only known paths are copied; no dynamic traversal of extracted content.
-const KNOWN_FILES: Array<{ src: string; dest: string }> = [
+const KNOWN_ENTRIES: Array<{ kind: "file" | "dir"; src: string; dest: string }> = [
   {
-    src: path.join("data", "publish", "algolia_docs_records.json"),
-    dest: path.join("data", "publish", "algolia_docs_records.json"),
+    kind: "file",
+    src: path.join("data", "publish", "indexes", "publication_manifest.json"),
+    dest: path.join("data", "publish", "indexes", "publication_manifest.json"),
   },
   {
-    src: path.join("data", "publish", "algolia_entities_records.json"),
-    dest: path.join("data", "publish", "algolia_entities_records.json"),
+    kind: "file",
+    src: path.join("data", "publish", "indexes", "bundle_catalog.jsonl"),
+    dest: path.join("data", "publish", "indexes", "bundle_catalog.jsonl"),
   },
   {
-    src: path.join("data", "publish", "algolia_docs_records_enriched.json"),
-    dest: path.join("data", "publish", "algolia_docs_records_enriched.json"),
+    kind: "file",
+    src: path.join("data", "publish", "indexes", "mcp_chunks.jsonl"),
+    dest: path.join("data", "publish", "indexes", "mcp_chunks.jsonl"),
   },
   {
-    src: path.join(
-      "data",
-      "publish",
-      "algolia_entities_records_enriched.json"
-    ),
-    dest: path.join(
-      "data",
-      "publish",
-      "algolia_entities_records_enriched.json"
-    ),
+    kind: "file",
+    src: path.join("data", "publish", "indexes", "canonical_chunks.jsonl"),
+    dest: path.join("data", "publish", "indexes", "canonical_chunks.jsonl"),
   },
   {
-    src: path.join("data", "publish", "algolia_index_settings.json"),
-    dest: path.join("data", "publish", "algolia_index_settings.json"),
+    kind: "file",
+    src: path.join("data", "publish", "indexes", "chunk_entity_mentions.jsonl"),
+    dest: path.join("data", "publish", "indexes", "chunk_entity_mentions.jsonl"),
   },
   {
+    kind: "file",
+    src: path.join("data", "publish", "indexes", "chunk_relation_hints.jsonl"),
+    dest: path.join("data", "publish", "indexes", "chunk_relation_hints.jsonl"),
+  },
+  {
+    kind: "file",
+    src: path.join("data", "publish", "sbd-toe-index-compact.json"),
+    dest: path.join("data", "publish", "sbd-toe-index-compact.json"),
+  },
+  {
+    kind: "dir",
+    src: path.join("data", "publish", "runtime"),
+    dest: path.join("data", "publish", "runtime"),
+  },
+  {
+    kind: "file",
+    src: path.join("data", "publish", "sbdtoe-ontology.yaml"),
+    dest: path.join("data", "publish", "sbdtoe-ontology.yaml"),
+  },
+  {
+    kind: "file",
     src: path.join("data", "reports", "run_manifest.json"),
     dest: path.join("data", "reports", "run_manifest.json"),
   },
@@ -198,7 +216,7 @@ export async function checkoutFromRelease(
     }
 
     // Copy known files from extracted bundle to destDir
-    for (const { src, dest } of KNOWN_FILES) {
+    for (const { kind, src, dest } of KNOWN_ENTRIES) {
       const srcPath = path.join(extractDir, src);
       const destPath = path.join(destDir, dest);
 
@@ -208,7 +226,7 @@ export async function checkoutFromRelease(
       await mkdir(path.dirname(destPath), { recursive: true });
 
       try {
-        await copyFile(srcPath, destPath);
+        await cp(srcPath, destPath, { recursive: kind === "dir" });
         process.stderr.write(`[release-checkout] Copiado: ${dest}\n`);
       } catch (err) {
         const message = err instanceof Error ? err.message : String(err);

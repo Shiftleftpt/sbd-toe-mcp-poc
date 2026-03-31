@@ -12,7 +12,6 @@ import {
   searchManualQuestion
 } from "./orchestrator/ask-manual.js";
 import { loadSystemPromptTemplate } from "./prompt/system-prompt.js";
-import { getSnapshotCache } from "./backend/semantic-index-gateway.js";
 import {
   handleGetSbdToeChapterBrief,
   handleListSbdToeChapters,
@@ -689,10 +688,10 @@ class McpRuntime {
           name: "consult_security_requirements",
           title: "Consult SbD-ToE Security Requirements",
           description:
-            "Deterministic resolution of security requirements and controls for a given application context. " +
+            "Deterministic resolution of security requirements, controls and artifacts for a given application context. " +
             "Filters requirements by risk level, optionally narrows by concern domains (auth, logging, api, etc.), " +
-            "then derives active controls via the ontology domain_mapping pipeline. " +
-            "All data comes from the SbD-ToE ontology — nothing is invented.",
+            "then resolves controls via the published runtime bundle, complementing with ontology domain_mapping when needed. " +
+            "All data comes from the published SbD-ToE deterministic runtime bundle — nothing is invented.",
           inputSchema: {
             type: "object",
             properties: {
@@ -730,9 +729,9 @@ class McpRuntime {
           title: "Get SbD-ToE Threat Landscape",
           description:
             "Deterministic threat resolution for an application context using the SbD-ToE ontology threats pipeline. " +
-            "Returns threats from mitigated_threats.json relevant to the active source chapters derived from " +
-            "the risk-level-filtered requirements. Optionally narrowed by concern domains. " +
-            "All data comes from the SbD-ToE ontology — nothing is invented.",
+            "Returns threats from the published runtime bundle relevant to the active requirement/chapter scope, " +
+            "with structural mitigation confidence and antipattern enrichment. Optionally narrowed by concern domains. " +
+            "All data comes from the published SbD-ToE deterministic runtime bundle — nothing is invented.",
           inputSchema: {
             type: "object",
             properties: {
@@ -759,10 +758,10 @@ class McpRuntime {
           name: "get_guide_by_role",
           title: "Get SbD-ToE Guide by Role",
           description:
-            "Returns practice assignments and user stories from the SbD-ToE manual for a given risk level, " +
+            "Returns runtime-grounded practices, assignments and user stories for a given risk level, " +
             "optionally filtered by role and/or lifecycle phase. " +
             "Roles are resolved via canonical aliases (e.g. 'dev' → 'developer', 'appsec' → 'security-champion'). " +
-            "Results grouped by role and phase. All data from the SbD-ToE ontology — nothing is invented.",
+            "Results grouped by role and phase. All data from the published SbD-ToE deterministic runtime bundle — nothing is invented.",
           inputSchema: {
             type: "object",
             properties: {
@@ -789,14 +788,14 @@ class McpRuntime {
           name: "resolve_entities",
           title: "Resolve SbD-ToE Entities",
           description:
-            "Low-level entity resolver over the SbD-ToE enriched index. " +
+            "Low-level entity resolver over the published SbD-ToE deterministic runtime bundle. " +
             "Query any entity type by record_type with optional field filters. " +
             "Supports dot-notation for nested fields (e.g. 'applicable_levels.L2'), " +
             "comparison operators ({gte, lte} for numbers, {in: [...]} for set membership), " +
             "and array membership checks. " +
             "Use this when the high-level tools (consult_security_requirements, get_threat_landscape, " +
             "get_guide_by_role) do not cover your specific query. " +
-            "All data from the SbD-ToE enriched entities index — nothing is invented.",
+            "All data from the published SbD-ToE deterministic runtime bundle — nothing is invented.",
           inputSchema: {
             type: "object",
             properties: {
@@ -804,8 +803,8 @@ class McpRuntime {
                 type: "string",
                 description:
                   "Entity type to query. Well-known types: requirement, control, practice, threat, " +
-                  "user_story, assignment, role, phase, maturity_mapping, chapter_bundle. " +
-                  "Read sbd://toe/ontology to see all entity schemas."
+                  "user_story, assignment, role, phase, artifact, evidence_pattern, signal, antipattern, " +
+                  "requirement_control_link, signal_evidence_link. Read sbd://toe/ontology to see the schemas."
               },
               filters: {
                 type: "object",
@@ -1288,8 +1287,7 @@ class McpRuntime {
           return;
         }
         case "list_sbd_toe_chapters": {
-          const cache = getSnapshotCache();
-          const result = handleListSbdToeChapters(args, cache);
+          const result = handleListSbdToeChapters(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result) }]
           });
@@ -1303,8 +1301,7 @@ class McpRuntime {
           return;
         }
         case "query_sbd_toe_entities": {
-          const cache = getSnapshotCache();
-          const result = await handleQuerySbdToeEntities(args, cache);
+          const result = await handleQuerySbdToeEntities(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result) }]
           });
@@ -1318,8 +1315,7 @@ class McpRuntime {
           return;
         }
         case "get_sbd_toe_chapter_brief": {
-          const cache = getSnapshotCache();
-          const result = handleGetSbdToeChapterBrief(args, cache);
+          const result = handleGetSbdToeChapterBrief(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result) }]
           });
@@ -1333,7 +1329,7 @@ class McpRuntime {
           return;
         }
         case "plan_sbd_toe_repo_governance": {
-          const result = handlePlanRepoGovernance(args, getSnapshotCache());
+          const result = handlePlanRepoGovernance(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result) }]
           });
@@ -1375,8 +1371,7 @@ class McpRuntime {
           return;
         }
         case "map_sbd_toe_applicability": {
-          const cache = getSnapshotCache();
-          const result = handleMapSbdToeApplicability(args, cache);
+          const result = handleMapSbdToeApplicability(args);
           this.sendResponse(request.id, {
             content: [{ type: "text", text: JSON.stringify(result) }]
           });

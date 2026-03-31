@@ -1,12 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { sanitizeRunManifest, ensurePublishedIndex } from "../bootstrap/checkout-backend.js";
+import { sanitizeRunManifest } from "../bootstrap/checkout-backend.js";
 
-/**
- * Tests for sanitizeRunManifest and ensurePublishedIndex from checkout-backend.ts
- */
-
-// Local interfaces for test input annotations.
-// Structurally compatible with the private interfaces in checkout-backend.ts.
 interface UpstreamRunManifestPayload {
   run_id?: string;
   generated_at?: string;
@@ -16,14 +10,6 @@ interface UpstreamRunManifestPayload {
   repo_url?: string;
   sync_mode?: string;
   version?: string;
-}
-
-interface UpstreamIndexSettingsPayload {
-  items?: Array<{
-    index_name?: string;
-    record_family?: string;
-    settings?: Record<string, unknown>;
-  }>;
 }
 
 // --- Tests ---
@@ -133,94 +119,6 @@ describe("checkout-backend.ts", () => {
       expect(result.repo_url).toBe("https://github.com/test/repo");
       expect(result.sync_mode).toBe("full");
       expect(result.version).toBe("1.0.0");
-    });
-  });
-
-  describe("ensurePublishedIndex", () => {
-    it("finds index by record_family", () => {
-      const items: UpstreamIndexSettingsPayload["items"] = [
-        {
-          index_name: "test_docs",
-          record_family: "documents",
-          settings: { ranking: ["asc(popularity)"] }
-        }
-      ];
-
-      const result = ensurePublishedIndex(items, "documents", "default_docs");
-
-      expect(result.indexName).toBe("test_docs");
-      expect(result.recordFamily).toBe("documents");
-      expect(result.settings).toEqual({ ranking: ["asc(popularity)"] });
-    });
-
-    it("uses index_name as fallback when record_family not found", () => {
-      const items: UpstreamIndexSettingsPayload["items"] = [
-        {
-          index_name: "fallback_index",
-          record_family: "other_family"
-        }
-      ];
-
-      const result = ensurePublishedIndex(items, "entities", "fallback_index");
-
-      expect(result.indexName).toBe("fallback_index");
-      expect(result.recordFamily).toBe("entities");
-    });
-
-    it("throws when index not found by family or fallback", () => {
-      const items: UpstreamIndexSettingsPayload["items"] = [
-        {
-          index_name: "some_index",
-          record_family: "other_family"
-        }
-      ];
-
-      expect(() => {
-        ensurePublishedIndex(items, "documents", "missing_fallback");
-      }).toThrow(/O upstream não publicou um índice utilizável para "documents"/);
-    });
-
-    it("throws when items array is empty", () => {
-      expect(() => {
-        ensurePublishedIndex([], "documents", "fallback");
-      }).toThrow(/O upstream não publicou um índice utilizável/);
-    });
-
-    it("throws when items is undefined", () => {
-      expect(() => {
-        ensurePublishedIndex(undefined, "documents", "fallback");
-      }).toThrow(/O upstream não publicou um índice utilizável/);
-    });
-
-    it("defaults settings to empty object when not provided", () => {
-      const items: UpstreamIndexSettingsPayload["items"] = [
-        {
-          index_name: "test_index",
-          record_family: "documents"
-          // settings omitted
-        }
-      ];
-
-      const result = ensurePublishedIndex(items, "documents", "fallback");
-
-      expect(result.settings).toEqual({});
-    });
-
-    it("prefers exact family match over fallback", () => {
-      const items: UpstreamIndexSettingsPayload["items"] = [
-        {
-          index_name: "fallback_index",
-          record_family: "other_family"
-        },
-        {
-          index_name: "exact_docs_index",
-          record_family: "documents"
-        }
-      ];
-
-      const result = ensurePublishedIndex(items, "documents", "fallback_index");
-
-      expect(result.indexName).toBe("exact_docs_index");
     });
   });
 });

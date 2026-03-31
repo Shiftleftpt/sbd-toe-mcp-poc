@@ -11,9 +11,13 @@ function validateCheckout(payload: unknown): BackendCheckout {
   }
 
   const checkout = payload as BackendCheckout;
-  if (!checkout.indices?.docs?.indexName || !checkout.indices?.entities?.indexName) {
+  if (
+    !checkout.contractFiles?.publicationManifest ||
+    !checkout.contractFiles?.mcpChunks ||
+    !checkout.contractFiles?.ontologyFile
+  ) {
     throw new Error(
-      "O checkout do backend não contém os índices documentais e estruturados esperados."
+      "O checkout do backend não contém o contrato publicado mínimo esperado."
     );
   }
 

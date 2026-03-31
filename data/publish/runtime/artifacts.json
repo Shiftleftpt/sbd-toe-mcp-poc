@@ -1,0 +1,1639 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 37,
+  "entity_type": "Artifact",
+  "items": [
+    {
+      "artifact_type_id": "ART-access-review-e0648977e7",
+      "canonical_aliases": [
+        "Access Review"
+      ],
+      "category": "governance_record",
+      "chapter_occurrences": [
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "11-deploy-seguro",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Governance Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references access_review"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "operations"
+      ],
+      "name": "Access Review",
+      "name_en": "Access Review",
+      "produced_by_controls": [
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-alert-policy-c55180d8ab",
+      "canonical_aliases": [
+        "alertas",
+        "monitorizacao",
+        "politica de alertas"
+      ],
+      "category": "operational_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Operational Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references alert_policy",
+        "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references alert_policy",
+        "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references alert_policy",
+        "control CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70 references alert_policy",
+        "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references alert_policy"
+      ],
+      "lifecycle_phases": [
+        "operations"
+      ],
+      "name": "Alert Policy",
+      "name_en": "Alert Policy",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+        "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628",
+        "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0",
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [
+        "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70",
+        "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-approval-record-6fe32eb803",
+      "canonical_aliases": [
+        "approval",
+        "approvals",
+        "aprovacao",
+        "go no go",
+        "registo de aprovacao"
+      ],
+      "category": "governance_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Governance Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references approval_record",
+        "practice 03-threat-modeling:aprovacao-formal-do-threat-model-baseline-e-revisoes matched alias 'aprovacao'",
+        "practice 05-dependencias-sbom-sca:validacao-de-release-go-no-go matched alias 'go no go'",
+        "practice 09-containers-imagens:aprovacao-depreciacao-e-revogacao-de-golden-base-images-catalogo-organizacional matched alias 'aprovacao'",
+        "practice 09-containers-imagens:promocao-por-estagios-com-aprovacao-explicita-e-revalidacao-por-ambiente matched alias 'aprovacao'"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "operations"
+      ],
+      "name": "Approval Record",
+      "name_en": "Approval Record",
+      "produced_by_controls": [
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-artifact-provenance-8b1bffca3c",
+      "canonical_aliases": [
+        "provenance",
+        "proveniencia",
+        "rastreabilidade",
+        "slsa"
+      ],
+      "category": "attestation",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Build provenance linking commit, pipeline, artifact and deployment context.",
+      "evidence": [
+        "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references artifact_provenance",
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references artifact_provenance",
+        "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references artifact_provenance",
+        "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references artifact_provenance",
+        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references artifact_provenance"
+      ],
+      "lifecycle_phases": [
+        "release",
+        "deployment"
+      ],
+      "name": "Artifact Provenance",
+      "name_en": "Artifact Provenance",
+      "produced_by_controls": [
+        "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2",
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+        "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0",
+        "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-artifact-signature-1d67811ec5",
+      "canonical_aliases": [
+        "assinatura",
+        "assinatura digital",
+        "assinaturas",
+        "cosign",
+        "signature"
+      ],
+      "category": "attestation",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Digital signature proving integrity and origin of the produced artifact.",
+      "evidence": [
+        "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references artifact_signature",
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references artifact_signature",
+        "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references artifact_signature",
+        "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references artifact_signature",
+        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references artifact_signature"
+      ],
+      "lifecycle_phases": [
+        "release",
+        "deployment"
+      ],
+      "name": "Artifact Signature",
+      "name_en": "Artifact Signature",
+      "produced_by_controls": [
+        "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2",
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+        "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0",
+        "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-container-image-51e2624252",
+      "canonical_aliases": [
+        "docker image",
+        "imagem",
+        "imagens"
+      ],
+      "category": "release_artifact",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Release Artifact artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references container_image",
+        "practice 07-cicd-seguro:validacao-de-integridade-de-imagens-base matched alias 'imagens'",
+        "practice 09-containers-imagens:aplicacao-de-politicas-formais-de-seguranca-no-runtime-com-opa-kyverno matched alias 'imagens'",
+        "practice 09-containers-imagens:aprovacao-depreciacao-e-revogacao-de-golden-base-images-catalogo-organizacional matched alias 'imagens'",
+        "practice 09-containers-imagens:assinatura-e-verificacao-de-proveniencia-de-imagens-com-cosign-e-rekor matched alias 'imagens'"
+      ],
+      "lifecycle_phases": [
+        "build",
+        "release"
+      ],
+      "name": "Container Image",
+      "name_en": "Container Image",
+      "produced_by_controls": [
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-dependency-inventory-4ddd43ae4f",
+      "canonical_aliases": [
+        "inventario de componentes",
+        "inventario de dependencias"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "05-dependencias-sbom-sca",
+        "09-containers-imagens",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references dependency_inventory",
+        "practice 05-dependencias-sbom-sca:inventario-e-sbom-por-build matched alias 'inventario de dependencias'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['inventario de dependencias']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/addon/01-inventario-sbom.md matched aliases ['inventario de dependencias']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/aplicacao-lifecycle.md matched aliases ['inventario de componentes']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Dependency Inventory",
+      "name_en": "Dependency Inventory",
+      "produced_by_controls": [],
+      "validated_by_controls": [
+        "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-deployment-plan-945b804751",
+      "canonical_aliases": [
+        "deploy",
+        "deploys",
+        "rollout"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references deployment_plan",
+        "practice 11-deploy-seguro:controlo-de-execucao-com-feature-flags matched alias 'deploy'",
+        "practice 11-deploy-seguro:controlo-e-validacao-de-drift-operacional matched alias 'deploy'",
+        "practice 11-deploy-seguro:deploy-apenas-de-artefactos-assinados matched alias 'deploy'",
+        "practice 11-deploy-seguro:deploy-progressivo-com-estrategias-canary-blue-green matched alias 'deploy'"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Deployment Plan",
+      "name_en": "Deployment Plan",
+      "produced_by_controls": [
+        "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-environment-inventory-154c4568fd",
+      "canonical_aliases": [
+        "ambientes"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references environment_inventory",
+        "practice 08-iac-infraestrutura:segregacao-de-ambientes-tagging-e-permissoes-minimas matched alias 'ambientes'",
+        "practice 11-deploy-seguro:controlo-e-validacao-de-drift-operacional matched alias 'ambientes'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['ambientes']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/arquitetos-software.md matched aliases ['ambientes']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Environment Inventory",
+      "name_en": "Environment Inventory",
+      "produced_by_controls": [
+        "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-exception-record-7dd76e5b70",
+      "canonical_aliases": [
+        "excecao",
+        "excecoes",
+        "exception",
+        "exceptions",
+        "waiver"
+      ],
+      "category": "governance_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Governance Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references exception_record",
+        "practice 05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias matched alias 'excecoes'",
+        "practice 06-desenvolvimento-seguro:gestao-de-excecoes-tecnicas matched alias 'excecoes'",
+        "practice 07-cicd-seguro:gestao-de-excecoes-bypass-controlado matched alias 'excecoes'",
+        "practice 08-iac-infraestrutura:excecoes-formais-em-iac matched alias 'excecoes'"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "operations"
+      ],
+      "name": "Exception Record",
+      "name_en": "Exception Record",
+      "produced_by_controls": [
+        "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-finding-register-b39d52b4e7",
+      "canonical_aliases": [
+        "finding",
+        "findings",
+        "registo de findings"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references finding_register",
+        "practice 09-containers-imagens:excecoes-temporarias-a-findings-policies-com-ttl-compensacoes-e-revalidacao matched alias 'findings'",
+        "practice 10-testes-seguranca:decisao-assistida-para-findings-de-testes-de-seguranca matched alias 'findings'",
+        "practice 10-testes-seguranca:feedback-automatico-de-findings-as-equipas matched alias 'findings'",
+        "practice 10-testes-seguranca:gestao-centralizada-de-findings-com-triagem-e-sla matched alias 'findings'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Finding Register",
+      "name_en": "Finding Register",
+      "produced_by_controls": [],
+      "validated_by_controls": [
+        "CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-governance-kpi-a03cc67a9e",
+      "canonical_aliases": [
+        "governance kpis",
+        "indicadores",
+        "kpi",
+        "kpis",
+        "metricas",
+        "metrics"
+      ],
+      "category": "operational_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Operational Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references governance_kpi",
+        "practice 06-desenvolvimento-seguro:monitorizacao-de-conformidade-e-metricas-de-seguranca matched alias 'metricas'",
+        "practice 07-cicd-seguro:metricas-e-conformidade-organizacional matched alias 'metricas'",
+        "practice 12-monitorizacao-operacoes:definicao-de-eventos-e-metricas-criticas matched alias 'metricas'",
+        "practice 12-monitorizacao-operacoes:metricas-de-eficacia-mttd-mttr matched alias 'metricas'"
+      ],
+      "lifecycle_phases": [
+        "operations"
+      ],
+      "name": "Governance Kpi",
+      "name_en": "Governance Kpi",
+      "produced_by_controls": [
+        "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-guideline-catalog-5e53974142",
+      "canonical_aliases": [
+        "guideline",
+        "guidelines"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references guideline_catalog",
+        "practice 06-desenvolvimento-seguro:governacao-e-curadoria-de-guidelines matched alias 'guidelines'",
+        "practice 06-desenvolvimento-seguro:guidelines-de-desenvolvimento-seguro matched alias 'guidelines'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['guidelines']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['guidelines']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Guideline Catalog",
+      "name_en": "Guideline Catalog",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-iac-plan-8b3e802ef7",
+      "canonical_aliases": [
+        "iac",
+        "infrastructure as code",
+        "manifestos",
+        "terraform plan"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references iac_plan",
+        "practice 08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac matched alias 'iac'",
+        "practice 08-iac-infraestrutura:backend-remoto-locking-e-rastreabilidade matched alias 'iac'",
+        "practice 08-iac-infraestrutura:detecao-e-correcao-de-drift matched alias 'iac'",
+        "practice 08-iac-infraestrutura:determinismo-e-reprodutibilidade-do-plan matched alias 'iac'"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Iac Plan",
+      "name_en": "Iac Plan",
+      "produced_by_controls": [
+        "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-identity-binding-f96a2a528c",
+      "canonical_aliases": [
+        "binding",
+        "bindings",
+        "rbac",
+        "service account"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "05-dependencias-sbom-sca",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "11-deploy-seguro",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references identity_binding",
+        "control CTRL-secrets-gestao-de-segredos-e-identidades-operacionais-e2c86cdfe9 references identity_binding",
+        "practice 09-containers-imagens:rbac-minimo-e-serviceaccounts-dedicadas matched alias 'rbac'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['rbac']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/addon/06-mapeamento-ameacas-risco.md matched aliases ['rbac']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Identity Binding",
+      "name_en": "Identity Binding",
+      "produced_by_controls": [
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+        "CTRL-secrets-gestao-de-segredos-e-identidades-operacionais-e2c86cdfe9"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-incident-metrics-946f5d7447",
+      "canonical_aliases": [
+        "incidentes"
+      ],
+      "category": "operational_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Operational Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70 references incident_metrics",
+        "practice 09-containers-imagens:monitorizacao-e-resposta-a-incidentes-em-runtime matched alias 'incidentes'",
+        "practice 11-deploy-seguro:reprodutibilidade-de-incidentes-em-runtime matched alias 'incidentes'",
+        "practice 12-monitorizacao-operacoes:integracao-com-processos-de-resposta-a-incidentes matched alias 'incidentes'",
+        "practice 13-formacao-onboarding:war-room-e-simulacoes-de-incidentes matched alias 'incidentes'"
+      ],
+      "lifecycle_phases": [
+        "operations"
+      ],
+      "name": "Incident Metrics",
+      "name_en": "Incident Metrics",
+      "produced_by_controls": [],
+      "validated_by_controls": [
+        "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-log-stream-b67ee06f7e",
+      "canonical_aliases": [
+        "audit logs",
+        "logs",
+        "trilho de auditoria"
+      ],
+      "category": "operational_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Operational Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70 references log_stream",
+        "practice 07-cicd-seguro:contencao-de-contexto-e-higiene-de-logs-outputs matched alias 'logs'",
+        "practice 12-monitorizacao-operacoes:seguranca-e-integridade-de-logs matched alias 'logs'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['logs']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['logs']"
+      ],
+      "lifecycle_phases": [
+        "operations"
+      ],
+      "name": "Log Stream",
+      "name_en": "Log Stream",
+      "produced_by_controls": [],
+      "validated_by_controls": [
+        "CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-onboarding-checklist-3f28bb1e95",
+      "canonical_aliases": [
+        "checklist",
+        "checklists",
+        "onboarding",
+        "onboarding checklist"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf references onboarding_checklist",
+        "practice 10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes matched alias 'checklist'",
+        "practice 10-testes-seguranca:decisao-assistida-para-findings-de-testes-de-seguranca matched alias 'checklist'",
+        "practice 10-testes-seguranca:feedback-automatico-de-findings-as-equipas matched alias 'checklist'",
+        "practice 10-testes-seguranca:gestao-centralizada-de-findings-com-triagem-e-sla matched alias 'checklist'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Onboarding Checklist",
+      "name_en": "Onboarding Checklist",
+      "produced_by_controls": [
+        "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-operational-evidence-f5e852756f",
+      "canonical_aliases": [
+        "evidencia imutavel",
+        "evidencia operacional"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "09-containers-imagens",
+        "11-deploy-seguro"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references operational_evidence",
+        "practice 11-deploy-seguro:evidencia-operacional-auditavel matched alias 'evidencia operacional'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/09-containers-imagens/canon/50-ameacas-mitigadas.md matched aliases ['evidencia imutavel']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/11-deploy-seguro/aplicacao-lifecycle.md matched aliases ['evidencia operacional']"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Operational Evidence",
+      "name_en": "Operational Evidence",
+      "produced_by_controls": [
+        "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-pipeline-config-f8f2ba893d",
+      "canonical_aliases": [
+        "ci cd",
+        "github actions",
+        "gitlab ci",
+        "pipeline",
+        "pipelines",
+        "workflow",
+        "workflows"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Pipeline definition controlling build, verification and release execution.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references pipeline_config",
+        "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references pipeline_config",
+        "control CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0 references pipeline_config",
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references pipeline_config",
+        "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references pipeline_config"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Pipeline Config",
+      "name_en": "Pipeline Config",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+        "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2",
+        "CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0",
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af"
+      ],
+      "validated_by_controls": [
+        "CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-policy-report-7e52280504",
+      "canonical_aliases": [
+        "compliance report",
+        "politica",
+        "politicas",
+        "relatorio",
+        "relatorios"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references policy_report",
+        "practice 07-cicd-seguro:evidencia-empirica-obrigatoria-anti-relatorios-sem-execucao matched alias 'relatorios'",
+        "practice 08-iac-infraestrutura:enforcement-automatico-de-politicas matched alias 'politicas'",
+        "practice 09-containers-imagens:aplicacao-de-politicas-formais-de-seguranca-no-runtime-com-opa-kyverno matched alias 'politicas'",
+        "practice 09-containers-imagens:enforcement-centralizado-e-auditavel-de-politicas-no-runtime matched alias 'politicas'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Policy Report",
+      "name_en": "Policy Report",
+      "produced_by_controls": [
+        "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-quiz-result-f93b4a0252",
+      "canonical_aliases": [
+        "assessment",
+        "quiz",
+        "resultado do quiz"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "03-threat-modeling",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf references quiz_result",
+        "practice 13-formacao-onboarding:operacionalizacao-de-formacao-de-terceiros matched alias 'quiz'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['assessment']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/aplicacao-lifecycle.md matched aliases ['quiz']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/pre-note.md matched aliases ['assessment']"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Quiz Result",
+      "name_en": "Quiz Result",
+      "produced_by_controls": [
+        "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-release-gate-57ec988cdb",
+      "canonical_aliases": [
+        "aprovacao de release",
+        "aprovacao de releases",
+        "gate",
+        "gates",
+        "go no go",
+        "release gate",
+        "release gates"
+      ],
+      "category": "attestation",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding"
+      ],
+      "confidence": null,
+      "description": "Attestation artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references release_gate",
+        "practice 01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco matched alias 'gates'",
+        "practice 03-threat-modeling:gate-de-controlo-de-consistencia-no-ci-cd matched alias 'gate'",
+        "practice 05-dependencias-sbom-sca:sca-automatico-com-gates matched alias 'gates'",
+        "practice 05-dependencias-sbom-sca:validacao-de-release-go-no-go matched alias 'go no go'"
+      ],
+      "lifecycle_phases": [
+        "release",
+        "deployment"
+      ],
+      "name": "Release Gate",
+      "name_en": "Release Gate",
+      "produced_by_controls": [],
+      "validated_by_controls": [
+        "CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-review-checklist-de29054201",
+      "canonical_aliases": [
+        "checklist",
+        "checklist de revisao",
+        "checklists"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29 references review_checklist",
+        "practice 10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes matched alias 'checklist'",
+        "practice 10-testes-seguranca:decisao-assistida-para-findings-de-testes-de-seguranca matched alias 'checklist'",
+        "practice 10-testes-seguranca:feedback-automatico-de-findings-as-equipas matched alias 'checklist'",
+        "practice 10-testes-seguranca:gestao-centralizada-de-findings-com-triagem-e-sla matched alias 'checklist'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Review Checklist",
+      "name_en": "Review Checklist",
+      "produced_by_controls": [
+        "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-risk-acceptance-record-ebea5da638",
+      "canonical_aliases": [
+        "risco residual"
+      ],
+      "category": "governance_record",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Governance Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0 references risk_acceptance_record",
+        "practice 01-classificacao-aplicacoes:analise-de-risco-residual matched alias 'risco residual'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['risco residual']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/gestao-executiva.md matched aliases ['risco residual']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/grc-compliance.md matched aliases ['risco residual']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "operations"
+      ],
+      "name": "Risk Acceptance Record",
+      "name_en": "Risk Acceptance Record",
+      "produced_by_controls": [
+        "CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-risk-matrix-6dafdd25fc",
+      "canonical_aliases": [
+        "matriz de risco",
+        "matriz de riscos"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "04-arquitetura-segura",
+        "10-testes-seguranca",
+        "13-formacao-onboarding"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29 references risk_matrix",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/aplicacao-lifecycle.md matched aliases ['matriz de risco']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/02-requisitos-seguranca/addon/03-taxonomia-rastreabilidade.md matched aliases ['matriz de risco']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/canon/50-ameacas-mitigadas.md matched aliases ['matriz de risco']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/10-testes-seguranca/addon/06-cobertura-e-priorizacao.md matched aliases ['matriz de risco']"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Risk Matrix",
+      "name_en": "Risk Matrix",
+      "produced_by_controls": [
+        "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-rollback-plan-4fbad982bb",
+      "canonical_aliases": [
+        "plano de rollback",
+        "rollback",
+        "rollbacks"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references rollback_plan",
+        "practice 08-iac-infraestrutura:rollback-e-salvaguarda-de-destroy matched alias 'rollback'",
+        "practice 11-deploy-seguro:rollback-estruturado-por-tipo-binario-configuracao-bd-infra matched alias 'rollback'",
+        "practice 11-deploy-seguro:rollback-rapido-e-testado matched alias 'rollback'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['rollback']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Rollback Plan",
+      "name_en": "Rollback Plan",
+      "produced_by_controls": [
+        "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-sast-report-0358e14566",
+      "canonical_aliases": [
+        "linters",
+        "sast"
+      ],
+      "category": "security_report",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Static analysis report with findings and remediation traceability.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references sast_report",
+        "practice 06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast matched alias 'linters'",
+        "practice 10-testes-seguranca:sast-obrigatorio-em-pull-request matched alias 'sast'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['sast']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['linters', 'sast']"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Sast Report",
+      "name_en": "Sast Report",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-sbom-ec0b691fce",
+      "canonical_aliases": [
+        "bill of materials",
+        "bom",
+        "sbom",
+        "sboms",
+        "software bill of materials"
+      ],
+      "category": "release_artifact",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Software Bill of Materials documenting third-party components and build contents.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references sbom",
+        "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references sbom",
+        "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references sbom",
+        "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references sbom",
+        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references sbom"
+      ],
+      "lifecycle_phases": [
+        "build",
+        "release"
+      ],
+      "name": "Sbom",
+      "name_en": "Sbom",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+        "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2",
+        "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628",
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [
+        "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-sca-report-da2c6d2413",
+      "canonical_aliases": [
+        "cve scan",
+        "sca",
+        "sca report",
+        "scan de vulnerabilidades",
+        "software composition analysis"
+      ],
+      "category": "security_report",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Composition analysis output with dependency and vulnerability evidence.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references sca_report",
+        "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references sca_report",
+        "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references sca_report",
+        "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references sca_report",
+        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references sca_report"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Sca Report",
+      "name_en": "Sca Report",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+        "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2",
+        "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628",
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [
+        "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-secret-config-a2bbf228fe",
+      "canonical_aliases": [
+        "secret",
+        "secret manager",
+        "secret managers",
+        "secrets",
+        "segredos",
+        "vault",
+        "vaults"
+      ],
+      "category": "configuration",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Configuration artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references secret_config",
+        "control CTRL-secrets-gestao-de-segredos-e-identidades-operacionais-e2c86cdfe9 references secret_config",
+        "practice 07-cicd-seguro:gestao-de-segredos matched alias 'segredos'",
+        "practice 08-iac-infraestrutura:gestao-de-segredos-e-identidades-para-iac matched alias 'segredos'",
+        "practice 09-containers-imagens:gestao-de-segredos-fora-da-imagem-com-oidc-e-workload-identity matched alias 'segredos'"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "deployment"
+      ],
+      "name": "Secret Config",
+      "name_en": "Secret Config",
+      "produced_by_controls": [
+        "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
+        "CTRL-secrets-gestao-de-segredos-e-identidades-operacionais-e2c86cdfe9"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-signature-attestation-67e300d959",
+      "canonical_aliases": [
+        "assinatura",
+        "assinaturas",
+        "atestacao",
+        "attestation",
+        "attestations"
+      ],
+      "category": "attestation",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Attestation package proving artifact integrity and supply-chain assertions.",
+      "evidence": [
+        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references signature_attestation",
+        "practice 07-cicd-seguro:assinatura-e-proveniencia matched alias 'assinatura'",
+        "practice 08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac matched alias 'assinatura'",
+        "practice 09-containers-imagens:assinatura-e-verificacao-de-proveniencia-de-imagens-com-cosign-e-rekor matched alias 'assinatura'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['assinatura']"
+      ],
+      "lifecycle_phases": [
+        "release",
+        "deployment"
+      ],
+      "name": "Signature Attestation",
+      "name_en": "Signature Attestation",
+      "produced_by_controls": [
+        "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-supplier-assessment-43fc2de564",
+      "canonical_aliases": [
+        "due diligence",
+        "fornecedor",
+        "third party"
+      ],
+      "category": "governance_record",
+      "chapter_occurrences": [
+        "02-requisitos-seguranca",
+        "05-dependencias-sbom-sca",
+        "08-iac-infraestrutura",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Governance Record artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references supplier_assessment",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/02-requisitos-seguranca/addon/10-validacao-requisitos.md matched aliases ['fornecedor']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/addon/01-inventario-sbom.md matched aliases ['fornecedor']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/08-iac-infraestrutura/addon/09-gestao-excecoes.md matched aliases ['fornecedor']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/13-formacao-onboarding/addon/20-modelo-inclusao-terceiros.md matched aliases ['fornecedor']"
+      ],
+      "lifecycle_phases": [
+        "design",
+        "operations"
+      ],
+      "name": "Supplier Assessment",
+      "name_en": "Supplier Assessment",
+      "produced_by_controls": [
+        "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-test-report-b11c5dfb8a",
+      "canonical_aliases": [
+        "relatorio de testes",
+        "scan report",
+        "testes"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references test_report",
+        "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references test_report",
+        "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references test_report",
+        "practice 07-cicd-seguro:testes-de-seguranca-dinamicos-dast matched alias 'testes'",
+        "practice 10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes matched alias 'testes'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Test Report",
+      "name_en": "Test Report",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
+        "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2"
+      ],
+      "validated_by_controls": [
+        "CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-threat-model-3a09510d13",
+      "canonical_aliases": [
+        "ameacas",
+        "modelo de ameacas",
+        "threat model",
+        "threat modeling",
+        "threat models"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Threat-modeling artifact describing threats, mitigations and residual risk.",
+      "evidence": [
+        "control CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0 references threat_model",
+        "practice 01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco matched alias 'ameacas'",
+        "practice 03-threat-modeling:aplicacao-linddun-quando-existir-tratamento-de-dados-pessoais-novo matched alias 'threat modeling'",
+        "practice 03-threat-modeling:aprovacao-formal-do-threat-model-baseline-e-revisoes matched alias 'threat modeling'",
+        "practice 03-threat-modeling:atualizacao-do-modelo-apos-alteracao-tecnica matched alias 'threat modeling'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Threat Model",
+      "name_en": "Threat Model",
+      "produced_by_controls": [
+        "CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-training-plan-e44b3c44f1",
+      "canonical_aliases": [
+        "formacao",
+        "plano de formacao",
+        "treino"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf references training_plan",
+        "practice 13-formacao-onboarding:code-clinics-estruturadas-e-recorrentes matched alias 'formacao'",
+        "practice 13-formacao-onboarding:exercicios-praticos-e-simulacoes matched alias 'formacao'",
+        "practice 13-formacao-onboarding:formacao-continua-por-perfil matched alias 'formacao'",
+        "practice 13-formacao-onboarding:formatos-de-entrega-e-dod-por-formato matched alias 'formacao'"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Training Plan",
+      "name_en": "Training Plan",
+      "produced_by_controls": [
+        "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-validation-evidence-79f6aaf0ec",
+      "canonical_aliases": [
+        "evidencia de validacao",
+        "evidencias"
+      ],
+      "category": "evidence",
+      "chapter_occurrences": [
+        "00-fundamentos",
+        "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
+        "03-threat-modeling",
+        "04-arquitetura-segura",
+        "05-dependencias-sbom-sca",
+        "06-desenvolvimento-seguro",
+        "07-cicd-seguro",
+        "08-iac-infraestrutura",
+        "09-containers-imagens",
+        "10-testes-seguranca",
+        "11-deploy-seguro",
+        "12-monitorizacao-operacoes",
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
+      ],
+      "confidence": null,
+      "description": "Evidence artifact used as auditable evidence.",
+      "evidence": [
+        "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references validation_evidence",
+        "practice 06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao matched alias 'evidencias'",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/auditores.md matched aliases ['evidencias']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['evidencias']",
+        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['evidencias']"
+      ],
+      "lifecycle_phases": [
+        "testing",
+        "release"
+      ],
+      "name": "Validation Evidence",
+      "name_en": "Validation Evidence",
+      "produced_by_controls": [
+        "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460"
+      ],
+      "validated_by_controls": [],
+      "warnings": []
+    }
+  ],
+  "profiles": [
+    "consult",
+    "review"
+  ],
+  "source_artifact": "data/entities/artifact_catalog.json"
+}

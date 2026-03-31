@@ -10,7 +10,7 @@ function formatRecordDebug(retrieval: RetrievalBundle): string {
 
   return retrieval.retrieved
     .map((record, index) => {
-      const header = `${index + 1}. [${record.citationId}] source=${record.source} index=${record.indexName} objectID=${record.objectID} algoliaRank=${record.algoliaRank} localScore=${record.localScore}`;
+      const header = `${index + 1}. [${record.citationId}] source=${record.source} index=${record.indexName} objectID=${record.objectID} rank=${record.algoliaRank} localScore=${record.localScore}`;
       const details = [
         `Título: ${record.title}`,
         `Capítulo: ${record.chapter ?? "n/d"}`,
@@ -22,6 +22,24 @@ function formatRecordDebug(retrieval: RetrievalBundle): string {
         `Documento: ${record.documentTitle ?? "n/d"}`,
         `Document path: ${record.documentPath ?? "n/d"}`,
         `Chapter path: ${record.chapterPath ?? "n/d"}`,
+        `Traceability: ${
+          record.traceability
+            ? [
+                record.traceability.sourcePath,
+                record.traceability.lineStart !== undefined
+                  ? `L${record.traceability.lineStart}${
+                      record.traceability.lineEnd !== undefined &&
+                      record.traceability.lineEnd !== record.traceability.lineStart
+                        ? `-L${record.traceability.lineEnd}`
+                        : ""
+                    }`
+                  : undefined,
+                record.traceability.unitId
+              ]
+                .filter(Boolean)
+                .join(" | ")
+            : "n/d"
+        }`,
         `Localização: ${[record.pageLabel, record.url].filter(Boolean).join(" | ") || "n/d"}`,
         `Excerto: ${record.excerpt}`
       ].join("\n");
@@ -71,11 +89,17 @@ function formatDebugAppendix(
   return [
     "## Debug",
     `- Query: ${query}`,
-    `- Índices consultados: ${retrieval.consultedIndices.join(", ") || "n/d"}`,
+    `- Artefactos consultados: ${retrieval.consultedIndices.join(", ") || "n/d"}`,
     `- Snapshot upstream: run_id=${retrieval.backendSnapshot.runId ?? "n/d"} commit_sha=${retrieval.backendSnapshot.commitSha ?? "n/d"}`,
     `- Clone upstream: ${retrieval.backendSnapshot.upstreamRepoPath ?? "n/d"}`,
-    `- Docs snapshot: ${retrieval.backendSnapshot.docsSnapshotFile}`,
-    `- Entities snapshot: ${retrieval.backendSnapshot.entitiesSnapshotFile}`,
+    `- Publication manifest: ${retrieval.backendSnapshot.publicationManifestFile ?? "n/d"}`,
+    `- Deterministic manifest: ${retrieval.backendSnapshot.deterministicManifestFile ?? "n/d"}`,
+    `- Ontology: ${retrieval.backendSnapshot.ontologyFile ?? "n/d"}`,
+    `- MCP chunks: ${retrieval.backendSnapshot.mcpChunksFile ?? "n/d"}`,
+    `- Canonical chunks: ${retrieval.backendSnapshot.canonicalChunksFile ?? "n/d"}`,
+    `- Chunk entity mentions: ${retrieval.backendSnapshot.chunkEntityMentionsFile ?? "n/d"}`,
+    `- Chunk relation hints: ${retrieval.backendSnapshot.chunkRelationHintsFile ?? "n/d"}`,
+    `- Substrate version: ${retrieval.backendSnapshot.substrateVersion ?? "n/d"}`,
     `- Sampling model: ${samplingModel ?? "n/d"}`,
     `- Capítulos envolvidos: ${chapters}`,
     `- Contexto selecionado: ${retrieval.selected.map((record) => `[${record.citationId}]`).join(", ") || "nenhum"}`,
@@ -155,7 +179,8 @@ export async function searchManualQuestion(
         pageLabel: record.pageLabel,
         documentPath: record.documentPath,
         chapterPath: record.chapterPath,
-        excerpt: record.excerpt
+        excerpt: record.excerpt,
+        traceability: record.traceability
       }))
     }
   };
@@ -195,7 +220,8 @@ export async function inspectManualRetrieval(
         pageLabel: record.pageLabel,
         documentPath: record.documentPath,
         chapterPath: record.chapterPath,
-        excerpt: record.excerpt
+        excerpt: record.excerpt,
+        traceability: record.traceability
       }))
     }
   };
@@ -250,7 +276,8 @@ export function formatSampledAnswerResult(
         pageLabel: record.pageLabel,
         documentPath: record.documentPath,
         chapterPath: record.chapterPath,
-        excerpt: record.excerpt
+        excerpt: record.excerpt,
+        traceability: record.traceability
       })),
       finalAnswer: answer
     }

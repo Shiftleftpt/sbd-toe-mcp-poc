@@ -1,0 +1,191 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 5,
+  "entity_type": "AntiPatternThreatLink",
+  "items": [
+    {
+      "bundle_ids": [
+        "01-classificacao-aplicacoes"
+      ],
+      "confidence": 0.76,
+      "evidence_unit_ids": [
+        "010-sbd-manual-01-classificacao-aplicacoes-addon-03-criterios-aceitacao-risco--criterios-para-aceitacao-de-risco--principio-fundamental"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding",
+        "how_it_arises_match",
+        "risk_match"
+      ],
+      "link_id": "sem:antipattern:aceitacao-de-risco-invalida|exposes|MT-020",
+      "link_type": "exposes",
+      "matched_threat_field": "how_it_arises",
+      "matched_threat_text": "Aceitação de risco feita sem visão de impacto global",
+      "score_components": {
+        "chapter_overlap": [
+          "01-classificacao-aplicacoes"
+        ],
+        "shared_salient_tokens": [
+          "aceitacao"
+        ],
+        "token_similarity": 0.2857
+      },
+      "source_id": "sem:antipattern:aceitacao-de-risco-invalida",
+      "source_label": "aceitação de risco inválida",
+      "source_type": "AntiPattern",
+      "target_chapter_id": "01-classificacao-aplicacoes",
+      "target_id": "MT-020",
+      "target_label": "Decisões de risco sem feedback do negócio",
+      "target_source_section_id": "010-sbd-manual-01-classificacao-aplicacoes-canon-50-ameacas-mitigadas--ameacas-mitigadas-capitulo-01-classificacao-da-criticidade-aplicacional--categoria-5-controlo-deficiente-da-evolucao-do-risco",
+      "target_type": "Threat"
+    },
+    {
+      "bundle_ids": [
+        "01-classificacao-aplicacoes"
+      ],
+      "confidence": 0.7,
+      "evidence_unit_ids": [
+        "010-sbd-manual-01-classificacao-aplicacoes-addon-03-criterios-aceitacao-risco--criterios-para-aceitacao-de-risco--principio-fundamental"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding",
+        "risk_match",
+        "threat_label_match"
+      ],
+      "link_id": "sem:antipattern:aceitacao-de-risco-invalida|exposes|MT-009",
+      "link_type": "exposes",
+      "matched_threat_field": "threat_label_raw",
+      "matched_threat_text": "Aceitação informal de riscos críticos",
+      "score_components": {
+        "chapter_overlap": [
+          "01-classificacao-aplicacoes"
+        ],
+        "shared_salient_tokens": [
+          "aceitacao"
+        ],
+        "token_similarity": 0.4
+      },
+      "source_id": "sem:antipattern:aceitacao-de-risco-invalida",
+      "source_label": "aceitação de risco inválida",
+      "source_type": "AntiPattern",
+      "target_chapter_id": "01-classificacao-aplicacoes",
+      "target_id": "MT-009",
+      "target_label": "Aceitação informal de riscos críticos",
+      "target_source_section_id": "010-sbd-manual-01-classificacao-aplicacoes-canon-50-ameacas-mitigadas--ameacas-mitigadas-capitulo-01-classificacao-da-criticidade-aplicacional--categoria-3-documentacao-e-justificacao-insuficientes",
+      "target_type": "Threat"
+    },
+    {
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "confidence": 0.7,
+      "evidence_unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding",
+        "risk_match",
+        "threat_label_match"
+      ],
+      "link_id": "sem:antipattern:alertas-nao-acionaveis|exposes|MT-200",
+      "link_type": "exposes",
+      "matched_threat_field": "threat_label_raw",
+      "matched_threat_text": "Incidentes sem alerta",
+      "score_components": {
+        "chapter_overlap": [
+          "12-monitorizacao-operacoes"
+        ],
+        "shared_salient_tokens": [
+          "alerta"
+        ],
+        "token_similarity": 0.25
+      },
+      "source_id": "sem:antipattern:alertas-nao-acionaveis",
+      "source_label": "Alertas não acionáveis",
+      "source_type": "AntiPattern",
+      "target_chapter_id": "12-monitorizacao-operacoes",
+      "target_id": "MT-200",
+      "target_label": "Incidentes sem alerta",
+      "target_source_section_id": "010-sbd-manual-12-monitorizacao-operacoes-canon-50-ameacas-mitigadas--ameacas-mitigadas-pelas-praticas-de-monitorizacao-e-operacoes--categoria-2-alertas-inexistentes-ou-ineficazes",
+      "target_type": "Threat"
+    },
+    {
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "confidence": 0.76,
+      "evidence_unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding",
+        "threat_label_match"
+      ],
+      "link_id": "sem:antipattern:permissoes-excessivas|exposes|MT-139",
+      "link_type": "exposes",
+      "matched_threat_field": "threat_label_raw",
+      "matched_threat_text": "Provisionamento com permissões excessivas",
+      "score_components": {
+        "chapter_overlap": [
+          "08-iac-infraestrutura"
+        ],
+        "shared_salient_tokens": [
+          "excessivo",
+          "permissoe"
+        ],
+        "token_similarity": 0.6667
+      },
+      "source_id": "sem:antipattern:permissoes-excessivas",
+      "source_label": "Permissões excessivas",
+      "source_type": "AntiPattern",
+      "target_chapter_id": "08-iac-infraestrutura",
+      "target_id": "MT-139",
+      "target_label": "Provisionamento com permissões excessivas",
+      "target_source_section_id": "010-sbd-manual-08-iac-infraestrutura-canon-50-ameacas-mitigadas--ameacas-mitigadas-capitulo-08-iac-e-infraestrutura-como-codigo--categoria-3-exposicao-de-dados-chaves-ou-permissoes-excessivas",
+      "target_type": "Threat"
+    },
+    {
+      "bundle_ids": [
+        "07-cicd-seguro"
+      ],
+      "confidence": 0.76,
+      "evidence_unit_ids": [
+        "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+      ],
+      "justification": [
+        "alias_match",
+        "bundle_grounding",
+        "threat_label_match"
+      ],
+      "link_id": "sem:antipattern:uso-de-segredos-estaticos|exposes|MT-121",
+      "link_type": "exposes",
+      "matched_threat_field": "threat_label_raw",
+      "matched_threat_text": "Segredos hardcoded",
+      "score_components": {
+        "chapter_overlap": [
+          "07-cicd-seguro"
+        ],
+        "shared_salient_tokens": [
+          "estatico",
+          "segredo"
+        ],
+        "token_similarity": 0.6667
+      },
+      "source_id": "sem:antipattern:uso-de-segredos-estaticos",
+      "source_label": "uso de segredos estáticos",
+      "source_type": "AntiPattern",
+      "target_chapter_id": "07-cicd-seguro",
+      "target_id": "MT-121",
+      "target_label": "Segredos hardcoded",
+      "target_source_section_id": "010-sbd-manual-07-cicd-seguro-canon-50-ameacas-mitigadas--ameacas-mitigadas-capitulo-07-ci-cd-seguro--categoria-4-gestao-insegura-de-segredos",
+      "target_type": "Threat"
+    }
+  ],
+  "profiles": [
+    "threats"
+  ],
+  "source_artifact": "data/publish/semantic/antipattern_threat_links.jsonl"
+}

@@ -1,0 +1,1119 @@
+{
+  "artifact_type": "deterministic_runtime_snapshot",
+  "count": 26,
+  "entity_type": "AntiPattern",
+  "items": [
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:aceitacao-de-risco-invalida",
+      "bundle_ids": [
+        "01-classificacao-aplicacoes"
+      ],
+      "document_roles": [
+        "addon"
+      ],
+      "entity_id": "sem:antipattern:aceitacao-de-risco-invalida",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "01-classificacao-aplicacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-01-classificacao-aplicacoes-addon-03-criterios-aceitacao-risco--criterios-para-aceitacao-de-risco--principio-fundamental"
+        ]
+      },
+      "label": "aceitação de risco inválida",
+      "normalized_key": "aceitacao-invalida-risco",
+      "risk": "aceitação de risco sem compreensão dos atributos, sem controlos conhecidos e verificáveis, sem evidência suficiente da eficácia, ou com impacto residual incompatível com o nível da aplicação",
+      "risks": [
+        "aceitação de risco sem compreensão dos atributos, sem controlos conhecidos e verificáveis, sem evidência suficiente da eficácia, ou com impacto residual incompatível com o nível da aplicação"
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 0.8,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-01-classificacao-aplicacoes-addon-03-criterios-aceitacao-risco--criterios-para-aceitacao-de-risco--principio-fundamental"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:alertas-nao-acionaveis",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:antipattern:alertas-nao-acionaveis",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "Alertas não acionáveis",
+      "normalized_key": "acionavei-alerta-nao",
+      "risk": "Geram ruído e não contribuem para resposta efetiva a incidentes.",
+      "risks": [
+        "Geram ruído e não contribuem para resposta efetiva a incidentes."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "AntiPattern": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:ambientes-mal-segregados",
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:ambientes-mal-segregados",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+        ]
+      },
+      "label": "Ambientes mal segregados",
+      "normalized_key": "ambiente-mal-segregado",
+      "risk": "Risco de contaminação entre ambientes e falhas de isolamento.",
+      "risks": [
+        "Risco de contaminação entre ambientes e falhas de isolamento."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:ausencia-de-ameaca-no-modelo",
+      "bundle_ids": [
+        "03-threat-modeling"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:ausencia-de-ameaca-no-modelo",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "03-threat-modeling"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-03-threat-modeling-intro--capitulo-3-threat-modeling--1-o-que-cobre-tecnicamente"
+        ]
+      },
+      "label": "Ausência de ameaça no modelo",
+      "normalized_key": "ameaca-ausencia-modelo",
+      "risk": "Não constitui prova da inexistência da ameaça, podendo levar a riscos de omissão e enviesamento",
+      "risks": [
+        "Não constitui prova da inexistência da ameaça, podendo levar a riscos de omissão e enviesamento"
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "AntiPattern": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-03-threat-modeling-intro--capitulo-3-threat-modeling--1-o-que-cobre-tecnicamente"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:confianca-exclusiva-em-mecanismos-tecnicos-automatizados",
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:confianca-exclusiva-em-mecanismos-tecnicos-automatizados",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--integracao-no-ciclo"
+        ]
+      },
+      "label": "confiança exclusiva em mecanismos técnicos automatizados",
+      "normalized_key": "automatizado-confianca-exclusiva-mecanismo-tecnico",
+      "risk": "não cria autoridade nem substitui os modelos de governação definidos",
+      "risks": [
+        "não cria autoridade nem substitui os modelos de governação definidos"
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--integracao-no-ciclo"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:confianca-na-experiencia-individual-sem-automacao",
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:confianca-na-experiencia-individual-sem-automacao",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+        ]
+      },
+      "label": "Confiança na experiência individual sem automação",
+      "normalized_key": "automacao-confianca-experiencia-individual-sem",
+      "risk": "Risco de erros humanos, falta de rastreabilidade e inconsistência na segurança da infraestrutura.",
+      "risks": [
+        "Risco de erros humanos, falta de rastreabilidade e inconsistência na segurança da infraestrutura."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "AntiPattern": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--como-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:demasiados-alertas",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:demasiados-alertas",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+        ]
+      },
+      "label": "Demasiados alertas",
+      "normalized_key": "alerta-demasiado",
+      "risk": "Gera alert fatigue e reduz a eficácia da monitorização.",
+      "risks": [
+        "Gera alert fatigue e reduz a eficácia da monitorização."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {
+          "missing_entity_type": 1
+        },
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {
+          "AntiPattern": 1
+        },
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:dependencia-circular",
+      "bundle_ids": [
+        "04-arquitetura-segura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:dependencia-circular",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "04-arquitetura-segura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--4-exemplos-de-aplicacao"
+        ]
+      },
+      "label": "dependência circular",
+      "normalized_key": "circular-dependencia",
+      "risk": "pode causar falhas no sistema se não mitigada",
+      "risks": [
+        "pode causar falhas no sistema se não mitigada"
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--4-exemplos-de-aplicacao"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:dependencia-exclusiva-de-ferramentas-automatizadas",
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:dependencia-exclusiva-de-ferramentas-automatizadas",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "13-formacao-onboarding"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-13-formacao-onboarding-intro--formacao-e-capacitacao"
+        ]
+      },
+      "label": "dependência exclusiva de ferramentas automatizadas",
+      "normalized_key": "automatizada-dependencia-exclusiva-ferramenta",
+      "risk": "Redução da compreensão humana dos processos e responsabilidades, levando à degradação da segurança na prática.",
+      "risks": [
+        "Redução da compreensão humana dos processos e responsabilidades, levando à degradação da segurança na prática."
+      ],
+      "run_labels": [
+        "20260330_ch13_sample"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-intro--formacao-e-capacitacao"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:detecao-sem-resposta",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:antipattern:detecao-sem-resposta",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "Deteção sem resposta",
+      "normalized_key": "detecao-resposta-sem",
+      "risk": "Monitorização sem integração com resposta não traz valor.",
+      "risks": [
+        "Monitorização sem integração com resposta não traz valor."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-aplicacao-lifecycle--aplicacao-de-monitorizacao-operacoes-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:erros-de-configuracao",
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:erros-de-configuracao",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+        ]
+      },
+      "label": "Erros de configuração",
+      "normalized_key": "configuracao-erro",
+      "risk": "Configurações incorretas que podem levar a vulnerabilidades.",
+      "risks": [
+        "Configurações incorretas que podem levar a vulnerabilidades."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:excecoes-nao-documentadas",
+      "bundle_ids": [
+        "04-arquitetura-segura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:excecoes-nao-documentadas",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "04-arquitetura-segura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--3-caveats-ou-limitacoes-da-prescricao"
+        ]
+      },
+      "label": "Exceções não documentadas",
+      "normalized_key": "documentada-excecoe-nao",
+      "risk": "Invalidam a rastreabilidade e o controle do risco residual.",
+      "risks": [
+        "Invalidam a rastreabilidade e o controle do risco residual."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--3-caveats-ou-limitacoes-da-prescricao"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:exposicao-excessiva-de-contexto-em-logs-e-artefactos",
+      "bundle_ids": [
+        "07-cicd-seguro"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:exposicao-excessiva-de-contexto-em-logs-e-artefactos",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "07-cicd-seguro"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+        ]
+      },
+      "label": "exposição excessiva de contexto em logs e artefactos",
+      "normalized_key": "artefacto-contexto-excessiva-exposicao-log",
+      "risk": "Risco de vazamento de informações sensíveis e canais de exfiltração de dados.",
+      "risks": [
+        "Risco de vazamento de informações sensíveis e canais de exfiltração de dados."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:falta-de-integracao-com-irp",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:falta-de-integracao-com-irp",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+        ]
+      },
+      "label": "Falta de integração com IRP",
+      "normalized_key": "falta-integracao-irp",
+      "risk": "Deteção que não conduz a resposta efetiva.",
+      "risks": [
+        "Deteção que não conduz a resposta efetiva."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:falta-de-onboarding",
+      "bundle_ids": [
+        "13-formacao-onboarding"
+      ],
+      "document_roles": [
+        "aplicacao_lifecycle"
+      ],
+      "entity_id": "sem:antipattern:falta-de-onboarding",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "13-formacao-onboarding"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+        ]
+      },
+      "label": "Falta de Onboarding",
+      "normalized_key": "falta-onboarding",
+      "risk": "Erros básicos propagam-se devido à ausência de formação inicial.",
+      "risks": [
+        "Erros básicos propagam-se devido à ausência de formação inicial."
+      ],
+      "run_labels": [
+        "20260330_ch13_sample"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-13-formacao-onboarding-aplicacao-lifecycle--aplicacao-de-formacao-e-capacitacao-no-ciclo-de-vida--recomendacoes-finais"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:ignorar-momentos-criticos-no-ciclo-de-vida-do-iac",
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:ignorar-momentos-criticos-no-ciclo-de-vida-do-iac",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--quando-aplicar"
+        ]
+      },
+      "label": "Ignorar momentos críticos no ciclo de vida do IaC",
+      "normalized_key": "ciclo-critico-iac-ignorar-momento-vida",
+      "risk": "Permitir acumulação silenciosa de risco",
+      "risks": [
+        "Permitir acumulação silenciosa de risco"
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac--quando-aplicar"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:limitacao-do-sbd-toe-a-pratica-tecnica-local",
+      "bundle_ids": [
+        "14-governanca-contratacao"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:limitacao-do-sbd-toe-a-pratica-tecnica-local",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "14-governanca-contratacao"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--conclusao"
+        ]
+      },
+      "label": "limitação do SbD-ToE à prática técnica local",
+      "normalized_key": "limitacao-local-pratica-sbd-toe-tecnica",
+      "risk": "falta de sistema de governação organizacional explícito e sustentável",
+      "risks": [
+        "falta de sistema de governação organizacional explícito e sustentável"
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-14-governanca-contratacao-intro--governanca-contratacao--conclusao"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:logs-incompletos-ou-ignorados",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:logs-incompletos-ou-ignorados",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes"
+        ]
+      },
+      "label": "Logs incompletos ou ignorados",
+      "normalized_key": "ignorado-incompleto-log",
+      "risk": "Falta de visibilidade que impede a deteção de ataques e incidentes.",
+      "risks": [
+        "Falta de visibilidade que impede a deteção de ataques e incidentes."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:logs-nao-estruturados",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:logs-nao-estruturados",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+        ]
+      },
+      "label": "Logs não estruturados",
+      "normalized_key": "estruturado-log-nao",
+      "risk": "Impedem correlação e atrasam investigações.",
+      "risks": [
+        "Impedem correlação e atrasam investigações."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:modelos-inconsistentes-incompletos-ou-desatualizados",
+      "bundle_ids": [
+        "04-arquitetura-segura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:modelos-inconsistentes-incompletos-ou-desatualizados",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "04-arquitetura-segura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--3-caveats-ou-limitacoes-da-prescricao"
+        ]
+      },
+      "label": "Modelos inconsistentes, incompletos ou desatualizados",
+      "normalized_key": "desatualizado-incompleto-inconsistente-modelo",
+      "risk": "Geram risco não rastreável.",
+      "risks": [
+        "Geram risco não rastreável."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--3-caveats-ou-limitacoes-da-prescricao"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:omissao-estrutural-de-ameacas",
+      "bundle_ids": [
+        "03-threat-modeling"
+      ],
+      "document_roles": [
+        "addon"
+      ],
+      "entity_id": "sem:antipattern:omissao-estrutural-de-ameacas",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "03-threat-modeling"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-03-threat-modeling-addon-02-riscos-processo-threat-modeling--riscos-de-processo-no-threat-modeling--1-omissao-estrutural-de-ameacas"
+        ]
+      },
+      "label": "Omissão estrutural de ameaças",
+      "normalized_key": "ameaca-estrutural-omissao",
+      "risk": "A ausência de uma ameaça num modelo não constitui evidência da sua inexistência, podendo levar a riscos não identificados devido a limitações do método, foco excessivo, desconhecimento ou reutilização acrítica.",
+      "risks": [
+        "A ausência de uma ameaça num modelo não constitui evidência da sua inexistência, podendo levar a riscos não identificados devido a limitações do método, foco excessivo, desconhecimento ou reutilização acrítica."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 0.8,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-03-threat-modeling-addon-02-riscos-processo-threat-modeling--riscos-de-processo-no-threat-modeling--1-omissao-estrutural-de-ameacas"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:permissoes-excessivas",
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:permissoes-excessivas",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+        ]
+      },
+      "label": "Permissões excessivas",
+      "normalized_key": "excessiva-permissoe",
+      "risk": "Aumento do risco de acesso indevido e comprometimento da segurança.",
+      "risks": [
+        "Aumento do risco de acesso indevido e comprometimento da segurança."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:retencao-insuficiente",
+      "bundle_ids": [
+        "12-monitorizacao-operacoes"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:retencao-insuficiente",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "12-monitorizacao-operacoes"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+        ]
+      },
+      "label": "Retenção insuficiente",
+      "normalized_key": "insuficiente-retencao",
+      "risk": "Impossibilita auditoria e análise forense.",
+      "risks": [
+        "Impossibilita auditoria e análise forense."
+      ],
+      "run_labels": [
+        "20260330_cross_sample_01_03_12"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-12-monitorizacao-operacoes-intro--monitorizacao-operacoes--riscos-e-armadilhas-comuns"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:threat-modeling-sem-arquitetura-clara",
+      "bundle_ids": [
+        "04-arquitetura-segura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:threat-modeling-sem-arquitetura-clara",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "04-arquitetura-segura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--3-caveats-ou-limitacoes-da-prescricao"
+        ]
+      },
+      "label": "Threat modeling sem arquitetura clara",
+      "normalized_key": "arquitetura-clara-modeling-sem-threat",
+      "risk": "Ineficácia na análise de ameaças.",
+      "risks": [
+        "Ineficácia na análise de ameaças."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-04-arquitetura-segura-intro--arquitetura-segura--3-caveats-ou-limitacoes-da-prescricao"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:uso-de-modulos-maliciosos",
+      "bundle_ids": [
+        "08-iac-infraestrutura"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:uso-de-modulos-maliciosos",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "08-iac-infraestrutura"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+        ]
+      },
+      "label": "Uso de módulos maliciosos",
+      "normalized_key": "malicioso-modulo-uso",
+      "risk": "Introdução de código malicioso que pode comprometer a infraestrutura.",
+      "risks": [
+        "Introdução de código malicioso que pode comprometer a infraestrutura."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-08-iac-infraestrutura-intro--seguranca-em-infraestrutura-como-codigo-iac"
+      ]
+    },
+    {
+      "aliases": [],
+      "antipattern_id": "sem:antipattern:uso-de-segredos-estaticos",
+      "bundle_ids": [
+        "07-cicd-seguro"
+      ],
+      "document_roles": [
+        "intro"
+      ],
+      "entity_id": "sem:antipattern:uso-de-segredos-estaticos",
+      "entity_type": "AntiPattern",
+      "evidence": {
+        "sample_bundle_ids": [
+          "07-cicd-seguro"
+        ],
+        "sample_unit_ids": [
+          "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+        ]
+      },
+      "label": "uso de segredos estáticos",
+      "normalized_key": "estatico-segredo-uso",
+      "risk": "Exposição e comprometimento de credenciais permanentes que podem ser exploradas para ataques.",
+      "risks": [
+        "Exposição e comprometimento de credenciais permanentes que podem ser exploradas para ataques."
+      ],
+      "run_labels": [
+        "20260330_111100_pre_ch13"
+      ],
+      "support": {
+        "bundle_count": 1,
+        "fit_target_counts": {},
+        "fit_verdict_counts": {},
+        "max_authority_score": 1.0,
+        "mention_count": 1,
+        "proposed_entity_type_counts": {},
+        "proposed_relation_type_counts": {},
+        "unit_count": 1
+      },
+      "unit_ids": [
+        "010-sbd-manual-07-cicd-seguro-intro--ci-cd-seguro--o-que-deve-ser-feito"
+      ]
+    }
+  ],
+  "profiles": [
+    "threats"
+  ],
+  "source_artifact": "data/publish/semantic/antipatterns.jsonl"
+}
