@@ -1,4 +1,5 @@
 import { copyFile, cp, mkdir, readFile, writeFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
 import path from "node:path";
 
 import { getAppRoot, getConfig, resolveAppPath } from "../config.js";
@@ -32,13 +33,59 @@ interface PublicationManifestPayload {
   substrate_version?: string;
 }
 
+interface LocalCheckoutLockPayload {
+  schemaVersion?: string;
+  strategy?: string;
+  upstreamRepoPath?: string;
+  expectedGraphBranch?: string;
+  expectedGraphCommitSha?: string;
+  expectedRunId?: string;
+  expectedSubstrateVersion?: string;
+  expectedPrimaryArtifact?: string;
+}
+
+interface LocalCheckoutObservation {
+  upstreamRepoPath: string;
+  graphBranch?: string;
+  graphCommitSha?: string;
+  runId?: string;
+  substrateVersion?: string;
+  primaryArtifact?: string;
+}
+
 async function readJsonFile<T>(filePath: string): Promise<T> {
   const raw = await readFile(filePath, "utf8");
   return JSON.parse(raw) as T;
 }
 
+async function tryReadJsonFile<T>(filePath: string): Promise<T | undefined> {
+  try {
+    return await readJsonFile<T>(filePath);
+  } catch (error) {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") {
+      return undefined;
+    }
+    throw error;
+  }
+}
+
 async function ensureParent(filePath: string): Promise<void> {
   await mkdir(path.dirname(filePath), { recursive: true });
+}
+
+async function copyFileIfExists(
+  sourcePath: string,
+  destinationPath: string
+): Promise<boolean> {
+  try {
+    await copyFile(sourcePath, destinationPath);
+    return true;
+  } catch (error) {
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") {
+      return false;
+    }
+    throw error;
+  }
 }
 
 function normalizePublicRepoUrl(value: string | undefined): string | undefined {
@@ -74,6 +121,89 @@ export function sanitizeRunManifest(
   };
 }
 
+function tryReadGitValue(repoPath: string, args: string[]): string | undefined {
+  try {
+    const output = execFileSync("git", ["-C", repoPath, ...args], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"]
+    }).trim();
+    return output.length > 0 ? output : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+function resolveUpstreamGraphState(upstreamRepoPath: string): {
+  branch?: string;
+  headCommitSha?: string;
+} {
+  const branch = tryReadGitValue(upstreamRepoPath, ["rev-parse", "--abbrev-ref", "HEAD"]);
+  const headCommitSha = tryReadGitValue(upstreamRepoPath, ["rev-parse", "HEAD"]);
+  return {
+    ...(branch ? { branch } : {}),
+    ...(headCommitSha ? { headCommitSha } : {})
+  };
+}
+
+export function validateLocalCheckoutLock(
+  lock: LocalCheckoutLockPayload,
+  observed: LocalCheckoutObservation
+): void {
+  const mismatches: string[] = [];
+
+  const expectedRepoPath = lock.upstreamRepoPath?.trim();
+  if (expectedRepoPath) {
+    const expectedResolved = path.resolve(expectedRepoPath);
+    const observedResolved = path.resolve(observed.upstreamRepoPath);
+    if (expectedResolved !== observedResolved) {
+      mismatches.push(
+        `upstreamRepoPath esperado=${expectedResolved} observado=${observedResolved}`
+      );
+    }
+  }
+
+  if (lock.expectedGraphBranch && lock.expectedGraphBranch !== observed.graphBranch) {
+    mismatches.push(
+      `graph branch esperado=${lock.expectedGraphBranch} observado=${observed.graphBranch ?? "n/d"}`
+    );
+  }
+
+  if (lock.expectedGraphCommitSha && lock.expectedGraphCommitSha !== observed.graphCommitSha) {
+    mismatches.push(
+      `graph commit esperado=${lock.expectedGraphCommitSha} observado=${observed.graphCommitSha ?? "n/d"}`
+    );
+  }
+
+  if (lock.expectedRunId && lock.expectedRunId !== observed.runId) {
+    mismatches.push(`run_id esperado=${lock.expectedRunId} observado=${observed.runId ?? "n/d"}`);
+  }
+
+  if (
+    lock.expectedSubstrateVersion &&
+    lock.expectedSubstrateVersion !== observed.substrateVersion
+  ) {
+    mismatches.push(
+      `substrate_version esperado=${lock.expectedSubstrateVersion} observado=${observed.substrateVersion ?? "n/d"}`
+    );
+  }
+
+  if (lock.expectedPrimaryArtifact && lock.expectedPrimaryArtifact !== observed.primaryArtifact) {
+    mismatches.push(
+      `primary_artifact esperado=${lock.expectedPrimaryArtifact} observado=${observed.primaryArtifact ?? "n/d"}`
+    );
+  }
+
+  if (mismatches.length > 0) {
+    throw new Error(
+      [
+        "O runtime local do graph não coincide com o lock file configurado.",
+        "Atualiza o clone local do graph para o estado esperado ou regenera o lock file desta branch.",
+        ...mismatches.map((item) => `- ${item}`)
+      ].join("\n")
+    );
+  }
+}
+
 async function main(): Promise<void> {
   const config = getConfig();
   const source = config.backend.upstreamSource;
@@ -83,6 +213,7 @@ async function main(): Promise<void> {
   }
   // source === "local" → fluxo existente continua inalterado
   const upstreamRepoPath = resolveAppPath(config.backend.upstreamRepoDir);
+  const localCheckoutLockFile = resolveAppPath(config.backend.localCheckoutLockFile);
   const checkoutFilePath = resolveAppPath(config.backend.checkoutFile);
   const localPublishedIndexesDir = resolveAppPath(config.backend.publishedIndexesDir);
   const localPublishedRuntimeDir = resolveAppPath(config.backend.publishedRuntimeDir);
@@ -159,6 +290,25 @@ async function main(): Promise<void> {
     readJsonFile<UpstreamRunManifestPayload>(upstreamRunManifest),
     readJsonFile<PublicationManifestPayload>(upstreamPublicationManifest)
   ]);
+  const localCheckoutLock = await tryReadJsonFile<LocalCheckoutLockPayload>(localCheckoutLockFile);
+  const upstreamGraphState = resolveUpstreamGraphState(upstreamRepoPath);
+
+  if (localCheckoutLock) {
+    validateLocalCheckoutLock(localCheckoutLock, {
+      upstreamRepoPath,
+      ...(upstreamGraphState.branch ? { graphBranch: upstreamGraphState.branch } : {}),
+      ...(upstreamGraphState.headCommitSha
+        ? { graphCommitSha: upstreamGraphState.headCommitSha }
+        : {}),
+      ...(runManifest.run_id ? { runId: runManifest.run_id } : {}),
+      ...(publicationManifest.substrate_version
+        ? { substrateVersion: publicationManifest.substrate_version }
+        : {}),
+      ...(publicationManifest.primary_artifact
+        ? { primaryArtifact: publicationManifest.primary_artifact }
+        : {})
+    });
+  }
 
   await Promise.all([
     ensureParent(localPublicationManifest),
@@ -176,7 +326,7 @@ async function main(): Promise<void> {
 
   const publicRunManifest = sanitizeRunManifest(runManifest);
 
-  await Promise.all([
+  const copyResults = await Promise.all([
     copyFile(upstreamPublicationManifest, localPublicationManifest),
     copyFile(upstreamBundleCatalog, localBundleCatalog),
     copyFile(upstreamMcpChunks, localMcpChunks),
@@ -186,15 +336,22 @@ async function main(): Promise<void> {
     cp(path.join(upstreamPublishedRuntimeDir, "."), localPublishedRuntimeDir, {
       recursive: true
     }),
-    copyFile(upstreamCompactIndex, localCompactIndex),
+    copyFileIfExists(upstreamCompactIndex, localCompactIndex),
     copyFile(upstreamOntologyFile, localOntologyFile),
     writeFile(localRunManifest, `${JSON.stringify(publicRunManifest, null, 2)}\n`, "utf8")
   ]);
+  const compactIndexCopied = copyResults[7] === true;
 
   const checkout: BackendCheckout = {
     schemaVersion: "0.1.0",
     checkedOutAt: new Date().toISOString(),
     upstreamRepoPath,
+    upstreamGraph: {
+      ...(upstreamGraphState.headCommitSha
+        ? { headCommitSha: upstreamGraphState.headCommitSha }
+        : {}),
+      ...(upstreamGraphState.branch ? { branch: upstreamGraphState.branch } : {})
+    },
     contractFiles: {
       runManifest: localRunManifest,
       publishedIndexesDir: localPublishedIndexesDir,
@@ -235,8 +392,12 @@ async function main(): Promise<void> {
       `canonical_chunks=${localCanonicalChunks}`,
       `chunk_entity_mentions=${localChunkEntityMentions}`,
       `chunk_relation_hints=${localChunkRelationHints}`,
-      `compact_index=${localCompactIndex}`,
+      compactIndexCopied
+        ? `compact_index=${localCompactIndex}`
+        : `compact_index=${localCompactIndex} (mantido localmente; upstream não publicou uma versão nova)`,
       `ontology_file=${localOntologyFile}`,
+      `graph_branch=${checkout.upstreamGraph?.branch ?? "n/d"}`,
+      `graph_commit_sha=${checkout.upstreamGraph?.headCommitSha ?? "n/d"}`,
       `substrate_version=${checkout.substrate?.substrateVersion ?? "n/d"}`,
       `run_id=${checkout.runManifest.runId ?? "n/d"}`,
       `commit_sha=${checkout.runManifest.commitSha ?? "n/d"}`

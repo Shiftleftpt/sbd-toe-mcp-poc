@@ -29,6 +29,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
+      - name: Validate stable tag format
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "${GITHUB_REF_NAME}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Error: stable npm publish only accepts tags in the form vX.Y.Z"
+            echo "Use the preview bundle workflow for development or prerelease builds."
+            exit 1
+          fi
+
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:

@@ -11,6 +11,7 @@ export interface AppConfig {
     entitiesIndex: string;
     maxContextRecords: number;
     upstreamRepoDir: string;
+    localCheckoutLockFile: string;
     checkoutFile: string;
     publishedIndexesDir: string;
     publishedRuntimeDir: string;
@@ -76,6 +77,10 @@ export interface BackendCheckout {
   schemaVersion: string;
   checkedOutAt: string;
   upstreamRepoPath: string;
+  upstreamGraph?: {
+    headCommitSha?: string | undefined;
+    branch?: string | undefined;
+  } | undefined;
   contractFiles: {
     runManifest: string;
     publishedIndexesDir?: string | undefined;

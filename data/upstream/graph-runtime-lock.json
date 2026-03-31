@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "0.1.0",
+  "strategy": "local_graph_checkout",
+  "upstreamRepoPath": "/Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph",
+  "expectedGraphBranch": "ontology_llm_codex",
+  "expectedGraphCommitSha": "753a8940efc488b03d71b93044aeefc7f90e4b21",
+  "expectedRunId": "20260330T011527Z",
+  "expectedSubstrateVersion": "v2-draft",
+  "expectedPrimaryArtifact": "canonical_chunks.jsonl"
+}
