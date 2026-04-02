@@ -81,8 +81,16 @@ jobs:
               --generate-notes
           fi
 
-      - name: Set version from tag
-        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
+      - name: Verify tag matches package version
+        shell: bash
+        run: |
+          set -euo pipefail
+          PACKAGE_VERSION=$(node -p "JSON.parse(require('node:fs').readFileSync('package.json','utf8')).version")
+          if [[ "v${PACKAGE_VERSION}" != "${GITHUB_REF_NAME}" ]]; then
+            echo "Error: package.json version is ${PACKAGE_VERSION}, but the pushed tag is ${GITHUB_REF_NAME}"
+            echo "Keep package.json version and git tag in sync before releasing."
+            exit 1
+          fi
 
       - name: Publish to npm
         run: npm publish --access public --provenance

@@ -11,6 +11,7 @@ const REQUIRED_PATHS = [
   "data/publish/indexes/publication_manifest.json",
   "data/publish/indexes/canonical_chunks.jsonl",
   "data/publish/indexes/mcp_chunks.jsonl",
+  "data/publish/indexes/vector_chunks.jsonl",
   "data/publish/indexes/bundle_catalog.jsonl",
   "data/publish/runtime/deterministic_manifest.json",
   "data/publish/sbd-toe-index-compact.json",
@@ -32,8 +33,7 @@ const BANNED_PATHS = [
   "data/publish/indexes/bundle_policy_links.jsonl",
   "data/publish/indexes/metric_catalog.jsonl",
   "data/publish/indexes/metric_rollups.jsonl",
-  "data/publish/indexes/ontology_discovery_units.jsonl",
-  "data/publish/indexes/vector_chunks.jsonl"
+  "data/publish/indexes/ontology_discovery_units.jsonl"
 ];
 
 async function main() {

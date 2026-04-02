@@ -116,6 +116,21 @@ describe("package-release", () => {
     }
   });
 
+  it("fails clearly when vector_chunks.jsonl is missing", async () => {
+    const packageReleaseLib = await loadPackageReleaseLib();
+    const repoRoot = await createFixtureRepo(packageReleaseLib.REQUIRED_PUBLISH_FILES);
+
+    try {
+      await removeFile(repoRoot, "data/publish/indexes/vector_chunks.jsonl");
+
+      await expect(packageReleaseLib.ensureRequiredBundleInputs(repoRoot)).rejects.toThrow(
+        "Falta o artefacto publish obrigatório: data/publish/indexes/vector_chunks.jsonl"
+      );
+    } finally {
+      await rm(repoRoot, { recursive: true, force: true });
+    }
+  });
+
   it("fails clearly when deterministic_manifest.json is missing", async () => {
     const packageReleaseLib = await loadPackageReleaseLib();
     const repoRoot = await createFixtureRepo(packageReleaseLib.REQUIRED_PUBLISH_FILES);
