@@ -6,6 +6,7 @@ coverage
 .env
 npm-debug.log*
 .DS_Store
+*.tgz
 data/upstream/backend-checkout.json
 
 # Local tooling — não commitar

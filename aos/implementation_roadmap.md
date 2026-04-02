@@ -29,6 +29,7 @@ Implementar o MCP v2 de forma incremental, sequencial e auditável. Cada slice �
 | s9 | F8  | AI Setup Foundation | s5 |
 | s10 | F9  | generate_document + Review Scope Mapping | s9 |
 | s11 | F10 | Repo Governance Planning | s10 |
+| s12 | F11 | External Regulatory Overlay opt-in | s11 |
 
 ---
 
@@ -274,6 +275,7 @@ Código novo implementado:
 - **s9** (F8) arranca o próximo epic com melhorias em tools existentes, SKILL.md e resources de setup, sem exigir nova arquitectura.
 - **s10** (F9) depende de s9 porque reutiliza a categorização de bundles, os títulos legíveis e o setup foundation.
 - **s11** (F10) depende de s10 porque a baseline de governance deve ser coerente com os templates e o review scope introduzidos antes.
+- **s12** (F11) depende de s11 porque o overlay externo deve restringir um universo normativo já estável, não substituir a ontologia nem reabrir decisões do runtime base.
 
 ## Estado dos Slices
 
@@ -291,12 +293,15 @@ Código novo implementado:
 | s9 | AI Setup Foundation | not-started |
 | s10 | generate_document + Review Scope Mapping | not-started |
 | s11 | Repo Governance Planning | not-started |
+| s12 | External Regulatory Overlay opt-in | not-started |
 
 ## Estado Atual
 
 **Epic F1–F7 COMPLETO.** Todos os 9 slices do primeiro epic (s1–s8 + s4-tests) estão fechados com 168/168 testes, `npm run check`/`npm run build` limpos e governança AI-Assisted implementada.
 
 **Epic F8–F10 PLANEADO.** Os slices s9–s11 já fazem parte da sequência global do roadmap, mas continuam `not-started` até criação formal de brief no AOS.
+
+**F11 EM BACKLOG CONTROLADO.** O slice s12 fica reservado para integração de overlays externos/regulatórios em modo opt-in, sem alterar o path normal do MCP.
 
 ---
 
@@ -307,6 +312,24 @@ Código novo implementado:
 | s9 | F8  | AI Setup Foundation — SKILL.md, expansão map_sbd_toe_applicability, fallback sampling, títulos, index compacto | s5 |
 | s10 | F9  | generate_document tool + Review Scope Mapping | s9 |
 | s11 | F10 | Repo Governance Planning — baseline e checkpoints | s10 |
+
+### Nota de backlog futuro
+
+Após s11, o roadmap pode abrir **s12 — F11 External Regulatory Overlay opt-in** para leituras como `DORA`, `NIS2`, `CRA` e `RGPD`, mas com guardrails explícitos:
+
+- ativação só quando o utilizador pedir enquadramento externo/regulatório
+- ordem de carga obrigatória:
+  `ontology -> deterministic manifest -> runtime bundle -> framework_overlay_index -> overlay mappings/playbooks`
+- entrypoint preferido:
+  `data/publish/overlay/framework_overlay_index.json`
+- o overlay restringe o universo dos perfis normais (`consult`, `guide`, `review`, `threats`) via `target_*`; não substitui a ontologia nem o runtime bundle
+- `overlay_mappings.jsonl` e `overlay_playbooks.json` servem só para grounding/explanation
+- weighting distinto:
+  `external_normative_overlay` para playbooks curados e `illustrative_overlay` para `exemplo-playbook`
+- critérios mínimos de validação:
+  1. o overlay não é consultado no path por defeito
+  2. existe pelo menos um cenário qualitativo dedicado por framework externo
+  3. o engine não activa requisitos apenas a partir de texto de playbook
 
 ### Motivação
 
