@@ -66,6 +66,12 @@ interface PendingRequest {
   reject: (reason?: unknown) => void;
 }
 
+interface PackageMetadata {
+  name: string;
+  version: string;
+  description: string;
+}
+
 type JsonRpcMessage =
   | JsonRpcRequest
   | JsonRpcNotification
@@ -73,6 +79,7 @@ type JsonRpcMessage =
   | JsonRpcError;
 
 const PROTOCOL_VERSION = "2025-03-26";
+let cachedPackageMetadata: PackageMetadata | undefined;
 const LOG_LEVELS = [
   "debug",
   "info",
@@ -83,6 +90,34 @@ const LOG_LEVELS = [
   "alert",
   "emergency"
 ] as const;
+
+function loadPackageMetadata(): PackageMetadata {
+  if (cachedPackageMetadata) {
+    return cachedPackageMetadata;
+  }
+
+  const pkgPath = resolveAppPath("package.json");
+  let pkgText: string;
+  try {
+    pkgText = readFileSync(pkgPath, "utf-8");
+  } catch {
+    throw new Error("Could not read package.json.");
+  }
+
+  const pkg = JSON.parse(pkgText) as {
+    name?: string;
+    version?: string;
+    description?: string;
+  };
+
+  cachedPackageMetadata = {
+    name: pkg.name ?? "sbd-toe-mcp-poc",
+    version: pkg.version ?? "0.0.0",
+    description: pkg.description ?? ""
+  };
+
+  return cachedPackageMetadata;
+}
 
 type LogLevel = (typeof LOG_LEVELS)[number];
 
@@ -354,6 +389,7 @@ class McpRuntime {
       typeof params.capabilities === "object" && params.capabilities !== null
         ? (params.capabilities as Record<string, unknown>)
         : {};
+    const packageMetadata = loadPackageMetadata();
 
     this.sendResponse(request.id, {
       protocolVersion: PROTOCOL_VERSION,
@@ -372,7 +408,7 @@ class McpRuntime {
       },
       serverInfo: {
         name: "sbd-toe-mcp-poc",
-        version: "0.1.0"
+        version: packageMetadata.version
       },
       instructions:
         "You are connected to the SbD-ToE MCP server (Security by Design — Theory of Everything).\n" +
@@ -1058,19 +1094,19 @@ class McpRuntime {
     }
 
     if (uri === "sbd://toe/version") {
-      const pkgPath = resolveAppPath("package.json");
-      let pkgText: string;
       try {
-        pkgText = readFileSync(pkgPath, "utf-8");
+        const pkg = loadPackageMetadata();
+        const payload = JSON.stringify({
+          name: pkg.name,
+          version: pkg.version,
+          description: pkg.description
+        });
+        this.sendResponse(request.id, {
+          contents: [{ uri, mimeType: "application/json", text: payload }]
+        });
       } catch {
         this.sendError(request.id, -32603, "Could not read package.json.");
-        return;
       }
-      const pkg = JSON.parse(pkgText) as { name?: string; version?: string; description?: string };
-      const payload = JSON.stringify({ name: pkg.name ?? "", version: pkg.version ?? "", description: pkg.description ?? "" });
-      this.sendResponse(request.id, {
-        contents: [{ uri, mimeType: "application/json", text: payload }]
-      });
       return;
     }
 

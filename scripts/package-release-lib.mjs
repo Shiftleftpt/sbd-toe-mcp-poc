@@ -24,6 +24,7 @@ export const REQUIRED_PUBLISH_FILES = [
   "data/publish/indexes/publication_manifest.json",
   "data/publish/indexes/bundle_catalog.jsonl",
   "data/publish/indexes/mcp_chunks.jsonl",
+  "data/publish/indexes/vector_chunks.jsonl",
   "data/publish/indexes/canonical_chunks.jsonl",
   "data/publish/indexes/chunk_entity_mentions.jsonl",
   "data/publish/indexes/chunk_relation_hints.jsonl",
@@ -74,6 +75,11 @@ export const REQUIRED_BUNDLE_ENTRIES = [
     kind: "file",
     src: "data/publish/indexes/mcp_chunks.jsonl",
     dest: "data/publish/indexes/mcp_chunks.jsonl"
+  },
+  {
+    kind: "file",
+    src: "data/publish/indexes/vector_chunks.jsonl",
+    dest: "data/publish/indexes/vector_chunks.jsonl"
   },
   {
     kind: "file",
