@@ -1,6 +1,7 @@
 import { copyFile, cp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { getAppRoot, getConfig, resolveAppPath } from "../config.js";
 import { checkoutFromRelease } from "./release-checkout.js";
@@ -226,6 +227,9 @@ async function main(): Promise<void> {
   const localChunkRelationHints = resolveAppPath(config.backend.chunkRelationHintsFile);
   const localCompactIndex = resolveAppPath("data/publish/sbd-toe-index-compact.json");
   const localOntologyFile = resolveAppPath(config.backend.ontologyFile);
+  const localNormalizationOntologyFile = resolveAppPath(
+    "data/publish/ontology/appsec-core-ontology.yaml"
+  );
   const localRunManifest = resolveAppPath(config.backend.runManifestFile);
   const upstreamPublishedIndexesDir = path.join(
     upstreamRepoPath,
@@ -277,7 +281,15 @@ async function main(): Promise<void> {
     upstreamRepoPath,
     "data",
     "publish",
+    "ontology",
     "sbdtoe-ontology.yaml"
+  );
+  const upstreamNormalizationOntologyFile = path.join(
+    upstreamRepoPath,
+    "data",
+    "publish",
+    "ontology",
+    "appsec-core-ontology.yaml"
   );
   const upstreamRunManifest = path.join(
     upstreamRepoPath,
@@ -320,6 +332,7 @@ async function main(): Promise<void> {
     ensureParent(localChunkRelationHints),
     ensureParent(localCompactIndex),
     ensureParent(localOntologyFile),
+    ensureParent(localNormalizationOntologyFile),
     ensureParent(localRunManifest),
     ensureParent(checkoutFilePath)
   ]);
@@ -338,6 +351,7 @@ async function main(): Promise<void> {
     }),
     copyFileIfExists(upstreamCompactIndex, localCompactIndex),
     copyFile(upstreamOntologyFile, localOntologyFile),
+    copyFile(upstreamNormalizationOntologyFile, localNormalizationOntologyFile),
     writeFile(localRunManifest, `${JSON.stringify(publicRunManifest, null, 2)}\n`, "utf8")
   ]);
   const compactIndexCopied = copyResults[7] === true;
@@ -363,7 +377,8 @@ async function main(): Promise<void> {
       canonicalChunks: localCanonicalChunks,
       chunkEntityMentions: localChunkEntityMentions,
       chunkRelationHints: localChunkRelationHints,
-      ontologyFile: localOntologyFile
+      ontologyFile: localOntologyFile,
+      normalizationOntologyFile: localNormalizationOntologyFile
     },
     runManifest: {
       runId: runManifest.run_id,
@@ -405,8 +420,19 @@ async function main(): Promise<void> {
   );
 }
 
-main().catch((error) => {
-  const message = error instanceof Error ? error.stack ?? error.message : String(error);
-  process.stderr.write(`${message}\n`);
-  process.exit(1);
-});
+function isExecutedAsEntryPoint(moduleUrl: string): boolean {
+  const entryArg = process.argv[1];
+  if (!entryArg) {
+    return false;
+  }
+
+  return path.resolve(fileURLToPath(moduleUrl)) === path.resolve(entryArg);
+}
+
+if (isExecutedAsEntryPoint(import.meta.url)) {
+  main().catch((error) => {
+    const message = error instanceof Error ? error.stack ?? error.message : String(error);
+    process.stderr.write(`${message}\n`);
+    process.exit(1);
+  });
+}

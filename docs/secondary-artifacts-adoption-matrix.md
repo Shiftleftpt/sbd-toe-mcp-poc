@@ -3,7 +3,7 @@
 Este documento define quando os artefactos públicos secundários do upstream
 `sbd-toe-knowledge-graph` devem ou não ser adotados neste MCP.
 
-Não substitui o inventário em [mcp_consumption_map.md](/Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-mcp-poc/docs/mcp_consumption_map.md).
+Não substitui o inventário em [mcp_consumption_map.md](mcp_consumption_map.md).
 O objetivo aqui é decidir:
 
 - se um artefacto secundário ajuda realmente;
@@ -11,7 +11,7 @@ O objetivo aqui é decidir:
 - se deve entrar em runtime, debug ou apenas dev/CI;
 - qual a prioridade de adoção.
 
-Esta matriz assume o contrato publicado em [consumer_contract.md](/Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/docs/consumer_contract.md):
+Esta matriz assume o contrato publicado do `sbd-toe-knowledge-graph` V2:
 
 - `Primário` = base mínima estável para consumers
 - `Secundário` = público e suportado para consumers mais ricos

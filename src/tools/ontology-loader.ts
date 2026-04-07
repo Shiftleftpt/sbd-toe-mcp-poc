@@ -4,7 +4,7 @@
  * Loads and caches the published SbD-ToE deterministic runtime bundle.
  *
  * Runtime contract:
- *   data/publish/sbdtoe-ontology.yaml
+ *   data/publish/ontology/sbdtoe-ontology.yaml
  *   data/publish/runtime/deterministic_manifest.json
  *   data/publish/runtime/*.json
  *
@@ -202,7 +202,7 @@ interface RuntimeArtifactEnvelope {
 let _cache: OntologyData | undefined;
 
 function loadOntologyYaml(): { domain_mapping?: Record<string, unknown> } {
-  const path = resolveAppPath("data/publish/sbdtoe-ontology.yaml");
+  const path = resolveAppPath("data/publish/ontology/sbdtoe-ontology.yaml");
   return parseYaml(readFileSync(path, "utf-8")) as { domain_mapping?: Record<string, unknown> };
 }
 

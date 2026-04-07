@@ -76,7 +76,7 @@
       "source_artifact": "data/entities/sdlc_phases_canonical_s6.json"
     },
     {
-      "count": 37,
+      "count": 45,
       "entity_type": "Artifact",
       "file": "artifacts.json",
       "name": "artifacts",
@@ -97,7 +97,7 @@
       "source_artifact": "data/entities/mitigated_threats.json"
     },
     {
-      "count": 107,
+      "count": 213,
       "entity_type": "EvidencePattern",
       "file": "evidence_patterns.json",
       "name": "evidence_patterns",
@@ -107,7 +107,7 @@
       "source_artifact": "data/entities/evidence_patterns.json"
     },
     {
-      "count": 37,
+      "count": 45,
       "entity_type": "ArtifactRequirement",
       "file": "artifact_requirements.json",
       "name": "artifact_requirements",
@@ -140,7 +140,7 @@
       "source_artifact": "data/publish/semantic/signals.jsonl"
     },
     {
-      "count": 9,
+      "count": 11,
       "entity_type": "SignalEvidenceLink",
       "file": "signal_evidence_links.json",
       "name": "signal_evidence_links",
@@ -181,11 +181,18 @@
     }
   ],
   "bundle_type": "deterministic_runtime_bundle",
+  "normalization_ontology_artifact": "data/publish/ontology/appsec-core-ontology.yaml",
   "notes": {
     "mcp_chunks": "retrieval and grounding skin; not deterministic source of truth",
     "vector_chunks": "optional vector recall skin; not deterministic source of truth"
   },
-  "ontology_artifact": "data/publish/sbdtoe-ontology.yaml",
+  "ontology_artifact": "data/publish/ontology/sbdtoe-ontology.yaml",
+  "ontology_source": {
+    "authoritative_repo": "SbD-ToE/sbd-toe-ontology",
+    "authoritative_repo_url": "https://github.com/SbD-ToE/sbd-toe-ontology",
+    "local_mirror_dir": "ontology/",
+    "local_mirror_role": "build_input_only"
+  },
   "profiles": {
     "consult": {
       "required_artifacts": [

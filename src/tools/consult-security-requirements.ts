@@ -375,7 +375,7 @@ export function handleConsultSecurityRequirements(
       content_type: "derived",
       produced_by: "deterministic_runtime_resolution",
       source_data:
-        "sbdtoe-ontology.yaml + runtime/requirements.json + runtime/controls.json + runtime/artifacts.json + runtime/artifact_requirements.json + runtime/requirement_control_links.json",
+        "ontology/sbdtoe-ontology.yaml + runtime/requirements.json + runtime/controls.json + runtime/artifacts.json + runtime/artifact_requirements.json + runtime/requirement_control_links.json",
       note:
         "Normative resolution uses the published deterministic runtime bundle. Controls are explicit when linked from requirements, otherwise derived via ontology domain_mapping.",
     },

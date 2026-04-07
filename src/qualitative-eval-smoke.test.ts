@@ -67,7 +67,7 @@ describe("qualitative eval smoke", () => {
     expect(result.selected.length).toBe(3);
     expect(result.consultedIndices).toEqual(
       expect.arrayContaining([
-        "sbdtoe-ontology.yaml",
+        "ontology/sbdtoe-ontology.yaml",
         "publication_manifest.json",
         "mcp_chunks.jsonl",
         "chunk_entity_mentions.jsonl",

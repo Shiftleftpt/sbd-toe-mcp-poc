@@ -1,0 +1,260 @@
+meta:
+  name: AppSec Core v0 Consolidated Review
+  version: '0.1'
+  status: review_candidate
+  maturity: consolidation_checkpoint
+  description: >
+    Single-file consolidated review surface for AppSec Core v0. This file is
+    intended to be the easiest review entrypoint while the modular drafts
+    remain the source of truth for slice-local detail.
+  related_artifacts:
+    working_spine: ontology/appsec-core-v0-draft.yaml
+    surface_contract: ontology/appsec-core-v0-surface-contract.yaml
+    slice_registry: ontology/appsec-core-slice-registry-v0-draft.yaml
+    instance_index: ontology/appsec-core-v0-instance-index.yaml
+    evidence_pattern_contract: ontology/appsec-core-evidence-pattern-v0-draft.yaml
+    evidence_pattern_index: ontology/appsec-core-evidence-pattern-index-v0.yaml
+    entity_schema: ontology/appsec-core-entity-schema-v0-draft.yaml
+    cross_slice_vocabulary: ontology/appsec-core-cross-slice-vocabulary-v0-draft.yaml
+    manual_mapping_contract: ontology/appsec-core-manual-mapping-v0-draft.yaml
+    readiness_note: docs/project/working-notes/2026-04-03-appsec-core-v0-readiness.md
+purpose:
+  current_goal: >
+    Give one compact YAML for review of the current AppSec Core v0 shape,
+    boundaries, slice coverage and indexed instance surface.
+  non_goals:
+    - replacing_slice_local_contracts_or_drafts
+    - publishing_external_alignment
+    - introducing_v3_runtime_semantics
+    - introducing_source_provenance_semantics
+read_this_as:
+  this_file_is:
+    - single_file_review_entrypoint
+    - consolidated_summary_of_the_current_v0_shape
+    - packaging_checkpoint_for_validation
+  this_file_is_not:
+    - only_source_of_truth
+    - fully_merged_global_instance_database
+    - final_public_release_artifact
+layer_split:
+  appsec_core:
+    status: active_v0_target
+    first_class_entities:
+      - ControlObjective
+      - Practice
+      - Mechanism
+      - Artifact
+      - EvidencePattern
+    supporting_but_not_core_driving:
+      - Threat
+      - Signal
+    explicitly_deferred:
+      - Problem
+      - Gap
+      - Capability
+  sbdtoe_manual_mapping:
+    status: active_and_separate
+    included:
+      - requirement_to_objective_mapping
+      - control_to_objective_mapping
+      - bridge_only_observations
+  external_alignment:
+    status: deferred
+    note: SSDF, SAMM and SLSA stay outside v0
+  v3_verification_runtime:
+    status: deferred
+    note: persistent findings and runtime verification history stay outside v0
+  source_provenance_layer:
+    status: parked_and_transversal
+    note: provenance and attestation stay outside core and manual mapping
+stable_v0_shape:
+  objective_model:
+    objective_kind: [atomic, composite]
+    objective_type: [governance, preventive, detective, corrective]
+    requirement_level_rule: atomic_first
+    control_level_rule: broad_controls_may_land_on_composite
+  entity_semantic_read:
+    Practice:
+      meaning: >
+        Prescriptive human or process discipline that should exist
+        independently of a specific tool or runtime product choice.
+    Mechanism:
+      meaning: >
+        Concrete technical or enforceable means used to implement practices or
+        directly realize objectives.
+    coupling_rule:
+      - mechanisms_should_reference_supported_practices_when_that_link_is_known
+  practice_families:
+    - governance_and_review
+    - policy_and_gate_enforcement
+    - identity_and_trust_control
+    - validation_and_analysis
+    - integrity_traceability_and_records
+    - rollout_recovery_and_runtime_records
+  mechanism_families:
+    - governance_and_review
+    - policy_and_gate_enforcement
+    - identity_and_trust_control
+    - validation_and_analysis
+    - integrity_traceability_and_records
+    - rollout_recovery_and_runtime_records
+  canonical_artifact_roles:
+    - configuration
+    - governance_record
+    - review_record
+    - approval_record
+    - gate_record
+    - inventory
+    - attestation
+    - report
+    - evidence_package
+    - operational_record
+    - build_definition
+    - release_artifact
+    - model
+    - validation_output
+    - binding_record
+  stable_relations:
+    - objective_realized_by_practice
+    - objective_implemented_by_mechanism
+    - objective_expects_artifact
+    - objective_verified_by_evidence_pattern
+    - artifact_supports_evidence_pattern
+    - manual_requirement_maps_to_objective
+    - manual_control_maps_to_objective
+  mapping_rules:
+    - bridge_only_observations_use_source_reference
+    - slice_local_nuance_may_remain_in_local_role
+    - merged_global_instance_set_is_optional_for_v0
+  method_guardrails:
+    - slice_cardinality_is_methodological_not_ontological
+    - future_versions_may_use_different_slice_counts_when_the_domain_requires_it
+reference_set:
+  slice_count: 10
+  slices:
+    - slice_id: ASC-01
+      scope: supply_chain_and_build_integrity
+      objective_family: ACO-SCBI
+      composite_objective: ACO-SCBI-007
+      current_control_mode: multi_control_convergent_surface
+      counts: {control_objectives: 7, practices: 7, mechanisms: 5, artifacts: 10}
+      contract: ontology/appsec-core-supply-chain-build-integrity-slice-contract.yaml
+    - slice_id: ASC-02
+      scope: identity_access_and_session_trust
+      objective_family: ACO-IAT
+      composite_objective: ACO-IAT-007
+      current_control_mode: single_broad_control_surface
+      counts: {control_objectives: 7, practices: 6, mechanisms: 6, artifacts: 6}
+      contract: ontology/appsec-core-identity-access-session-trust-slice-contract.yaml
+    - slice_id: ASC-03
+      scope: architecture_and_trust_boundaries
+      objective_family: ACO-ATB
+      composite_objective: ACO-ATB-007
+      current_control_mode: dual_control_surface
+      counts: {control_objectives: 7, practices: 7, mechanisms: 5, artifacts: 4}
+      contract: ontology/appsec-core-architecture-trust-boundaries-slice-contract.yaml
+    - slice_id: ASC-04
+      scope: testing_security_validation_and_empirical_assurance
+      objective_family: ACO-TSV
+      composite_objective: ACO-TSV-007
+      current_control_mode: single_broad_control_surface
+      counts: {control_objectives: 7, practices: 7, mechanisms: 5, artifacts: 6}
+      contract: ontology/appsec-core-testing-security-validation-slice-contract.yaml
+    - slice_id: ASC-05
+      scope: threat_modeling_risk_disposition_and_mitigation_traceability
+      objective_family: ACO-TMR
+      composite_objective: ACO-TMR-007
+      current_control_mode: single_broad_control_surface
+      counts: {control_objectives: 7, practices: 7, mechanisms: 6, artifacts: 4}
+      contract: ontology/appsec-core-threat-modeling-risk-disposition-slice-contract.yaml
+    - slice_id: ASC-06
+      scope: secret_handling_protected_configuration_and_operational_identities
+      objective_family: ACO-SPC
+      composite_objective: ACO-SPC-007
+      current_control_mode: single_broad_control_surface
+      counts: {control_objectives: 7, practices: 6, mechanisms: 4, artifacts: 2}
+      contract: ontology/appsec-core-secrets-protected-config-slice-contract.yaml
+    - slice_id: ASC-07
+      scope: input_validation_safe_parsing_and_controlled_failure
+      objective_family: ACO-IVF
+      composite_objective: ACO-IVF-007
+      current_control_mode: single_broad_control_surface
+      counts: {control_objectives: 7, practices: 6, mechanisms: 4, artifacts: 6}
+      contract: ontology/appsec-core-input-validation-safe-failure-slice-contract.yaml
+    - slice_id: ASC-08
+      scope: integration_trust_and_service_to_service_security
+      objective_family: ACO-ITS
+      composite_objective: ACO-ITS-007
+      current_control_mode: split_control_surface
+      counts: {control_objectives: 7, practices: 6, mechanisms: 5, artifacts: 5}
+      contract: ontology/appsec-core-integration-trust-service-security-slice-contract.yaml
+    - slice_id: ASC-09
+      scope: release_promotion_controlled_rollout_and_rollback_readiness
+      objective_family: ACO-RPR
+      composite_objective: ACO-RPR-007
+      current_control_mode: split_control_surface
+      counts: {control_objectives: 7, practices: 6, mechanisms: 4, artifacts: 8}
+      contract: ontology/appsec-core-release-promotion-controlled-rollout-slice-contract.yaml
+    - slice_id: ASC-10
+      scope: security_event_logging_audit_trail_and_centralized_logging
+      objective_family: ACO-SLG
+      composite_objective: ACO-SLG-007
+      current_control_mode: single_broad_control_surface
+      counts: {control_objectives: 7, practices: 5, mechanisms: 4, artifacts: 2}
+      contract: ontology/appsec-core-security-event-logging-audit-trail-slice-contract.yaml
+global_instance_index:
+  indexed_now:
+    total_indexed_instances: 234
+    counts:
+      control_objectives: 70
+      practices: 63
+      mechanisms: 48
+      artifacts: 53
+  supporting_global_surfaces:
+    EvidencePattern:
+      status: one_runtime_aligned_global_support_index_now_exists
+      artifacts:
+        - ontology/appsec-core-evidence-pattern-v0-draft.yaml
+        - ontology/appsec-core-evidence-pattern-index-v0.yaml
+      limitations:
+        - supported_signal_ids_are_not_materialized_in_current_runtime_output
+        - verification_when_and_responsible_roles_are_sparse
+        - the_current_surface_is_runtime_aligned_not_yet_full_slice_normalized
+      public_claim:
+        v0_supports:
+          - expected_evidence_shape
+          - validation_method_expression
+          - artifact_traceability
+          - deterministic_review_support
+        v0_does_not_claim:
+          - execution_binding
+          - verification_run_history
+          - full_signal_coverage
+          - runtime_decision_trace
+  not_indexed_globally_yet:
+    Threat:
+      status: supporting_not_core_driving
+    Signal:
+      status: supporting_not_core_driving
+review_read_order:
+  - read_this_file_first
+  - drill_into_ontology/appsec-core-v0-surface-contract.yaml_for_packaging_rules
+  - drill_into_ontology/appsec-core-v0-instance-index.yaml_for_full_id_lists
+  - drill_into_ontology/appsec-core-evidence-pattern-v0-draft.yaml_for_supporting_semantics
+  - drill_into_ontology/appsec-core-evidence-pattern-index-v0.yaml_for_runtime_aligned_coverage
+  - drill_into_ontology/appsec-core-manual-mapping-v0-draft.yaml_for_projection_rules
+  - open_slice_contracts_only_when_detail_is_needed
+current_open_items:
+  - whether_the_current_evidencepattern_support_index_is_enough_for_first_publication
+  - whether_more_canonical_role_flattening_is_worth_the_loss_of_slice_local_nuance
+  - whether_a_heavier_merged_instance_set_adds_real_value_beyond_the_current_index
+acceptance_read:
+  stable_enough_now:
+    - one_single_yaml_now_exists_for_appsec_v0_review
+    - the_modular_source_of_truth_remains_preserved
+    - the_reference_set_is_broad_enough_without_slice_11
+    - one_supporting_global_evidencepattern_surface_now_exists
+  not_done_yet:
+    - final_public_release_packaging
+    - external_alignment
+    - v3

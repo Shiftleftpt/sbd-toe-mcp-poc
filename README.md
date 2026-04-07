@@ -157,11 +157,11 @@ Copy `.env.example` to `.env` and adjust as needed.
 
 | Repository | Role |
 |---|---|
-| `Shiftleftpt/SbD-ToE-Manual` | canonical editorial source of the manual |
-| `sbd-toe-knowledge-graph` | builder/publisher of semantic snapshots |
+| `SbD-ToE/sbd-toe-manual` | canonical editorial source of the manual |
+| `SbD-ToE/sbd-toe-knowledge-graph` | builder/publisher of the compiled manual surface |
 | `@shiftleftpt/sbd-toe-mcp` | MCP server — consumes snapshots, exposes tools |
 
-This project **consumes** artefacts already produced by `sbd-toe-knowledge-graph`. It does not re-index the manual, does not rebuild semantics and does not replace the builder.
+This project **consumes** the published bundle of the compiled SbD-ToE manual. It does not re-index the manual, does not reconcile `AppSec Core` directly, does not rebuild semantics and does not replace the builder.
 
 Maintainers who want to update the bundled snapshots from a local checkout of `sbd-toe-knowledge-graph`:
 

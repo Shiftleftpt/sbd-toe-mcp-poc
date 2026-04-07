@@ -96,6 +96,7 @@ export interface BackendCheckout {
     chunkEntityMentions?: string | undefined;
     chunkRelationHints?: string | undefined;
     ontologyFile?: string | undefined;
+    normalizationOntologyFile?: string | undefined;
   };
   runManifest: {
     runId?: string | undefined;

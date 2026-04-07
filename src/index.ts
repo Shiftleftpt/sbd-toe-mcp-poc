@@ -1079,7 +1079,7 @@ class McpRuntime {
     }
 
     if (uri === "sbd://toe/ontology") {
-      const ontologyPath = resolveAppPath("data/publish/sbdtoe-ontology.yaml");
+      const ontologyPath = resolveAppPath("data/publish/ontology/sbdtoe-ontology.yaml");
       let ontologyText: string;
       try {
         ontologyText = readFileSync(ontologyPath, "utf-8");

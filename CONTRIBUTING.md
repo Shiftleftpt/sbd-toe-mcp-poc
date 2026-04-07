@@ -2,7 +2,7 @@
 
 Este repositório usa **trunk-based development**, com `master` como ramo principal e publicável.
 
-O objetivo deste guia é manter o `sbd-toe-mcp-poc` coerente com o ecossistema SbD-ToE sem confundir o papel deste projeto com o do `sbd-toe-knowledge-graph` ou do `Shiftleftpt/SbD-ToE-Manual`.
+O objetivo deste guia é manter o `sbd-toe-mcp-poc` coerente com o ecossistema SbD-ToE sem confundir o papel deste projeto com o do `SbD-ToE/sbd-toe-knowledge-graph` ou do `SbD-ToE/sbd-toe-manual`.
 
 ## Antes de começar
 
@@ -189,7 +189,7 @@ A filosofia deste projeto é **transparência total**. Os disclosures:
 
 ## Atualização dos snapshots embutidos
 
-Este repositório **consome** artefactos publicados; não reconstrói o pipeline semântico.
+Este repositório **consome** artefactos publicados do manual compilado; não reconstrói o pipeline semântico.
 
 Se precisares de atualizar o bundle embutido:
 

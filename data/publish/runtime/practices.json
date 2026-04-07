@@ -657,6 +657,7 @@
         "candidate covers all practice tokens",
         "practice_id derived deterministically from chapter '03-threat-modeling'",
         "summary occurrence linked from 010-sbd-manual/03-threat-modeling/intro.md",
+        "technical_detail occurrence linked from 010-sbd-manual/03-threat-modeling/addon/00-catalogo-requisitos.md",
         "technical_detail occurrence linked from 010-sbd-manual/03-threat-modeling/addon/01-metodologias-e-ferramentas.md",
         "technical_detail occurrence linked from 010-sbd-manual/03-threat-modeling/addon/02-riscos-processo-threat-modeling.md",
         "technical_detail occurrence linked from 010-sbd-manual/03-threat-modeling/addon/03-validacao-evidencia-threat-modeling.md",
@@ -672,6 +673,7 @@
       "label": "Validação de arquitetura com threat modeling",
       "normalized_label": "validacao-de-arquitetura-com-threat-modeling",
       "source_document_ids": [
+        "010-sbd-manual-03-threat-modeling-addon-00-catalogo-requisitos",
         "010-sbd-manual-03-threat-modeling-addon-01-metodologias-e-ferramentas",
         "010-sbd-manual-03-threat-modeling-addon-02-riscos-processo-threat-modeling",
         "010-sbd-manual-03-threat-modeling-addon-03-validacao-evidencia-threat-modeling",
@@ -687,6 +689,7 @@
         "technical_detail"
       ],
       "source_section_ids": [
+        "010-sbd-manual-03-threat-modeling-addon-00-catalogo-requisitos--catalogo-de-requisitos-de-threat-modeling",
         "010-sbd-manual-03-threat-modeling-addon-01-metodologias-e-ferramentas--metodologias-e-ferramentas-de-threat-modeling",
         "010-sbd-manual-03-threat-modeling-addon-02-riscos-processo-threat-modeling--riscos-de-processo-no-threat-modeling",
         "010-sbd-manual-03-threat-modeling-addon-03-validacao-evidencia-threat-modeling--validacao-e-evidencia-no-threat-modeling",

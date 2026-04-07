@@ -19,7 +19,8 @@ const execFileAsync = promisify(execFile);
 export const PROJECT_NAME = "sbd-toe-mcp";
 
 export const REQUIRED_PUBLISH_FILES = [
-  "data/publish/sbdtoe-ontology.yaml",
+  "data/publish/ontology/appsec-core-ontology.yaml",
+  "data/publish/ontology/sbdtoe-ontology.yaml",
   "data/publish/sbd-toe-index-compact.json",
   "data/publish/indexes/publication_manifest.json",
   "data/publish/indexes/bundle_catalog.jsonl",
@@ -53,8 +54,13 @@ export const REQUIRED_BUNDLE_ENTRIES = [
   { kind: "dir", src: "dist", dest: "dist" },
   {
     kind: "file",
-    src: "data/publish/sbdtoe-ontology.yaml",
-    dest: "data/publish/sbdtoe-ontology.yaml"
+    src: "data/publish/ontology/appsec-core-ontology.yaml",
+    dest: "data/publish/ontology/appsec-core-ontology.yaml"
+  },
+  {
+    kind: "file",
+    src: "data/publish/ontology/sbdtoe-ontology.yaml",
+    dest: "data/publish/ontology/sbdtoe-ontology.yaml"
   },
   {
     kind: "file",

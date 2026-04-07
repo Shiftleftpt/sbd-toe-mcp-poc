@@ -15,7 +15,8 @@ const REQUIRED_PATHS = [
   "data/publish/indexes/bundle_catalog.jsonl",
   "data/publish/runtime/deterministic_manifest.json",
   "data/publish/sbd-toe-index-compact.json",
-  "data/publish/sbdtoe-ontology.yaml"
+  "data/publish/ontology/appsec-core-ontology.yaml",
+  "data/publish/ontology/sbdtoe-ontology.yaml"
 ];
 
 const BANNED_PREFIXES = [

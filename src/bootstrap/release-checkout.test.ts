@@ -15,7 +15,7 @@ describe("assertSafeAssetUrl", () => {
   it("accepts an authorised github.com URL", () => {
     expect(() =>
       assertSafeAssetUrl(
-        "https://github.com/Shiftleftpt/sbd-toe-knowledge-graph/releases/download/v1.0.0/bundle.tar.gz"
+        "https://github.com/SbD-ToE/sbd-toe-knowledge-graph/releases/download/v1.0.0/bundle.tar.gz"
       )
     ).not.toThrow();
   });
@@ -36,7 +36,7 @@ describe("assertSafeAssetUrl", () => {
 
   it("rejects a URL that starts with an allowed prefix but has wrong host", () => {
     expect(() =>
-      assertSafeAssetUrl("https://evil.github.com/Shiftleftpt/anything")
+      assertSafeAssetUrl("https://evil.github.com/SbD-ToE/anything")
     ).toThrow("URL de asset não autorizada");
   });
 });
@@ -172,7 +172,7 @@ describe("fetchReleaseAssetUrl", () => {
 
   it("returns assetUrl and assetName for a valid release with bundle asset", async () => {
     const downloadUrl =
-      "https://github.com/Shiftleftpt/sbd-toe-knowledge-graph/releases/download/v1.0.0/bundle.tar.gz";
+      "https://github.com/SbD-ToE/sbd-toe-knowledge-graph/releases/download/v1.0.0/bundle.tar.gz";
 
     vi.mocked(fetch).mockResolvedValueOnce(
       new Response(
@@ -198,7 +198,7 @@ describe("fetchReleaseAssetUrl", () => {
 
   it("always uses the tag-specific release URL", async () => {
     const downloadUrl =
-      "https://github.com/Shiftleftpt/sbd-toe-knowledge-graph/releases/download/v2.0.0/bundle.tar.gz";
+      "https://github.com/SbD-ToE/sbd-toe-knowledge-graph/releases/download/v2.0.0/bundle.tar.gz";
 
     vi.mocked(fetch).mockResolvedValueOnce(
       new Response(

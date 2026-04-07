@@ -43,7 +43,7 @@ Não são vulnerabilidades de segurança, por defeito:
 - gaps editoriais ou dúvidas sobre o conteúdo do manual
 - pedidos de funcionalidade
 - problemas de instalação sem impacto de segurança
-- vulnerabilidades que pertençam exclusivamente ao `Shiftleftpt/SbD-ToE-Manual` ou ao `sbd-toe-knowledge-graph`
+- vulnerabilidades que pertençam exclusivamente ao `SbD-ToE/sbd-toe-manual` ou ao `SbD-ToE/sbd-toe-knowledge-graph`
 
 Se tiveres dúvida sobre o repositório correto, reporta na mesma em privado e triamos internamente.
 

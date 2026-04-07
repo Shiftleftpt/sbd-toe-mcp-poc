@@ -36,7 +36,7 @@ Basta apontar o MCP para:
 Confirmar:
 
 - o MCP está a ler:
-  - `data/publish/sbdtoe-ontology.yaml`
+  - `data/publish/ontology/sbdtoe-ontology.yaml`
   - `data/publish/runtime/deterministic_manifest.json`
   - `data/publish/runtime/*.json`
   - `data/publish/indexes/mcp_chunks.jsonl`

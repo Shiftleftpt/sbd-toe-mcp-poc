@@ -900,7 +900,7 @@ function loadPublishedSubstrate(): PublishedSubstrateCache {
 
   const config = getConfig();
   const ontology = readYamlFileRequired<Record<string, unknown>>(
-    "data/publish/sbdtoe-ontology.yaml"
+    config.backend.ontologyFile
   );
   const publicationManifest = readJsonFileRequired<PublicationManifestPayload>(
     config.backend.publicationManifestFile
@@ -1254,7 +1254,7 @@ export async function retrievePublishedContext(
     retrieved,
     promptChapters,
     consultedIndices: [
-      "sbdtoe-ontology.yaml",
+      "ontology/sbdtoe-ontology.yaml",
       "publication_manifest.json",
       "mcp_chunks.jsonl",
       ...(shouldRunVector ? ["vector_chunks.jsonl"] : []),

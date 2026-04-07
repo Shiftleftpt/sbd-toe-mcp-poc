@@ -119,7 +119,7 @@ export function getConfig(): AppConfig {
       ),
       ontologyFile: getEnv(
         "ONTOLOGY_FILE",
-        "./data/publish/sbdtoe-ontology.yaml"
+        "./data/publish/ontology/sbdtoe-ontology.yaml"
       ),
       runManifestFile: getEnv(
         "RUN_MANIFEST_FILE",

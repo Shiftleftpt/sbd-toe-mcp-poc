@@ -105,7 +105,8 @@ export const mockBackendCheckout = {
     canonicalChunks: "data/publish/indexes/canonical_chunks.jsonl",
     chunkEntityMentions: "data/publish/indexes/chunk_entity_mentions.jsonl",
     chunkRelationHints: "data/publish/indexes/chunk_relation_hints.jsonl",
-    ontologyFile: "data/publish/sbdtoe-ontology.yaml"
+    ontologyFile: "data/publish/ontology/sbdtoe-ontology.yaml",
+    normalizationOntologyFile: "data/publish/ontology/appsec-core-ontology.yaml"
   },
   runManifest: {
     runId: "test-run-001",

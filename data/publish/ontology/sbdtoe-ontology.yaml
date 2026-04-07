@@ -1,0 +1,1035 @@
+meta:
+  name: SbD-ToE Manual Ontology
+  version: '2.0'
+  status: current
+  scope: Manual ontology
+  description: 'Draft V2 ontology for the SbD-ToE manual. This model keeps the deterministic normative backbone of the manual and adds the semantic layer validated in the V2 discovery work. It is intended as the publishable ontology of the manual, not yet as a generic AppSec domain ontology.
+
+    '
+  principles:
+  - manual-first
+  - bundle-aware
+  - deterministic-runtime
+  - llm-offline-only
+  - provenance-required
+  source_of_truth:
+    backbone_yaml: ontology/sbdtoe-ontology.yaml
+    bundle_indexes:
+    - data/publish/indexes/bundle_catalog.jsonl
+    - data/publish/indexes/bundle_documents.jsonl
+    - data/publish/indexes/ontology_discovery_units.jsonl
+    semantic_entities:
+    - data/publish/semantic/concepts.jsonl
+    - data/publish/semantic/mechanisms.jsonl
+    - data/publish/semantic/patterns.jsonl
+    - data/publish/semantic/antipatterns.jsonl
+    - data/publish/semantic/signals.jsonl
+    semantic_links:
+    - data/publish/semantic/requirement_control_links.jsonl
+    - data/publish/semantic/mechanism_control_links.jsonl
+    - data/publish/semantic/pattern_control_links.jsonl
+    - data/publish/semantic/antipattern_requirement_links.jsonl
+    - data/publish/semantic/antipattern_threat_links.jsonl
+    - data/publish/semantic/signal_evidence_links.jsonl
+    external_overlay:
+    - data/publish/overlay/external_frameworks.json
+    - data/publish/overlay/external_obligations.json
+    - data/publish/overlay/overlay_playbooks.json
+    - data/publish/overlay/overlay_mappings.jsonl
+  data_sources:
+    requirements: data/entities/canonical_requirements_s7.json
+    controls: data/entities/canonical_controls.json
+    practices: data/entities/practices.json
+    threats: data/entities/mitigated_threats.json
+    artifacts: data/entities/artifact_catalog.json
+    phases: data/entities/sdlc_phases_canonical_s6.json
+    roles: data/entities/canonical_roles_s5.json
+    user_stories: data/entities/lifecycle_user_stories.json
+    assignments: data/entities/practice_assignments.json
+    control_links: data/entities/control_links.json
+    maturity: data/entities/maturity_mappings.json
+    policy_refs: data/entities/policy_references.json
+    proportionality: data/entities/proportionality.json
+    evidence_patterns: data/entities/evidence_patterns.json
+verification_scope:
+  status: deferred_to_v3
+  note: >
+    This ontology defines expected evidence structures and deterministic review inputs,
+    but does not yet model verification execution, persistent findings or validation
+    history. Those concerns are deferred to a future V3 audit/verification layer.
+epistemic_model:
+  description: 'Separates how a fact was built, how authoritative it is, and how it should be interpreted by deterministic resolution and external consumers.
+
+    '
+  source_mode:
+    explicit: Directly extracted from a canonical SbD-ToE source artifact
+    derived: Deterministically derived from an explicit canonical relation or mapping
+    scored: Deterministically scored from semantic evidence and lexical grounding
+    heuristic: Fallback match with bounded confidence
+    runtime: Produced only during runtime resolution
+  authority_class:
+    normative: Represents what the manual prescribes
+    editorial: Represents how the manual is structured and presented
+    semantic: Represents semantic enrichment discovered from the manual
+    operational: Represents runtime or execution-oriented compilation
+    external: Represents curated or adopted external overlays mapped onto the manual
+  confidence_model:
+    deterministic: Result is exact given canonical source data
+    bounded: Result is deterministic but thresholded and contestable
+    probabilistic: Result depends on a probabilistic extraction step; not allowed in runtime
+semantic_classification_policy:
+  concept:
+    definition: Stable semantic notion used to frame interpretation of the manual
+    tests:
+    - Does not require a concrete implementation means by itself
+    - Can organize or explain multiple mechanisms or patterns
+    - Still makes sense when detached from a specific control implementation
+  mechanism:
+    definition: Concrete technical or process means used to realize a control
+    tests:
+    - Actionable as a component of implementation or operations
+    - Can support more than one pattern or practice
+    - More concrete than a concept and narrower than a pattern
+  pattern:
+    definition: Reusable arrangement of mechanisms, responsibilities or sequencing
+    tests:
+    - Describes a repeatable way of applying one or more mechanisms
+    - Can be instantiated across multiple bundles or application contexts
+    - More compositional than a single mechanism
+  antipattern:
+    definition: Repeatable undesired arrangement or practice explicitly discouraged by the manual
+    tests:
+    - Represents a failure mode, deficiency or risky shortcut
+    - Can be linked to violated requirements or exposed threats
+  signal:
+    definition: Observable indicator that supports or weakens a verification judgement
+    tests:
+    - Observable in an artifact, config, workflow, runtime output or record
+    - Useful for review, evidence or gap explanation
+layers:
+  core:
+    description: First-class ontology entities for the SbD-ToE manual
+    entities:
+    - Requirement
+    - Control
+    - Practice
+    - PracticeAssignment
+    - Artifact
+    - Threat
+    - Role
+    - SDLCPhase
+    - UserStory
+    - EvidencePattern
+    - Concept
+    - Mechanism
+    - Pattern
+    - AntiPattern
+    - Signal
+  supporting:
+    description: Useful knowledge entities that support the manual model but do not drive resolution alone
+    entities:
+    - KnowledgeBundle
+    - BundleDocument
+    - DocumentUnit
+    - PolicyReference
+    - MaturityMapping
+    - ExternalFramework
+    - ExternalObligation
+    - OverlayPlaybook
+    - OverlayMapping
+  runtime:
+    description: Runtime-only input or link support; not a core domain class
+    entities:
+    - ApplicationContext
+    - ArtifactRequirement
+  stub:
+    description: Reserved or incomplete entities not yet promoted into the V2 core
+    entities:
+    - ImplementationRule
+entities:
+  KnowledgeBundle:
+    layer: supporting
+    description: A chapter-level knowledge bundle in the SbD-ToE manual
+    id_field: bundle_id
+    source_file: data/publish/indexes/bundle_catalog.jsonl
+    attributes:
+    - bundle_id: string
+    - collection_id: string
+    - title: string
+    - bundle_type: enum[chapter]
+    - maintenance_status: enum[current, legacy]
+    - bundle_authority_score: float
+  BundleDocument:
+    layer: supporting
+    description: A structural document inside a bundle
+    id_field: document_id
+    source_file: data/publish/indexes/bundle_documents.jsonl
+    attributes:
+    - document_id: string
+    - bundle_id: string
+    - canonical_path: string
+    - document_role: enum[intro, aplicacao_lifecycle, addon, policy_reference, instantiated_policy, maturity, advanced, rationale, legacy_canon]
+    - semantic_layer: string
+    - source_authority_score: float
+    - normative_weight: enum[strong, medium, weak, historical]
+  DocumentUnit:
+    layer: supporting
+    description: The smallest bundle-aware textual unit used for semantic discovery
+    id_field: unit_id
+    source_file: data/publish/indexes/ontology_discovery_units.jsonl
+    attributes:
+    - unit_id: string
+    - bundle_id: string
+    - document_id: string
+    - section_id: string
+    - document_role: string
+    - heading_path: string
+    - classification: string
+    - semantic_layer: string
+    - source_authority_score: float
+  Requirement:
+    layer: core
+    description: Security requirement prescribed by the SbD-ToE manual
+    id_field: requirement_id
+    source_file: data/entities/canonical_requirements_s7.json
+    attributes:
+    - requirement_id: string
+    - category: string
+    - name: string
+    - description: string
+    - applicable_levels: object
+    - source_bundle: string
+    - source_chapter: integer
+  Control:
+    layer: core
+    description: Canonical control objective/strategy in the manual
+    id_field: control_id
+    source_file: data/entities/canonical_controls.json
+    authority_class: normative
+    attributes:
+    - control_id: string
+    - name: string
+    - statement: string
+    - intent: string
+    - domain: string
+    - control_family: string
+    - control_type: enum[preventive, detective, corrective, governance]
+    - abstraction_level: enum[technical, governance]
+    - applicability_notes: string
+    - operational_expectation: string
+    - verification_notes: string
+    - chapter_ids: list[string]
+  Practice:
+    layer: core
+    description: Operational practice that implements one or more controls
+    id_field: id
+    source_file: data/entities/practices.json
+    attributes:
+    - id: string
+    - label: string
+    - chapter_id: string
+  PracticeAssignment:
+    layer: core
+    description: 'Concrete action: who does what, when, and at what risk level'
+    id_field: id
+    source_file: data/entities/practice_assignments.json
+    attributes:
+    - id: string
+    - practice_id: string
+    - action: string
+    - role: string
+    - phase: string
+    - risk_level: enum[L1, L2, L3]
+    - artifacts: list[string]
+  UserStory:
+    layer: core
+    description: Bundle operationalization scenario expressed in user story form
+    id_field: id
+    source_file: data/entities/lifecycle_user_stories.json
+    editorial_alias: UserStory
+    attributes:
+    - id: string
+    - us_id: string
+    - title: string
+    - practice_id: string
+    - roles_normalized: list[string]
+    - artifacts: list[string]
+    - checklist_items: list[string]
+  Artifact:
+    layer: core
+    description: 'Observable artifact expected or produced by the manual. Includes technical, documentary and hybrid artifacts. Documentary and probative meaning is not modeled as a separate core entity yet; it is carried by artifact_kind, documentary_status and evidence_role.
+
+      '
+    note: Artifacts are not evidence by themselves; they require interpretation through EvidencePattern.
+    id_field: artifact_type_id
+    source_file: data/entities/artifact_catalog.json
+    attributes:
+    - artifact_type_id: string
+    - name: string
+    - category: enum[evidence, configuration, governance_record, operational_record, attestation, release_artifact, security_report]
+    - artifact_kind: string
+    - documentary_status: enum[documentary, technical, hybrid]
+    - evidence_role: enum[normative_source, proof_of_practice, proof_of_control, technical_evidence, implementation_support]
+    - lifecycle_phases: list[string]
+    - produced_by_controls: list[string]
+  Threat:
+    layer: core
+    description: Threat mitigated by the manual
+    id_field: id
+    source_file: data/entities/mitigated_threats.json
+    authority_class: normative
+    attributes:
+    - id: string
+    - name: string
+    - category: string
+    - threat_kind: string
+    - threat_description: string
+    - impact_area: list[string]
+    - source_taxonomy: string
+    - associated_controls: list[string]
+    - typical_antipattern_ids: list[string]
+    - chapter_id: string
+  Role:
+    layer: core
+    description: Canonical role vocabulary reused across the manual
+    id_field: role_id
+    source_file: data/entities/canonical_roles_s5.json
+    attributes:
+    - role_id: string
+    - aliases: list[string]
+  SDLCPhase:
+    layer: core
+    description: Canonical SDLC phase
+    id_field: phase_id
+    source_file: data/entities/sdlc_phases_canonical_s6.json
+    attributes:
+    - phase_id: string
+    - label: string
+    - aliases: list[string]
+  EvidencePattern:
+    layer: core
+    description: 'Expected evidence pattern used for deterministic review. Interprets one or more artifacts or signals as verifiable evidence; the artifact itself is not the evidence judgement. Designed as input for deterministic verification models in future ontology versions (V3).
+
+      '
+    id_field: id
+    source_file: data/entities/evidence_patterns.json
+    status: partial
+    authority_class: normative
+    future_role: verification_input
+    attributes:
+    - id: string
+    - evidence_type: string
+    - evidence_expectation: string
+    - verification_logic: string
+    - detectable_in: list[string]
+    - maps_to_requirement_id: string
+    - maps_to_control_id: string
+    - supported_signal_ids: list[string]
+  Concept:
+    layer: core
+    description: Semantic concept explicitly or consistently expressed in the manual
+    id_field: concept_id
+    source_file: data/publish/semantic/concepts.jsonl
+    attributes:
+    - concept_id: string
+    - label: string
+    - aliases: list[string]
+    - bundle_ids: list[string]
+    - source_unit_ids: list[string]
+  Mechanism:
+    layer: core
+    description: Technical or process mechanism used to realize a control
+    id_field: mechanism_id
+    source_file: data/publish/semantic/mechanisms.jsonl
+    attributes:
+    - mechanism_id: string
+    - label: string
+    - aliases: list[string]
+    - bundle_ids: list[string]
+    - source_unit_ids: list[string]
+  Pattern:
+    layer: core
+    description: Reusable implementation or operating pattern in the manual
+    id_field: pattern_id
+    source_file: data/publish/semantic/patterns.jsonl
+    attributes:
+    - pattern_id: string
+    - label: string
+    - aliases: list[string]
+    - bundle_ids: list[string]
+    - source_unit_ids: list[string]
+  AntiPattern:
+    layer: core
+    description: Undesired implementation or operating pattern described by the manual
+    id_field: antipattern_id
+    source_file: data/publish/semantic/antipatterns.jsonl
+    attributes:
+    - antipattern_id: string
+    - label: string
+    - aliases: list[string]
+    - bundle_ids: list[string]
+    - source_unit_ids: list[string]
+  Signal:
+    layer: core
+    description: Observable indicator used to support evidence or highlight gaps. Signals support verification but do not constitute verification outcomes on their own.
+    interpretation_role: supporting_only
+    id_field: signal_id
+    source_file: data/publish/semantic/signals.jsonl
+    attributes:
+    - signal_id: string
+    - label: string
+    - aliases: list[string]
+    - signal_type: string
+    - bundle_ids: list[string]
+    - source_unit_ids: list[string]
+  PolicyReference:
+    layer: supporting
+    description: Policy reference linked from a bundle
+    id_field: document_id
+    source_file: data/publish/indexes/bundle_policy_links.jsonl
+    attributes:
+    - document_id: string
+    - bundle_id: string
+    - policy_title: string
+    - link_status: string
+  MaturityMapping:
+    layer: supporting
+    description: External maturity alignment, kept outside the V2 core semantics
+    id_field: id
+    source_file: data/entities/maturity_mappings.json
+    attributes:
+    - id: string
+    - framework: string
+    - framework_area: string
+    - chapter_id: string
+  ExternalFramework:
+    layer: supporting
+    description: Curated external framework represented as an overlay on the SbD-ToE manual
+    id_field: framework_id
+    source_file: data/publish/overlay/external_frameworks.json
+    authority_class: external
+    attributes:
+    - framework_id: string
+    - name: string
+    - short_code: string
+    - framework_kind: string
+    - jurisdiction: string
+    - scope_summary: string
+    - authority_class: string
+  ExternalObligation:
+    layer: supporting
+    description: Curated external obligation, article or topic mapped onto the manual
+    id_field: obligation_id
+    source_file: data/publish/overlay/external_obligations.json
+    authority_class: external
+    attributes:
+    - obligation_id: string
+    - framework_id: string
+    - title: string
+    - citation: string
+    - obligation_kind: string
+    - topic: string
+    - normative_strength: string
+    - applicability_scope: string
+  OverlayPlaybook:
+    layer: supporting
+    description: Curated or illustrative document that reads the manual through an external framework
+    id_field: playbook_id
+    source_file: data/publish/overlay/overlay_playbooks.json
+    authority_class: external
+    attributes:
+    - playbook_id: string
+    - framework_ids: list[string]
+    - title: string
+    - source_bundle_id: string
+    - source_document_id: string
+    - source_path: string
+    - playbook_kind: string
+    - authority_class: string
+    - adoption_status: string
+    - curation_status: string
+    - applicability_scope: string
+  OverlayMapping:
+    layer: supporting
+    description: Materialized overlay assertion between an external obligation or playbook and the manual
+    id_field: mapping_id
+    source_file: data/publish/overlay/overlay_mappings.jsonl
+    authority_class: external
+    attributes:
+    - mapping_id: string
+    - framework_id: string
+    - obligation_id: string
+    - playbook_id: string
+    - target_type: string
+    - target_id: string
+    - mapping_type: string
+    - confidence: float
+    - authority_class: string
+    - justification: string
+    - source_document_id: string
+    - source_lines: list[integer]
+  ApplicationContext:
+    layer: runtime
+    description: Runtime application input for deterministic resolution
+    source_file: null
+    attributes:
+    - risk_level: enum[L1, L2, L3]
+    - exposure: enum[local, internal, authenticated, public]
+    - data_sensitivity: enum[low, personal, regulated, secrets]
+    - technologies: list[string]
+    - chapter_context: string
+    - concerns: list[string]
+    - artifact_type: string
+    - deployment_context: string
+    - observed_artifacts: list[string]
+    - observed_signals: list[string]
+  ArtifactRequirement:
+    layer: runtime
+    description: Link support between artifact expectations and the normative backbone
+    id_field: id
+    source_file: data/entities/artifact_requirements.json
+    attributes:
+    - id: string
+    - artifact_type_id: string
+    - source_control_ids: list[string]
+    - source_practice_ids: list[string]
+    - chapter_id: string
+  ImplementationRule:
+    layer: stub
+    description: Reserved future layer for code-generation-facing implementation rules
+    id_field: rule_id
+    source_file: null
+    attributes:
+    - rule_id: string
+    - description: string
+    - maps_to_requirement_ids: list[string]
+    - maps_to_control_id: string
+relations:
+  editorial:
+    bundle_has_document:
+      from: KnowledgeBundle
+      to: BundleDocument
+      status: stable
+      source_mode: explicit
+      authority_class: editorial
+      confidence_model: deterministic
+    document_has_unit:
+      from: BundleDocument
+      to: DocumentUnit
+      status: stable
+      source_mode: explicit
+      authority_class: editorial
+      confidence_model: deterministic
+    bundle_references_policy:
+      from: KnowledgeBundle
+      to: PolicyReference
+      status: partial
+      source_mode: explicit
+      authority_class: editorial
+      confidence_model: deterministic
+  normative_backbone:
+    requirement_maps_to_control:
+      from: Requirement
+      to: Control
+      status: partial
+      source_mode: derived
+      authority_class: normative
+      confidence_model: bounded
+      preferred_source: data/publish/semantic/requirement_control_links.jsonl
+      fallback_source: ontology.domain_mapping
+    control_implemented_by_practice:
+      from: Control
+      to: Practice
+      status: stable
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    practice_has_assignment:
+      from: Practice
+      to: PracticeAssignment
+      status: stable
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    practice_has_user_story:
+      from: Practice
+      to: UserStory
+      status: stable
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    assignment_assigns_role:
+      from: PracticeAssignment
+      to: Role
+      status: stable
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    assignment_occurs_in_phase:
+      from: PracticeAssignment
+      to: SDLCPhase
+      status: stable
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    control_produces_artifact:
+      from: Control
+      to: Artifact
+      status: stable
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    practice_produces_artifact:
+      from: PracticeAssignment
+      to: Artifact
+      status: partial
+      source_mode: explicit
+      authority_class: normative
+      confidence_model: deterministic
+    threat_mitigated_by_control:
+      from: Threat
+      to: Control
+      status: stable
+      source_mode: heuristic
+      authority_class: normative
+      confidence_model: bounded
+  semantic_layer:
+    mechanism_implements_control:
+      from: Mechanism
+      to: Control
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/mechanism_control_links.jsonl
+    pattern_operationalizes_control:
+      from: Pattern
+      to: Control
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/pattern_control_links.jsonl
+    antipattern_violates_requirement:
+      from: AntiPattern
+      to: Requirement
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/antipattern_requirement_links.jsonl
+    antipattern_exposes_threat:
+      from: AntiPattern
+      to: Threat
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/antipattern_threat_links.jsonl
+    signal_supports_evidence:
+      from: Signal
+      to: EvidencePattern
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/signal_evidence_links.jsonl
+      note: Current runtime uses artifact_catalog fallback while EvidencePattern remains incomplete
+  semantic_internal:
+    mechanism_operationalizes_concept:
+      from: Mechanism
+      to: Concept
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/semantic_relations.jsonl
+    pattern_operationalizes_concept:
+      from: Pattern
+      to: Concept
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/semantic_relations.jsonl
+    pattern_uses_mechanism:
+      from: Pattern
+      to: Mechanism
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/semantic_relations.jsonl
+    signal_indicates_mechanism:
+      from: Signal
+      to: Mechanism
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/semantic_relations.jsonl
+    signal_indicates_pattern:
+      from: Signal
+      to: Pattern
+      status: partial
+      source_mode: scored
+      authority_class: semantic
+      confidence_model: bounded
+      source_file: data/publish/semantic/semantic_relations.jsonl
+  external_overlay:
+    obligation_maps_to_bundle:
+      from: ExternalObligation
+      to: KnowledgeBundle
+      status: partial
+      source_mode: explicit
+      authority_class: external
+      confidence_model: deterministic
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+    obligation_maps_to_requirement:
+      from: ExternalObligation
+      to: Requirement
+      status: partial
+      source_mode: derived
+      authority_class: external
+      confidence_model: bounded
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+    obligation_maps_to_control:
+      from: ExternalObligation
+      to: Control
+      status: partial
+      source_mode: derived
+      authority_class: external
+      confidence_model: bounded
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+    obligation_maps_to_practice:
+      from: ExternalObligation
+      to: Practice
+      status: partial
+      source_mode: derived
+      authority_class: external
+      confidence_model: bounded
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+    obligation_expects_evidence:
+      from: ExternalObligation
+      to: EvidencePattern
+      status: partial
+      source_mode: derived
+      authority_class: external
+      confidence_model: bounded
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+    playbook_highlights_bundle:
+      from: OverlayPlaybook
+      to: KnowledgeBundle
+      status: partial
+      source_mode: explicit
+      authority_class: external
+      confidence_model: deterministic
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+    playbook_references_overlay:
+      from: OverlayPlaybook
+      to: OverlayPlaybook
+      status: partial
+      source_mode: explicit
+      authority_class: external
+      confidence_model: deterministic
+      source_file: data/publish/overlay/overlay_mappings.jsonl
+resolution_profiles:
+  consult:
+    objective: Determine what applies to an application context
+    primary_entities:
+    - Requirement
+    - Control
+    - Artifact
+    supporting_entities:
+    - KnowledgeBundle
+    - ApplicationContext
+    key_relations:
+    - requirement_maps_to_control
+    - control_produces_artifact
+  guide:
+    objective: Explain how to implement the manual in operational terms
+    primary_entities:
+    - Control
+    - Practice
+    - PracticeAssignment
+    - UserStory
+    - Mechanism
+    - Pattern
+    key_relations:
+    - control_implemented_by_practice
+    - practice_has_assignment
+    - assignment_assigns_role
+    - assignment_occurs_in_phase
+    - mechanism_implements_control
+    - pattern_operationalizes_control
+  review:
+    objective: Assess expected evidence, observed evidence, signals and gaps
+    primary_entities:
+    - Requirement
+    - Control
+    - Artifact
+    - EvidencePattern
+    - Signal
+    - AntiPattern
+    key_relations:
+    - requirement_maps_to_control
+    - control_produces_artifact
+    - signal_supports_evidence
+    - antipattern_violates_requirement
+    current_runtime_note: 'Deterministic review exists, but still uses artifact_catalog fallback because EvidencePattern coverage is incomplete.
+
+      '
+  threats:
+    objective: Explain what threats are relevant and how they are mitigated or exposed
+    primary_entities:
+    - Threat
+    - Control
+    - AntiPattern
+    - Practice
+    key_relations:
+    - threat_mitigated_by_control
+    - antipattern_exposes_threat
+    - control_implemented_by_practice
+review_findings_model:
+  description: Canonical finding types produced by deterministic review resolution
+  finding_types:
+  - finding_type: missing_expected_artifact
+    meaning: An expected artifact was not observed
+  - finding_type: missing_expected_signal
+    meaning: An expected signal supporting verification was not observed
+  - finding_type: unmapped_requirement
+    meaning: A requirement is applicable but lacks a strong downstream verification path
+  - finding_type: unsupported_control
+    meaning: A control is active but lacks sufficient evidence support
+  - finding_type: observed_antipattern
+    meaning: A known anti-pattern was linked to the resolved context
+  - finding_type: weak_evidence
+    meaning: Evidence exists but is weaker than the preferred verification basis
+not_in_scope_yet:
+  description: Deliberately excluded from the draft V2 ontology of the manual
+  entities:
+  - ExternalRequirement
+  - Problem
+  - Gap
+  - Capability
+  - AppSecCoreControlObjective
+  rationale:
+  - These belong to the future external-alignment layer or AppSec core ontology
+  - The current goal is to formalize the SbD-ToE manual ontology itself
+domain_mapping:
+  AUT:
+  - identity
+  - governance
+  ACC:
+  - identity
+  LOG:
+  - monitoring
+  SES:
+  - identity
+  VAL:
+  - code_integrity
+  ERR:
+  - code_integrity
+  - governance
+  CFG:
+  - infrastructure
+  - governance
+  API:
+  - identity
+  - code_integrity
+  INT:
+  - code_integrity
+  - secrets
+  REQ:
+  - governance
+  DST:
+  - supply_chain
+  - code_integrity
+  IDE:
+  - governance
+  - code_integrity
+  ARC:
+  - governance
+  - identity
+  - infrastructure
+  - monitoring
+  CLA:
+  - governance
+  THR:
+  - governance
+  DEP:
+  - supply_chain
+  DEV:
+  - code_integrity
+  CIC:
+  - code_integrity
+  - secrets
+  IAC:
+  - infrastructure
+  - supply_chain
+  - secrets
+  CNT:
+  - supply_chain
+  - identity
+  - secrets
+  TST:
+  - testing
+  DPL:
+  - infrastructure
+  - secrets
+  OPS:
+  - monitoring
+  TRN:
+  - governance
+  GOV:
+  - governance
+  - identity
+  ENC:
+  - secrets
+  - code_integrity
+domain_profile_registry:
+  requirement_linking:
+    domain_hint_keywords:
+      identity:
+      - autenticacao
+      - autorizacao
+      - mfa
+      - password
+      - passwords
+      - sessao
+      - sessoes
+      - federada
+      - oauth
+      - oidc
+      - jwt
+      - rbac
+      - acesso
+      - acessos
+      - role
+      - roles
+      - permissao
+      - permissoes
+      monitoring:
+      - logging
+      - log
+      - logs
+      - auditoria
+      - alerta
+      - alertas
+      - monitorizacao
+      - deteccao
+      - detecao
+      - evento
+      - eventos
+      - drift
+      supply_chain:
+      - dependencia
+      - dependencias
+      - sbom
+      - sdk
+      - sdks
+      - wrapper
+      - wrappers
+      - biblioteca
+      - bibliotecas
+      - licenca
+      - licencas
+      - vulnerabilidade
+      - vulnerabilidades
+      - inventario
+      - proveniencia
+      secrets:
+      - segredo
+      - segredos
+      - credencial
+      - credenciais
+      - cofre
+      - vault
+      - chave
+      - chaves
+      - certificado
+      - certificados
+      - tls
+      - token
+      - tokens
+      - encriptacao
+      - cifragem
+      - hashing
+      - hash
+      - rotacao
+      code_integrity:
+      - validacao
+      - validar
+      - input
+      - inputs
+      - schema
+      - json
+      - xml
+      - sanitizacao
+      - injecao
+      - injecoes
+      - whitelist
+      - blacklist
+      - codigo
+      - testes
+      - teste
+      - erro
+      - erros
+      - api
+      infrastructure:
+      - ambiente
+      - ambientes
+      - deploy
+      - deployment
+      - staging
+      - topologia
+      - segmentacao
+      - rede
+      - redes
+      - diagrama
+      - diagramas
+      - aprovacao
+      - aprovacoes
+      - rollback
+      - gateway
+      - proxy
+      - waf
+      governance:
+      - risco
+      - riscos
+      - threat
+      - modeling
+      - revisao
+      - revisoes
+      - adr
+      - decisao
+      - decisoes
+      - owner
+      - owners
+      - checklist
+      - conformidade
+    category_profiles:
+      AUT:
+        preferred_domains:
+        - identity
+      API: {}
+      CFG: {}
+      ENC:
+        preferred_domains:
+        - secrets
+      REQ:
+        baseline_lexical_threshold:
+          score: 0.6
+          margin: 0.04
+      DST:
+        baseline_lexical_threshold:
+          score: 0.6
+          margin: 0.03
+      INT:
+        baseline_lexical_threshold:
+          score: 0.6
+          margin: 0.05
+      ERR:
+        baseline_lexical_threshold:
+          score: 0.6
+          margin: 0.03

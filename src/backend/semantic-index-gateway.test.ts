@@ -545,7 +545,7 @@ describe("semantic-index-gateway.ts", () => {
       const result = await retrievePublishedContext("how to implement authentication", 3);
 
       expect(result.selected.length).toBeGreaterThan(0);
-      expect(result.consultedIndices).toContain("sbdtoe-ontology.yaml");
+      expect(result.consultedIndices).toContain("ontology/sbdtoe-ontology.yaml");
       expect(result.backendSnapshot.mcpChunksFile).toContain("mcp_chunks.jsonl");
       expect(result.backendSnapshot.substrateVersion).toBeDefined();
       expect(result.selected[0]?.citationId.startsWith("M")).toBe(true);

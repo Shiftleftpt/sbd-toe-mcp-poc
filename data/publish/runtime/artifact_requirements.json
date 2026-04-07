@@ -1,6 +1,6 @@
 {
   "artifact_type": "deterministic_runtime_snapshot",
-  "count": 37,
+  "count": 45,
   "entity_type": "ArtifactRequirement",
   "items": [
     {
@@ -76,7 +76,7 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Alert Policy must be produced and retained as auditable evidence for practices such as Alertas sobre Vulnerabilidades em Componentes Usados, Auditoria Periódica de Bibliotecas Copiadas Manualmente, Automação da atualização com avaliação de impacto.",
+      "description": "Alert Policy must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Geração de SBOM e assinatura de artefactos de build, Gestão de Exceções com TTL e Revalidação Obrigatória.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references alert_policy",
         "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references alert_policy",
@@ -95,11 +95,19 @@
         "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "05-dependencias-sbom-sca:alertas-sobre-vulnerabilidades-em-componentes-usados",
         "05-dependencias-sbom-sca:auditoria-periodica-de-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:automacao-da-atualizacao-com-avaliacao-de-impacto",
         "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
         "05-dependencias-sbom-sca:gestao-de-dependencias-seguras",
+        "05-dependencias-sbom-sca:inventario-e-controlo-de-dependencias-emergentes",
         "05-dependencias-sbom-sca:inventario-e-sbom-por-build",
         "05-dependencias-sbom-sca:proibir-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:repositorios-internos-como-fonte-unica",
@@ -184,13 +192,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Approval Record must be produced and retained as auditable evidence for practices such as Aprovação formal do Threat Model (baseline e revisões), Validação de release (*go/no go*), Enforcement automático de políticas.",
+      "description": "Approval Record must be produced and retained as auditable evidence for practices such as Validação e aprovação final, Aprovação formal do Threat Model (baseline e revisões), Validação de release (*go/no go*).",
       "evidence": [
         "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references approval_record",
+        "practice 02-requisitos-seguranca:validacao-e-aprovacao-final matched alias 'aprovacao'",
         "practice 03-threat-modeling:aprovacao-formal-do-threat-model-baseline-e-revisoes matched alias 'aprovacao'",
         "practice 05-dependencias-sbom-sca:validacao-de-release-go-no-go matched alias 'go no go'",
-        "practice 09-containers-imagens:aprovacao-depreciacao-e-revogacao-de-golden-base-images-catalogo-organizacional matched alias 'aprovacao'",
-        "practice 09-containers-imagens:promocao-por-estagios-com-aprovacao-explicita-e-revalidacao-por-ambiente matched alias 'aprovacao'"
+        "practice 09-containers-imagens:aprovacao-depreciacao-e-revogacao-de-golden-base-images-catalogo-organizacional matched alias 'aprovacao'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-approval-000",
@@ -198,6 +206,7 @@
         "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
         "03-threat-modeling:aprovacao-formal-do-threat-model-baseline-e-revisoes",
         "05-dependencias-sbom-sca:validacao-de-release-go-no-go",
         "08-iac-infraestrutura:enforcement-automatico-de-politicas",
@@ -238,6 +247,162 @@
       "warnings": []
     },
     {
+      "artifact_type_id": "ART-architecture-baseline-57234e937b",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Architecture Baseline must be produced and retained as auditable evidence for practices such as Atualização da baseline após alteração arquitetural significativa, Avaliação de impacto no negócio e priorização de trade offs, Catálogo de padrões de arquitetura segura (reutilização governada).",
+      "evidence": [
+        "control CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4 references architecture_baseline"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-architecture-000",
+      "source_control_ids": [
+        "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:atualizacao-da-baseline-apos-alteracao-arquitetural-significativa",
+        "04-arquitetura-segura:avaliacao-de-impacto-no-negocio-e-priorizacao-de-trade-offs",
+        "04-arquitetura-segura:catalogo-de-padroes-de-arquitetura-segura-reutilizacao-governada",
+        "04-arquitetura-segura:definicao-de-principios-e-baseline-de-arquitetura-segura",
+        "04-arquitetura-segura:ficha-de-solucao-com-controlos-e-rastreabilidade-arquitetural",
+        "04-arquitetura-segura:gate-arquitetural-antes-do-go-live",
+        "04-arquitetura-segura:gestao-de-decisoes-arquiteturais-adr",
+        "04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios",
+        "04-arquitetura-segura:identificacao-e-governacao-de-componentes-nao-deterministicos",
+        "04-arquitetura-segura:revisao-formal-de-arquitetura-para-l3-governacao-reforcada",
+        "04-arquitetura-segura:revisao-formal-do-design-arquitetural",
+        "04-arquitetura-segura:sincronizacao-threat-modeling-arquitetura",
+        "04-arquitetura-segura:triggers-de-arquitetura-viva-e-disciplina-de-revisao",
+        "04-arquitetura-segura:validacao-arquitetural-automatizavel-no-ci-cd-quando-aplicavel"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-architecture-checklist-abc8e3982a",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Architecture Checklist must be produced and retained as auditable evidence for practices such as Atualização da baseline após alteração arquitetural significativa, Avaliação de impacto no negócio e priorização de trade offs, Catálogo de padrões de arquitetura segura (reutilização governada).",
+      "evidence": [
+        "control CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4 references architecture_checklist"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-architecture-000",
+      "source_control_ids": [
+        "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:atualizacao-da-baseline-apos-alteracao-arquitetural-significativa",
+        "04-arquitetura-segura:avaliacao-de-impacto-no-negocio-e-priorizacao-de-trade-offs",
+        "04-arquitetura-segura:catalogo-de-padroes-de-arquitetura-segura-reutilizacao-governada",
+        "04-arquitetura-segura:definicao-de-principios-e-baseline-de-arquitetura-segura",
+        "04-arquitetura-segura:ficha-de-solucao-com-controlos-e-rastreabilidade-arquitetural",
+        "04-arquitetura-segura:gate-arquitetural-antes-do-go-live",
+        "04-arquitetura-segura:gestao-de-decisoes-arquiteturais-adr",
+        "04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios",
+        "04-arquitetura-segura:identificacao-e-governacao-de-componentes-nao-deterministicos",
+        "04-arquitetura-segura:revisao-formal-de-arquitetura-para-l3-governacao-reforcada",
+        "04-arquitetura-segura:revisao-formal-do-design-arquitetural",
+        "04-arquitetura-segura:sincronizacao-threat-modeling-arquitetura",
+        "04-arquitetura-segura:triggers-de-arquitetura-viva-e-disciplina-de-revisao",
+        "04-arquitetura-segura:validacao-arquitetural-automatizavel-no-ci-cd-quando-aplicavel"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-architecture-decision-record-504be0e5f1",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Architecture Decision Record must be produced and retained as auditable evidence for practices such as Atualização da baseline após alteração arquitetural significativa, Avaliação de impacto no negócio e priorização de trade offs, Catálogo de padrões de arquitetura segura (reutilização governada).",
+      "evidence": [
+        "control CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4 references architecture_decision_record",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/01-catalogo-requisitos.md matched aliases ['architecture decision record']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/06-rastreabilidade.md matched aliases ['architecture decision record']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/07-termos-e-glossario-arquitetura.md matched aliases ['architecture decision record']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/10-kpis-metricas.md matched aliases ['architecture decision record']"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-architecture-000",
+      "source_control_ids": [
+        "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:atualizacao-da-baseline-apos-alteracao-arquitetural-significativa",
+        "04-arquitetura-segura:avaliacao-de-impacto-no-negocio-e-priorizacao-de-trade-offs",
+        "04-arquitetura-segura:catalogo-de-padroes-de-arquitetura-segura-reutilizacao-governada",
+        "04-arquitetura-segura:definicao-de-principios-e-baseline-de-arquitetura-segura",
+        "04-arquitetura-segura:ficha-de-solucao-com-controlos-e-rastreabilidade-arquitetural",
+        "04-arquitetura-segura:gate-arquitetural-antes-do-go-live",
+        "04-arquitetura-segura:gestao-de-decisoes-arquiteturais-adr",
+        "04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios",
+        "04-arquitetura-segura:identificacao-e-governacao-de-componentes-nao-deterministicos",
+        "04-arquitetura-segura:revisao-formal-de-arquitetura-para-l3-governacao-reforcada",
+        "04-arquitetura-segura:revisao-formal-do-design-arquitetural",
+        "04-arquitetura-segura:sincronizacao-threat-modeling-arquitetura",
+        "04-arquitetura-segura:triggers-de-arquitetura-viva-e-disciplina-de-revisao",
+        "04-arquitetura-segura:validacao-arquitetural-automatizavel-no-ci-cd-quando-aplicavel"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-architecture-diagram-d7bc383218",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Architecture Diagram must be produced and retained as auditable evidence for practices such as Revisão de fronteiras de confiança e integrações.",
+      "evidence": [
+        "control CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b references architecture_diagram"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-architecture-000",
+      "source_control_ids": [
+        "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:revisao-de-fronteiras-de-confianca-e-integracoes"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-architecture-review-5bbd6e5876",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Architecture Review must be produced and retained as auditable evidence for practices such as Atualização da baseline após alteração arquitetural significativa, Avaliação de impacto no negócio e priorização de trade offs, Catálogo de padrões de arquitetura segura (reutilização governada).",
+      "evidence": [
+        "control CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4 references architecture_review"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-architecture-000",
+      "source_control_ids": [
+        "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:atualizacao-da-baseline-apos-alteracao-arquitetural-significativa",
+        "04-arquitetura-segura:avaliacao-de-impacto-no-negocio-e-priorizacao-de-trade-offs",
+        "04-arquitetura-segura:catalogo-de-padroes-de-arquitetura-segura-reutilizacao-governada",
+        "04-arquitetura-segura:definicao-de-principios-e-baseline-de-arquitetura-segura",
+        "04-arquitetura-segura:ficha-de-solucao-com-controlos-e-rastreabilidade-arquitetural",
+        "04-arquitetura-segura:gate-arquitetural-antes-do-go-live",
+        "04-arquitetura-segura:gestao-de-decisoes-arquiteturais-adr",
+        "04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios",
+        "04-arquitetura-segura:identificacao-e-governacao-de-componentes-nao-deterministicos",
+        "04-arquitetura-segura:revisao-formal-de-arquitetura-para-l3-governacao-reforcada",
+        "04-arquitetura-segura:revisao-formal-do-design-arquitetural",
+        "04-arquitetura-segura:sincronizacao-threat-modeling-arquitetura",
+        "04-arquitetura-segura:triggers-de-arquitetura-viva-e-disciplina-de-revisao",
+        "04-arquitetura-segura:validacao-arquitetural-automatizavel-no-ci-cd-quando-aplicavel"
+      ],
+      "warnings": []
+    },
+    {
       "artifact_type_id": "ART-artifact-provenance-8b1bffca3c",
       "chapter_ids": [
         "00-fundamentos",
@@ -257,13 +422,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Artifact Provenance must be produced and retained as auditable evidence for practices such as Rastreabilidade com Anotações de Segurança, Assinatura e proveniência, Cobertura ampliada (containers e SBOM).",
+      "description": "Artifact Provenance must be produced and retained as auditable evidence for practices such as Catálogo de requisitos do projeto (criação e manutenção), Geração de SBOM e assinatura de artefactos de build, Rastreabilidade de requisitos.",
       "evidence": [
         "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references artifact_provenance",
         "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references artifact_provenance",
         "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references artifact_provenance",
         "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references artifact_provenance",
-        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references artifact_provenance"
+        "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references artifact_provenance"
       ],
       "mandatory": true,
       "requirement_id": "REQ-artifact-000",
@@ -272,9 +437,27 @@
         "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
         "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0",
         "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+        "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb",
         "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:catalogo-de-requisitos-do-projeto-criacao-e-manutencao",
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
+        "02-requisitos-seguranca:rastreabilidade-de-requisitos",
+        "04-arquitetura-segura:ficha-de-solucao-com-controlos-e-rastreabilidade-arquitetural",
+        "05-dependencias-sbom-sca:alertas-sobre-vulnerabilidades-em-componentes-usados",
+        "05-dependencias-sbom-sca:auditoria-periodica-de-bibliotecas-copiadas-manualmente",
+        "05-dependencias-sbom-sca:automacao-da-atualizacao-com-avaliacao-de-impacto",
+        "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
+        "05-dependencias-sbom-sca:gestao-de-dependencias-seguras",
+        "05-dependencias-sbom-sca:inventario-e-controlo-de-dependencias-emergentes",
+        "05-dependencias-sbom-sca:inventario-e-sbom-por-build",
+        "05-dependencias-sbom-sca:proibir-bibliotecas-copiadas-manualmente",
+        "05-dependencias-sbom-sca:repositorios-internos-como-fonte-unica",
+        "05-dependencias-sbom-sca:sbom-em-cada-build",
+        "05-dependencias-sbom-sca:sca-automatico-com-gates",
+        "05-dependencias-sbom-sca:validacao-automatica-de-compatibilidade-de-licencas",
+        "05-dependencias-sbom-sca:validacao-de-release-go-no-go",
         "06-desenvolvimento-seguro:rastreabilidade-com-anotacoes-de-seguranca",
         "07-cicd-seguro:assinatura-e-proveniencia",
         "07-cicd-seguro:cobertura-ampliada-containers-e-sbom",
@@ -383,13 +566,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Artifact Signature must be produced and retained as auditable evidence for practices such as Assinatura e proveniência, Cobertura ampliada (containers e SBOM), Contenção de contexto e higiene de logs/outputs.",
+      "description": "Artifact Signature must be produced and retained as auditable evidence for practices such as Catálogo de requisitos do projeto (criação e manutenção), Geração de SBOM e assinatura de artefactos de build, Alertas sobre Vulnerabilidades em Componentes Usados.",
       "evidence": [
         "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references artifact_signature",
         "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references artifact_signature",
         "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references artifact_signature",
         "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references artifact_signature",
-        "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references artifact_signature"
+        "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references artifact_signature"
       ],
       "mandatory": true,
       "requirement_id": "REQ-artifact-000",
@@ -398,9 +581,25 @@
         "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
         "CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0",
         "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905",
+        "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb",
         "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:catalogo-de-requisitos-do-projeto-criacao-e-manutencao",
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
+        "05-dependencias-sbom-sca:alertas-sobre-vulnerabilidades-em-componentes-usados",
+        "05-dependencias-sbom-sca:auditoria-periodica-de-bibliotecas-copiadas-manualmente",
+        "05-dependencias-sbom-sca:automacao-da-atualizacao-com-avaliacao-de-impacto",
+        "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
+        "05-dependencias-sbom-sca:gestao-de-dependencias-seguras",
+        "05-dependencias-sbom-sca:inventario-e-controlo-de-dependencias-emergentes",
+        "05-dependencias-sbom-sca:inventario-e-sbom-por-build",
+        "05-dependencias-sbom-sca:proibir-bibliotecas-copiadas-manualmente",
+        "05-dependencias-sbom-sca:repositorios-internos-como-fonte-unica",
+        "05-dependencias-sbom-sca:sbom-em-cada-build",
+        "05-dependencias-sbom-sca:sca-automatico-com-gates",
+        "05-dependencias-sbom-sca:validacao-automatica-de-compatibilidade-de-licencas",
+        "05-dependencias-sbom-sca:validacao-de-release-go-no-go",
         "07-cicd-seguro:assinatura-e-proveniencia",
         "07-cicd-seguro:cobertura-ampliada-containers-e-sbom",
         "07-cicd-seguro:contencao-de-contexto-e-higiene-de-logs-outputs",
@@ -535,21 +734,45 @@
       "warnings": []
     },
     {
+      "artifact_type_id": "ART-data-flow-diagram-5cb5415fa5",
+      "chapter_ids": [
+        "03-threat-modeling",
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Data Flow Diagram must be produced and retained as auditable evidence for practices such as Revisão de fronteiras de confiança e integrações.",
+      "evidence": [
+        "control CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b references data_flow_diagram",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/03-threat-modeling/addon/00-catalogo-requisitos.md matched aliases ['data flow diagrams']"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-data-000",
+      "source_control_ids": [
+        "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:revisao-de-fronteiras-de-confianca-e-integracoes"
+      ],
+      "warnings": []
+    },
+    {
       "artifact_type_id": "ART-dependency-inventory-4ddd43ae4f",
       "chapter_ids": [
         "00-fundamentos",
+        "02-requisitos-seguranca",
+        "04-arquitetura-segura",
         "05-dependencias-sbom-sca",
         "09-containers-imagens",
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Dependency Inventory must be produced and retained as auditable evidence for practices such as Alertas sobre Vulnerabilidades em Componentes Usados, Auditoria Periódica de Bibliotecas Copiadas Manualmente, Automação da atualização com avaliação de impacto.",
+      "description": "Dependency Inventory must be produced and retained as auditable evidence for practices such as Geração de SBOM e assinatura de artefactos de build, Alertas sobre Vulnerabilidades em Componentes Usados, Auditoria Periódica de Bibliotecas Copiadas Manualmente.",
       "evidence": [
         "control CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb references dependency_inventory",
         "practice 05-dependencias-sbom-sca:inventario-e-sbom-por-build matched alias 'inventario de dependencias'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['inventario de dependencias']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/addon/01-inventario-sbom.md matched aliases ['inventario de dependencias']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/aplicacao-lifecycle.md matched aliases ['inventario de componentes']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['inventario de dependencias']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/01-catalogo-requisitos.md matched aliases ['inventario de componentes']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/05-validacao.md matched aliases ['inventario de componentes']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-dependency-000",
@@ -557,11 +780,13 @@
         "CTRL-supply-chain-inventario-e-analise-de-dependencias-6b0fd9f7fb"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
         "05-dependencias-sbom-sca:alertas-sobre-vulnerabilidades-em-componentes-usados",
         "05-dependencias-sbom-sca:auditoria-periodica-de-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:automacao-da-atualizacao-com-avaliacao-de-impacto",
         "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
         "05-dependencias-sbom-sca:gestao-de-dependencias-seguras",
+        "05-dependencias-sbom-sca:inventario-e-controlo-de-dependencias-emergentes",
         "05-dependencias-sbom-sca:inventario-e-sbom-por-build",
         "05-dependencias-sbom-sca:proibir-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:repositorios-internos-como-fonte-unica",
@@ -633,7 +858,6 @@
         "03-threat-modeling",
         "04-arquitetura-segura",
         "05-dependencias-sbom-sca",
-        "06-desenvolvimento-seguro",
         "07-cicd-seguro",
         "08-iac-infraestrutura",
         "09-containers-imagens",
@@ -644,13 +868,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Environment Inventory must be produced and retained as auditable evidence for practices such as Assinatura e Proveniência de artefactos IaC, Backend remoto, locking e rastreabilidade, Deteção e correção de *drift*.",
+      "description": "Environment Inventory must be produced and retained as auditable evidence for practices such as Catálogo de requisitos do projeto (criação e manutenção), Assinatura e Proveniência de artefactos IaC, Backend remoto, locking e rastreabilidade.",
       "evidence": [
         "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references environment_inventory",
         "practice 08-iac-infraestrutura:segregacao-de-ambientes-tagging-e-permissoes-minimas matched alias 'ambientes'",
         "practice 11-deploy-seguro:controlo-e-validacao-de-drift-operacional matched alias 'ambientes'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['ambientes']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/arquitetos-software.md matched aliases ['ambientes']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['ambientes']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/arquitetos-software.md matched aliases ['ambientes']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-environment-000",
@@ -658,6 +882,7 @@
         "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:catalogo-de-requisitos-do-projeto-criacao-e-manutencao",
         "08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac",
         "08-iac-infraestrutura:backend-remoto-locking-e-rastreabilidade",
         "08-iac-infraestrutura:detecao-e-correcao-de-drift",
@@ -693,13 +918,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Exception Record must be produced and retained as auditable evidence for practices such as Exceções a CVEs formais e temporárias, Gestão de Exceções Técnicas, Gestão de exceções (bypass controlado).",
+      "description": "Exception Record must be produced and retained as auditable evidence for practices such as Gestão de Exceções com TTL e Revalidação Obrigatória, Gestão de exceções arquiteturais com controlos compensatórios, Exceções a CVEs formais e temporárias.",
       "evidence": [
         "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references exception_record",
+        "practice 02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria matched alias 'excecoes'",
+        "practice 04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios matched alias 'excecoes'",
         "practice 05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias matched alias 'excecoes'",
-        "practice 06-desenvolvimento-seguro:gestao-de-excecoes-tecnicas matched alias 'excecoes'",
-        "practice 07-cicd-seguro:gestao-de-excecoes-bypass-controlado matched alias 'excecoes'",
-        "practice 08-iac-infraestrutura:excecoes-formais-em-iac matched alias 'excecoes'"
+        "practice 06-desenvolvimento-seguro:gestao-de-excecoes-tecnicas matched alias 'excecoes'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-exception-000",
@@ -707,8 +932,11 @@
         "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios",
         "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
         "06-desenvolvimento-seguro:gestao-de-excecoes-tecnicas",
+        "06-desenvolvimento-seguro:guidelines-de-desenvolvimento-seguro",
         "07-cicd-seguro:gestao-de-excecoes-bypass-controlado",
         "08-iac-infraestrutura:excecoes-formais-em-iac",
         "09-containers-imagens:excecoes-temporarias-a-findings-policies-com-ttl-compensacoes-e-revalidacao",
@@ -798,13 +1026,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Governance Kpi must be produced and retained as auditable evidence for practices such as Monitorização de Conformidade e Métricas de Segurança, Métricas e conformidade organizacional, Definição de eventos e métricas críticas.",
+      "description": "Governance Kpi must be produced and retained as auditable evidence for practices such as Validação de arquitetura com threat modeling, Guidelines de Desenvolvimento Seguro, Monitorização de Conformidade e Métricas de Segurança.",
       "evidence": [
         "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references governance_kpi",
+        "practice 03-threat-modeling:validacao-de-arquitetura-com-threat-modeling matched alias 'metricas'",
+        "practice 06-desenvolvimento-seguro:guidelines-de-desenvolvimento-seguro matched alias 'metricas'",
         "practice 06-desenvolvimento-seguro:monitorizacao-de-conformidade-e-metricas-de-seguranca matched alias 'metricas'",
-        "practice 07-cicd-seguro:metricas-e-conformidade-organizacional matched alias 'metricas'",
-        "practice 12-monitorizacao-operacoes:definicao-de-eventos-e-metricas-criticas matched alias 'metricas'",
-        "practice 12-monitorizacao-operacoes:metricas-de-eficacia-mttd-mttr matched alias 'metricas'"
+        "practice 07-cicd-seguro:metricas-e-conformidade-organizacional matched alias 'metricas'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-governance-000",
@@ -812,6 +1040,8 @@
         "CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628"
       ],
       "source_practice_ids": [
+        "03-threat-modeling:validacao-de-arquitetura-com-threat-modeling",
+        "06-desenvolvimento-seguro:guidelines-de-desenvolvimento-seguro",
         "06-desenvolvimento-seguro:monitorizacao-de-conformidade-e-metricas-de-seguranca",
         "07-cicd-seguro:metricas-e-conformidade-organizacional",
         "12-monitorizacao-operacoes:definicao-de-eventos-e-metricas-criticas",
@@ -836,16 +1066,17 @@
         "02-requisitos-seguranca",
         "03-threat-modeling",
         "05-dependencias-sbom-sca",
-        "06-desenvolvimento-seguro"
+        "06-desenvolvimento-seguro",
+        "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Guideline Catalog must be produced and retained as auditable evidence for practices such as Arquivo Central de Evidências de Validação, Automatização em CI/CD (Linters & SAST), Gate de Segurança Pré release.",
+      "description": "Guideline Catalog must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Gestão de Exceções com TTL e Revalidação Obrigatória, Validação de cobertura de testes.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references guideline_catalog",
         "practice 06-desenvolvimento-seguro:governacao-e-curadoria-de-guidelines matched alias 'guidelines'",
         "practice 06-desenvolvimento-seguro:guidelines-de-desenvolvimento-seguro matched alias 'guidelines'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['guidelines']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['guidelines']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['guidelines']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['guidelines']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-guideline-000",
@@ -853,6 +1084,12 @@
         "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao",
         "06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast",
         "06-desenvolvimento-seguro:gate-de-seguranca-pre-release",
@@ -875,19 +1112,19 @@
       "chapter_ids": [
         "00-fundamentos",
         "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
         "04-arquitetura-segura",
         "05-dependencias-sbom-sca",
         "06-desenvolvimento-seguro",
         "07-cicd-seguro",
         "08-iac-infraestrutura",
         "09-containers-imagens",
-        "10-testes-seguranca",
         "11-deploy-seguro",
         "13-formacao-onboarding",
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Iac Plan must be produced and retained as auditable evidence for practices such as Assinatura e Proveniência de artefactos IaC, Backend remoto, locking e rastreabilidade, Deteção e correção de *drift*.",
+      "description": "Iac Plan must be produced and retained as auditable evidence for practices such as Catálogo de requisitos do projeto (criação e manutenção), Assinatura e Proveniência de artefactos IaC, Backend remoto, locking e rastreabilidade.",
       "evidence": [
         "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references iac_plan",
         "practice 08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac matched alias 'iac'",
@@ -901,6 +1138,7 @@
         "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:catalogo-de-requisitos-do-projeto-criacao-e-manutencao",
         "08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac",
         "08-iac-infraestrutura:backend-remoto-locking-e-rastreabilidade",
         "08-iac-infraestrutura:detecao-e-correcao-de-drift",
@@ -928,6 +1166,7 @@
         "01-classificacao-aplicacoes",
         "02-requisitos-seguranca",
         "03-threat-modeling",
+        "04-arquitetura-segura",
         "05-dependencias-sbom-sca",
         "07-cicd-seguro",
         "08-iac-infraestrutura",
@@ -942,8 +1181,8 @@
         "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references identity_binding",
         "control CTRL-secrets-gestao-de-segredos-e-identidades-operacionais-e2c86cdfe9 references identity_binding",
         "practice 09-containers-imagens:rbac-minimo-e-serviceaccounts-dedicadas matched alias 'rbac'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['rbac']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/addon/06-mapeamento-ameacas-risco.md matched aliases ['rbac']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['rbac']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/addon/06-mapeamento-ameacas-risco.md matched aliases ['rbac']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-identity-000",
@@ -1042,6 +1281,28 @@
       "warnings": []
     },
     {
+      "artifact_type_id": "ART-integration-review-179347cc14",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Integration Review must be produced and retained as auditable evidence for practices such as Revisão de fronteiras de confiança e integrações.",
+      "evidence": [
+        "control CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b references integration_review",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/addon/07-termos-e-glossario-arquitetura.md matched aliases ['integration review']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/aplicacao-lifecycle.md matched aliases ['integration review']"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-integration-000",
+      "source_control_ids": [
+        "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:revisao-de-fronteiras-de-confianca-e-integracoes"
+      ],
+      "warnings": []
+    },
+    {
       "artifact_type_id": "ART-log-stream-b67ee06f7e",
       "chapter_ids": [
         "00-fundamentos",
@@ -1066,8 +1327,8 @@
         "control CTRL-monitoring-monitorizacao-e-resposta-operacional-1797f0af70 references log_stream",
         "practice 07-cicd-seguro:contencao-de-contexto-e-higiene-de-logs-outputs matched alias 'logs'",
         "practice 12-monitorizacao-operacoes:seguranca-e-integridade-de-logs matched alias 'logs'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['logs']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['logs']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['logs']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['logs']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-log-000",
@@ -1111,7 +1372,7 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Onboarding Checklist must be produced and retained as auditable evidence for practices such as Avaliação crítica de cobertura real e limitações, Decisão Assistida para Findings de Testes de Segurança, Feedback Automático de Findings às Equipas.",
+      "description": "Onboarding Checklist must be produced and retained as auditable evidence for practices such as Política, Formação e Procedimentos Operacionais, Avaliação crítica de cobertura real e limitações, Decisão Assistida para Findings de Testes de Segurança.",
       "evidence": [
         "control CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf references onboarding_checklist",
         "practice 10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes matched alias 'checklist'",
@@ -1125,6 +1386,7 @@
         "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:politica-formacao-e-procedimentos-operacionais",
         "10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes",
         "10-testes-seguranca:decisao-assistida-para-findings-de-testes-de-seguranca",
         "10-testes-seguranca:feedback-automatico-de-findings-as-equipas",
@@ -1166,8 +1428,8 @@
       "evidence": [
         "control CTRL-infrastructure-deploy-seguro-e-reversivel-ae204be5f0 references operational_evidence",
         "practice 11-deploy-seguro:evidencia-operacional-auditavel matched alias 'evidencia operacional'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/09-containers-imagens/canon/50-ameacas-mitigadas.md matched aliases ['evidencia imutavel']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/11-deploy-seguro/aplicacao-lifecycle.md matched aliases ['evidencia operacional']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/09-containers-imagens/canon/50-ameacas-mitigadas.md matched aliases ['evidencia imutavel']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/11-deploy-seguro/aplicacao-lifecycle.md matched aliases ['evidencia operacional']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-operational-000",
@@ -1209,24 +1471,42 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Pipeline Config must be produced and retained as auditable evidence for practices such as Aplicação LINDDUN quando existir tratamento de dados pessoais  *(novo)*, Aprovação formal do Threat Model (baseline e revisões), Atualização do modelo após alteração técnica.",
+      "description": "Pipeline Config must be produced and retained as auditable evidence for practices such as Análise de risco residual, Aplicação da matriz de controlo, Classificação inicial da aplicação.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references pipeline_config",
         "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references pipeline_config",
-        "control CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0 references pipeline_config",
-        "control CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af references pipeline_config",
-        "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references pipeline_config"
+        "control CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4 references pipeline_config",
+        "control CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29 references pipeline_config",
+        "control CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0 references pipeline_config"
       ],
       "mandatory": true,
       "requirement_id": "REQ-pipeline-000",
       "source_control_ids": [
         "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460",
         "CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2",
+        "CTRL-governance-arquitetura-segura-e-rastreavel-74562442c4",
+        "CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29",
         "CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0",
         "CTRL-identity-gestao-de-identidades-acessos-e-ownership-d0919c69af",
         "CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34"
       ],
       "source_practice_ids": [
+        "01-classificacao-aplicacoes:analise-de-risco-residual",
+        "01-classificacao-aplicacoes:aplicacao-da-matriz-de-controlo",
+        "01-classificacao-aplicacoes:classificacao-inicial-da-aplicacao",
+        "01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco",
+        "01-classificacao-aplicacoes:revisao-por-alteracao-relevante-event-based",
+        "01-classificacao-aplicacoes:validacao-antes-do-go-live",
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:gates-automaticos-em-ci-cd-para-requisitos-de-seguranca",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:rastreabilidade-de-requisitos",
+        "02-requisitos-seguranca:revisao-por-alteracao-relevante",
+        "02-requisitos-seguranca:selecao-de-requisitos-por-criticidade",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "03-threat-modeling:aplicacao-linddun-quando-existir-tratamento-de-dados-pessoais-novo",
         "03-threat-modeling:aprovacao-formal-do-threat-model-baseline-e-revisoes",
         "03-threat-modeling:atualizacao-do-modelo-apos-alteracao-tecnica",
@@ -1237,6 +1517,20 @@
         "03-threat-modeling:reutilizacao-controlada-e-revisao-de-modelos-anteriores",
         "03-threat-modeling:validacao-de-arquitetura-com-threat-modeling",
         "03-threat-modeling:validacao-de-impacto-no-negocio",
+        "04-arquitetura-segura:atualizacao-da-baseline-apos-alteracao-arquitetural-significativa",
+        "04-arquitetura-segura:avaliacao-de-impacto-no-negocio-e-priorizacao-de-trade-offs",
+        "04-arquitetura-segura:catalogo-de-padroes-de-arquitetura-segura-reutilizacao-governada",
+        "04-arquitetura-segura:definicao-de-principios-e-baseline-de-arquitetura-segura",
+        "04-arquitetura-segura:ficha-de-solucao-com-controlos-e-rastreabilidade-arquitetural",
+        "04-arquitetura-segura:gate-arquitetural-antes-do-go-live",
+        "04-arquitetura-segura:gestao-de-decisoes-arquiteturais-adr",
+        "04-arquitetura-segura:gestao-de-excecoes-arquiteturais-com-controlos-compensatorios",
+        "04-arquitetura-segura:identificacao-e-governacao-de-componentes-nao-deterministicos",
+        "04-arquitetura-segura:revisao-formal-de-arquitetura-para-l3-governacao-reforcada",
+        "04-arquitetura-segura:revisao-formal-do-design-arquitetural",
+        "04-arquitetura-segura:sincronizacao-threat-modeling-arquitetura",
+        "04-arquitetura-segura:triggers-de-arquitetura-viva-e-disciplina-de-revisao",
+        "04-arquitetura-segura:validacao-arquitetural-automatizavel-no-ci-cd-quando-aplicavel",
         "06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao",
         "06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast",
         "06-desenvolvimento-seguro:gate-de-seguranca-pre-release",
@@ -1341,13 +1635,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Policy Report must be produced and retained as auditable evidence for practices such as Evidência empírica obrigatória (anti “relatórios sem execução”), Assinatura e Proveniência de artefactos IaC, Backend remoto, locking e rastreabilidade.",
+      "description": "Policy Report must be produced and retained as auditable evidence for practices such as Catálogo de requisitos do projeto (criação e manutenção), Política, Formação e Procedimentos Operacionais, Evidência empírica obrigatória (anti “relatórios sem execução”).",
       "evidence": [
         "control CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905 references policy_report",
+        "practice 02-requisitos-seguranca:politica-formacao-e-procedimentos-operacionais matched alias 'politica'",
         "practice 07-cicd-seguro:evidencia-empirica-obrigatoria-anti-relatorios-sem-execucao matched alias 'relatorios'",
         "practice 08-iac-infraestrutura:enforcement-automatico-de-politicas matched alias 'politicas'",
-        "practice 09-containers-imagens:aplicacao-de-politicas-formais-de-seguranca-no-runtime-com-opa-kyverno matched alias 'politicas'",
-        "practice 09-containers-imagens:enforcement-centralizado-e-auditavel-de-politicas-no-runtime matched alias 'politicas'"
+        "practice 09-containers-imagens:aplicacao-de-politicas-formais-de-seguranca-no-runtime-com-opa-kyverno matched alias 'politicas'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-policy-000",
@@ -1355,6 +1649,8 @@
         "CTRL-infrastructure-infraestrutura-como-codigo-governada-5228bca905"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:catalogo-de-requisitos-do-projeto-criacao-e-manutencao",
+        "02-requisitos-seguranca:politica-formacao-e-procedimentos-operacionais",
         "07-cicd-seguro:evidencia-empirica-obrigatoria-anti-relatorios-sem-execucao",
         "08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac",
         "08-iac-infraestrutura:backend-remoto-locking-e-rastreabilidade",
@@ -1377,18 +1673,19 @@
       "chapter_ids": [
         "00-fundamentos",
         "01-classificacao-aplicacoes",
+        "02-requisitos-seguranca",
         "03-threat-modeling",
         "13-formacao-onboarding",
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Quiz Result must be produced and retained as auditable evidence for practices such as Code Clinics Estruturadas e Recorrentes, Exercícios práticos e simulações, Formação contínua por perfil.",
+      "description": "Quiz Result must be produced and retained as auditable evidence for practices such as Política, Formação e Procedimentos Operacionais, Code Clinics Estruturadas e Recorrentes, Exercícios práticos e simulações.",
       "evidence": [
         "control CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf references quiz_result",
         "practice 13-formacao-onboarding:operacionalizacao-de-formacao-de-terceiros matched alias 'quiz'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['assessment']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/aplicacao-lifecycle.md matched aliases ['quiz']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/pre-note.md matched aliases ['assessment']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['assessment']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/aplicacao-lifecycle.md matched aliases ['quiz']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/pre-note.md matched aliases ['assessment']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-quiz-000",
@@ -1396,6 +1693,7 @@
         "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:politica-formacao-e-procedimentos-operacionais",
         "13-formacao-onboarding:code-clinics-estruturadas-e-recorrentes",
         "13-formacao-onboarding:exercicios-praticos-e-simulacoes",
         "13-formacao-onboarding:formacao-continua-por-perfil",
@@ -1430,16 +1728,17 @@
         "10-testes-seguranca",
         "11-deploy-seguro",
         "12-monitorizacao-operacoes",
-        "13-formacao-onboarding"
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Release Gate must be produced and retained as auditable evidence for practices such as Mapeamento de ameaças por nível de risco, Gate de controlo de consistência no CI/CD, SCA automático com *gates*.",
+      "description": "Release Gate must be produced and retained as auditable evidence for practices such as Mapeamento de ameaças por nível de risco, Gates automáticos em CI/CD para requisitos de segurança, Gate de controlo de consistência no CI/CD.",
       "evidence": [
         "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references release_gate",
         "practice 01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco matched alias 'gates'",
+        "practice 02-requisitos-seguranca:gates-automaticos-em-ci-cd-para-requisitos-de-seguranca matched alias 'gates'",
         "practice 03-threat-modeling:gate-de-controlo-de-consistencia-no-ci-cd matched alias 'gate'",
-        "practice 05-dependencias-sbom-sca:sca-automatico-com-gates matched alias 'gates'",
-        "practice 05-dependencias-sbom-sca:validacao-de-release-go-no-go matched alias 'go no go'"
+        "practice 04-arquitetura-segura:gate-arquitetural-antes-do-go-live matched alias 'gate'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-release-000",
@@ -1448,7 +1747,9 @@
       ],
       "source_practice_ids": [
         "01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco",
+        "02-requisitos-seguranca:gates-automaticos-em-ci-cd-para-requisitos-de-seguranca",
         "03-threat-modeling:gate-de-controlo-de-consistencia-no-ci-cd",
+        "04-arquitetura-segura:gate-arquitetural-antes-do-go-live",
         "05-dependencias-sbom-sca:sca-automatico-com-gates",
         "05-dependencias-sbom-sca:validacao-de-release-go-no-go",
         "06-desenvolvimento-seguro:gate-de-seguranca-pre-release",
@@ -1515,6 +1816,10 @@
         "01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco",
         "01-classificacao-aplicacoes:revisao-por-alteracao-relevante-event-based",
         "01-classificacao-aplicacoes:validacao-antes-do-go-live",
+        "02-requisitos-seguranca:gates-automaticos-em-ci-cd-para-requisitos-de-seguranca",
+        "02-requisitos-seguranca:rastreabilidade-de-requisitos",
+        "02-requisitos-seguranca:revisao-por-alteracao-relevante",
+        "02-requisitos-seguranca:selecao-de-requisitos-por-criticidade",
         "10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes",
         "10-testes-seguranca:decisao-assistida-para-findings-de-testes-de-seguranca",
         "10-testes-seguranca:feedback-automatico-de-findings-as-equipas",
@@ -1550,9 +1855,9 @@
       "evidence": [
         "control CTRL-governance-threat-modeling-e-gestao-de-risco-272c9a8ed0 references risk_acceptance_record",
         "practice 01-classificacao-aplicacoes:analise-de-risco-residual matched alias 'risco residual'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['risco residual']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/gestao-executiva.md matched aliases ['risco residual']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/grc-compliance.md matched aliases ['risco residual']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['risco residual']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/gestao-executiva.md matched aliases ['risco residual']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/grc-compliance.md matched aliases ['risco residual']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-risk-000",
@@ -1587,10 +1892,10 @@
       "description": "Risk Matrix must be produced and retained as auditable evidence for practices such as Análise de risco residual, Aplicação da matriz de controlo, Classificação inicial da aplicação.",
       "evidence": [
         "control CTRL-governance-classificacao-e-governacao-por-risco-97aceecf29 references risk_matrix",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/aplicacao-lifecycle.md matched aliases ['matriz de risco']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/02-requisitos-seguranca/addon/03-taxonomia-rastreabilidade.md matched aliases ['matriz de risco']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/canon/50-ameacas-mitigadas.md matched aliases ['matriz de risco']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/10-testes-seguranca/addon/06-cobertura-e-priorizacao.md matched aliases ['matriz de risco']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/01-classificacao-aplicacoes/aplicacao-lifecycle.md matched aliases ['matriz de risco']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/04-arquitetura-segura/canon/50-ameacas-mitigadas.md matched aliases ['matriz de risco']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/10-testes-seguranca/addon/06-cobertura-e-priorizacao.md matched aliases ['matriz de risco']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/13-formacao-onboarding/aplicacao-lifecycle.md matched aliases ['matriz de riscos']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-risk-000",
@@ -1603,7 +1908,11 @@
         "01-classificacao-aplicacoes:classificacao-inicial-da-aplicacao",
         "01-classificacao-aplicacoes:mapeamento-de-ameacas-por-nivel-de-risco",
         "01-classificacao-aplicacoes:revisao-por-alteracao-relevante-event-based",
-        "01-classificacao-aplicacoes:validacao-antes-do-go-live"
+        "01-classificacao-aplicacoes:validacao-antes-do-go-live",
+        "02-requisitos-seguranca:gates-automaticos-em-ci-cd-para-requisitos-de-seguranca",
+        "02-requisitos-seguranca:rastreabilidade-de-requisitos",
+        "02-requisitos-seguranca:revisao-por-alteracao-relevante",
+        "02-requisitos-seguranca:selecao-de-requisitos-por-criticidade"
       ],
       "warnings": []
     },
@@ -1612,14 +1921,14 @@
       "chapter_ids": [
         "00-fundamentos",
         "01-classificacao-aplicacoes",
-        "04-arquitetura-segura",
         "05-dependencias-sbom-sca",
         "07-cicd-seguro",
         "08-iac-infraestrutura",
         "09-containers-imagens",
         "11-deploy-seguro",
         "12-monitorizacao-operacoes",
-        "13-formacao-onboarding"
+        "13-formacao-onboarding",
+        "14-governanca-contratacao"
       ],
       "confidence": null,
       "description": "Rollback Plan must be produced and retained as auditable evidence for practices such as *Rollback* e salvaguarda de *destroy*, Controlo de execução com *feature flags*, Deploy apenas de artefactos assinados.",
@@ -1628,7 +1937,7 @@
         "practice 08-iac-infraestrutura:rollback-e-salvaguarda-de-destroy matched alias 'rollback'",
         "practice 11-deploy-seguro:rollback-estruturado-por-tipo-binario-configuracao-bd-infra matched alias 'rollback'",
         "practice 11-deploy-seguro:rollback-rapido-e-testado matched alias 'rollback'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['rollback']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['rollback']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-rollback-000",
@@ -1667,13 +1976,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Sast Report must be produced and retained as auditable evidence for practices such as Arquivo Central de Evidências de Validação, Automatização em CI/CD (Linters & SAST), Gate de Segurança Pré release.",
+      "description": "Sast Report must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Gestão de Exceções com TTL e Revalidação Obrigatória, Validação de cobertura de testes.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references sast_report",
         "practice 06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast matched alias 'linters'",
         "practice 10-testes-seguranca:sast-obrigatorio-em-pull-request matched alias 'sast'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['sast']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['linters', 'sast']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/baseline.md matched aliases ['sast']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['linters', 'sast']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-sast-000",
@@ -1681,6 +1990,12 @@
         "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao",
         "06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast",
         "06-desenvolvimento-seguro:gate-de-seguranca-pre-release",
@@ -1718,7 +2033,7 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Sbom must be produced and retained as auditable evidence for practices such as Alertas sobre Vulnerabilidades em Componentes Usados, Auditoria Periódica de Bibliotecas Copiadas Manualmente, Automação da atualização com avaliação de impacto.",
+      "description": "Sbom must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Geração de SBOM e assinatura de artefactos de build, Gestão de Exceções com TTL e Revalidação Obrigatória.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references sbom",
         "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references sbom",
@@ -1736,11 +2051,19 @@
         "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "05-dependencias-sbom-sca:alertas-sobre-vulnerabilidades-em-componentes-usados",
         "05-dependencias-sbom-sca:auditoria-periodica-de-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:automacao-da-atualizacao-com-avaliacao-de-impacto",
         "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
         "05-dependencias-sbom-sca:gestao-de-dependencias-seguras",
+        "05-dependencias-sbom-sca:inventario-e-controlo-de-dependencias-emergentes",
         "05-dependencias-sbom-sca:inventario-e-sbom-por-build",
         "05-dependencias-sbom-sca:proibir-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:repositorios-internos-como-fonte-unica",
@@ -1814,7 +2137,7 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Sca Report must be produced and retained as auditable evidence for practices such as Alertas sobre Vulnerabilidades em Componentes Usados, Auditoria Periódica de Bibliotecas Copiadas Manualmente, Automação da atualização com avaliação de impacto.",
+      "description": "Sca Report must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Geração de SBOM e assinatura de artefactos de build, Gestão de Exceções com TTL e Revalidação Obrigatória.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references sca_report",
         "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references sca_report",
@@ -1832,11 +2155,19 @@
         "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "05-dependencias-sbom-sca:alertas-sobre-vulnerabilidades-em-componentes-usados",
         "05-dependencias-sbom-sca:auditoria-periodica-de-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:automacao-da-atualizacao-com-avaliacao-de-impacto",
         "05-dependencias-sbom-sca:excecoes-a-cves-formais-e-temporarias",
         "05-dependencias-sbom-sca:gestao-de-dependencias-seguras",
+        "05-dependencias-sbom-sca:inventario-e-controlo-de-dependencias-emergentes",
         "05-dependencias-sbom-sca:inventario-e-sbom-por-build",
         "05-dependencias-sbom-sca:proibir-bibliotecas-copiadas-manualmente",
         "05-dependencias-sbom-sca:repositorios-internos-como-fonte-unica",
@@ -1985,13 +2316,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Signature Attestation must be produced and retained as auditable evidence for practices such as Assinatura e proveniência, Assinatura e Proveniência de artefactos IaC, Aplicação de políticas formais de segurança no runtime com OPA/Kyverno.",
+      "description": "Signature Attestation must be produced and retained as auditable evidence for practices such as Geração de SBOM e assinatura de artefactos de build, Assinatura e proveniência, Assinatura e Proveniência de artefactos IaC.",
       "evidence": [
         "control CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d references signature_attestation",
+        "practice 02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build matched alias 'assinatura'",
         "practice 07-cicd-seguro:assinatura-e-proveniencia matched alias 'assinatura'",
         "practice 08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac matched alias 'assinatura'",
-        "practice 09-containers-imagens:assinatura-e-verificacao-de-proveniencia-de-imagens-com-cosign-e-rekor matched alias 'assinatura'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/appsec-engineer.md matched aliases ['assinatura']"
+        "practice 09-containers-imagens:assinatura-e-verificacao-de-proveniencia-de-imagens-com-cosign-e-rekor matched alias 'assinatura'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-signature-000",
@@ -1999,6 +2330,7 @@
         "CTRL-supply-chain-supply-chain-segura-de-imagens-e-containers-8a8af25a4d"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:geracao-de-sbom-e-assinatura-de-artefactos-de-build",
         "07-cicd-seguro:assinatura-e-proveniencia",
         "08-iac-infraestrutura:assinatura-e-proveniencia-de-artefactos-iac",
         "09-containers-imagens:aplicacao-de-politicas-formais-de-seguranca-no-runtime-com-opa-kyverno",
@@ -2015,9 +2347,9 @@
     {
       "artifact_type_id": "ART-supplier-assessment-43fc2de564",
       "chapter_ids": [
-        "02-requisitos-seguranca",
         "05-dependencias-sbom-sca",
         "08-iac-infraestrutura",
+        "10-testes-seguranca",
         "13-formacao-onboarding",
         "14-governanca-contratacao"
       ],
@@ -2025,10 +2357,10 @@
       "description": "Supplier Assessment must be produced and retained as auditable evidence for practices such as Cláusulas contratuais de segurança, Consolidação de KPIs de governação e maturidade, Execução de fluxo formal de validação de fornecedores.",
       "evidence": [
         "control CTRL-governance-governacao-de-fornecedores-e-excecoes-a9a9ab3628 references supplier_assessment",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/02-requisitos-seguranca/addon/10-validacao-requisitos.md matched aliases ['fornecedor']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/addon/01-inventario-sbom.md matched aliases ['fornecedor']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/08-iac-infraestrutura/addon/09-gestao-excecoes.md matched aliases ['fornecedor']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/13-formacao-onboarding/addon/20-modelo-inclusao-terceiros.md matched aliases ['fornecedor']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/addon/01-inventario-sbom.md matched aliases ['fornecedor']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/05-dependencias-sbom-sca/canon/25-rastreabilidade.md matched aliases ['third party']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/08-iac-infraestrutura/canon/25-rastreabilidade.md matched aliases ['third party']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/10-testes-seguranca/addon/14-tlpt-readiness.md matched aliases ['third party']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-supplier-000",
@@ -2068,13 +2400,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Test Report must be produced and retained as auditable evidence for practices such as Arquivo Central de Evidências de Validação, Automatização em CI/CD (Linters & SAST), Gate de Segurança Pré release.",
+      "description": "Test Report must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Gestão de Exceções com TTL e Revalidação Obrigatória, Validação de cobertura de testes.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references test_report",
         "control CTRL-code-integrity-integridade-e-governacao-de-pipelines-d5b14eeef2 references test_report",
         "control CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34 references test_report",
-        "practice 07-cicd-seguro:testes-de-seguranca-dinamicos-dast matched alias 'testes'",
-        "practice 10-testes-seguranca:avaliacao-critica-de-cobertura-real-e-limitacoes matched alias 'testes'"
+        "practice 02-requisitos-seguranca:validacao-de-cobertura-de-testes matched alias 'testes'",
+        "practice 07-cicd-seguro:testes-de-seguranca-dinamicos-dast matched alias 'testes'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-test-000",
@@ -2084,6 +2416,12 @@
         "CTRL-testing-testes-de-seguranca-baseados-em-risco-55dcb62d34"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao",
         "06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast",
         "06-desenvolvimento-seguro:gate-de-seguranca-pre-release",
@@ -2180,6 +2518,7 @@
         "03-threat-modeling:reutilizacao-controlada-e-revisao-de-modelos-anteriores",
         "03-threat-modeling:validacao-de-arquitetura-com-threat-modeling",
         "03-threat-modeling:validacao-de-impacto-no-negocio",
+        "04-arquitetura-segura:sincronizacao-threat-modeling-arquitetura",
         "13-formacao-onboarding:threat-modeling-peer-led-e-rotativo"
       ],
       "warnings": []
@@ -2198,13 +2537,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Training Plan must be produced and retained as auditable evidence for practices such as Code Clinics Estruturadas e Recorrentes, Exercícios práticos e simulações, Formação contínua por perfil.",
+      "description": "Training Plan must be produced and retained as auditable evidence for practices such as Política, Formação e Procedimentos Operacionais, Code Clinics Estruturadas e Recorrentes, Exercícios práticos e simulações.",
       "evidence": [
         "control CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf references training_plan",
+        "practice 02-requisitos-seguranca:politica-formacao-e-procedimentos-operacionais matched alias 'formacao'",
         "practice 13-formacao-onboarding:code-clinics-estruturadas-e-recorrentes matched alias 'formacao'",
         "practice 13-formacao-onboarding:exercicios-praticos-e-simulacoes matched alias 'formacao'",
-        "practice 13-formacao-onboarding:formacao-continua-por-perfil matched alias 'formacao'",
-        "practice 13-formacao-onboarding:formatos-de-entrega-e-dod-por-formato matched alias 'formacao'"
+        "practice 13-formacao-onboarding:formacao-continua-por-perfil matched alias 'formacao'"
       ],
       "mandatory": true,
       "requirement_id": "REQ-training-000",
@@ -2212,6 +2551,7 @@
         "CTRL-governance-capacitacao-e-onboarding-de-seguranca-f84db7abdf"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:politica-formacao-e-procedimentos-operacionais",
         "13-formacao-onboarding:code-clinics-estruturadas-e-recorrentes",
         "13-formacao-onboarding:exercicios-praticos-e-simulacoes",
         "13-formacao-onboarding:formacao-continua-por-perfil",
@@ -2228,6 +2568,26 @@
         "13-formacao-onboarding:validacao-formal-de-onboarding-via-checklist",
         "13-formacao-onboarding:war-room-e-simulacoes-de-incidentes",
         "14-governanca-contratacao:trilho-de-formacao-obrigatoria-pre-acesso-contractors"
+      ],
+      "warnings": []
+    },
+    {
+      "artifact_type_id": "ART-trust-boundary-model-e661186e9f",
+      "chapter_ids": [
+        "04-arquitetura-segura"
+      ],
+      "confidence": null,
+      "description": "Trust Boundary Model must be produced and retained as auditable evidence for practices such as Revisão de fronteiras de confiança e integrações.",
+      "evidence": [
+        "control CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b references trust_boundary_model"
+      ],
+      "mandatory": true,
+      "requirement_id": "REQ-trust-000",
+      "source_control_ids": [
+        "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b"
+      ],
+      "source_practice_ids": [
+        "04-arquitetura-segura:revisao-de-fronteiras-de-confianca-e-integracoes"
       ],
       "warnings": []
     },
@@ -2251,13 +2611,13 @@
         "14-governanca-contratacao"
       ],
       "confidence": null,
-      "description": "Validation Evidence must be produced and retained as auditable evidence for practices such as Arquivo Central de Evidências de Validação, Automatização em CI/CD (Linters & SAST), Gate de Segurança Pré release.",
+      "description": "Validation Evidence must be produced and retained as auditable evidence for practices such as Definição de critérios de validação, Gestão de Exceções com TTL e Revalidação Obrigatória, Validação de cobertura de testes.",
       "evidence": [
         "control CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460 references validation_evidence",
         "practice 06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao matched alias 'evidencias'",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/auditores.md matched aliases ['evidencias']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['evidencias']",
-        "corpus document /Volumes/G-DRIVE/Shared/Manual-SbD-ToE/sbd-toe-knowledge-graph/data/source/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['evidencias']"
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/auditores.md matched aliases ['evidencias']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/developer.md matched aliases ['evidencias']",
+        "corpus document /Users/pedrofarinha/Shared-Projs/SecurityByDesign-TheoryOfEverything/SbD-ToE-Manual/manuals_src/docs/sbd-toe/010-sbd-manual/00-fundamentos/roles-responsabilidades/devops-sre.md matched aliases ['evidencias']"
       ],
       "mandatory": true,
       "requirement_id": "REQ-validation-000",
@@ -2265,6 +2625,12 @@
         "CTRL-code-integrity-desenvolvimento-seguro-e-validacao-de-codigo-63dedd7460"
       ],
       "source_practice_ids": [
+        "02-requisitos-seguranca:definicao-de-criterios-de-validacao",
+        "02-requisitos-seguranca:gestao-de-excecoes-com-ttl-e-revalidacao-obrigatoria",
+        "02-requisitos-seguranca:validacao-de-cobertura-de-testes",
+        "02-requisitos-seguranca:validacao-de-tags-sec-lx-e-requisitos-no-pipeline",
+        "02-requisitos-seguranca:validacao-e-aprovacao-final",
+        "02-requisitos-seguranca:validacao-por-requisito-dominio-req-xxx-evidencia",
         "06-desenvolvimento-seguro:arquivo-central-de-evidencias-de-validacao",
         "06-desenvolvimento-seguro:automatizacao-em-ci-cd-linters-sast",
         "06-desenvolvimento-seguro:gate-de-seguranca-pre-release",

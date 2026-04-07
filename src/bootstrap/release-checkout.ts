@@ -9,10 +9,10 @@ import type { AppConfig } from "../types.js";
 
 // SECURITY: URL base e owner/repo são HARDCODED. Nunca aceitar de env ou input externo.
 const HARDCODED_API_BASE =
-  "https://api.github.com/repos/Shiftleftpt/sbd-toe-knowledge-graph";
+  "https://api.github.com/repos/SbD-ToE/sbd-toe-knowledge-graph";
 
 const ALLOWED_ASSET_URL_PREFIXES = [
-  "https://github.com/Shiftleftpt/sbd-toe-knowledge-graph/",
+  "https://github.com/SbD-ToE/sbd-toe-knowledge-graph/",
   "https://objects.githubusercontent.com/",
 ];
 
@@ -64,8 +64,13 @@ const KNOWN_ENTRIES: Array<{ kind: "file" | "dir"; src: string; dest: string }> 
   },
   {
     kind: "file",
-    src: path.join("data", "publish", "sbdtoe-ontology.yaml"),
-    dest: path.join("data", "publish", "sbdtoe-ontology.yaml"),
+    src: path.join("data", "publish", "ontology", "appsec-core-ontology.yaml"),
+    dest: path.join("data", "publish", "ontology", "appsec-core-ontology.yaml"),
+  },
+  {
+    kind: "file",
+    src: path.join("data", "publish", "ontology", "sbdtoe-ontology.yaml"),
+    dest: path.join("data", "publish", "ontology", "sbdtoe-ontology.yaml"),
   },
   {
     kind: "file",

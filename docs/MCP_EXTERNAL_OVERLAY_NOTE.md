@@ -9,7 +9,7 @@ Use `data/publish/overlay/*` only when the user explicitly asks for an external-
 
 Load order:
 
-1. `data/publish/sbdtoe-ontology.yaml`
+1. `data/publish/ontology/sbdtoe-ontology.yaml`
 2. `data/publish/runtime/deterministic_manifest.json`
 3. normal runtime bundle
 4. `data/publish/overlay/framework_overlay_index.json`
