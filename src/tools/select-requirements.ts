@@ -33,6 +33,12 @@ export interface SelectRequirementsOutput {
     narrowed_out: SelectionResult["narrowed_out"];
     excluded_by_level: SelectionResult["excluded_by_level"];
   };
+  /**
+   * 0.20.0-beta.24 — ÂMBITO DA PROMESSA. `narrowed_out` cobria a baseline; os capítulos
+   * de domínio que nenhuma declaração activou desapareciam sem uma linha. Agora são
+   * declarados por contagem, com o caminho para os trazer — nunca por extenso.
+   */
+  out_of_scope_chapters?: SelectionResult["out_of_scope_chapters"];
   /** 0.20.0-beta.21 — modo efectivo e semântica da resposta. */
   mode: SelectionResult["mode"];
   /** `task` é contexto registado (auditoria); só influencia a selecção em mode="discover". */
@@ -100,7 +106,11 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
   const arr = (k: string) =>
     Array.isArray(args[k]) ? (args[k] as unknown[]).filter((x): x is string => typeof x === "string") : undefined;
 
-  const task = str("task"), stack = str("stack"), exposure = str("exposure"), dataSensitivity = str("data_sensitivity");
+  // 0.20.0-beta.24: `task_context` é o nome canónico; `task` fica aceite como alias.
+  // O nome carregava semântica — um campo chamado `task` convida o chamador a acreditar
+  // que o texto decide, e no contrato v1.18 não decide.
+  const task = str("task_context") ?? str("task");
+  const stack = str("stack"), exposure = str("exposure"), dataSensitivity = str("data_sensitivity");
   const concerns = arr("concerns"), changedFiles = arr("changed_files"), technologies = arr("technologies");
   const modeArg = str("mode");
   if (modeArg !== undefined && !["declarative", "baseline", "discover"].includes(modeArg)) {
@@ -166,7 +176,7 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
       note:
         mode === "discover"
           ? "MODO EXPLORATÓRIO (discover): activação por casamento de palavras na tarefa, com os avisos de basis/dominância/vazio. Instrumento de investigação — a resposta NÃO é o contrato declarativo desta linha."
-          : "Selecção DECLARATIVA (contrato v1.18-beta): função apenas do que foi declarado — risk_level, concerns, exposure, data_sensitivity, technologies, changed_files. O `task` fica registado para auditoria e não influencia o resultado. Cada inclusão tem selection_trace; cada exclusão elegível está em narrowed_out com razão — nunca em silêncio. Nada é inventado."
+          : "Selecção DECLARATIVA (contrato v1.18-beta): função apenas do que foi declarado — risk_level, concerns, exposure, data_sensitivity, technologies, changed_files. O `task` fica registado para auditoria e não influencia o resultado. Cada inclusão tem selection_trace; cada exclusão elegível está em narrowed_out com razão — nunca em silêncio. ÂMBITO da promessa (0.20.0-beta.24): ela vale para o UNIVERSO, não só para a baseline — `narrowed_out` cobre o que era elegível e ficou de fora, `excluded_by_level` o que existe noutro nível, e `out_of_scope_chapters` o que nenhuma declaração activou, por capítulo e por contagem, com o caminho para o trazer. Nada é inventado."
     },
     risk_level: risk,
     mode: result.mode,
@@ -201,6 +211,7 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
         }
       : {}),
     selection: { selected: page, narrowed_out: result.narrowed_out, excluded_by_level: result.excluded_by_level },
+    ...(result.out_of_scope_chapters ? { out_of_scope_chapters: result.out_of_scope_chapters } : {}),
     context: { activated_chapters: result.activated_chapters, activated_categories: result.activated_categories },
     activation_trace: result.activation.trace,
     overlay,
@@ -219,7 +230,7 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
     meta: {
       eligible: result.eligible_count,
       note:
-        "coverage pagina `selected`; `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado.",
+        "coverage pagina `selected`; `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão.",
       notes: result.notes
     },
     next: result.needs_input

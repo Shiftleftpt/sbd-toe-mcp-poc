@@ -971,6 +971,94 @@ export const scenarios = [
       }
       return ok(`provenance.server=${pkg} em ${checked.length} ferramentas, distinto de kg`); } },
 
+  { id: "TC-F-43", axis: "F", title: "0.20.0-beta.24 (item 1): agent-guide GERADO — publica o vocabulário (24), não a cobertura do mapa de ameaças (13)", tool: "read_sbd_toe_resource",
+    run: async (c) => {
+      const g = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/agent-guide" });
+      if (!g.ok) return fail(g.error);
+      const guide = typeof g.data?.content === "string" ? g.data.content : JSON.stringify(g.data);
+      const vocabRes = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/activation-vocabulary" });
+      if (!vocabRes.ok) return fail(vocabRes.error);
+      const vtext = typeof vocabRes.data?.content === "string" ? vocabRes.data.content : JSON.stringify(vocabRes.data);
+      const vocab = JSON.parse(vtext.slice(vtext.indexOf("{")));
+      const concerns = (vocab.concerns?.values ?? []).map((x) => String(x.value));
+      if (concerns.length < 20) return fail(`vocabulário com ${concerns.length} valores — fixture mudou`);
+      const missing = concerns.filter((x) => !guide.includes("`" + x + "`"));
+      if (missing.length > 0) return fail(`guia não publica ${missing.length} concerns do vocabulário: ${missing.join(", ")}`);
+      // a regressão nominal: os concerns que o mapa de ameaças NÃO resolve têm de estar no guia
+      const un = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["build"] });
+      if (!un.ok) return fail(un.error);
+      const unsupported = un.data.unsupported_concerns?.values ?? [];
+      if (unsupported.length === 0) return fail("fixture mudou: 'build' já é roteável por ameaças");
+      const swallowed = unsupported.filter((x) => !guide.includes("`" + x + "`"));
+      if (swallowed.length > 0) return fail(`o guia voltou a publicar a cobertura do mapa de ameaças como vocabulário (faltam ${swallowed.join(", ")})`);
+      // contagens do guia = contagens do vocabulário (não folclore)
+      const auth = (vocab.concerns?.values ?? []).find((x) => String(x.value) === "auth");
+      const at = auth?.requirements_at ?? {};
+      if (!guide.includes(`${at.L1} / ${at.L2} / ${at.L3}`)) return fail("as contagens do guia não são as do vocabulário");
+      // recursos e prompts reais aparecem no guia
+      if (!guide.includes("sbd://toe/activation-vocabulary")) return fail("o guia não lista o recurso que ele próprio manda ler no passo 1");
+      if (!guide.includes("prepare_grounded_codegen")) return fail("o guia não lista os 3 prompts servidos");
+      return ok(`guia derivado: ${concerns.length} concerns publicados (era 13), ${unsupported.length} não-roteáveis presentes, contagens = vocabulário, recursos e prompts completos`); } },
+
+  { id: "TC-F-44", axis: "F", title: "0.20.0-beta.24 (item 2): âmbito da promessa — o que nenhuma declaração activou é DECLARADO, não omitido", tool: "select_sbd_toe_requirements",
+    run: async (c) => {
+      const r = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], limit: 500 });
+      if (!r.ok) return fail(r.error);
+      const band = r.data.out_of_scope_chapters;
+      if (!band) return fail("capítulos não activados desaparecem sem uma linha (item 2 vivo)");
+      if (!(band.count > 0) || !(band.requirements_out_of_scope > 0)) return fail("banda presente mas vazia");
+      if (!/N[ÃA]O são «não aplicáveis»|não-perguntados/i.test(band.scope_note ?? "")) return fail("a nota não distingue «fora de âmbito» de «não aplicável»");
+      if (!/universo/i.test(band.scope_note ?? "")) return fail("o âmbito da promessa não está declarado na resposta");
+      for (const entry of band.chapters) {
+        if (typeof entry.at_level !== "number" || typeof entry.out_of_scope !== "number") return fail(`linha sem contagens: ${entry.chapter}`);
+        if (!entry.activate_with) return fail(`capítulo ${entry.chapter} sem caminho de recuperação`);
+        if (entry.out_of_scope > entry.at_level) return fail(`${entry.chapter}: fora (${entry.out_of_scope}) > total (${entry.at_level})`);
+      }
+      // custo: contagens, NUNCA os requisitos por extenso
+      const raw = JSON.stringify(band);
+      if (/requirement_ids|"[A-Z]{3}-\d{3}"/.test(raw)) return fail("a banda lista requisitos por extenso — declarar a ausência não pode custar o que custaria tê-los");
+      // o caminho de recuperação FUNCIONA: declarar o que ela indica tira o capítulo da banda
+      const target = band.chapters.find((x) => /^05-/.test(x.chapter));
+      if (!target) return fail("fixture mudou: cap. 05 não está fora de âmbito para concerns=['auth']");
+      const m = /concerns=\["([a-z_]+)"/.exec(target.activate_with);
+      if (!m) return fail(`dica não copiável para o cap. 05: ${target.activate_with}`);
+      const after = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth", m[1]], limit: 500 });
+      if (!after.ok) return fail(after.error);
+      const still = (after.data.out_of_scope_chapters?.chapters ?? []).some((x) => /^05-/.test(x.chapter));
+      if (still) return fail(`seguir a dica (${m[1]}) não trouxe o cap. 05 para dentro do âmbito`);
+      // e a selecção NÃO muda por causa da banda (item aditivo)
+      const before = r.data.selection.selected.length;
+      const baseline = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], limit: 500 });
+      if (!baseline.ok) return fail(baseline.error);
+      if (baseline.data.selection.selected.length !== before) return fail("selecção não determinística");
+      return ok(`${band.count} capítulos declarados, ${band.requirements_out_of_scope} requisitos fora de âmbito, dica '${m[1]}' verificada a trazer o cap. 05; selecção inalterada (${before})`); } },
+
+  { id: "TC-F-45", axis: "F", title: "0.20.0-beta.24 (item 3): higiene do `task` — task_context canónico, alias mantido, sem promessas de inferência", tool: "select_sbd_toe_requirements",
+    run: async (c) => {
+      const canonical = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], task_context: "implementar login" });
+      if (!canonical.ok) return fail(canonical.error);
+      if (canonical.data.task?.text !== "implementar login") return fail("task_context não foi registado");
+      if (canonical.data.task?.affects_selection !== false) return fail("task_context marcado como motor no modo declarativo");
+      const alias = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], task: "implementar login" });
+      if (!alias.ok) return fail(alias.error);
+      if (alias.data.selection.selected.length !== canonical.data.selection.selected.length)
+        return fail("o alias `task` deixou de ser equivalente (compatibilidade partida)");
+      // discover continua a ter o texto como motor
+      const disc = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", task: "implementar login com sessões e tokens", mode: "discover" });
+      if (!disc.ok) return fail(disc.error);
+      if ((disc.data.selection.selected.length ?? 0) === 0) return fail("discover deixou de usar o texto como motor");
+      // resíduos: a descrição da tool não pode prometer inferência a partir do task
+      const tools = c.tools ?? [];
+      const sel = tools.find((t) => t.name === "select_sbd_toe_requirements");
+      if (!sel) return fail("select ausente de tools/list");
+      const desc = String(sel.description ?? "");
+      if (/narrows deterministically by the task's declared signals/.test(desc))
+        return fail("resíduo vivo: a descrição ainda promete narrowing pelo texto da tarefa");
+      if (/activated by the context \([^)]*task/.test(desc))
+        return fail("resíduo vivo: `task` ainda listado como activador de capítulos");
+      if (!/task_context/.test(JSON.stringify(sel.inputSchema ?? {}))) return fail("schema sem o nome canónico task_context");
+      return ok(`task_context canónico e registado (affects_selection=false), alias equivalente, discover intacto (${disc.data.selection.selected.length} req.), descrição sem resíduos`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

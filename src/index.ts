@@ -61,6 +61,8 @@ import {
   buildSetupAgentPrompt,
   readGroundedCodegenGuide
 } from "./resources/sbd-toe-resources.js";
+import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./serving/server-surface.js";
+import { buildAgentGuide } from "./serving/agent-guide.js";
 
 type JsonRpcId = string | number;
 
@@ -173,92 +175,7 @@ interface LogEvent {
   message: string;
 }
 
-/** The single source of the resource surface — resources/list AND the
- * read_sbd_toe_resource tool derive from THIS list (never hardcoded twice). */
-const RESOURCE_CATALOG = [
-        {
-          uri: "sbd://toe/agent-guide",
-          name: "SbD-ToE Agent Guide",
-          description:
-            "ENTRY POINT — READ THIS FIRST. Operational guide for AI agents: SbD-ToE identity (Security by Design — Theory of Everything), CONSULT/GUIDE modes, routing by SDLC phase and domain, tool selection, epistemic standards, chapter map, risk levels, identifier conventions.",
-          mimeType: "text/markdown"
-        },
-        {
-          uri: "sbd://toe/chapter-applicability/{riskLevel}",
-          name: "SbD-ToE Chapter Applicability",
-          description:
-            "Graduated chapter applicability for a risk level (L1/L2/L3): presence always, demand scales — derived from authored assignment proportionality (0.14.0).",
-          mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/activation-vocabulary",
-          name: "SbD-ToE Activation Vocabulary",
-          description:
-            "DECLARATIVE-FIRST (0.20-beta): the CLOSED vocabulary this server accepts and what each value activates — concerns, exposure, data_sensitivity, technologies, changed_files path table, roles, phases, risk levels. Derived from the served bundle and the engine's own tables, never hand-written. Read it, map your reading of the request onto these values, and DECLARE them: the server answers the declared, it does not interpret prose.",
-          mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/index-compact",
-          name: "SbD-ToE Index Compact",
-          description:
-            "Compact JSON index of the manual, DERIVED at read-time from the served bundle (graduated demand_by_level; no minLevel). Injectable into system prompt to eliminate exploratory discovery.",
-          mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/ontology",
-          name: "SbD-ToE Ontology",
-          description:
-            "Full SbD-ToE ontology YAML: domain_mapping (requirement category → control domains), " +
-            "inference rules with priorities, resolution pipelines (consult/guide/threats/review), " +
-            "and entity schemas. Read once per session to understand the deterministic resolution model " +
-            "before calling consult_security_requirements, get_threat_landscape or get_guide_by_role.",
-          mimeType: "application/yaml"
-        },
-        {
-          uri: "sbd://toe/skill/{role}",
-          name: "SbD-ToE Role Skill",
-          description:
-            "Role-specialised SbD-ToE skill for a canonical role — RISK LEVEL FIXED AT L2 neste URI; " +
-            "para outro nível usa generate_sbd_toe_skill(role, risk_level=…). Same output as generate_sbd_toe_skill(role, format=skill).",
-          mimeType: "text/markdown"
-        },
-        {
-          uri: "sbd://toe/subagent/{role}",
-          name: "SbD-ToE Role Sub-agent Definition",
-          description:
-            "Installable sub-agent definition for a canonical role (default risk L2, harnessed flavour — " +
-            "grants mcp__sbd-toe__* tools). Same output as generate_sbd_toe_skill(role, format=subagent).",
-          mimeType: "text/markdown"
-        },
-        {
-          uri: "sbd://toe/codegen-instructions/{mode}",
-          name: "SbD-ToE Codegen Instructions (per mode)",
-          description:
-            "Static per-mode boilerplate of prepare_sbd_toe_codegen_context (mode: codegen, review or " +
-            "test-plan): llm_codegen_instructions slots + security_rationale_template skeleton — " +
-            "byte-identical to the detail=full inline content when assembled per the embedded rules — " +
-            "plus the detail_encoding legend for detail=standard/minimal payloads (v2 token diet). " +
-            "Referenced by codegen_instructions_ref in dieted payloads.",
-          mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/version",
-          name: "SbD-ToE MCP Version",
-          description: "Version of the running SbD-ToE MCP server (name, version, description) plus the provenance of the served knowledge: manual {version, commit}, kg {release_tag, substrate_version, consumer_contract_version} and ontology {tag, commit}, read from the consumed-bundle pin.",
-          mimeType: "application/json"
-        },
-        {
-          uri: "sbd://toe/grounded-codegen-guide",
-          name: "SbD-ToE Grounded Codegen Guide",
-          description:
-            "Agent-facing guide for using prepare_sbd_toe_codegen_context. " +
-            "Covers workflow, branching by status (ready_for_codegen / needs_clarification / " +
-            "needs_decomposition / unsupported_scope), output discipline (cite citation_map, fill " +
-            "security_rationale, distinguish code/tests/evidence), and explicit prohibitions " +
-            "(no invented IDs, no compliance claims, no rastreabilidade-noise inside source files).",
-          mimeType: "text/markdown"
-        }
-] as const;
+
 
 /** Declared resource-read failure (never-silent): carries the JSON-RPC code. */
 /**
@@ -313,7 +230,7 @@ async function materializeResource(uri: string): Promise<{ mimeType: string; tex
 
   if (uri === "sbd://toe/agent-guide") {
     try {
-      return { mimeType: "text/markdown", text: readFileSync(resolveAppPath("assets/agent-guide.md"), "utf-8") };
+      return { mimeType: "text/markdown", text: buildAgentGuide() };
     } catch {
       throw new ResourceReadError(-32603, "Could not read SbD-ToE agent guide.");
     }
@@ -1225,16 +1142,21 @@ class McpRuntime {
           description:
             "START HERE — para qualquer tarefa concreta esta é a 1ª tool. Arranque: lê sbd://toe/agent-guide (read_sbd_toe_resource); setup_sbd_toe_agent é um PROMPT MCP — clientes sem prompts (p.ex. Desktop) não o expõem: segue directo por aqui. DECLARATIVO PRIMEIRO (contrato v1.18-beta, linha 0.20): TU tens o contexto — lê o pedido, o código e a conversa e DECLARA o que interpretaste (risk_level, concerns, exposure, data_sensitivity, technologies, changed_files). EU NÃO INTERPRETO PROSA: respondo com o que o KG sabe sobre o declarado, mais as adjacências do grafo, de forma reproduzível. Vocabulário fechado em sbd://toe/activation-vocabulary. O `task` fica REGISTADO para auditoria e NÃO influencia o resultado; sem nenhuma declaração devolvo needs_input com o vocabulário e candidatos A CONFIRMAR (nunca adivinho, nunca devolvo zero em silêncio); a baseline do nível pede-se explicitamente (mode='baseline'); o motor inferencial antigo fica em mode='discover' (exploratório). The MP1 selection operation (Classificar → Seleccionar): which requirements apply to THIS task in THIS " +
             "context. Composes the reference semantics the published ontology declares — baseline (cap. 02 base " +
-            "catalogue, by risk level) ∪ domain chapters activated by the context (changed_files, technologies, stack, " +
-            "task) ⊕ regulatory overlay (extend) — then narrows deterministically by the task's declared signals. " +
-            "Returns BOTH bands: selected[] (each with its selection_trace: source/trigger/score) and narrowed_out[] " +
-            "(eligible-without-signal, grouped by category, with reason) — never silent. Paginated. " +
+            "catalogue, by risk level) ∪ domain chapters activated by the DECLARED activators (concerns, exposure, " +
+            "data_sensitivity, technologies, changed_files) ∪ the categories the published vocabulary promises " +
+            "⊕ regulatory overlay (extend) — then narrows deterministically by those same declarations. The task " +
+            "text is NEVER an activator in declarative mode (it is recorded context; it is only an engine in " +
+            "mode='discover'). Returns the bands: selected[] (each with its selection_trace: source/trigger/score), " +
+            "narrowed_out[] (eligible-without-signal, grouped by category, with reason), excluded_by_level[] and " +
+            "out_of_scope_chapters (what no declaration activated, by chapter and count, with how to bring it in) — " +
+            "never silent, and the SCOPE of that promise is the universe, not just the baseline. Paginated. " +
             "All data from the published deterministic runtime bundle — nothing is invented.",
           inputSchema: {
             type: "object",
             properties: {
               risk_level: { type: "string", enum: ["L1", "L2", "L3"], description: "Application risk level (drives the baseline)." },
-              task: { type: "string", description: "RECORDED CONTEXT (auditoria): o enunciado da tarefa. NÃO influencia a selecção no modo declarativo — o servidor não interpreta prosa. Só é motor em mode='discover'." },
+              task_context: { type: "string", description: "CONTEXTO REGISTADO (auditoria): o enunciado da tarefa. NOME CANÓNICO desde 0.20.0-beta.24 — um campo chamado `task` convidava a ser o motor, e não é: NÃO influencia a selecção no modo declarativo. Alias `task` continua aceite (aditivo, nunca renomeámos nada); em mode='discover' o texto é motor e `task` é o nome a usar." },
+              task: { type: "string", description: "ALIAS de `task_context` (compatibilidade). Em mode='discover' é o MOTOR (casamento lexical, exploratório); no modo declarativo é apenas contexto registado." },
               mode: { type: "string", enum: ["declarative", "baseline", "discover"], description: "declarative (default): responde ao DECLARADO; sem declarações devolve needs_input com vocabulário e candidatos a confirmar. baseline: baseline completa do nível, por pedido EXPLÍCITO (nunca fallback). discover: motor inferencial histórico (casamento lexical da prosa), exploratório — investigação e estudo de paráfrase." },
               stack: { type: "string", description: "Texto livre da stack. No modo declarativo só conta quando traz, como TOKEN EXACTO, um valor de `technologies` (normalizar o declarado é legítimo; adivinhar prosa não). Preferir `technologies`." },
               exposure: { type: "string", enum: ["local", "internal", "authenticated", "public"], description: "Declared activator: authenticated/public activate auth+logging (+api/validation/architecture for public)." },
@@ -1645,94 +1567,11 @@ class McpRuntime {
   }
 
   private getPromptDefinition(): Record<string, unknown> {
-    return {
-      name: "ask_sbd_toe_manual",
-      title: "Ask SbD-ToE Manual",
-      description:
-        "MCP prompt to guide the AI chat to answer questions about the SbD-ToE manual with grounding.",
-      arguments: [
-        {
-          name: "question",
-          description: "Question about the SbD-ToE manual.",
-          required: true
-        }
-      ]
-    };
+    return PROMPT_CATALOG[0] as Record<string, unknown>;
   }
 
   private handlePromptsList(request: JsonRpcRequest): void {
-    this.sendResponse(request.id, {
-      prompts: [
-        this.getPromptDefinition(),
-        {
-          name: "setup_sbd_toe_agent",
-          title: "Setup SbD-ToE Agent",
-          description:
-            "START HERE — entry point (2ª chamada, após leres sbd://toe/agent-guide): MCP PROMPT (clientes sem suporte de prompts não o expõem — alternativa: activadores estruturados directos no select) to configure an agent with SbD-ToE manual context and rules for a given risk level.",
-          arguments: [
-            {
-              name: "riskLevel",
-              description: "Project risk level: L1, L2 or L3.",
-              required: true
-            },
-            {
-              name: "projectRole",
-              description: "Project role or description (optional).",
-              required: false
-            }
-          ]
-        },
-        {
-          name: "prepare_grounded_codegen",
-          title: "Prepare Grounded Codegen (SbD-ToE)",
-          description:
-            "MCP prompt that bundles the grounded-codegen guide with a user task and instructs the " +
-            "agent to call prepare_sbd_toe_codegen_context before producing code. Forces citation of " +
-            "citation_map IDs, fills security_rationale_template, distinguishes code/tests/evidence, " +
-            "blocks compliance claims, and routes needs_clarification / needs_decomposition / " +
-            "unsupported_scope to user dialog instead of silent guessing.",
-          arguments: [
-            {
-              name: "task",
-              description: "Concrete coding task (e.g. 'Add payload validation to PATCH /users/:id/email').",
-              required: true
-            },
-            {
-              name: "mode",
-              description: "codegen | review | test-plan. Defaults to codegen.",
-              required: false
-            },
-            {
-              name: "riskLevel",
-              description: "Project risk level: L1, L2 or L3.",
-              required: false
-            },
-            {
-              name: "concerns",
-              description:
-                "Optional explicit concerns (comma-separated string or array). Otherwise inferred by the activation engine.",
-              required: false
-            },
-            {
-              name: "stack",
-              description: "Stack hint (e.g. 'Node.js/Express'). Informational.",
-              required: false
-            },
-            {
-              name: "regulatoryFrameworks",
-              description:
-                "Optional regulatory framework short codes or IDs (e.g. 'GDPR', 'EXT-DORA'). Comma-separated string or array.",
-              required: false
-            },
-            {
-              name: "includeRegulatoryOverlay",
-              description: "When true, asks the tool to surface regulatory overlay context.",
-              required: false
-            }
-          ]
-        }
-      ]
-    });
+    this.sendResponse(request.id, { prompts: [...PROMPT_CATALOG] });
   }
 
   private handlePromptGet(request: JsonRpcRequest): void {

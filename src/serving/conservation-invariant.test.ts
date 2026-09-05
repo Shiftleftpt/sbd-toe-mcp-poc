@@ -36,6 +36,74 @@ function requirementsOfCategories(categories: readonly string[], level: (typeof 
 }
 
 describe("conservação — o que o vocabulário promete aparece em alguma banda", () => {
+  /**
+   * 0.20.0-beta.24 — A INVARIANTE DEIXA DE VARRER SÓ A BASELINE.
+   *
+   * Até aqui exigia-se que a PROMESSA aparecesse em banda. Faltava o outro lado: o
+   * UNIVERSO. Um requisito do catálogo, ao nível pedido, ou está numa banda (selected,
+   * narrowed_out, excluded_by_level) ou pertence a um capítulo DECLARADO em
+   * `absent_chapters`. Não existe terceira hipótese: desaparecer sem uma linha era
+   * exactamente o defeito (~133 requisitos em `concerns:["auth"]`@L2).
+   */
+  it("universo: todo o requisito do catálogo está em banda OU num capítulo declarado ausente", () => {
+    const offenders: string[] = [];
+    const sample = [
+      { label: "concerns=[auth]", ctx: { concerns: ["auth"] } },
+      { label: "concerns=[build]", ctx: { concerns: ["build"] } },
+      { label: "concerns=[auth,supply_chain]", ctx: { concerns: ["auth", "supply_chain"] } },
+      { label: "exposure=public", ctx: { exposure: "public" } },
+      { label: "data_sensitivity=regulated", ctx: { data_sensitivity: "regulated" } },
+      { label: "technologies=[containers]", ctx: { technologies: ["containers"] } },
+      { label: "changed_files=[src/auth/login.ts]", ctx: { changed_files: ["src/auth/login.ts"] } }
+    ];
+    for (const level of LEVELS) {
+      for (const { label, ctx } of sample) {
+        const r = runSelection({ risk_level: level, ...ctx } as Parameters<typeof runSelection>[0]);
+        if (r.needs_input) continue;
+        const seen = bandedIds(r);
+        const declaredAbsent = new Set((r.out_of_scope_chapters?.chapters ?? []).map((c) => c.chapter));
+        const lost = ontology.requirements.filter(
+          (x) =>
+            x.applicable_levels?.[level] === true &&
+            !seen.has(x.requirement_id) &&
+            !(x.source_bundle !== undefined && declaredAbsent.has(x.source_bundle))
+        );
+        if (lost.length > 0)
+          offenders.push(
+            `${label}@${level}: ${lost.length} requisitos do catálogo em banda NENHUMA e em capítulo NÃO declarado ausente (ex.: ${lost
+              .slice(0, 4)
+              .map((x) => x.requirement_id)
+              .join(", ")})`
+          );
+      }
+    }
+    expect(offenders, `\n${offenders.join("\n")}`).toEqual([]);
+  });
+
+  it("a banda de ausência é honesta: cada capítulo declarado tem mesmo zero requisitos em banda", () => {
+    const offenders: string[] = [];
+    for (const level of LEVELS) {
+      for (const concern of ["auth", "build", "logging"]) {
+        const r = runSelection({ risk_level: level, concerns: [concern] });
+        if (r.needs_input) continue;
+        const seen = bandedIds(r);
+        for (const entry of r.out_of_scope_chapters?.chapters ?? []) {
+          const all = ontology.requirements.filter(
+            (x) => x.source_bundle === entry.chapter && x.applicable_levels?.[level] === true
+          );
+          const missing = all.filter((x) => !seen.has(x.requirement_id));
+          if (entry.at_level !== all.length)
+            offenders.push(`${concern}@${level}: ${entry.chapter} declara at_level=${entry.at_level}, catálogo tem ${all.length}`);
+          if (entry.out_of_scope !== missing.length)
+            offenders.push(`${concern}@${level}: ${entry.chapter} declara out_of_scope=${entry.out_of_scope}, reais ${missing.length}`);
+          if (missing.length === 0)
+            offenders.push(`${concern}@${level}: ${entry.chapter} listado sem nada de fora`);
+        }
+      }
+    }
+    expect(offenders, `\n${offenders.join("\n")}`).toEqual([]);
+  });
+
   it("24 concerns × 3 níveis: nenhuma promessa desaparece", () => {
     const offenders: string[] = [];
     for (const entry of vocab.concerns.values) {

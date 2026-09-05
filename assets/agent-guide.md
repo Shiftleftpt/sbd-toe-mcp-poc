@@ -21,8 +21,10 @@ adjacências do grafo, de forma reproduzível e auditável.
    É a lista **fechada** de valores que aceito e, para cada valor, **o que ele activa**
    (categorias, capítulos, contagens por nível). É ele que substitui a adivinhação de palavras.
 2. **Mapeia e declara** — `select_sbd_toe_requirements(risk_level, concerns=[…], …)`.
-   O `task` podes enviá-lo à mesma: fica **registado para auditoria** (`role:
+   O enunciado podes enviá-lo à mesma em **`task_context`** (nome canónico desde
+   0.20.0-beta.24; `task` continua aceite): fica **registado para auditoria** (`role:
    "recorded_context"`, `affects_selection: false`) e **não influencia o resultado**.
+   O campo mudou de nome porque o nome antigo convidava a acreditar que o texto decide.
 3. **Sem declarações** recebes `needs_input`: o vocabulário aplicável, **candidatos A
    CONFIRMAR** derivados do texto (sugestão, nunca selecção) e um exemplo copiável.
    Nunca devolvo zero em silêncio e nunca invento o teu âmbito.
@@ -148,25 +150,17 @@ Use `search_sbd_toe_manual` for narrative/conceptual questions.
 **Output size:** L1 ≈ 22k chars, L2 ≈ 36k chars, L3 ≈ 36k chars (may exceed context).
 **Always use `concerns` to scope L2/L3 queries** — reduces to ~9k chars per concern set.
 
-#### Valid `concerns` values (ontology-controlled vocabulary)
+#### `concerns` — o vocabulário FECHADO desta linha (derivado do bundle)
 
-| concern | Categories resolved | Meaning |
-|---|---|---|
-| `auth` | AUT, ACC, SES | Authentication, access control, sessions |
-| `logging` | LOG | Audit logging, monitoring |
-| `validation` | VAL, ERR | Input validation, error handling |
-| `api` | API | API security |
-| `config` | CFG | Configuration & environment hardening |
-| `integrity` | INT | Integrity & integration |
-| `distribution` | DST | Supply chain, packaging |
-| `ide` | IDE | Development environment |
-| `requirements` | REQ | Security requirements in SDLC |
-| `architecture` | ARC | Secure architecture |
-| `iac` | IAC | Infrastructure-as-Code |
-| `encryption` | ENC | Cryptography & sensitive data |
-| `agents` | AGN | AI-agent / automation governance — mandate, autonomy A0–A4, kill-switch, intent declaration (`REQ-AGN-001…004`; consult only) |
+<!-- BEGIN GENERATED: concerns -->
+<!-- END GENERATED: concerns -->
 
-Pass concerns as exact lowercase strings from the table above.
+#### Os restantes activadores declaráveis
+
+<!-- BEGIN GENERATED: activators -->
+<!-- END GENERATED: activators -->
+
+
 
 ### GUIDE mode
 Use when the user asks *how to implement, design, structure, document, or review* something
@@ -192,13 +186,10 @@ get_threat_landscape         ← deterministic: threats relevant to a risk level
                                 use for: threat modelling context, "what threats apply to auth?"
 ```
 
-#### Valid `role` values for `get_guide_by_role`
+#### `role` — papéis aceites por `get_guide_by_role`
 
-Canonical role IDs (pass exact or common alias — resolved automatically):
-
-`developer` · `appsec` · `devops` · `grc` · `qa` · `security_champion` · `software_architect`
-· `product_owner` · `scrum_master` · `team_lead` · `ciso` · `executive_management`
-· `ops` · `compliance` · `auditor` · `ir` · `sre`
+<!-- BEGIN GENERATED: roles -->
+<!-- END GENERATED: roles -->
 
 #### Interpreting tool output
 
@@ -214,6 +205,7 @@ Canonical role IDs (pass exact or common alias — resolved automatically):
 | `match: "declared_gap"` / `meta.declared_gap` (query_sbd_toe_entities, resolve_entities) | Cite `declared_gap.note` verbatim — a legacy / unresolvable citation, not a missing requirement |
 | `citation_note` / `meta.citation_note` (informative) | The id is an illustrative example (`REQ-NNN`) or a non-requirement token (`CWE-`, `SHA-`) cited by the Manual — say so; it is not a requirement and not a gap |
 | `selection.selected[]` (select) | The recommendation for the task — cite each item's `selection_trace` when asked *why* |
+| `selection.out_of_scope_chapters` (select) | O que **nenhuma declaração activou**, por capítulo e por contagem, com `activate_with` copiável. **Não é «não aplicável»** — é não-perguntado: se o capítulo é relevante para a tarefa, re-chama com a declaração indicada. `SEM ACTIVADOR PUBLICADO` significa que o vocabulário não tem forma de o activar — diz-se, não se inventa |
 | `selection.narrowed_out[]` (select) | Eligible-but-narrowed, grouped with reason — never treat as "not applicable"; re-call with the missing signal to recover a group |
 | `completeness_report.selection` (prepare) | The same two-band summary behind the codegen context — `narrowed_out_ref` names the tool to inspect it |
 
@@ -342,54 +334,29 @@ Always distinguish between:
 
 ## Resources
 
-| Resource URI | When to use |
-|---|---|
-| `sbd://toe/agent-guide` | This document — full operational guide |
-| `sbd://toe/index-compact` | Full chapter map as JSON — fast structured lookup |
-| `sbd://toe/chapter-applicability/{riskLevel}` | Graduated applicability: every chapter present, per-chapter demand for the level |
-| `sbd://toe/ontology` | Full ontology YAML — domain_mapping, concerns, inference rules |
-| `sbd://toe/version` | Server identity + served knowledge provenance (manual/kg/ontology, from the pin) — read at session start |
+<!-- BEGIN GENERATED: resources -->
+<!-- END GENERATED: resources -->
 
 ---
 
 ## Prompts
 
-| Prompt | When to use |
-|---|---|
-| `setup_sbd_toe_agent(riskLevel, projectRole)` | Session setup — active chapters + risk-specific rules. **Prompt MCP** (clientes sem prompts: activadores directos no select) |
-| `ask_sbd_toe_manual(question)` | Direct grounded Q&A |
+<!-- BEGIN GENERATED: prompts -->
+<!-- END GENERATED: prompts -->
 
 ---
 
 ## Chapter reference
 
-| chapterId | Title | Min level | Domains |
-|---|---|---|---|
-| `00-fundamentos` | Fundamentos SbD-ToE | L1 | governance, foundation |
-| `01-classificacao-aplicacoes` | Classificação de Aplicações | L1 | governance, risk |
-| `02-requisitos-seguranca` | Requisitos de Segurança | L1 | governance, requirements |
-| `03-threat-modeling` | Threat Modeling | L1 | risk, architecture |
-| `04-arquitetura-segura` | Arquitetura Segura | L1 | architecture, design |
-| `05-dependencias-sbom-sca` | Dependências, SBOM e SCA | L1 | supply-chain |
-| `06-desenvolvimento-seguro` | Desenvolvimento Seguro | L2 | development, coding |
-| `07-cicd-seguro` | CI/CD Seguro | L1 | devops, pipeline |
-| `08-iac-infraestrutura` | IaC e Infraestrutura | L1 | infrastructure |
-| `09-containers-imagens` | Containers e Imagens | L1 | containers |
-| `10-testes-seguranca` | Testes de Segurança | L1 | testing |
-| `11-deploy-seguro` | Deploy Seguro | L2 | deploy |
-| `12-monitorizacao-operacoes` | Monitorização e Operações | L1 | monitoring |
-| `13-formacao-onboarding` | Formação e Onboarding | L3 | training |
-| `14-governanca-contratacao` | Governança e Contratação | L1 | governance |
+<!-- BEGIN GENERATED: chapters -->
+<!-- END GENERATED: chapters -->
 
 ---
 
 ## Risk levels
 
-| Level | Scope | Unlocks |
-|---|---|---|
-| `L1` | Low risk — internal, no sensitive data | ALL chapters — demand mostly recomendado/opcional |
-| `L2` | Medium risk — public APIs, user data | + chapters 06, 11 |
-| `L3` | High risk — PII, regulated systems | + chapter 13 |
+<!-- BEGIN GENERATED: risk-levels -->
+<!-- END GENERATED: risk-levels -->
 
 ---
 

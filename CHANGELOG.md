@@ -1,13 +1,137 @@
 ---
 ai_assisted: true
 model: Claude Fable 5
-date: 2026-09-05
+date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.23 (beta line, npm `beta`) — CONSERVAÇÃO: o motor não deita fora o que foi declarado. Invariante de conservação sobre o vocabulário TODO (24 concerns × 3 níveis + exposure + data_sensitivity + technologies + paths); P0-1 (o motor cede à promessa publicada por CATEGORIA — 4 famílias afectadas, não 1); P0-2 (unsupported_concerns declarado em get_threat_landscape + agent-guide deixa de mandar afirmar ausência a partir de lista vazia); P0-3 (guarda anti-zero cobre technologies; declaração com efeito deixa de ser descartada); P1 (provenance.server: a resposta diz que servidor a produziu). Bundle e linha estável inalterados.
+reasoning: v0.20.0-beta.24 (beta line, npm `beta`) — a última peça manual e o âmbito da promessa. (1) agent-guide GERADO do vocabulário e da superfície real: a tabela que publicava como «ontology-controlled vocabulary» era, carácter a carácter, o supported_values do mapa de ameaças (13 em vez de 24). (2) A promessa never-silent passa a valer para o UNIVERSO: out_of_scope_chapters declara por capítulo o que nenhuma declaração activou, com caminho de recuperação derivado; a invariante de conservação varre o universo. (3) Higiene do `task`: resíduos que prometiam inferência corrigidos e `task_context` como nome canónico (alias `task` mantido). Bundle e linha estável inalterados.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.24 — 2026-09-06
+
+**A última peça manual, e o âmbito da promessa.** Autorizado pelo lead («avança com o
+beta.24», 2026-09-06); diagnóstico em §16 da design note. Bundle pin INALTERADO (release
+KG `v1.11.0`); **linha estável intocada**.
+
+> beta.21 matou a inferência · beta.22 fechou o silêncio de input · beta.23 garantiu a
+> conservação do declarado · **beta.24 tira o guia da mão e dá âmbito à promessa.**
+
+### 1 — O agent-guide passou a ser GERADO
+
+**Origem real dos «13 concerns», confirmada antes de gerar nada:** a tabela que o guia
+publicava sob o título *«Valid `concerns` values (ontology-controlled vocabulary)»* é,
+carácter a carácter e na mesma ordem alfabética, o **`supported_values` do MAPA DE
+AMEAÇAS**. A prova é estrutural, não estatística: o **complemento** dessa lista são
+**exactamente os 11 `unsupported_concerns`** que a beta.23 descobriu
+(`secrets, build, supply_chain, testing, threat_modeling, monitoring, release,
+deployment, integration, files, privacy`). Não era lista desactualizada — era a **lista
+errada com o nome errado**. Custo medido pelo avaliador: numa tarefa de webhooks com
+dados pessoais, obedecer ao guia custava `integration` e `privacy` — 17 requisitos,
+incluindo validação de assinatura e anti-replay.
+
+`src/serving/agent-guide.ts` passa a expandir blocos marcados no asset a partir das
+mesmas fontes que o servidor serve. **Derivado agora:** `concerns` (24, com categorias,
+domínios, capítulos e contagens por nível), os restantes activadores declaráveis
+(`exposure`, `data_sensitivity`, `technologies`, nº de padrões de `changed_files`, com os
+valores INERTES nomeados), `roles` (13 canónicos + aliases), `resources` (10), `prompts`
+(3), `chapters` (15) e `risk levels`. **Autoral (fica onde está):** o START HERE, o
+âmbito, os modos de operação, os padrões de resposta, os standards epistémicos, o guia de
+routing, a leitura de output e as convenções de identificadores.
+
+Outros defeitos que a derivação fechou de caminho, todos da mesma família:
+
+- a tabela de recursos **não listava `sbd://toe/activation-vocabulary`** — o recurso que o
+  próprio guia manda ler no passo 1;
+- a tabela de prompts listava **2 dos 3** (faltava `prepare_grounded_codegen`);
+- a tabela de níveis dizia *«L2 → + capítulos 06, 11; L3 → + capítulo 13»*, contradizendo
+  a **aplicabilidade graduada** de 0.14.0. O bloco gerado diz a verdade do modelo:
+  **15 de 15 capítulos presentes em todos os níveis**, com a exigência a escalar
+  (4 → 10 → 11 obrigatórios).
+
+Para isto, a superfície MCP passou a viver num sítio só (`src/serving/server-surface.ts`:
+`RESOURCE_CATALOG` + `PROMPT_CATALOG`), de onde `resources/list`, `prompts/list` e o guia
+derivam. E a skill gerada (`generate_sbd_toe_skill`) passa a levar o guia **derivado**, não
+o template — servir o template ali reintroduziria a lista escrita à mão pela porta das
+traseiras.
+
+**Guarda de suite** (`agent-guide-derived.test.ts`, 6 propriedades, família da invariante
+next-verbatim): todo o marcador tem gerador e vice-versa; os 24 concerns do vocabulário
+estão no guia servido; **os 11 não-roteáveis por ameaças estão lá** (a regressão nominal);
+as contagens do guia são as do vocabulário; recursos e prompts batem com a superfície
+real; nenhuma tool nomeada no guia é fantasma.
+
+### 2 — A promessa «nunca em silêncio» passa a ter ÂMBITO declarado
+
+`narrowed_out` cobria a baseline do cap. 02. Os capítulos de domínio que nenhuma
+declaração activou desapareciam sem uma linha — no teste cego do avaliador, ~65 requisitos;
+medido aqui em `concerns:["auth"]`@L2, **133 requisitos em 14 capítulos**. E o cabeçalho
+prometia «nunca em silêncio» **sem dizer sobre o quê**.
+
+Banda nova **`out_of_scope_chapters`**: por capítulo, `at_level`, `out_of_scope` e um
+`activate_with` **copiável e derivado** do vocabulário (concern → tecnologia → caminho, por
+ordem de custo para quem declara). Quando o vocabulário não tem forma de activar o
+capítulo, **diz-se**: `01-classificacao-aplicacoes` não tem activador publicado nenhum —
+8 requisitos a L2 que nenhuma declaração consegue trazer (achado, reportado).
+
+O cabeçalho da promessa e o `meta.note` passam a **declarar o âmbito**: a promessa vale
+para o universo, com `narrowed_out` (elegível que ficou de fora), `excluded_by_level`
+(existe noutro nível) e `out_of_scope_chapters` (nada o activou).
+
+**Custo medido — contagens, nunca requisitos por extenso:** 538 tokens no pior caso
+(14 capítulos, 11,7% do payload de `select`); 481 tk (6,1%) com dois concerns declarados;
+507 tk (7,2%) na baseline explícita. Listá-los por extenso custaria **3.689 tokens** —
+6,9× mais. A banda **não existe em `discover`** (o oráculo não se toca) e **não entra no
+`prepare`** (os 8 gates de dieta ficam byte-idênticos).
+
+**A invariante de conservação deixou de varrer só a baseline** e apanhou três coisas — duas
+delas defeitos da banda nova, antes de sair desta lane:
+
+1. **cap. 02 declarado ausente com a baseline toda em banda** — a banda contava só os
+   requisitos domain-specific do capítulo;
+2. **`REQ-AGN-001..004` fora de todas as bandas e de toda a declaração** — vivem no cap. 02,
+   que estava «presente», e a granularidade «capítulo inteiro» deixava-os cair. Foi o que
+   obrigou a reformular a banda de «capítulos ausentes» para **«o que fica fora, por
+   capítulo»**, que é a forma que fecha o universo exactamente;
+3. **`01-classificacao-aplicacoes` sem activador publicado** (acima).
+
+### 3 — Higiene do `task`
+
+**Resíduos encontrados e corrigidos** (prometiam inferência e contradiziam o contrato
+v1.18 no mesmo parágrafo):
+
+- `select_sbd_toe_requirements`, cauda inglesa da descrição: *«domain chapters activated by
+  the context (changed_files, technologies, stack, **task**)»* e *«then narrows
+  deterministically by **the task's declared signals**»* — o `task` listado como activador
+  de capítulos e como motor de narrowing;
+- prompt `prepare_grounded_codegen`, argumento `concerns`: *«Otherwise **inferred by the
+  activation engine**»*.
+
+Varridos também os usos legítimos, que ficam: `mitigation_confidence: heuristic/inferred`,
+`content_type: "inferred"` e os standards epistémicos (vocabulário de proveniência, outro
+domínio) e as referências explícitas a `mode="discover"`.
+
+**`task` → `task_context`** no `select`: o nome carregava semântica — um campo chamado
+`task` convida o chamador a acreditar que o texto decide. `task_context` é o nome canónico;
+**`task` continua aceite como alias** (aditivo, nunca renomeámos nada) e **continua a ser o
+MOTOR em `mode="discover"`**. O `prepare` mantém `task` como nome: ali o texto é o assunto
+do codegen, não um activador — renomeá-lo mudaria o que a tool é.
+
+### Verificação
+
+- **Suite**: 769/769 (51 ficheiros), com a guarda do guia (6) e a conservação estendida (7).
+- **Aceitação**: 152 cenários — 112 PASS · 17 PART · **0 FAIL**, gate **PASS**. Novos
+  TC-F-43 (guia derivado), TC-F-44 (âmbito declarado, com a dica de recuperação verificada
+  a funcionar), TC-F-45 (higiene do `task`).
+- **Ouro**: relatório **byte-idêntico** ao da beta.23 nos dois braços — `discover`
+  **10 PASS / 0 / 0** (obrigatório), declarativo **6 PASS / 4 PART / 0 FAIL**. O item 2 não
+  mexeu na selecção, como exigido.
+- **Orçamentos**: 8/8 gates hard inalterados (fixture1 18.779/20.400 · 6.105/6.500 ·
+  5.459/5.800 · 3.658/3.870; fixture2 25.200/26.700 · 9.098/9.200 · 8.372/8.450 ·
+  4.802/4.840).
+- **Gate**: stdout só JSON-RPC · exit 0 · `package_version` = `sbd://toe/version` =
+  `provenance.server`.
 
 ## 0.20.0-beta.23 — 2026-09-05
 

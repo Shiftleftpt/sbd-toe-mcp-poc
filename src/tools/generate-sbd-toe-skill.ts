@@ -18,6 +18,7 @@
  */
 
 import { servedKgReleaseTag, servingServerVersion } from "../version-info.js";
+import { buildAgentGuide } from "../serving/agent-guide.js";
 import { readFileSync } from "node:fs";
 import { resolveAppPath } from "../config.js";
 import { getOntologyData } from "./ontology-loader.js";
@@ -88,9 +89,10 @@ function extractGuideSection(guide: string, heading: string): string {
 }
 
 function readAgentGuide(): string {
-  const guidePath = resolveAppPath("assets/agent-guide.md");
+  // 0.20.0-beta.24: a skill gerada leva o guia DERIVADO, não o template. Servir o
+  // template aqui reintroduziria pela porta das traseiras a lista escrita à mão.
   try {
-    return readFileSync(guidePath, "utf-8");
+    return buildAgentGuide();
   } catch {
     throw new Error("Could not read SbD-ToE agent guide from assets/agent-guide.md.");
   }

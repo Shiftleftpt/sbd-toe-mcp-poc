@@ -31,6 +31,7 @@ import {
   type NormalizedInput
 } from "../tools/prepare-codegen-context.js";
 import { bundlesForChangedFiles } from "../tools/map-review-scope.js";
+import { buildActivationVocabulary } from "./activation-vocabulary.js";
 import { EXPOSURE_CONCERNS as EXPOSURE_ACTIVATION, SENSITIVITY_CONCERNS as SENSITIVITY_ACTIVATION } from "../tools/prepare-codegen-context.js";
 
 export type SelectionRiskLevel = "L1" | "L2" | "L3";
@@ -211,6 +212,23 @@ export interface SelectionResult {
   mode: SelectionMode;
   /** Presente quando nada foi declarado no modo declarativo: pedido de declaração + aula. */
   needs_input?: NeedsInput;
+  /**
+   * 0.20.0-beta.24 — ÂMBITO DA PROMESSA: capítulos de domínio que NENHUMA declaração
+   * activou e que por isso não têm um único requisito em banda nenhuma. Até aqui
+   * desapareciam sem uma linha (no teste cego do avaliador, ~65 requisitos dos caps.
+   * 05/07/10) enquanto o cabeçalho prometia «nunca em silêncio» sem dizer sobre O QUÊ.
+   * Declara-se o que ficou FORA por capítulo — inclusive a parte que falta de um
+   * capítulo parcialmente coberto (o cap. 02 tem a baseline em banda e os REQ-AGN-*
+   * fora; a granularidade «capítulo inteiro» deixava-os cair). Contagens e caminho de
+   * recuperação — nunca os requisitos por extenso: declarar a ausência não pode custar
+   * o que custaria tê-los.
+   */
+  out_of_scope_chapters?: {
+    scope_note: string;
+    count: number;
+    requirements_out_of_scope: number;
+    chapters: Array<{ chapter: string; at_level: number; out_of_scope: number; activate_with: string }>;
+  };
   /** 0.20.0-beta.23: tokens de `technologies` fora do vocabulário — nomeados, nunca descartados em silêncio. */
   unknown_technologies?: string[];
   /** O `task` é contexto registado, não motor (excepto em discover). */
@@ -858,6 +876,16 @@ export function runSelectionWithActivation(
     };
   }
 
+  /**
+   * Banda de ausência (beta.24). Um capítulo entra aqui quando tem requisitos ao nível e
+   * NENHUM deles aparece em selected/narrowed_out/excluded_by_level — isto é, quando
+   * nada do que foi declarado lhe tocou. O caminho de recuperação é DERIVADO do
+   * vocabulário (concern > tecnologia > caminho, por esta ordem de custo para quem
+   * declara); quando o vocabulário publicado não tem forma de activar o capítulo,
+   * diz-se isso em vez de se inventar um caminho.
+   */
+  const out_of_scope_chapters = declarative ? buildOutOfScopeChapters(level, selected, narrowed_out, excluded_by_level) : undefined;
+
   const notes: string[] = [];
   if (r1Added > 0) {
     notes.push(`${R1_RULE_ID}: ${r1Added} requisitos do principal não-humano seleccionados por regra nomeada (decisão pós-P2 2026-08-31).`);
@@ -888,6 +916,80 @@ export function runSelectionWithActivation(
     notes,
     mode,
     ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
+    ...(out_of_scope_chapters && out_of_scope_chapters.count > 0 ? { out_of_scope_chapters } : {}),
     task_record: taskRecord,
+  };
+}
+
+/**
+ * Como se activa um capítulo, dito com o vocabulário publicado. Ordem de preferência:
+ * o concern (uma palavra), depois a tecnologia, depois o caminho — do mais barato ao
+ * mais específico para quem declara.
+ */
+function activationHintFor(chapter: string, categories: readonly string[] = []): string {
+  const vocab = buildActivationVocabulary();
+  if (categories.length > 0) {
+    const byCategory = vocab.concerns.values
+      .filter((c) => c.activates_categories.some((cat) => categories.includes(cat)))
+      .map((c) => String(c.value));
+    if (byCategory.length > 0) return `concerns=[${byCategory.slice(0, 2).map((c) => `"${c}"`).join(", ")}]`;
+  }
+  const concerns = vocab.concerns.values.filter((c) => c.activates_chapters.includes(chapter)).map((c) => String(c.value));
+  if (concerns.length > 0) return `concerns=[${concerns.slice(0, 2).map((c) => `"${c}"`).join(", ")}]`;
+  const techs = vocab.technologies.values.filter((t) => t.activates_chapters.includes(chapter)).map((t) => String(t.value));
+  if (techs.length > 0) return `technologies=[${techs.slice(0, 2).map((t) => `"${t}"`).join(", ")}]`;
+  // Os padrões publicados são strings de EXIBIÇÃO: alguns listam alternativas separadas
+  // por " / ". Para a dica ser copiável escolhe-se o padrão mais específico (o que activa
+  // menos capítulos) e só a primeira alternativa.
+  const paths = vocab.changed_files.patterns
+    .filter((pattern) => pattern.activates_chapters.includes(chapter))
+    .sort((a, b) => a.activates_chapters.length - b.activates_chapters.length);
+  const first = paths[0];
+  if (first !== undefined) return `changed_files=["${first.pattern.split(" / ")[0]!.trim()}"]`;
+  return "SEM ACTIVADOR PUBLICADO — nenhum concern, tecnologia ou padrão de caminho do vocabulário activa este capítulo";
+}
+
+function buildOutOfScopeChapters(
+  level: SelectionRiskLevel,
+  selected: SelectedRequirement[],
+  narrowedOut: NarrowedOutGroup[],
+  excludedByLevel: NarrowedOutGroup[]
+): NonNullable<SelectionResult["out_of_scope_chapters"]> {
+  const ontology = getOntologyData();
+  const banded = new Set<string>([
+    ...selected.map((x) => x.requirement_id),
+    ...narrowedOut.flatMap((g) => g.requirement_ids),
+    ...excludedByLevel.flatMap((g) => g.requirement_ids),
+  ]);
+  const byChapter = new Map<string, Requirement[]>();
+  for (const r of ontology.requirements) {
+    if (r.source_bundle === undefined) continue;
+    if (r.applicable_levels?.[level] !== true) continue;
+    const list = byChapter.get(r.source_bundle) ?? [];
+    list.push(r);
+    byChapter.set(r.source_bundle, list);
+  }
+  const chapters: Array<{ chapter: string; at_level: number; out_of_scope: number; activate_with: string }> = [];
+  let outOfScope = 0;
+  for (const [chapter, reqs] of [...byChapter.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+    const missing = reqs.filter((r) => !banded.has(r.requirement_id));
+    if (missing.length === 0) continue;
+    const categories = [...new Set(missing.map((r) => r.category))];
+    chapters.push({
+      chapter,
+      at_level: reqs.length,
+      out_of_scope: missing.length,
+      activate_with: activationHintFor(chapter, categories),
+    });
+    outOfScope += missing.length;
+  }
+  return {
+    scope_note:
+      `ÂMBITO: esta resposta cobre a baseline do cap. 02 a ${level}, os capítulos activados pelo que declaraste e as categorias que o vocabulário promete. ` +
+      `Fora dele ficaram ${outOfScope} requisitos em ${chapters.length} capítulos — NÃO são «não aplicáveis», são não-perguntados. ` +
+      "«Nada falta sem aviso» vale para o universo, não só para a baseline: ficam aqui por contagem, com o caminho para os trazer.",
+    count: chapters.length,
+    requirements_out_of_scope: outOfScope,
+    chapters,
   };
 }
