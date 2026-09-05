@@ -40,3 +40,10 @@ review_status: pending-human-review
 - Ouro byte-idêntico ao da beta.23: `discover` **10/0/0** · declarativo **6/4/0**
 - Orçamentos 8/8 inalterados · gate: stdout JSON-RPC, exit 0, package_version coerente
 - Cenários novos: **TC-F-43, TC-F-44, TC-F-45**
+
+## Fecho
+
+- Commit da vaga: `863ed99bacb3797b9603ef387b4c736dd8ec40c1` · tag anotada `v0.20.0-beta.24`
+- Registo em FREEZE-REGISTRY: `d7ee9d2`
+- `release.yml` run **33999753605** (success) → npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.24` = `beta`
+- `gitHead` publicado = commit da tag ✓ · `latest` = 0.19.4 **intocado**
