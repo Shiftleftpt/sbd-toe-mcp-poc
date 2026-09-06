@@ -112,7 +112,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.35 → `fe4f59aeec8972db0b6cd02d35b121de8621e9ee` (2026-09-06; tag anotada nesta commit; npm ao fechar) fecha a leitura CONSULT: a
+**Beta line:** v0.20.0-beta.35 → `fe4f59aeec8972db0b6cd02d35b121de8621e9ee` (2026-09-06; `release.yml` run 34052937325 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.35` = `beta`, gitHead igual; GitHub pre-release) fecha a leitura CONSULT: a
 pergunta de CONHECIMENTO estava a ser servida por superfícies de SELECÇÃO, e daí vinham as duas peças em
 falta do GR-05. `explain_sbd_toe_topic` atravessa o Manual (requisitos com `applies_at`, orientação,
 provas, ameaças, ANTIPADRÕES e onde no ciclo), dá banda própria aos 26 antipadrões — com as ligações que
@@ -411,6 +411,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.35 tag commit recorded (`fe4f59ae`); npm `beta` publish + GitHub pre-release confirmed (run 34052937325); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.35 registered (leitura CONSULT com antipadrões e nível que anota; GR-05 sobe a SERVIDO; GR-04 declarado achado de conteúdo; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.34 tag commit recorded (`4f56bbe2`); npm `beta` publish + GitHub pre-release confirmed (run 34051699997); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.34 registered (vista IMPL com KPIs e thresholds por nível; GR-01 sobe a SERVIDO no Eixo I; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
