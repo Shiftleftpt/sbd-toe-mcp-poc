@@ -67,6 +67,7 @@ import { buildModelResource, buildQuickStart } from "./serving/model-resource.js
 import { THREAT_ORDERING, SELECT_PAGINATION } from "./serving/behaviour-notes.js";
 import { handleGetPlaybook } from "./tools/get-playbook.js";
 import { handleGetChapterCapability } from "./tools/get-chapter-capability.js";
+import { handleExplainTopic } from "./tools/explain-topic.js";
 import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
@@ -1032,6 +1033,27 @@ class McpRuntime {
               limit: { type: "number" }
             },
             required: [],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "explain_sbd_toe_topic",
+          title: "Explain SbD-ToE Topic (CONSULT)",
+          description:
+            "LEITURA CONSULT (0.20.0-beta.35) — «o que é que o Manual DIZ sobre X?», pergunta de CONHECIMENTO, sem tarefa e sem projecto. Atravessa o Manual: requisitos (com `applies_at`), ORIENTAÇÃO (práticas), PROVAS, AMEAÇAS, **ANTIPADRÕES** («o que NÃO fazer» — a metade que não tinha caminho próprio) e onde no ciclo. Distingue requisito de orientação e marca a proveniência manual-grounded. " +
+            "**`risk_level` é OPCIONAL aqui e ANOTA, nunca filtra** — uma pergunta de conhecimento não tem nível. Fronteira deliberada: o nível continua OBRIGATÓRIO na selecção (`select_sbd_toe_requirements`), no `prepare_sbd_toe_codegen_context` e na vista de capacidade, onde a pergunta é «o que se aplica ao MEU caso». " +
+            "Pede por conceito (`concern`) ou por estrutura (`category` / `chapter`).",
+          inputSchema: {
+            type: "object",
+            properties: {
+              concern: { type: "string", enum: DECLARED_CONCERNS, description: `Tópico por CONCEITO. ${CONCERNS_VOCABULARY_NOTE}` },
+              category: { type: "string", description: "Tópico por ESTRUTURA: código de categoria (ex.: `ENC`)." },
+              chapter: { type: "string", description: "Tópico por ESTRUTURA: id de capítulo (ex.: `08-iac-infraestrutura`)." },
+              risk_level: { type: "string", enum: ["L1", "L2", "L3"], description: "OPCIONAL — ANOTA que requisitos se aplicam a este nível. NÃO filtra: a resposta é a mesma sem ele." },
+              offset: { type: "number", description: "Paginação sobre os requisitos." },
+              limit: { type: "number", description: "Requisitos por página (default 20)." }
+            },
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -2199,6 +2221,13 @@ class McpRuntime {
             duration_ms: Date.now() - startedAt,
             ...metadata,
             message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "explain_sbd_toe_topic": {
+          const result = handleExplainTopic(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           return;
         }

@@ -1664,6 +1664,44 @@ export const scenarios = [
       if (arts.length === 0) return fail("o brief do cap. 07 não traz artefactos");
       return ok(`cap. 07: ${measures.length} KPIs com thresholds L1/L2/L3 e ${comAlvo.length} com alvo a L2; ${d.artifacts.total} artefactos (${d.artifacts.mandatory} obrigatórios); leitura declarada IMPL; ciclo fechado com o assess; brief com ${arts.length} artefactos`); } },
 
+  { id: "TC-F-62", axis: "F", title: "0.20.0-beta.35: leitura CONSULT — antipadrões com porta e o nível ANOTA em vez de exigir", tool: "explain_sbd_toe_topic",
+    run: async (c) => {
+      // a pergunta do oráculo: conhecimento, sem tarefa, sem projecto e SEM risk_level
+      const r = await c.tool("explain_sbd_toe_topic", { concern: "secrets" });
+      if (!r.ok) return fail(r.error);
+      const d = r.data;
+      if (d.status) return fail(`a pergunta de conhecimento foi recusada: ${d.status}`);
+      if (d.reading?.id !== "CONSULT") return fail("a resposta não declara a leitura");
+      // atravessa o Manual
+      for (const [k, v] of [["requisitos", d.requirements?.total], ["práticas", d.guidance?.practices], ["provas", d.proof?.evidence_patterns], ["ameaças", d.threats?.total]])
+        if (!(v > 0)) return fail(`a travessia não traz ${k}`);
+      if (!(d.where_in_lifecycle?.phases ?? []).length) return fail("sem «onde no ciclo»");
+      // requisito distingue-se de orientação
+      if (!/exig|REQUISITO/i.test(d.requirements?.note ?? "")) return fail("não distingue requisito de orientação");
+      if (!/ORIENTA|não são exigíveis/i.test(d.guidance?.note ?? "")) return fail("a orientação não é marcada como tal");
+      if (!/manual-grounded/i.test(d.provenance?.note ?? "")) return fail("sem proveniência manual-grounded");
+      // ANTIPADRÕES: banda própria; zero é DECLARADO, nunca mudo
+      if (!d.anti_patterns) return fail("sem banda de antipadrões — «o que NÃO fazer» continua sem porta");
+      if ((d.anti_patterns.total ?? 0) === 0 && !/NENHUM antipadrão publicado[\s\S]*resolve_entities/.test(d.anti_patterns.note ?? ""))
+        return fail("zero antipadrões sem declarar onde eles estão");
+      const iac = await c.tool("explain_sbd_toe_topic", { concern: "iac" });
+      if (!iac.ok) return fail(iac.error);
+      if (!((iac.data.anti_patterns?.total ?? 0) > 0)) return fail("um tópico COM antipadrões devolve zero");
+      const ap = iac.data.anti_patterns.values[0];
+      for (const k of ["antipattern_id", "risk", "chapters"]) if (!(k in ap)) return fail(`antipadrão sem ${k}`);
+      // o nível ANOTA, não filtra
+      const semNivel = await c.tool("explain_sbd_toe_topic", { concern: "iac" });
+      const comNivel = await c.tool("explain_sbd_toe_topic", { concern: "iac", risk_level: "L1" });
+      if (!comNivel.ok) return fail(comNivel.error);
+      if (comNivel.data.requirements.total !== semNivel.data.requirements.total)
+        return fail(`o risk_level FILTROU (${semNivel.data.requirements.total} → ${comNivel.data.requirements.total}) — devia só anotar`);
+      if (!comNivel.data.your_level) return fail("o nível dado não produziu anotação");
+      if (!comNivel.data.requirements.values.some((x) => "applies_to_your_level" in x)) return fail("sem anotação por requisito");
+      // FRONTEIRA: onde o nível é legítimo continua OBRIGATÓRIO
+      const sel = await c.tool("select_sbd_toe_requirements", { concerns: ["auth"] });
+      if (sel.ok) return fail("o select passou a aceitar chamada sem risk_level — a fronteira quebrou");
+      return ok(`CONSULT sem nível: ${d.requirements.total} requisitos, ${d.guidance.practices} práticas, ${d.proof.evidence_patterns} provas, ${d.threats.total} ameaças, ${d.where_in_lifecycle.phases.length} fases; antipadrões com banda própria (${iac.data.anti_patterns.total} em iac, zero DECLARADO em secrets); nível anota e não filtra; select continua a exigi-lo`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

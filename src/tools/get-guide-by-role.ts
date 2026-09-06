@@ -83,6 +83,15 @@ export interface AssignmentSlim {
   phase: string;
   canonical_phase: string;
   action: string;
+  /**
+   * 0.20.0-beta.35 — a PROPORCIONALIDADE existe no bundle e não era servida.
+   *
+   * É prosa autorada que nomeia quem valida/aprova ao nível («…com validação formal por
+   * AppSec Engineer»), e é o que o Manual tem de mais próximo de «quem decide o quê». Vem
+   * servida COMO ESTÁ: o Manual não publica uma taxonomia decide-vs-delega, e inventar uma
+   * seria o oposto de tudo o que esta linha construiu.
+   */
+  proportionality?: string;
   artifacts: string[];
   user_story?: {
     us_id?: string;
@@ -354,6 +363,7 @@ function slimAssignment(assignment: AssignmentWithStory, includeDetail: boolean)
     ...(assignment.practice?.label ? { practice_label: assignment.practice.label } : {}),
     role: assignment.role,
     canonical_role: assignment.canonical_role,
+    ...(assignment.proportionality ? { proportionality: assignment.proportionality } : {}),
     phase: assignment.phase,
     canonical_phase: assignment.canonical_phase,
     action: assignment.action,

@@ -79,6 +79,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 | v0.20.0-beta.5 | 62a1eda (`62a1eda3982147e44369c8a9271ca3697af2680f`; annotated tag object `5165a04a`) | 2026-08-31 | formal KG `v1.7.0` (`29156b86…`, contract v1.14, ontology v2.2, Manual v1.7.1) — same pin and content as stable v0.10.4 | `beta` (superseded) |
 | v0.20.0-beta.6 | 322c38f (`322c38f4dc440aad40bf110b8e20d3d40f623318`; annotated tag object `71098136`) | 2026-08-31 | formal KG `v1.7.0` + MP1 selection operation (= stable 0.11.0 → `102b8166`) | `beta` (superseded) |
 | v0.20.0-beta.7 | 4256ee0 (`4256ee0f09386a45e69012ec565375965f49b0de`; annotated tag object `6e75ef23`) | 2026-08-31 | formal KG `v1.9.0` (`11153c85…`, contract v1.15, 273/29 FIL/PRI — zero-delta over the verified v1.8.0 dev-build) | `beta` (formal batch, «3 sims») |
+| v0.20.0-beta.35 | PENDING (tag commit registado ao fechar) | 2026-09-06 | GR-05 fechado: `explain_sbd_toe_topic` (leitura CONSULT) com banda própria para os 26 ANTIPADRÕES e o `risk_level` a ANOTAR em vez de exigir — fronteira mantida na selecção/prepare/capacidade. **GR-05: SERVIDO-MAL → SERVIDO**; GR-04 fica SERVIDO-MAL e é ACHADO DE CONTEÚDO (o bundle não publica decide-vs-delega; serve-se a `proportionality` que existe) | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.34 | 4f56bbe (`4f56bbe29cba92696324faa2be27e8857b709bbd`) | 2026-09-06 | CAPACIDADE: `get_sbd_toe_chapter_capability` (99 KPIs com thresholds por nível + artefactos), ciclo fechado com o assess nos dois sentidos, leitura IMPL vs GUIDE declarada na resposta e no guia. **GR-01 no Eixo I: NÃO SERVIDO → SERVIDO**; o «0 artefactos» era defeito da SONDA (o brief servia 29); lacuna do checklist declarada | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.33 | f2262f8 (`f2262f81d8bc83cb8ba253c3ad38f50580676ef3`) | 2026-09-06 | PLAYBOOKS com caminho próprio: `get_sbd_toe_playbook` (20 playbooks + 450 secções que o bundle já publicava e só eram alcançáveis por retrieval NÃO-NORMATIVO); autoridade servida, exemplo ilustrativo em banda separada, delimitação obrigatória, frameworks sem cross-check declarados com o roadmap do Manual, ligação nos dois sentidos. **GR-02 no Eixo I: NÃO SERVIDO → SERVIDO** | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.32 | aad6ea7 (`aad6ea768aab79e0d9ed9689ea4edfa4fd9aca9b`) | 2026-09-06 | EIXO I (leituras): medição implementada no runner + PRIMEIRA BASELINE contra o oráculo novo do lead (golden-reading-cases.md v1) — 1 SERVIDO · 5 SERVIDO-MAL · 0 NÃO SERVIDO; nada corrigido (a baseline é o produto); o controlo positivo apanhou um falso positivo da SONDA, não do servidor | `beta` (`latest` = 0.19.4, estável inalterada) |
@@ -111,7 +112,16 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.34 → `4f56bbe29cba92696324faa2be27e8857b709bbd` (2026-09-06; `release.yml` run 34051699997 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.34` = `beta`, gitHead igual; GitHub pre-release) dá caminho à MEDIDA DE
+**Beta line:** v0.20.0-beta.35 → PENDING (2026-09-06; tag e npm ao fechar) fecha a leitura CONSULT: a
+pergunta de CONHECIMENTO estava a ser servida por superfícies de SELECÇÃO, e daí vinham as duas peças em
+falta do GR-05. `explain_sbd_toe_topic` atravessa o Manual (requisitos com `applies_at`, orientação,
+provas, ameaças, ANTIPADRÕES e onde no ciclo), dá banda própria aos 26 antipadrões — com as ligações que
+o bundle tem, declaradas como poucas, e o zero DECLARADO quando o tópico não tem — e aplica a regra do
+programa: **o nível ANOTA, não filtra**. A fronteira ficou explícita e testada: o `risk_level` continua
+OBRIGATÓRIO na selecção, no prepare e na capacidade. **GR-05: SERVIDO-MAL → SERVIDO (7/7)**; o GR-04
+fica em SERVIDO-MAL porque a peça que falta é de CONTEÚDO — o bundle não publica taxonomia
+decide-vs-delega, e serve-se a `proportionality` que existe sem a fazer passar pelo que não é.
+Prior: v0.20.0-beta.34 → `4f56bbe29cba92696324faa2be27e8857b709bbd` (2026-09-06; `release.yml` run 34051699997 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.34` = `beta`, gitHead igual; GitHub pre-release) dá caminho à MEDIDA DE
 CAPACIDADE — a peça central da leitura IMPL, que a medição do Eixo I tinha dado como sem caminho. As 99
 métricas já estavam publicadas com thresholds por nível e só o `assess_implementation` lhes tocava, para
 avaliar KPIs que o CHAMADOR trazia; a superfície nova publica os que o MANUAL define, com
@@ -401,6 +411,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.35 registered (leitura CONSULT com antipadrões e nível que anota; GR-05 sobe a SERVIDO; GR-04 declarado achado de conteúdo; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.34 tag commit recorded (`4f56bbe2`); npm `beta` publish + GitHub pre-release confirmed (run 34051699997); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.34 registered (vista IMPL com KPIs e thresholds por nível; GR-01 sobe a SERVIDO no Eixo I; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.33 tag commit recorded (`f2262f81`); npm `beta` publish + GitHub pre-release confirmed (run 34050890354); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |

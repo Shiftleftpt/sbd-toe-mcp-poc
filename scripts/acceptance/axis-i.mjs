@@ -285,7 +285,14 @@ export const readingCases = [
       const pieces = [
         piece("user stories aplicáveis ao papel", checklist.length > 0 || assignments.length > 0, `${checklist.length} histórias / ${assignments.length} atribuições`),
         piece("o momento no ciclo", withPhase > 0, `${withPhase} atribuições com fase`),
-        piece("o que o PO decide vs o que delega", false, "não publicado como dado (nem no assignment nem na história)"),
+        piece(
+          // O Manual NÃO publica uma taxonomia decide-vs-delega. Publica `proportionality`:
+          // prosa autorada que nomeia quem valida/aprova ao nível. Servi-la é honesto;
+          // contá-la como a peça pedida seria ajustar a medida ao trabalho feito.
+          "o que o PO decide vs o que delega",
+          false,
+          `não publicado como dado — o bundle tem \`proportionality\` (${assignments.filter((a) => a.proportionality).length}/${assignments.length} atribuições, prosa que nomeia quem valida) e NENHUMA taxonomia de decisão. ACHADO DE CONTEÚDO, não de serving.`
+        ),
         piece(
           "a evidência que fica",
           checklist.some((x) => JSON.stringify(x).toLowerCase().includes("dod") || JSON.stringify(x).toLowerCase().includes("evid")),
@@ -310,7 +317,14 @@ export const readingCases = [
     async probe(client) {
       const used = [];
       const notes = [];
-      // pergunta de conhecimento: sem tarefa e sem projecto
+      /**
+       * 0.20.0-beta.35: a leitura de CONHECIMENTO tem superfície própria e NÃO exige nível —
+       * a sonda passa a fazer a pergunta como o oráculo a escreve: sem tarefa, sem projecto
+       * e SEM risk_level.
+       */
+      const topic = await client.tool("explain_sbd_toe_topic", { concern: "secrets" });
+      used.push("explain_sbd_toe_topic");
+      const t = topic.ok ? topic.data ?? {} : {};
       const consult = await client.tool("consult_security_requirements", { risk_level: "L2", concerns: ["secrets"] });
       used.push("consult_security_requirements");
       const cd = consult.ok ? (consult.data?.data ?? consult.data ?? {}) : {};
@@ -323,24 +337,38 @@ export const readingCases = [
       used.push("get_sbd_toe_verification_matrix");
       const guide = await client.tool("get_guide_by_role", { risk_level: "L2", phase: "build" });
       used.push("get_guide_by_role");
-      const requiresLevel = !consult.ok && /risk_level/i.test(String(consult.error ?? ""));
+      // a peça é «não exigir nível para conhecimento»: mede-se na superfície de conhecimento
+      const knowledgeNeedsLevel = !topic.ok || (t.status !== undefined && /risk_level/i.test(JSON.stringify(t)));
+      const requiresLevel = knowledgeNeedsLevel;
       const pieces = [
-        piece("requisitos", (cd.requirements ?? []).length > 0, `${(cd.requirements ?? []).length} requisitos`),
+        piece(
+          "requisitos",
+          (t.requirements?.total ?? 0) > 0 || (cd.requirements ?? []).length > 0,
+          `${t.requirements?.total ?? 0} pela leitura de conhecimento (sem nível) · ${(cd.requirements ?? []).length} pelo consult`
+        ),
         piece("práticas / onde no ciclo", guide.ok, "get_guide_by_role por fase"),
         piece("provas", matrix.ok && ((matrix.data?.data ?? matrix.data ?? {}).rows ?? []).length > 0, "matriz de verificação"),
         piece("ameaças", threats.ok && (threats.data?.coverage?.total ?? 0) > 0, `${threats.data?.coverage?.total ?? 0} ameaças`),
-        piece("antipadrões (o que NÃO fazer)", antiFound, antiFound ? "via query_entities" : "sem caminho próprio para os 26 antipadrões"),
+        piece(
+          // servido = há CAMINHO e a resposta é honesta: os antipadrões do tópico, ou o zero
+          // DECLARADO com o sítio onde eles estão. Zero mudo continuaria a não servir.
+          "antipadrões (o que NÃO fazer)",
+          Boolean(t.anti_patterns) && ((t.anti_patterns.total ?? 0) > 0 || /NENHUM antipadrão publicado[\s\S]*resolve_entities/.test(t.anti_patterns.note ?? "")),
+          `banda própria: ${t.anti_patterns?.total ?? 0} neste tópico${(t.anti_patterns?.total ?? 0) === 0 ? " (zero DECLARADO, com onde encontrá-los)" : ""}`
+        ),
         piece("proveniência marcada (manual-grounded)", Boolean(cd.provenance ?? consult.data?.provenance), "provenance no payload"),
         piece(
           "não exige risk_level para uma pergunta de conhecimento",
-          !requiresLevel ? false : false,
-          "todas as superfícies normativas exigem risk_level"
+          !knowledgeNeedsLevel,
+          knowledgeNeedsLevel
+            ? "as superfícies normativas exigem risk_level"
+            : "explain_sbd_toe_topic responde sem nível; o nível ANOTA quando dado"
         ),
       ];
       const mustNotViolations = [];
       if (requiresLevel) mustNotViolations.push("exige risk_level para responder a uma pergunta de conhecimento");
-      notes.push("o `risk_level` foi fornecido pela sonda (L2) porque as superfícies o exigem — a pergunta do oráculo não o traz");
-      return { path: consult.ok, pieces, mustNotViolations, used, notes };
+      notes.push("a pergunta foi feita como o oráculo a escreve: sem tarefa, sem projecto e sem `risk_level`");
+      return { path: topic.ok || consult.ok, pieces, mustNotViolations, used, notes };
     },
   },
   {

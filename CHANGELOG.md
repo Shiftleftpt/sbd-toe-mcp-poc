@@ -3,11 +3,95 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.34 (beta line, npm `beta`) — CAPACIDADE: `get_sbd_toe_chapter_capability` dá caminho à MEDIDA de capacidade (99 KPIs com thresholds por nível + artefactos), fecha o ciclo com o assess nos dois sentidos, e declara a leitura IMPL vs GUIDE na própria resposta e no guia. GR-01 no Eixo I: NÃO SERVIDO → SERVIDO (5/5). Descoberto que o brief JÁ servia os artefactos — o zero era defeito da sonda. Declarada a lacuna do checklist. Selecção intocada; ouro H byte-idêntico.
+reasoning: v0.20.0-beta.35 (beta line, npm `beta`) — GR-05 fechado: `explain_sbd_toe_topic` dá superfície à leitura CONSULT, com banda própria para os 26 ANTIPADRÕES e com o `risk_level` a ANOTAR em vez de exigir (fronteira mantida: continua obrigatório na selecção, prepare e capacidade). GR-05: SERVIDO-MAL → SERVIDO (7/7). GR-04 fica SERVIDO-MAL e é ACHADO DE CONTEÚDO: o bundle não publica taxonomia decide-vs-delega — serve-se a `proportionality` que existe, sem inventar a que falta. Selecção intocada; ouro H byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.35 — 2026-09-06
+
+**GR-05 fechado; GR-04 declarado como achado de conteúdo.** Autorizado pelo lead («sim»,
+2026-09-06) a partir da medição #3 do Eixo I. Bundle pin INALTERADO (release KG `v1.11.0`);
+**linha estável intocada**. *GR-03 (programa/MP1-5) fora desta vaga por decisão do lead —
+não foi tocado.*
+
+### A — GR-05 (CONSULT): 5/7 → **7/7, SERVIDO**
+
+A causa das duas peças em falta era a mesma: **a leitura de CONHECIMENTO estava a ser servida
+por superfícies de SELECÇÃO**. `explain_sbd_toe_topic` dá-lhe superfície própria.
+
+**A porta dos antipadrões.** «O que NÃO fazer» é metade do valor de um manual de segurança e
+não tinha caminho. Agora vem em **banda própria** (`anti_patterns`), com o `risk` publicado,
+os capítulos, e as **ligações que o bundle tem** — `antipattern_requirement_links` (2) e
+`antipattern_threat_links` (5). São poucas e **está declarado que são poucas**: um antipadrão
+sem ligação continua a ser conhecimento válido do Manual, e não se inventam arestas. Dois
+caminhos até ele, ambos publicados: o **capítulo** onde vive e a **ligação** a um requisito
+do âmbito.
+
+E o zero é **declarado**: `secrets` não tem antipadrões (os 26 vivem em 8 capítulos de
+domínio; CFG/ENC vivem no cap. 02) — a resposta di-lo, diz onde eles estão e como pedi-los.
+Zero mudo continuaria a não servir.
+
+**O `risk_level` deixa de ser exigido para uma pergunta de conhecimento.** A regra aplicada é
+a do programa: **o nível ANOTA, não filtra.** Cada requisito traz `applies_at`; se o chamador
+declarar um nível, ganha `applies_to_your_level` e um bloco `your_level` que diz
+explicitamente que **não filtrou nada**.
+
+> **A fronteira, e é deliberada — onde NÃO mexi:** o `risk_level` continua **obrigatório** no
+> `select_sbd_toe_requirements`, no `prepare_sbd_toe_codegen_context` e na vista de
+> capacidade. Aí a pergunta é «o que se aplica ao MEU caso» e sem nível não há resposta
+> honesta. O cenário TC-F-62 **verifica a fronteira nos dois sentidos**: falha se o `select`
+> passar a aceitar chamada sem nível, e falha se o nível filtrar na leitura de conhecimento.
+
+A travessia serve requisitos (com `applies_at`), **orientação** (práticas, marcadas como não
+exigíveis por si), provas, ameaças, antipadrões e onde no ciclo — com proveniência
+`manual-grounded` e a distinção requisito/orientação explícita. Custo: **1.669 tk**
+(`secrets`), 1.794 (`iac`), 1.966 (capítulo 12).
+
+### B — GR-04 (PAPEL/MOMENTO): fica **SERVIDO-MAL**, e é ACHADO DE CONTEÚDO
+
+Verifiquei primeiro, como mandado. O bundle **não publica** uma taxonomia decide-vs-delega.
+O que publica, por atribuição, é:
+
+- **`action`** — o verbo do que o papel faz (já servido);
+- **`proportionality`** — prosa autorada que nomeia quem valida/aprova ao nível
+  («*Obrigatório — Classificação completa com validação formal por AppSec Engineer*»).
+
+**`proportionality` existia e não era servida** — passa a ser. É o mais próximo que o Manual
+tem de «quem decide o quê», e vai **como está**.
+
+**Não a contei como a peça pedida.** Servir prosa adjacente e marcar o caso como resolvido
+seria ajustar a medida ao trabalho feito — o oposto do que esta linha construiu. A peça
+continua em falta e é **achado de CONTEÚDO, não de serving**: reportado ao Orchestrator,
+não inferido.
+
+### O EIXO I, antes → depois
+
+| caso | beta.34 | **beta.35** |
+|---|---|---|
+| **GR-05** (CONSULT) | SERVIDO-MAL (5/7) | **SERVIDO** (7/7) |
+| **GR-04** (PAPEL) | SERVIDO-MAL (3/4) | SERVIDO-MAL (3/4) — peça de conteúdo |
+| GR-01 · GR-02 · GR-06 | SERVIDO | SERVIDO |
+| GR-03 | NÃO SERVIDO | NÃO SERVIDO *(fora desta vaga)* |
+
+**4 SERVIDO · 1 SERVIDO-MAL · 1 NÃO SERVIDO** (era 3/2/1). **Nenhum outro caso se moveu.**
+
+### Ensino
+
+O bloco gerado «As LEITURAS» passa a nomear a superfície CONSULT e a dizer a regra do nível:
+**obrigatório onde a pergunta é «o que se aplica ao MEU caso», opcional onde é «o que o
+Manual diz»** — «não é flexibilização: é a fronteira entre seleccionar e conhecer».
+
+### Verificação
+
+- **Suite** 799/799 · **Aceitação** 169 → **129 PASS · 17 PART · 0 FAIL**, gate **PASS**
+  (novo TC-F-62).
+- **As oito invariantes verdes** (39 asserções).
+- **Ouro do Eixo H byte-idêntico ao da beta.34** nos dois braços: `discover`
+  **10 PASS / 0 / 0**, declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu.**
+- **Orçamentos** 8/8 do `prepare` inalterados. **Gate**: stdout só JSON-RPC · exit 0 ·
+  28 tools.
 
 ## 0.20.0-beta.34 — 2026-09-06
 
