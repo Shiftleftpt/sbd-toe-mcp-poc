@@ -114,7 +114,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.37 → `6fb82c9d616fe1bf8a2cca7031b1f9c5e0ee1360` (2026-09-06; `release.yml` run PENDING publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.37` = `beta`, gitHead igual; GitHub pre-release) serve a VISTA
+**Beta line:** v0.20.0-beta.37 → `6fb82c9d616fe1bf8a2cca7031b1f9c5e0ee1360` (2026-09-06; `release.yml` run 34063791062 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.37` = `beta`, gitHead igual; GitHub pre-release) serve a VISTA
 PROCESSUAL. A montante, o Codex publicou os macro-processos como dados; faltava a última perna — o
 serving. `get_sbd_toe_macro_processes` dá a leitura PROGRAMA («por onde começamos, e com que
 sequência?»): os cinco MP com pergunta, invariante, dono e percurso de capítulos, e a ORDEM DE ADOPÇÃO
@@ -441,6 +441,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.37 tag commit recorded (`6fb82c9d`); npm `beta` publish + GitHub pre-release confirmed (run 34063791062); gitHead = tag commit; `latest` = 0.19.4 unchanged. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.37 registered (vista processual MP-01..05 + ordem de adopção; ordem só por dependency com prova de ciclo; três limites declarados; **bundle re-pin: release KG v1.11.0 → dev-build kg-v1-manual-v1.8.1-aligned-2026-09-06, sha256 f87d5b46bf10…, contract v1.18** — proveniência apenas, conteúdo inalterado; Eixo I 4·1·1 → 5·1·0). Tag on the commit introducing this row. No frozen state touched; stable line (latest 0.19.4, KG formal v1.11.0) unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.36 tag commit recorded (`b2646118`); npm `beta` publish + GitHub pre-release confirmed (run 34055196074); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.36 registered (invariantes sobre inventário vivo; conservação na banda v1.2; assess com âmbito; cadeia de activação; unmodelled_signals; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
