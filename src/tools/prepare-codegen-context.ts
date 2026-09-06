@@ -3494,7 +3494,19 @@ function applyStructuralDiet(
     repeat_call_hint: REPEAT_CALL_HINT,
     provenance: result.provenance
   };
-  if (result.debug) dieted.debug = result.debug;
+  if (result.debug) {
+    // 0.20.0-beta.26 (§17-A, menor): a nota contava o cap CLÁSSICO (returned=25) mesmo
+    // quando o nível dietado devolvia 5 — o número que o consumidor lia não era o que
+    // recebeu. Passa a contar o efectivo, dizendo qual é o cap deste `detail`.
+    dieted.debug = {
+      ...result.debug,
+      notes: result.debug.notes.map((note) =>
+        note.startsWith("evidence_patterns: total=")
+          ? `evidence_patterns: total=${evidenceTotal} returned=${evidenceKept.length} capped=${evidenceCapped} (cap efectivo do detail="${detail}": ${evidenceCap}; cap clássico: ${EVIDENCE_PATTERN_CAP})`
+          : note
+      )
+    };
+  }
   return dieted;
 }
 
@@ -3794,17 +3806,32 @@ function prepareCodegenContextCore(
     return projection;
   }
 
+  /**
+   * 0.20.0-beta.26 (§17-A) — ORDENAÇÃO POR PERTENÇA AO ÂMBITO.
+   *
+   * A ordenação anterior dava 1.0 a qualquer EP ligado a um CONTROLO directo e só 0.7 ao
+   * EP ligado a um REQUISITO do âmbito activado: a pertença ao controlo ganhava à pertença
+   * ao requisito, e o desempate por id fazia o resto. Efeito medido: numa tarefa de
+   * validação (âmbito ERR/VAL) vinham 5 em 5 EPs de fora — EP-API-002/003/007, EP-AUT-010,
+   * EP-CFG-005 — e nem um EP-VAL/EP-ERR; em `auth` funcionava por SORTE ALFABÉTICA
+   * (ACC < API < AUT < CFG < ERR < VAL). Pior: em «exigir reautenticação» o `minimal`
+   * omitia EP-AUT-009, o padrão do requisito que a tarefa NOMEIA.
+   *
+   * Isto não é um modelo de relevância — é uma comparação de PERTENÇA, e é por isso que
+   * pode ser uma invariante testável: o requisito do âmbito activado vem primeiro, depois
+   * o controlo directo, depois o derivado, e o id só desempata dentro do mesmo escalão.
+   */
   const scoredEvidencePatterns = v0.evidencePatterns.map((pattern) => {
     let score = 0;
     if (
-      pattern.maps_to_control_id &&
-      directControlIds.has(pattern.maps_to_control_id)
+      pattern.maps_to_requirement_id &&
+      activeRequirementIdsForEvidence.has(pattern.maps_to_requirement_id)
     ) {
       score = Math.max(score, 1.0);
     }
     if (
-      pattern.maps_to_requirement_id &&
-      activeRequirementIdsForEvidence.has(pattern.maps_to_requirement_id)
+      pattern.maps_to_control_id &&
+      directControlIds.has(pattern.maps_to_control_id)
     ) {
       score = Math.max(score, 0.7);
     }
@@ -4036,7 +4063,7 @@ function prepareCodegenContextCore(
         trigger: pattern.maps_to_control_id ?? pattern.maps_to_requirement_id ?? "<no anchor>",
         score,
         confidence: "deterministic",
-        reason: `Evidence pattern dropped by relevance cap (cap=${EVIDENCE_PATTERN_CAP}).`
+        reason: `Evidence pattern dropped by the scope-membership cap (cap=${EVIDENCE_PATTERN_CAP}); within a membership tier the order is by id, not by relevance.`
       })
     );
     result.debug = {

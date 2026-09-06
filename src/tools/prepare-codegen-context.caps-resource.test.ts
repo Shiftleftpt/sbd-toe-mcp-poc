@@ -251,7 +251,7 @@ describe("prepare_sbd_toe_codegen_context — caps + resource + description (v2-
       expectReadyFull(debugFull);
       const rejectedIds = new Set(
         (debugFull.debug?.rejected_candidates ?? [])
-          .filter((entry) => entry.reason.includes("relevance cap"))
+          .filter((entry) => entry.reason.includes("scope-membership cap"))
           .map((entry) => entry.produced)
       );
       const beyondClassicCap =

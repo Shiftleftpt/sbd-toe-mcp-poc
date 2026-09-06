@@ -3,11 +3,138 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.25 (beta line, npm `beta`) — adenda ao beta.24: mata explicitamente a teoria do minLevel na GERAÇÃO do guia (sobrevivia numa coluna «Presente desde» que a beta.24 introduziu) e varre o guia inteiro por afirmações que contradizem o comportamento actual: «TWO bands» (são quatro desde 0.15.0), «L1 reduz o âmbito», a doutrina pré-declarativa («a task refina»), tamanhos de resposta folclóricos (22k/36k contra 32k/47k/51k medidos), estampa de proveniência incompleta e o search_sbd_toe_manual apresentado sem a marca NÃO-NORMATIVO que a própria tool declara. Bundle e linha estável inalterados.
+reasoning: v0.20.0-beta.26 (beta line, npm `beta`) — economia e auditoria: tudo o que restava da lista do avaliador numa vaga. evidence_patterns por PERTENÇA ao âmbito (era prefixo alfabético: 5/5 fora do âmbito numa tarefa de validação); get_threat_landscape com needs_input quando todos os concerns são não-roteáveis (8,3k tk → 434 tk) e cobertura declarada na descrição; traço multi-activador; dieta do select por legenda de justificações (−21% a −58%, mesmo conjunto); denominadores nomeados e definidos; obligation_ids no overlay; P1-3/P1-4 (cobertura parcial declarada, gap inexistente deixa de ser declarado); cap. 01 explicado. Selecção INALTERADA, ouro byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.26 — 2026-09-06
+
+**Economia e auditoria** — tudo o que restava da lista do avaliador, numa vaga. Autorizado
+pelo lead («junta o que resta», 2026-09-06); itens em §17/§18 da design note. Bundle pin
+INALTERADO (release KG `v1.11.0`); **linha estável intocada**.
+
+> As três propriedades estruturais (motor honra o vocabulário · fidelidade por invariante ·
+> documentação derivada) estão fechadas e guardadas. **Nenhum item desta vaga lhes toca —
+> e a selecção não se mexeu: o ouro é byte-idêntico ao da beta.25 nos dois braços.**
+
+### 1 — `evidence_patterns` por PERTENÇA ao âmbito (o de maior retorno)
+
+A causa não era o cap: era a ordenação. Um EP ligado a um **CONTROLO directo** pontuava
+`1.0` e um ligado a um **REQUISITO do âmbito activado** apenas `0.7` — a pertença ao
+controlo ganhava à pertença ao requisito, e o id desempatava o resto. As duas sondas do
+avaliador, reproduzidas:
+
+| sonda | antes | depois |
+|---|---|---|
+| A — `concerns:["validation"]` (âmbito ERR/VAL), cap 5 | **5 em 5 FORA do âmbito**: EP-API-002, EP-API-003, EP-API-007, EP-AUT-010, EP-CFG-005 — nem um EP-VAL/ERR | **5 em 5 DENTRO**: EP-ERR-001…005 |
+| B — `concerns:["auth"]` (âmbito ACC/AUT/SES) | todos dentro, **por sorte alfabética** (`ACC < API < AUT < CFG < ERR < VAL`) | todos dentro, **por pertença** — a sorte deixou de ser necessária |
+
+A ordem é agora: requisito do âmbito → controlo directo → controlo derivado, e o id só
+desempata **dentro** do mesmo escalão. É comparação de pertença, não modelo de relevância —
+e é por isso que virou invariante testável (monotonia: nenhum EP de fora antes de um de
+dentro, em `minimal`/`standard`/`full`).
+
+**A promessa falsa foi corrigida com ela:** a descrição dizia «ranked by relevance to the
+activated scope». Passa a declarar a ordenação real **e** a avisar que, dentro de um
+escalão, o id **não é ranking**. E o menor do mesmo achado: `debug.notes` contava o cap
+clássico (`returned=25`) quando o nível dietado devolvia 5 — passa a contar o efectivo,
+nomeando o cap do `detail`.
+
+**O que esta vaga NÃO resolveu, e porquê:** em «exigir reautenticação», `EP-AUT-009`
+continua fora do `minimal`. Verificado: **é** tier-1 (o requisito AUT-009 está no âmbito),
+mas é o 18.º de **25 EPs igualmente no âmbito**, e o cap de 5 corta. Promovê-lo exigiria
+ranking pelo TEXTO da tarefa — exactamente o que a beta.21 matou e o contrato v1.18 proíbe.
+Fica declarado em vez de resolvido com um modelo de relevância pela porta das traseiras.
+
+### 2 — `get_threat_landscape`: parar em vez de cobrar
+
+Quando **todos** os concerns declarados são não-roteáveis, o roteamento caía no âmbito
+largo e devolvia ~25 ameaças de governação — **8,3k tokens, zero úteis** — para acabar a
+dizer que não sabia. Agora responde `needs_input` a **434 tk (−95%)**, com a lista do que
+resolve e o encaminhamento para `select_sbd_toe_requirements` (onde os requisitos existem).
+
+A **cobertura está declarada na DESCRIÇÃO da tool**, gerada da mesma fonte derivada
+(13 de 24 concerns, nomeados) — não volta a ser folclore. E as ameaças declaram a sua
+**ordem**: por `mitigation_confidence` e depois `chapter_id`, com aviso explícito de que
+**não é ranking de relevância** e a paginação segue essa ordem.
+
+> A garantia da beta.23 mantém-se **literal**: o payload de `needs_input` traz também
+> `unsupported_concerns`. Quem aprendeu a lê-lo continua a lê-lo — uma promessa cumprida
+> não se retira por se ter arranjado melhor. (Foram os dois cenários TC-F-40/43 que o
+> apanharam quando o `needs_input` a substituiu em vez de a acompanhar.)
+
+### 3 — Traço multi-activador
+
+`concerns:["iac"]` + `technologies:["containers"]` activavam ambos o cap. 08 e o traço
+registava só o primeiro. Cada capítulo passa a trazer **`activated_by[]` com todos** os
+pares origem+gatilho (`source`/`trigger` mantêm-se, com o primeiro, para compatibilidade).
+Testado como propriedade sobre **todos** os pares tecnologia×concern que partilham capítulo.
+
+### 4 — Dieta do `select`
+
+Medido nesta linha: numa selecção de 115 requisitos o `selection_trace` era **6.077 tk de
+13.429 (45%)** e continha **12 entradas distintas para 115** — a mesma justificação
+verbatim ×13. `detail` (`full` default e byte-idêntico · `standard` · `minimal`) move as
+justificações distintas para `selection_trace_legend` e deixa cada item a referi-las:
+
+| caso | full | standard | minimal |
+|---|---|---|---|
+| 115 req (6 concerns, L3) | 13.503 tk | 8.076 (**−40%**) | 7.015 (**−48%**) |
+| baseline L3 (121 req) | 12.157 tk | 6.066 (**−50%**) | 5.108 (**−58%**) |
+| auth L2 (27 req) | 5.497 tk | 4.322 (−21%) | 4.140 (−25%) |
+
+**Dieta de serialização, nunca de conteúdo** — e isso é invariante, não promessa: a suite
+reconstrói o `selection_trace` clássico a partir da legenda e verifica-o **byte a byte**,
+e confirma que `full` continua idêntico ao comportamento anterior.
+
+### 5 — Denominadores nomeados e definidos
+
+`meta.eligible` valeu 121 e 187 na mesma sessão e 273 só aparecia em prosa. Agora cada um
+tem nome, valor e definição no payload — e `meta.eligible_denominator` diz qual é:
+
+| denominador | L2 (auth) | o que é |
+|---|---|---|
+| `baseline_at_level` | 114 | requisitos BASE do cap. 02 ao nível — o piso |
+| `activated_at_level` | 114 | baseline ∪ capítulos activados ∪ categorias prometidas — **é o `meta.eligible`** |
+| `catalogue_at_level` | 247 | tudo o que se aplica ao nível, activado ou não |
+| `catalogue_total` | 273 | catálogo inteiro; **não é denominador de nada aqui** — vem nomeado para não voltar a aparecer só em prosa |
+
+As desigualdades (`baseline ≤ activado ≤ catálogo do nível ≤ total`) e a identidade
+`meta.eligible == activated_at_level` são propriedade testada. Custo: 259 tk.
+
+### 6, 7, 8 — Overlay, cobertura parcial, cap. 01
+
+- **`obligation_ids`** por área no `map_sbd_toe_regulatory_activation` (antes só
+  `obligation_count`, e o consumidor tinha de ir ao `resolve_entities` adivinhar quais). E
+  `example_citation_note` diz o que a citação **é**: `"30"` é o **artigo do diploma**, não
+  um id do manual nem uma contagem.
+- **P1-3**: `coverage_gaps` passa a declarar a **ausência PARCIAL de campo** —
+  `evidence_patterns_without_validation_method` apanha exactamente EP-ENC-001/003/006/007:
+  a linha existe, o método que a torna verificável não, e antes o payload dizia **0
+  lacunas**. Meia cobertura declarada como total era a falha.
+- **P1-4**: com `n=0` a nota deixa de declarar lacuna e encaminhamento que não existem.
+- **cap. 01** (achado da beta.24): **não ganha activador**. Dar-lhe um mudaria a selecção
+  de todas as chamadas, e nenhum item desta vaga pode mexer na selecção. Fica **explicado**:
+  as suas categorias (`CLA` — e as irmãs `GOV`/`TRN`) não pertencem a nenhum concern porque
+  o vocabulário activa por **superfície de engenharia**, e a classificação de risco é o
+  procedimento que PRODUZ o `risk_level` que todas as outras respostas já usam. Não é
+  lacuna nem «não aplicável» — e a banda dá a porta que existe
+  (`map_sbd_toe_applicability` / `get_sbd_toe_chapter_brief`).
+
+### Verificação
+
+- **Suite** 780/780 (52 ficheiros), com `beta26-invariants.test.ts` (6 propriedades: EP por
+  pertença, traço multi-activador ×2, denominadores, reconstrução da dieta, `full` intacto).
+- **Aceitação** 156 → **116 PASS · 17 PART · 0 FAIL**, gate **PASS** (novos TC-F-47/48/49).
+- **Ouro byte-idêntico ao da beta.25** nos dois braços: `discover` **10 PASS / 0 / 0**,
+  declarativo **6 PASS / 4 PART / 0 FAIL**. A selecção não se mexeu.
+- **Orçamentos**: 8/8 gates hard do `prepare` (fixture1 18.741/20.400 · 6.094/6.500 ·
+  5.459/5.800 · 3.658/3.870; fixture2 25.161/26.700 · 9.087/9.200 · 8.372/8.450 ·
+  4.802/4.840) — ligeiramente ABAIXO da beta.25, pelo conteúdo dos EPs reordenados.
+- **Gate**: stdout só JSON-RPC · exit 0 · `package_version` = `sbd://toe/version` =
+  `provenance.server`.
 
 ## 0.20.0-beta.25 — 2026-09-06
 

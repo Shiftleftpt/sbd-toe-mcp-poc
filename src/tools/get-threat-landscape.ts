@@ -362,7 +362,7 @@ export function _resolveThreatLandscape(
       activeBundles: [...activeBundles].sort(),
       concernsApplied: consult.meta.concernsApplied,
       note:
-        "Threat applicability resolves from consult-mode requirement scope; the defining chapters of activated controls count as in-scope (G-b 2026-08-30). mitigation_confidence uses direct control references first, then chapter/bundle or antipattern-derived alignment, then heuristic domain fallback.",
+        "Threat applicability resolves from consult-mode requirement scope; the defining chapters of activated controls count as in-scope (G-b 2026-08-30). mitigation_confidence uses direct control references first, then chapter/bundle or antipattern-derived alignment, then heuristic domain fallback. ORDEM (0.20.0-beta.26): as ameaças vêm ordenadas por mitigation_confidence e, dentro do mesmo grau, por chapter_id — NÃO é um ranking de relevância para a tua tarefa, e a paginação segue essa mesma ordem. Não presumas que as primeiras são as mais relevantes; para reduzir o âmbito, declara `concerns`.",
     },
   };
 }
@@ -387,6 +387,65 @@ export function handleGetThreatLandscape(
     : [];
   const support = declaredConcerns.length > 0 ? threatConcernSupport() : { supported: [], unsupported: [] };
   const unsupportedHere = declaredConcerns.filter((c) => support.unsupported.includes(c));
+  /**
+   * 0.20.0-beta.26 (§17-C) — quando TODOS os concerns declarados são não-roteáveis, o
+   * roteamento cai para o âmbito largo e devolve ~25 ameaças de GOVERNAÇÃO (MT-001..025,
+   * 8,4k tk) que não têm nada a ver com o que foi pedido. Cobrar esse payload para dizer
+   * «não sei» é o oposto do contrato: agora pede DECLARAÇÃO, com a lista do que resolve.
+   */
+  const allUnsupported = declaredConcerns.length > 0 && unsupportedHere.length === declaredConcerns.length;
+  if (allUnsupported) {
+    return {
+      provenance: {
+        kg: servedKgReleaseTag(),
+        server: servingServerVersion(),
+        content_type: "derived",
+        produced_by: "threat_resolution_pipeline",
+        source_data: "runtime/v1/manual_threat_mitigation.jsonl + activation vocabulary",
+        note: "Pedido de DECLARAÇÃO, não resultado: nenhum dos concerns declarados é roteável por este mapa."
+      },
+      risk_level: full.risk_level,
+      threats: [],
+      /**
+       * A garantia da beta.23 mantém-se LITERAL: quem aprendeu a ler
+       * `unsupported_concerns` continua a lê-lo. O `needs_input` acrescenta-se — não
+       * substitui. Uma promessa cumprida não se retira por se ter arranjado melhor.
+       */
+      unsupported_concerns: {
+        values: [...new Set(unsupportedHere)].sort(),
+        supported_values: support.supported,
+        note:
+          `Concerns VÁLIDOS do vocabulário que o mapa de ameaças não resolve: ${[...new Set(unsupportedHere)].sort().join(", ")}. ` +
+          "Não são zero ameaças — são zero ameaças ROTEÁVEIS por este mapa. Como são TODOS os que declaraste, " +
+          "a resposta é um pedido de declaração (`needs_input`) em vez de um panorama largo que não pediste. " +
+          "NÃO concluas ausência de ameaças a partir desta resposta: para estes concerns usa select_sbd_toe_requirements."
+      },
+      needs_input: {
+        reason:
+          `Nenhum dos concerns declarados (${[...new Set(declaredConcerns)].sort().join(", ")}) é roteável pelo mapa de ameaças. ` +
+          "Sem esta paragem a resposta seria o âmbito largo — ameaças de GOVERNAÇÃO sem relação com o que pediste, " +
+          "a custo de payload cheio, para acabar a dizer que não sabe. Zero útil não é uma resposta.",
+        supported_concerns: support.supported,
+        note:
+          "Estes concerns TÊM requisitos — o que falta é roteamento de AMEAÇAS. Para eles usa " +
+          "`select_sbd_toe_requirements` com os mesmos concerns; para ameaças, declara um valor de `supported_concerns` " +
+          "(ou chama sem `concerns` se queres mesmo o panorama largo, sabendo que é largo).",
+        next: [
+          { intent: "Requisitos dos concerns que declaraste (existem)", tool: "select_sbd_toe_requirements", with: `risk_level="${full.risk_level}", concerns=[${declaredConcerns.map((c) => `"${c}"`).join(", ")}]`, kind: "structural" as const },
+          { intent: "Ameaças de um concern que este mapa resolve", tool: "get_threat_landscape", with: `risk_level="${full.risk_level}", concerns=["${support.supported[0] ?? "auth"}"]`, kind: "structural" as const }
+        ]
+      },
+      meta: {
+        threatCount: 0,
+        activeChapters: [],
+        activeBundles: [],
+        concernsApplied: declaredConcerns,
+        note: "needs_input: nenhum concern roteável declarado. Nada foi resolvido — e por isso nada é cobrado."
+      },
+      coverage: { total: 0, returned: 0, offset: 0, nextOffset: null, hasMore: false }
+    } as unknown as GetThreatLandscapeResult;
+  }
+
   const shaped = {
     ...full,
     ...(unsupportedHere.length > 0

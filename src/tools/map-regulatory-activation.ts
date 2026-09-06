@@ -31,8 +31,12 @@ export interface ActivatedArea {
   mapping_count: number;
   /** Distinct obligations of the framework that touch this area. */
   obligation_count: number;
+  /** 0.20.0-beta.26: os ids das obrigações desta área — poupa a viagem ao resolve_entities. */
+  obligation_ids: string[];
   /** Mapping counts broken down by target type (Practice/Requirement/Control/…). */
   by_target_type: Record<string, number>;
+  /** 0.20.0-beta.26: diz o que a citação É (artigo do diploma), para "30"/"25" não passarem por contagens. */
+  example_citation_note?: string;
   /** A representative citation from the framework for this area (first non-empty). */
   example_citation?: string;
 }
@@ -143,8 +147,21 @@ export function handleMapRegulatoryActivation(
       chapter,
       mapping_count: g.count,
       obligation_count: g.obligations.size,
+      /**
+       * 0.20.0-beta.26 (§17-D): os IDs, não só a contagem. Antes o consumidor via
+       * `obligation_count: 7` e tinha de ir ao `resolve_entities` adivinhar quais —
+       * uma viagem inteira para obter o que já estava calculado aqui.
+       */
+      obligation_ids: [...g.obligations].sort(),
       by_target_type: g.byType,
-      ...(g.citation ? { example_citation: g.citation } : {})
+      ...(g.citation
+        ? {
+            example_citation: g.citation,
+            example_citation_note:
+              `Citação do texto do framework (ex.: "${g.citation}" é o ARTIGO/secção do diploma, não um id do manual nem uma contagem). ` +
+              "Os ids das obrigações estão em `obligation_ids`."
+          }
+        : {})
     }));
 
   const distinctObligations = new Set(mappings.map((m) => m.obligation_id).filter(Boolean)).size;

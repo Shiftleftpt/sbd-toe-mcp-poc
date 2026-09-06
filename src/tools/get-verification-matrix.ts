@@ -100,6 +100,14 @@ export interface VerificationMatrixData {
   coverage_gaps: {
     requirements_without_evidence_pattern: number;
     sample: string[];
+    /**
+     * 0.20.0-beta.26 (P1-3, de beta.22): a ausência PARCIAL de campo também é lacuna.
+     * EP-ENC-001/003/006/007 existem e não trazem `validation_method`: a linha aparece,
+     * a coluna que a torna verificável não — e `coverage_gaps` dizia 0. Ter o padrão sem
+     * o método é meia cobertura, e meia cobertura declarada como total é a falha.
+     */
+    evidence_patterns_without_validation_method: number;
+    evidence_patterns_without_validation_method_sample: string[];
     note: string;
   };
 }
@@ -173,6 +181,11 @@ export function handleGetVerificationMatrix(
     (r) => r.applicable_levels[riskLevel]
   );
   const missing = applicableReqs.filter((r) => !epReqIds.has(r.requirement_id)).map((r) => r.requirement_id);
+  // P1-3: EPs desta resposta que não publicam `validation_method` — ausência PARCIAL.
+  const withoutMethod = rows
+    .filter((r) => typeof r.validation_method !== "string" || r.validation_method.length === 0)
+    .map((r) => r.evidence_pattern_id)
+    .sort();
 
   const offsetArg = args["offset"];
   const limitArg = args["limit"];
@@ -204,9 +217,17 @@ export function handleGetVerificationMatrix(
       coverage_gaps: {
         requirements_without_evidence_pattern: missing.length,
         sample: missing.slice(0, 10),
+        evidence_patterns_without_validation_method: withoutMethod.length,
+        evidence_patterns_without_validation_method_sample: withoutMethod.slice(0, 10),
         note:
-          `${missing.length} of ${applicableReqs.length} ${riskLevel}-applicable requirements have no ` +
-          `EvidencePattern yet — declared gap; routed to Codex for verification-reference completion.`
+          // P1-4 (de beta.22): com n=0 não se declara lacuna nem encaminhamento que não existem.
+          (missing.length === 0
+            ? `Todos os ${applicableReqs.length} requisitos aplicáveis a ${riskLevel} têm EvidencePattern — sem lacuna a declarar e sem encaminhamento em curso.`
+            : `${missing.length} of ${applicableReqs.length} ${riskLevel}-applicable requirements have no ` +
+              `EvidencePattern yet — declared gap; routed to Codex for verification-reference completion.`) +
+          (withoutMethod.length > 0
+            ? ` COBERTURA PARCIAL: ${withoutMethod.length} EvidencePattern desta resposta não publicam \`validation_method\` (${withoutMethod.slice(0, 4).join(", ")}${withoutMethod.length > 4 ? ", …" : ""}) — a linha existe, o método de validação não. Não os apresentes como verificáveis.`
+            : "")
       }
     },
     provenance: {

@@ -18,6 +18,74 @@ import type { Affordance } from "../serving/protocol-envelope.js";
 
 const DEFAULT_LIMIT = 100;
 
+/**
+ * 0.20.0-beta.26 — DIETA DO `select` (§17-D).
+ *
+ * «A protecção existe onde o payload é pequeno (consult maxItems 5) e falta onde é
+ * grande»: 166 requisitos custavam ~40k tk com 60-70% de texto repetido. Medido nesta
+ * linha: numa selecção de 115 requisitos o `selection_trace` era 6.077 tk de 13.429 (45%)
+ * e continha **12 entradas distintas para 115** — a mesma justificação verbatim ×13.
+ *
+ * A dieta é de SERIALIZAÇÃO, nunca de conteúdo: nem um id nem uma justificação se perdem.
+ * As entradas distintas passam para uma legenda (`selection_trace_legend`) e cada item
+ * refere-a. É a mesma regra do epic v2-token-diet: muda a codificação, não o conjunto.
+ */
+export type SelectDetail = "full" | "standard" | "minimal";
+
+interface TraceLegendEntry {
+  ref: string;
+  layer: string;
+  source: string;
+  trigger: string;
+  score: number;
+  basis?: string;
+  reason: string;
+}
+
+function dietSelected(
+  selected: SelectionResult["selected"],
+  detail: SelectDetail
+): { rows: unknown[]; legend?: TraceLegendEntry[]; note?: string } {
+  if (detail === "full") return { rows: selected };
+  const legend: TraceLegendEntry[] = [];
+  const byKey = new Map<string, string>();
+  const refFor = (entry: SelectionResult["selected"][number]["selection_trace"][number]): string => {
+    const key = JSON.stringify(entry);
+    const seen = byKey.get(key);
+    if (seen !== undefined) return seen;
+    const ref = `T${legend.length + 1}`;
+    byKey.set(key, ref);
+    legend.push({ ref, ...(entry as unknown as Omit<TraceLegendEntry, "ref">) });
+    return ref;
+  };
+  const rows = selected.map((item) => {
+    const refs = item.selection_trace.map(refFor);
+    const base: Record<string, unknown> = {
+      requirement_id: item.requirement_id,
+      name: item.name,
+      category: item.category,
+      trace: refs
+    };
+    if (detail === "standard") {
+      base["type"] = item.type;
+      base["source_chapter"] = item.source_chapter;
+    }
+    return base;
+  });
+  return {
+    rows,
+    legend,
+    note:
+      `DIETA de serialização (detail="${detail}"): as ${legend.length} justificações DISTINTAS vivem em ` +
+      "`selection_trace_legend` e cada item refere-as em `trace` — nenhum id e nenhuma justificação se " +
+      "perdem, muda só a codificação. Reconstrói o `selection_trace` clássico substituindo cada ref pela " +
+      "entrada da legenda com o mesmo `ref`." +
+      (detail === "minimal"
+        ? " Em `minimal` saem também `type` e `source_chapter` (deriváveis: `trace_sbd_toe_requirement_sources(requirement_ids)`); pede `detail=\"standard\"` para os ter inline."
+        : "")
+  };
+}
+
 export interface SelectRequirementsOutput {
   provenance: {
     kg: string;
@@ -28,8 +96,12 @@ export interface SelectRequirementsOutput {
     note: string;
   };
   risk_level: string;
+  /** 0.20.0-beta.26: nível de serialização efectivo desta resposta. */
+  detail: SelectDetail;
+  /** Presente fora de `detail="full"`: as justificações distintas, referidas por `trace`. */
+  selection_trace_legend?: TraceLegendEntry[];
   selection: {
-    selected: SelectionResult["selected"];
+    selected: SelectionResult["selected"] | unknown[];
     narrowed_out: SelectionResult["narrowed_out"];
     excluded_by_level: SelectionResult["excluded_by_level"];
   };
@@ -91,7 +163,9 @@ export interface SelectRequirementsOutput {
     narrowed_out_requirements: number;
     excluded_by_level_requirements: number;
   };
-  meta: { eligible: number; note: string; notes: string[] };
+  meta: { eligible: number; eligible_denominator: string; note: string; notes: string[] };
+  /** 0.20.0-beta.26 — cada denominador com nome, valor e definição. */
+  denominators: SelectionResult["denominators"];
   next?: Affordance[];
 }
 
@@ -164,6 +238,14 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
   const limitArg = typeof args["limit"] === "number" ? Math.max(1, Math.floor(args["limit"] as number)) : DEFAULT_LIMIT;
   const page = result.selected.slice(offsetArg, offsetArg + limitArg);
   const nextOffset = offsetArg + page.length < result.selected.length ? offsetArg + page.length : null;
+  const detailArg = str("detail");
+  if (detailArg !== undefined && !["full", "standard", "minimal"].includes(detailArg)) {
+    throw Object.assign(new Error(`Invalid detail: "${detailArg}". Allowed: full, standard, minimal.`), {
+      rpcError: { code: -32602, message: `Invalid detail: "${detailArg}". Allowed: full, standard, minimal.` }
+    });
+  }
+  const detail = (detailArg ?? "full") as SelectDetail;
+  const dieted = dietSelected(page, detail);
 
   return {
     provenance: {
@@ -210,7 +292,9 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
           }
         }
       : {}),
-    selection: { selected: page, narrowed_out: result.narrowed_out, excluded_by_level: result.excluded_by_level },
+    detail,
+    ...(dieted.legend ? { selection_trace_legend: dieted.legend } : {}),
+    selection: { selected: dieted.rows, narrowed_out: result.narrowed_out, excluded_by_level: result.excluded_by_level },
     ...(result.out_of_scope_chapters ? { out_of_scope_chapters: result.out_of_scope_chapters } : {}),
     context: { activated_chapters: result.activated_chapters, activated_categories: result.activated_categories },
     activation_trace: result.activation.trace,
@@ -227,11 +311,13 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
       excluded_by_level_requirements: result.excluded_by_level.reduce((n, g) => n + g.count, 0),
       narrowed_out_requirements: result.narrowed_out.reduce((n, g) => n + g.count, 0)
     },
+    denominators: result.denominators,
     meta: {
       eligible: result.eligible_count,
+      eligible_denominator: "activated_at_level",
       note:
-        "coverage pagina `selected`; `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão.",
-      notes: result.notes
+        "coverage pagina `selected`; `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão. `eligible` é o denominador `activated_at_level` — os quatro denominadores vêm nomeados e definidos em `denominators`.",
+      notes: dieted.note ? [...result.notes, dieted.note] : result.notes
     },
     next: result.needs_input
       ? [

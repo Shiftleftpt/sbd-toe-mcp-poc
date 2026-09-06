@@ -32,7 +32,20 @@ describe("get_sbd_toe_verification_matrix", () => {
     expect(typeof r.data.coverage_gaps.requirements_without_evidence_pattern).toBe("number");
     expect(r.data.coverage_gaps.requirements_without_evidence_pattern).toBe(0);
     expect(Array.isArray(r.data.coverage_gaps.sample)).toBe(true);
-    expect(r.data.coverage_gaps.note.toLowerCase()).toContain("codex");
+    // 0.20.0-beta.26 (P1-4): com 0 lacunas a nota NAO declara lacuna nem encaminhamento
+    // que nao existem — declarar um gap inexistente era o defeito. O encaminhamento para
+    // Codex so aparece quando ha mesmo lacuna.
+    const note = r.data.coverage_gaps.note.toLowerCase();
+    if (r.data.coverage_gaps.requirements_without_evidence_pattern === 0) {
+      expect(note).not.toContain("codex");
+      expect(note).toContain("sem lacuna a declarar");
+    } else {
+      expect(note).toContain("codex");
+    }
+    // P1-3: a ausencia PARCIAL de campo e declarada (EP sem validation_method).
+    expect(typeof r.data.coverage_gaps.evidence_patterns_without_validation_method).toBe("number");
+    if (r.data.coverage_gaps.evidence_patterns_without_validation_method > 0)
+      expect(note).toContain("cobertura parcial");
   });
 
   it("reports the unhinted-pattern count (level filter authoritative when 0)", () => {

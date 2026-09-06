@@ -63,6 +63,7 @@ import {
 } from "./resources/sbd-toe-resources.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./serving/server-surface.js";
 import { buildAgentGuide } from "./serving/agent-guide.js";
+import { threatConcernSupport } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
 
@@ -1155,6 +1156,12 @@ class McpRuntime {
             type: "object",
             properties: {
               risk_level: { type: "string", enum: ["L1", "L2", "L3"], description: "Application risk level (drives the baseline)." },
+              detail: {
+                type: "string",
+                enum: ["full", "standard", "minimal"],
+                description:
+                  "Nível de SERIALIZAÇÃO da resposta (0.20.0-beta.26; default `full` = comportamento anterior, byte-idêntico). `standard` e `minimal` movem as justificações DISTINTAS do `selection_trace` para `selection_trace_legend` e deixam cada item a referi-las em `trace` — medido: −40% e −48% de payload numa selecção de 115 requisitos (12 justificações distintas para 115 entradas), com o MESMO conjunto de ids. Dieta de serialização, nunca de conteúdo: nenhum id e nenhuma justificação se perdem. `minimal` elide ainda `type` e `source_chapter` (deriváveis)."
+              },
               task_context: { type: "string", description: "CONTEXTO REGISTADO (auditoria): o enunciado da tarefa. NOME CANÓNICO desde 0.20.0-beta.24 — um campo chamado `task` convidava a ser o motor, e não é: NÃO influencia a selecção no modo declarativo. Alias `task` continua aceite (aditivo, nunca renomeámos nada); em mode='discover' o texto é motor e `task` é o nome a usar." },
               task: { type: "string", description: "ALIAS de `task_context` (compatibilidade). Em mode='discover' é o MOTOR (casamento lexical, exploratório); no modo declarativo é apenas contexto registado." },
               mode: { type: "string", enum: ["declarative", "baseline", "discover"], description: "declarative (default): responde ao DECLARADO; sem declarações devolve needs_input com vocabulário e candidatos a confirmar. baseline: baseline completa do nível, por pedido EXPLÍCITO (nunca fallback). discover: motor inferencial histórico (casamento lexical da prosa), exploratório — investigação e estudo de paráfrase." },
@@ -1235,6 +1242,9 @@ class McpRuntime {
           name: "get_threat_landscape",
           title: "Get SbD-ToE Threat Landscape",
           description:
+            `COBERTURA DECLARADA (0.20.0-beta.26): este mapa resolve ${threatConcernSupport().supported.length} dos ${DECLARED_CONCERNS.length} concerns do vocabulário — ` +
+            `${threatConcernSupport().supported.join(", ")}. ` +
+            "Qualquer outro concern é VÁLIDO e tem requisitos, mas não é roteável AQUI: vem declarado em `unsupported_concerns`, e se TODOS os declarados forem não-roteáveis a resposta é `needs_input` em vez de um payload cheio de ameaças de governação sem relação com o pedido. " +
             "Deterministic threat resolution for an application context using the SbD-ToE ontology threats pipeline. " +
             "Returns threats from the published runtime bundle relevant to the active requirement/chapter scope " +
             "(the defining chapters of activated controls count as in-scope), with structural mitigation confidence, " +
@@ -1441,7 +1451,11 @@ class McpRuntime {
             "source and reason), activated_scope, g2_context, manual_grounding, regulatory_overlay, " +
             "citation_map, completeness_report (incl. evidence-pattern relevance-cap metrics), " +
             "llm_codegen_instructions and security_rationale_template — with provenance for each section. " +
-            "Evidence patterns are ranked by relevance to the activated scope and capped (default 25) so " +
+            "Evidence patterns are ordered by MEMBERSHIP of the activated scope — first those whose "
+            + "`maps_to_requirement_id` is a requirement of the activated scope, then those of a direct "
+            + "control, then of a derived control; WITHIN each tier the order is by id, which is NOT a "
+            + "ranking: two patterns of the same tier are equally in scope and the id only makes the cut "
+            + "deterministic. Capped (default 25) so " +
             "the LLM context stays manageable; the dropped patterns are listed in debug.rejected_candidates " +
             "when debug=true. No canonical IDs are ever invented; names are surfaced only when " +
             "manual_rastreabilidade publishes them.",

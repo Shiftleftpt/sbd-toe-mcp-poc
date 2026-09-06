@@ -2591,19 +2591,6 @@
         ]
       },
       {
-        "id": "EP-ACC-009",
-        "relevance_score": 1,
-        "source": "runtime_v0",
-        "maps_to_requirement_id": "ACC-009",
-        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
-        "evidence_expectation": "Logs com avaliação de atributos. Teste com variação de contexto.",
-        "verification_logic": "Testar decisão de acesso com atributos distintos. Confirmar aplicação de política dinâmica.",
-        "expected_artifact_type_ids": [
-          "ART-log-stream-b67ee06f7e",
-          "ART-policy-report-7e52280504"
-        ]
-      },
-      {
         "id": "EP-ACC-010",
         "relevance_score": 1,
         "source": "runtime_v0",
@@ -2707,67 +2694,6 @@
         ]
       },
       {
-        "id": "EP-ARC-001",
-        "relevance_score": 1,
-        "source": "runtime_v0",
-        "maps_to_requirement_id": "ARC-001",
-        "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
-        "evidence_expectation": "Zonas de confiança identificadas e documentadas",
-        "verification_logic": "Diagrama com zonas assinaladas, justificadas e versionado em repositório",
-        "expected_artifact_type_ids": [
-          "ART-architecture-diagram-d7bc383218",
-          "ART-data-flow-diagram-5cb5415fa5"
-        ]
-      },
-      {
-        "id": "EP-ARC-006",
-        "relevance_score": 1,
-        "source": "runtime_v0",
-        "maps_to_requirement_id": "ARC-006",
-        "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
-        "evidence_expectation": "Controlos técnicos de isolamento entre domínios sensíveis",
-        "verification_logic": "Evidência de isolamento activo (políticas de rede, firewalls lógicos, segmentação de APIs); configuração testável e auditável",
-        "expected_artifact_type_ids": [
-          "ART-policy-report-7e52280504",
-          "ART-validation-evidence-79f6aaf0ec"
-        ]
-      },
-      {
-        "id": "EP-ARC-008",
-        "relevance_score": 1,
-        "source": "runtime_v0",
-        "maps_to_requirement_id": "ARC-008",
-        "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
-        "evidence_expectation": "Fluxos de dados entre zonas de confiança protegidos",
-        "verification_logic": "DFD com controlos explícitos em cada fronteira de confiança; actualizado e versionado em repositório"
-      },
-      {
-        "id": "EP-ARC-011",
-        "relevance_score": 1,
-        "source": "runtime_v0",
-        "maps_to_requirement_id": "ARC-011",
-        "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
-        "evidence_expectation": "Segmentação lógica e física entre ambientes",
-        "verification_logic": "Evidência de segregação de rede, permissões e identidade entre dev, staging e prod; documentada e verificável por auditoria",
-        "expected_artifact_type_ids": [
-          "ART-log-stream-b67ee06f7e",
-          "ART-environment-inventory-154c4568fd"
-        ]
-      },
-      {
-        "id": "EP-ARC-013",
-        "relevance_score": 1,
-        "source": "runtime_v0",
-        "maps_to_requirement_id": "ARC-013",
-        "maps_to_control_id": "CTRL-infrastructure-segmentacao-e-controlo-arquitetural-dceb3c1f0b",
-        "evidence_expectation": "Validação automática de topologia em CI/CD ou como código",
-        "verification_logic": "Job de CI com output de validação de topologia; logs de execução disponíveis; falhas bloqueiam promoção",
-        "expected_artifact_type_ids": [
-          "ART-log-stream-b67ee06f7e",
-          "ART-artifact-provenance-8b1bffca3c"
-        ]
-      },
-      {
         "id": "EP-AUT-001",
         "relevance_score": 1,
         "source": "runtime_v0",
@@ -2800,6 +2726,80 @@
         "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
         "evidence_expectation": "Log com contagem de falhas. Evidência de bloqueio ou atraso.",
         "verification_logic": "Simular tentativas repetidas falhadas. Confirmar bloqueio, CAPTCHA ou atraso progressivo.",
+        "expected_artifact_type_ids": [
+          "ART-log-stream-b67ee06f7e",
+          "ART-operational-evidence-f5e852756f"
+        ]
+      },
+      {
+        "id": "EP-AUT-004",
+        "relevance_score": 1,
+        "source": "runtime_v0",
+        "maps_to_requirement_id": "AUT-004",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Log de sessão revogada. Erro de autenticação na reutilização.",
+        "verification_logic": "Efectuar logout. Tentar reutilizar sessão ou token. Confirmar rejeição.",
+        "expected_artifact_type_ids": [
+          "ART-log-stream-b67ee06f7e"
+        ]
+      },
+      {
+        "id": "EP-AUT-005",
+        "relevance_score": 1,
+        "source": "runtime_v0",
+        "maps_to_requirement_id": "AUT-005",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Log de timeout. Captura de expiração automática.",
+        "verification_logic": "Simular inactividade pelo período configurado. Confirmar expiração e redirect.",
+        "expected_artifact_type_ids": [
+          "ART-log-stream-b67ee06f7e"
+        ]
+      },
+      {
+        "id": "EP-AUT-006",
+        "relevance_score": 1,
+        "source": "runtime_v0",
+        "maps_to_requirement_id": "AUT-006",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Output de configuração. Resultado de scan. Ausência em repositório.",
+        "verification_logic": "Validar hashing com salt. Verificar ausência de credenciais em claro em armazenamento e transmissão.",
+        "expected_artifact_type_ids": [
+          "ART-sca-report-da2c6d2413",
+          "ART-test-report-b11c5dfb8a"
+        ]
+      },
+      {
+        "id": "EP-AUT-007",
+        "relevance_score": 1,
+        "source": "runtime_v0",
+        "maps_to_requirement_id": "AUT-007",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Log de autenticação via IdP externo. Captura de login bem-sucedido.",
+        "verification_logic": "Simular login federado via SAML/OIDC. Confirmar fluxo completo e logging.",
+        "expected_artifact_type_ids": [
+          "ART-log-stream-b67ee06f7e"
+        ]
+      },
+      {
+        "id": "EP-AUT-008",
+        "relevance_score": 1,
+        "source": "runtime_v0",
+        "maps_to_requirement_id": "AUT-008",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Captura de step-up. Log associado à acção crítica.",
+        "verification_logic": "Simular acção sensível. Confirmar exigência de factor adicional.",
+        "expected_artifact_type_ids": [
+          "ART-log-stream-b67ee06f7e"
+        ]
+      },
+      {
+        "id": "EP-AUT-009",
+        "relevance_score": 1,
+        "source": "runtime_v0",
+        "maps_to_requirement_id": "AUT-009",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Log da tentativa bloqueada. Evidência de verificação da sessão activa.",
+        "verification_logic": "Tentar alterar credenciais sem reautenticação. Confirmar bloqueio.",
         "expected_artifact_type_ids": [
           "ART-log-stream-b67ee06f7e",
           "ART-operational-evidence-f5e852756f"

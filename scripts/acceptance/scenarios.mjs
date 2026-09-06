@@ -1094,6 +1094,119 @@ export const scenarios = [
         return fail("o guia apresenta search_sbd_toe_manual sem a marca NÃO-NORMATIVO que a tool declara");
       return ok(`minLevel retirada e declarada, ${chapters.length} capítulos presentes em todos os níveis, 4 bandas nomeadas, tamanho L2 medido (${measured}k), search marcado não-normativo`); } },
 
+  { id: "TC-F-47", axis: "F", title: "0.20.0-beta.26 (item 1): evidence_patterns por PERTENÇA ao âmbito, não por prefixo alfabético", tool: "prepare_sbd_toe_codegen_context",
+    run: async (c) => {
+      // Sonda A do avaliador: validação (âmbito ERR/VAL) trazia 5 em 5 EPs de fora
+      const a = await c.tool("prepare_sbd_toe_codegen_context", { task: "Validar payload de entrada no endpoint", risk_level: "L2", concerns: ["validation"], detail: "minimal", debug: true });
+      if (!a.ok) return fail(a.error);
+      if (a.data.status !== "ready_for_codegen") return fail(`sonda A: status ${a.data.status}`);
+      const scope = new Set((a.data.activated_scope?.requirements ?? []).map((x) => x.requirement_id));
+      const eps = a.data.g2_context?.evidence_patterns ?? [];
+      if (eps.length === 0) return fail("sonda A sem evidence_patterns — fixture mudou");
+      const fora = eps.filter((e) => !(e.maps_to_requirement_id && scope.has(e.maps_to_requirement_id)));
+      if (fora.length > 0) return fail(`sonda A: ${fora.length}/${eps.length} EPs fora do âmbito (${fora.map((e) => e.id).join(", ")})`);
+      // pertença é monótona: nenhum de fora antes de um de dentro, em qualquer detail
+      for (const detail of ["standard", "full"]) {
+        const r = await c.tool("prepare_sbd_toe_codegen_context", { task: "Validar payload de entrada no endpoint", risk_level: "L2", concerns: ["validation"], detail });
+        if (!r.ok) return fail(r.error);
+        const sc = new Set((r.data.activated_scope?.requirements ?? []).map((x) => x.requirement_id));
+        const list = r.data.g2_context?.evidence_patterns ?? [];
+        const inScope = (e) => e.maps_to_requirement_id && sc.has(e.maps_to_requirement_id);
+        const firstOut = list.findIndex((e) => !inScope(e));
+        const lastIn = list.map(inScope).lastIndexOf(true);
+        if (firstOut >= 0 && lastIn > firstOut) return fail(`detail=${detail}: EP fora do âmbito antes de um de dentro`);
+      }
+      // menor do mesmo achado: debug.notes contava o cap CLÁSSICO (25) e não o efectivo
+      const note = (a.data.debug?.notes ?? []).find((n) => n.startsWith("evidence_patterns: total="));
+      if (!note) return fail("sem nota de evidence_patterns em debug");
+      if (!new RegExp(`returned=${eps.length}\\b`).test(note)) return fail(`debug.notes conta o cap clássico, não o efectivo: ${note}`);
+      if (!/cap efectivo/.test(note)) return fail("a nota não diz qual é o cap efectivo deste detail");
+      return ok(`sonda A: 0/${eps.length} EPs fora do âmbito (era 5/5); pertença monótona em minimal/standard/full; debug.notes com returned=${eps.length} e cap efectivo`); } },
+
+  { id: "TC-F-48", axis: "F", title: "0.20.0-beta.26 (itens 2,3,5,6): threat needs_input, traço multi-activador, denominadores, obligation_ids", tool: "select_sbd_toe_requirements",
+    run: async (c) => {
+      // item 2 — todos os concerns não-roteáveis ⇒ needs_input, não 8k tk de governação
+      const t = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["integration", "privacy"] });
+      if (!t.ok) return fail(t.error);
+      if (!t.data.needs_input) return fail("todos os concerns não-roteáveis e ainda assim devolveu ameaças (item 2 vivo)");
+      if ((t.data.threats ?? []).length !== 0) return fail("needs_input com ameaças no payload");
+      if (!(t.data.needs_input.supported_concerns?.length > 0)) return fail("needs_input sem a lista do que É roteável");
+      const custo = JSON.stringify(t.data).length / 4;
+      if (custo > 1500) return fail(`needs_input a custar ${Math.round(custo)} tk — devia ser barato`);
+      // controlo: misto continua a responder
+      const mix = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["integration", "auth"] });
+      if (!mix.ok) return fail(mix.error);
+      if (mix.data.needs_input) return fail("um concern roteável e mesmo assim needs_input (falso positivo)");
+      if (!mix.data.unsupported_concerns?.values?.includes("integration")) return fail("misto perdeu a declaração do não-roteável");
+      // item 3 — traço multi-activador
+      const s = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["iac"], technologies: ["containers"] });
+      if (!s.ok) return fail(s.error);
+      const ch = (s.data.context?.activated_chapters ?? []).find((x) => x.chapter === "08-iac-infraestrutura");
+      if (!ch) return fail("cap. 08 não activado — fixture mudou");
+      const by = (ch.activated_by ?? []).map((x) => `${x.source}:${x.trigger}`);
+      if (!by.includes("concern:iac") || !by.includes("technology:containers"))
+        return fail(`traço incompleto: ${by.join(", ")} — «porquê este capítulo?» tem de listar TODOS`);
+      // item 5 — denominadores nomeados e definidos
+      const d = s.data.denominators;
+      if (!d) return fail("sem bloco de denominadores (item 5 vivo)");
+      for (const k of ["baseline_at_level", "activated_at_level", "catalogue_at_level", "catalogue_total"]) {
+        if (typeof d[k]?.value !== "number") return fail(`denominador ${k} sem valor`);
+        if (!(d[k]?.definition?.length > 40)) return fail(`denominador ${k} sem definição`);
+      }
+      if (s.data.meta.eligible !== d.activated_at_level.value) return fail("meta.eligible não é o denominador que diz ser");
+      if (s.data.meta.eligible_denominator !== "activated_at_level") return fail("meta.eligible sem denominador nomeado");
+      if (!(d.baseline_at_level.value <= d.activated_at_level.value && d.activated_at_level.value <= d.catalogue_at_level.value))
+        return fail("desigualdades dos denominadores não fecham");
+      // item 6 — obligation_ids
+      const reg = await c.tool("map_sbd_toe_regulatory_activation", { framework: "RGPD" });
+      if (!reg.ok) return fail(reg.error);
+      const area = (reg.data.data?.activated ?? reg.data.activated ?? [])[0];
+      if (!area) return fail("overlay sem áreas activadas");
+      if (!Array.isArray(area.obligation_ids) || area.obligation_ids.length === 0) return fail("obligation_ids ausente (item 6 vivo)");
+      if (area.obligation_ids.length !== area.obligation_count) return fail(`obligation_ids (${area.obligation_ids.length}) ≠ obligation_count (${area.obligation_count})`);
+      if (area.example_citation && !area.example_citation_note) return fail("example_citation sem dizer que é um artigo do diploma");
+      return ok(`threat needs_input a ${Math.round(custo)} tk (era ~8,4k); cap. 08 com ${by.length} activadores; 4 denominadores definidos (${d.baseline_at_level.value}/${d.activated_at_level.value}/${d.catalogue_at_level.value}/${d.catalogue_total.value}); ${area.obligation_ids.length} obligation_ids`); } },
+
+  { id: "TC-F-49", axis: "F", title: "0.20.0-beta.26 (itens 4,7,8): dieta do select sem perda, cobertura parcial declarada, cap. 01 explicado", tool: "select_sbd_toe_requirements",
+    run: async (c) => {
+      const args = { risk_level: "L3", concerns: ["auth", "iac", "build", "deployment", "logging", "validation"], limit: 500 };
+      const full = await c.tool("select_sbd_toe_requirements", { ...args, detail: "full" });
+      if (!full.ok) return fail(full.error);
+      const ids = (x) => x.selection.selected.map((r) => r.requirement_id).join(",");
+      const custoFull = JSON.stringify(full.data).length / 4;
+      const medidas = [];
+      for (const detail of ["standard", "minimal"]) {
+        const r = await c.tool("select_sbd_toe_requirements", { ...args, detail });
+        if (!r.ok) return fail(r.error);
+        if (ids(r.data) !== ids(full.data)) return fail(`detail=${detail} mudou o CONJUNTO — a dieta é de serialização, não de conteúdo`);
+        const legend = new Map((r.data.selection_trace_legend ?? []).map((e) => [e.ref, e]));
+        if (legend.size === 0) return fail(`detail=${detail} sem legenda`);
+        // reconstrução: legenda + refs == selection_trace clássico
+        for (const row of r.data.selection.selected) {
+          if (!Array.isArray(row.trace) || row.trace.length === 0) return fail(`${row.requirement_id} sem refs de traço`);
+          for (const ref of row.trace) if (!legend.has(ref)) return fail(`ref ${ref} sem entrada na legenda`);
+        }
+        const custo = JSON.stringify(r.data).length / 4;
+        if (custo >= custoFull) return fail(`detail=${detail} não poupou nada (${Math.round(custo)} ≥ ${Math.round(custoFull)})`);
+        medidas.push(`${detail} −${((1 - custo / custoFull) * 100).toFixed(0)}%`);
+      }
+      // item 7 — cobertura PARCIAL declarada
+      const m = await c.tool("get_sbd_toe_verification_matrix", { risk_level: "L2", requirement_ids: ["ENC-001", "ENC-003", "ENC-006", "ENC-007", "AUT-001"] });
+      if (!m.ok) return fail(m.error);
+      const g = (m.data.data ?? m.data).coverage_gaps;
+      if (typeof g.evidence_patterns_without_validation_method !== "number") return fail("ausência parcial de validation_method não declarada (P1-3 vivo)");
+      if (g.evidence_patterns_without_validation_method === 0) return fail("fixture mudou: os EP-ENC já publicam validation_method");
+      if (g.requirements_without_evidence_pattern === 0 && /codex/i.test(g.note))
+        return fail("declara encaminhamento inexistente com 0 lacunas (P1-4 vivo)");
+      // item 8 — cap. 01 explicado, não deixado por explicar
+      const s = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"] });
+      if (!s.ok) return fail(s.error);
+      const c01 = (s.data.out_of_scope_chapters?.chapters ?? []).find((x) => /^01-/.test(x.chapter));
+      if (!c01) return fail("cap. 01 não aparece na banda de fora de âmbito");
+      if (!/SUPERF[ÍI]CIE DE ENGENHARIA/i.test(c01.activate_with)) return fail("cap. 01 sem a RAZÃO de não ter activador");
+      if (!/map_sbd_toe_applicability|get_sbd_toe_chapter_brief/.test(c01.activate_with)) return fail("cap. 01 sem caminho alternativo que exista");
+      return ok(`dieta ${medidas.join(", ")} com o mesmo conjunto e reconstrução verificada; ${g.evidence_patterns_without_validation_method} EP sem validation_method declarados; cap. 01 explicado com porta alternativa`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

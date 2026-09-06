@@ -161,8 +161,18 @@ export interface NarrowedOutGroup {
 
 export interface ActivatedChapter {
   chapter: string;
+  /** O PRIMEIRO activador (estável desde 0.11.0; mantido para compatibilidade). */
   source: "changed_file" | "technology" | "concern" | "stack";
   trigger: string;
+  /**
+   * 0.20.0-beta.26 — TODOS os activadores deste capítulo, não só o primeiro.
+   * Duas declarações podem activar o mesmo capítulo (`concerns:["iac"]` e
+   * `technologies:["containers"]` activam ambas o cap. 08) e o traço registava só quem
+   * chegou primeiro: a resposta a «porquê este capítulo?» vinha incompleta, e retirar a
+   * declaração que aparecia no traço não desactivava o capítulo — o que faz o traço
+   * parecer errado a quem o testa.
+   */
+  activated_by: Array<{ source: ActivatedChapter["source"]; trigger: string }>;
 }
 
 /** Declarações que a selecção aceita — o vocabulário está em sbd://toe/activation-vocabulary. */
@@ -229,6 +239,22 @@ export interface SelectionResult {
     requirements_out_of_scope: number;
     chapters: Array<{ chapter: string; at_level: number; out_of_scope: number; activate_with: string }>;
   };
+  /**
+   * 0.20.0-beta.26 — DENOMINADORES NOMEADOS E DEFINIDOS.
+   *
+   * `meta.eligible` valeu 121 e 187 na mesma sessão (baseline vs baseline+capítulos
+   * activados) e 273 só aparecia em prosa: três denominadores diferentes, todos
+   * implícitos. «Num servidor determinístico, um denominador implícito é uma dívida.»
+   * Cada um passa a ter nome, valor e definição no payload — e as desigualdades entre
+   * eles são invariante testada, não convenção.
+   */
+  denominators: {
+    note: string;
+    baseline_at_level: { value: number; definition: string };
+    activated_at_level: { value: number; definition: string };
+    catalogue_at_level: { value: number; definition: string };
+    catalogue_total: { value: number; definition: string };
+  };
   /** 0.20.0-beta.23: tokens de `technologies` fora do vocabulário — nomeados, nunca descartados em silêncio. */
   unknown_technologies?: string[];
   /** O `task` é contexto registado, não motor (excepto em discover). */
@@ -255,12 +281,18 @@ function activateChapters(
   activation: ActivationResult
 ): ActivatedChapter[] {
   const out: ActivatedChapter[] = [];
-  const seen = new Set<string>();
+  const byChapter = new Map<string, ActivatedChapter>();
   const push = (chapter: string, source: ActivatedChapter["source"], trigger: string) => {
-    const key = `${chapter}`;
-    if (seen.has(key)) return;
-    seen.add(key);
-    out.push({ chapter, source, trigger });
+    const existing = byChapter.get(chapter);
+    if (existing) {
+      // acumula: mesma origem+gatilho não se repete, activador novo regista-se
+      if (!existing.activated_by.some((a) => a.source === source && a.trigger === trigger))
+        existing.activated_by.push({ source, trigger });
+      return;
+    }
+    const entry: ActivatedChapter = { chapter, source, trigger, activated_by: [{ source, trigger }] };
+    byChapter.set(chapter, entry);
+    out.push(entry);
   };
   const fileMap = bundlesForChangedFiles(input.changed_files);
   for (const [file, bundles] of fileMap) {
@@ -527,6 +559,7 @@ export function runSelectionWithActivation(
     return {
       risk_level: level,
       eligible_count: baselineEligible.length,
+      denominators: buildDenominators(level, baselineEligible.length),
       selected: [],
       narrowed_out: [],
       excluded_by_level: [],
@@ -841,6 +874,7 @@ export function runSelectionWithActivation(
     return {
       risk_level: level,
       eligible_count: baselineEligible.length + domainEligible.length + categoryEligible.length,
+      denominators: buildDenominators(level, baselineEligible.length + domainEligible.length + categoryEligible.length),
       selected: [],
       narrowed_out: [],
       excluded_by_level,
@@ -903,6 +937,7 @@ export function runSelectionWithActivation(
   return {
     risk_level: level,
     eligible_count: baselineEligible.length + domainEligible.length + categoryEligible.length + agentsWave.length + extraEligible,
+    denominators: buildDenominators(level, baselineEligible.length + domainEligible.length + categoryEligible.length + agentsWave.length + extraEligible),
     selected,
     narrowed_out,
     excluded_by_level,
@@ -946,7 +981,61 @@ function activationHintFor(chapter: string, categories: readonly string[] = []):
     .sort((a, b) => a.activates_chapters.length - b.activates_chapters.length);
   const first = paths[0];
   if (first !== undefined) return `changed_files=["${first.pattern.split(" / ")[0]!.trim()}"]`;
-  return "SEM ACTIVADOR PUBLICADO — nenhum concern, tecnologia ou padrão de caminho do vocabulário activa este capítulo";
+  /**
+   * 0.20.0-beta.26 (achado da beta.24, item 8) — o cap. 01 não tem activador nenhum, e a
+   * razão é estrutural, não uma lacuna do vocabulário: as suas categorias (CLA, e as
+   * irmãs GOV/TRN) não pertencem a nenhum concern porque o vocabulário activa por
+   * SUPERFÍCIE DE ENGENHARIA — o que estás a construir ou a mudar. Classificação de risco,
+   * governação e formação não são superfícies de engenharia: a classificação é o
+   * procedimento que PRODUZ o `risk_level` que todas as outras respostas já usam.
+   *
+   * Decisão desta vaga: NÃO se inventa activador. Dar um a este capítulo mudaria a
+   * selecção de todas as chamadas — e nenhum item desta vaga pode mexer na selecção. Fica
+   * declarado, com a razão e com um caminho que existe (que não é um activador).
+   */
+  const chapterCategories = [...new Set(
+    getOntologyData().requirements.filter((r) => r.source_bundle === chapter).map((r) => r.category)
+  )].sort();
+  return (
+    `SEM ACTIVADOR PUBLICADO: as categorias deste capítulo (${chapterCategories.join(", ")}) não pertencem a nenhum ` +
+    "concern porque o vocabulário activa por SUPERFÍCIE DE ENGENHARIA (o que constróis ou mudas), e este " +
+    "capítulo não é uma. Não é lacuna do vocabulário nem «não aplicável» — chega-se lá por outra porta: " +
+    `map_sbd_toe_applicability(riskLevel) ou get_sbd_toe_chapter_brief(chapter="${chapter}")`
+  );
+}
+
+function buildDenominators(
+  level: SelectionRiskLevel,
+  eligible: number
+): SelectionResult["denominators"] {
+  const ontology = getOntologyData();
+  const atLevel = (r: Requirement) => r.applicable_levels?.[level] === true;
+  return {
+    note:
+      "Denominadores NOMEADOS: uma percentagem só significa alguma coisa com o denominador dito. " +
+      "`meta.eligible` é o `activated_at_level` — nem a baseline sozinha, nem o catálogo do nível.",
+    baseline_at_level: {
+      value: ontology.requirements.filter((r) => r.type === "base" && atLevel(r)).length,
+      definition: `Requisitos BASE (cap. 02) aplicáveis a ${level}. É o piso: existe sempre, com ou sem declarações.`
+    },
+    activated_at_level: {
+      value: eligible,
+      definition:
+        `Baseline de ${level} ∪ capítulos de domínio activados pelo que foi DECLARADO ∪ categorias que o ` +
+        "vocabulário promete. É o universo desta resposta, e é o denominador de `meta.eligible`: " +
+        "`selected + narrowed_out == activated_at_level`."
+    },
+    catalogue_at_level: {
+      value: ontology.requirements.filter(atLevel).length,
+      definition:
+        `TODOS os requisitos publicados aplicáveis a ${level}, activados ou não. A diferença para ` +
+        "`activated_at_level` está declarada em `out_of_scope_chapters` — não é «não aplicável», é não-perguntado."
+    },
+    catalogue_total: {
+      value: ontology.requirements.length,
+      definition: "Catálogo publicado inteiro, todos os níveis. Não é denominador de nada nesta resposta — vem nomeado para não voltar a aparecer só em prosa."
+    }
+  };
 }
 
 function buildOutOfScopeChapters(

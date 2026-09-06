@@ -770,17 +770,6 @@
         ]
       },
       {
-        "id": "EP-ACC-009",
-        "maps_to_requirement_id": "ACC-009",
-        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
-        "evidence_expectation": "Logs com avaliação de atributos. Teste com variação de contexto.",
-        "verification_logic": "Testar decisão de acesso com atributos distintos. Confirmar aplicação de política dinâmica.",
-        "expected_artifact_type_ids": [
-          "ART-log-stream-b67ee06f7e",
-          "ART-policy-report-7e52280504"
-        ]
-      },
-      {
         "id": "EP-ACC-010",
         "maps_to_requirement_id": "ACC-010",
         "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
@@ -789,6 +778,17 @@
         "expected_artifact_type_ids": [
           "ART-approval-record-6fe32eb803",
           "ART-finding-register-b39d52b4e7"
+        ]
+      },
+      {
+        "id": "EP-API-001",
+        "maps_to_requirement_id": "API-001",
+        "maps_to_control_id": "CTRL-identity-identidade-autenticacao-e-sessoes-aplicacionais-c9d3f51e82",
+        "evidence_expectation": "Logs de rejeição. Testes automatizados de endpoints.",
+        "verification_logic": "Testar endpoints sem credenciais. Confirmar rejeição 401/403.",
+        "expected_artifact_type_ids": [
+          "ART-log-stream-b67ee06f7e",
+          "ART-test-report-b11c5dfb8a"
         ]
       }
     ]
