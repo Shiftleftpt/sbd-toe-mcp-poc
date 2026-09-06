@@ -12,6 +12,7 @@
  */
 
 import { servedKgReleaseTag, servingServerVersion } from "../version-info.js";
+import { buildActivationVocabulary } from "../serving/activation-vocabulary.js";
 import type { Practice, PracticeAssignment, UserStory } from "./ontology-loader.js";
 import { getOntologyData, resolvePhaseId, resolveRoleId } from "./ontology-loader.js";
 import { _resolveConsultResult } from "./consult-security-requirements.js";
@@ -120,9 +121,13 @@ export interface GetGuideByRoleResult {
   assignments: AssignmentWithStory[];
   by_role: Record<string, AssignmentWithStory[]>;
   by_phase: Record<string, AssignmentWithStory[]>;
+  /** 0.20.0-beta.31: papel canónico sem mapeamento nesta superfície. */
+  unsupported_role?: { value: string; supported_values: string[]; note: string };
   meta: {
     assignmentCount: number;
     userStoryCount: number;
+    /** 0.20.0-beta.31: histórias DISTINTAS — `assignmentCount` conta atribuições, não histórias. */
+    distinctUserStoryCount?: number;
     activePracticeCount: number;
     knownRoles: string[];
     knownPhases: string[];
@@ -152,11 +157,15 @@ export interface GetGuideByRoleOutput {
   assignments: AssignmentSlim[];
   /** Aggregated DoD checklist of the role's user stories — present only with include_detail + a role filter. */
   role_checklist?: RoleChecklistEntry[];
+  /** 0.20.0-beta.31: papel canónico que esta superfície não mapeia — declarado, nunca vazio mudo. */
+  unsupported_role?: { value: string; supported_values: string[]; note: string };
   role_summary: Record<string, number>;
   phase_summary: Record<string, number>;
   meta: {
     assignmentCount: number;
     userStoryCount: number;
+    /** 0.20.0-beta.31: histórias DISTINTAS — `assignmentCount` conta atribuições, não histórias. */
+    distinctUserStoryCount?: number;
     activePracticeCount: number;
     knownRoles: string[];
     knownPhases: string[];
@@ -271,9 +280,30 @@ export function _resolveGuideByRole(
     (by_phase[assignment.canonical_phase] ??= []).push(assignment);
   }
 
-  const knownRoles = [...new Set(enrichedAssignments.map((assignment) => assignment.canonical_role))].sort();
+  /**
+   * 0.20.0-beta.31 — `knownRoles` é o que ESTA superfície resolve, e tem de o dizer.
+   *
+   * Vinha das atribuições presentes: para `role="fornecedores-terceiros"` (canónico,
+   * publicado no guia e no vocabulário) a resposta trazia `assignments: []` e um
+   * `knownRoles` de 13 entradas que **omitia o próprio papel que ela resolveu como
+   * canónico** — a resposta continha a prova de que o papel não existia ali e nunca fazia a
+   * ligação. Agora o conjunto é o do VOCABULÁRIO publicado, e o que esta superfície não tem
+   * é DECLARADO em `unsupported_role`, com os que ela cobre de facto.
+   */
+  const rolesWithAssignments = [...new Set(enrichedAssignments.map((assignment) => assignment.canonical_role))].sort();
+  const publishedRoles = buildActivationVocabulary().roles.values.map((r) => String(r.value)).sort();
+  const knownRoles = [...new Set([...publishedRoles, ...rolesWithAssignments])].sort();
   const knownPhases = [...new Set(enrichedAssignments.map((assignment) => assignment.canonical_phase))].sort();
   const userStoryCount = filteredAssignments.filter((assignment) => assignment.user_story !== undefined).length;
+  /**
+   * 0.20.0-beta.31 — a mesma história pode estar em várias atribuições (uma por prática).
+   * O avaliador leu «US-21 ×4» como duplicação; não é — são 4 atribuições distintas que
+   * partilham uma história. Desduplicar perderia as atribuições; o que faltava era o
+   * DENOMINADOR ao lado, para o número não poder ser mal lido.
+   */
+  const distinctUserStoryCount = new Set(
+    filteredAssignments.map((assignment) => assignment.user_story?.id).filter((x): x is string => typeof x === "string")
+  ).size;
 
   return {
     risk_level: riskLevel,
@@ -285,15 +315,33 @@ export function _resolveGuideByRole(
     assignments: filteredAssignments,
     by_role,
     by_phase,
+    ...(typeof canonicalRole === "string" && filteredAssignments.length === 0 && !rolesWithAssignments.includes(canonicalRole)
+      ? {
+          unsupported_role: {
+            value: canonicalRole,
+            supported_values: rolesWithAssignments,
+            note:
+              `O papel \`${canonicalRole}\` é CANÓNICO e publicado (vocabulário e guia), mas esta superfície não ` +
+              `tem atribuições de prática para ele: o bundle publica assignments para ${rolesWithAssignments.length} papéis. ` +
+              "NÃO é ausência de responsabilidades — é ausência de MAPEAMENTO nesta superfície. Não digas que o papel " +
+              "não tem nada a fazer, nem geres um subagente com base neste vazio: para o que o Manual exige nesta " +
+              "área usa `select_sbd_toe_requirements` (por concern ou por estrutura, ex.: " +
+              '`chapters=["14-governanca-contratacao"]`), e `get_sbd_toe_chapter_brief` para o capítulo.',
+          },
+        }
+      : {}),
     meta: {
       assignmentCount: filteredAssignments.length,
       userStoryCount,
+      distinctUserStoryCount,
       activePracticeCount: activePracticeIds.size,
       knownRoles,
       knownPhases,
       note:
         "Guide mode is grounded on consult-mode controls, then expanded via source_practice_ids, " +
-        "practice_assignments and lifecycle_user_stories. Role and phase filters use canonical runtime entities.",
+        "practice_assignments and lifecycle_user_stories. Role and phase filters use canonical runtime entities. " +
+        "`assignmentCount` conta ATRIBUIÇÕES (prática × papel × fase); `distinctUserStoryCount` conta as histórias " +
+        "distintas — a mesma história aparece em várias atribuições e isso não é duplicação.",
     },
   };
 }
@@ -394,6 +442,7 @@ export function handleGetGuideByRole(
     canonicalPhase: full.canonicalPhase,
     assignments: hasFilter ? full.assignments.map((a) => slimAssignment(a, includeDetail)) : [],
     ...(role_checklist ? { role_checklist } : {}),
+    ...(full.unsupported_role ? { unsupported_role: full.unsupported_role } : {}),
     role_summary,
     phase_summary,
     meta: {

@@ -28,6 +28,7 @@ import { _resolveConsultResult } from "./consult-security-requirements.js";
 import type { Affordance } from "../serving/protocol-envelope.js";
 import { threatLandscapeAffordances } from "../serving/affordances.js";
 import { buildActivationVocabulary } from "../serving/activation-vocabulary.js";
+import { THREAT_ORDERING } from "../serving/behaviour-notes.js";
 
 export interface MitigatingControl {
   control_id: string;
@@ -432,7 +433,7 @@ export function _resolveThreatLandscape(
       activeBundles: [...activeBundles].sort(),
       concernsApplied: consult.meta.concernsApplied,
       note:
-        "Threat applicability resolves from consult-mode requirement scope; the defining chapters of activated controls count as in-scope (G-b 2026-08-30). mitigation_confidence uses direct control references first, then chapter/bundle or antipattern-derived alignment, then heuristic domain fallback. ORDEM (0.20.0-beta.26): as ameaças vêm ordenadas por mitigation_confidence e, dentro do mesmo grau, por chapter_id — NÃO é um ranking de relevância para a tua tarefa, e a paginação segue essa mesma ordem. Não presumas que as primeiras são as mais relevantes; para reduzir o âmbito, declara `concerns`.",
+        "Threat applicability resolves from consult-mode requirement scope; the defining chapters of activated controls count as in-scope (G-b 2026-08-30). mitigation_confidence uses direct control references first, then chapter/bundle or antipattern-derived alignment, then heuristic domain fallback. " + THREAT_ORDERING + "",
     },
   };
 }
@@ -672,10 +673,53 @@ export function handleGetThreatLandscape(
     ...(declaredConcerns.length > 0 && totalThreats > 0
       ? {
           routing_basis: {
+            /**
+             * 0.20.0-beta.31 — desambiguado e POR CONCERN.
+             *
+             * A nota trazia «capítulo(s) próprio(s): 4», onde o `4` era o NÚMERO DO CAPÍTULO
+             * e foi lido como contagem. E o `basis` era escalar para um conjunto MISTO: com
+             * [architecture, api, encryption, integration] só o `architecture` roteia por
+             * capítulo mapeado, e a resposta dizia uma coisa só para os quatro.
+             *
+             * Também se separam dois sentidos que partilhavam o nome «capítulo próprio»:
+             * O VALOR `domain_chapter` mantém-se (é contrato publicado desde a beta.28 —
+             * renomeá-lo seria a classe de dano que esta vaga combate). O que muda são os
+             * campos que o desambiguam: `threat_domain_chapters` é o MAPEAMENTO DE AMEAÇAS (pode ser um
+             * capítulo partilhado com outro concern — `logging` e `monitoring` mapeiam ambos
+             * o 12); `activates_chapters` (no vocabulário) é o que o concern activa na
+             * SELECÇÃO, e pode ser vazio para o mesmo concern.
+             */
             basis: hasDomain ? ("domain_chapter" as const) : ("activated_controls" as const),
-            note: hasDomain
-              ? `Estes concerns têm capítulo(s) de ameaças próprio(s): ${[...domainChapters].sort((a, b) => a - b).join(", ")}.`
-              : "Estes concerns NÃO têm capítulo de ameaças próprio: as ameaças chegam pelos capítulos onde se DEFINEM os controlos que eles activam. São ameaças reais do âmbito activado, mas não são «as ameaças deste domínio» — o manual pode não publicar ameaças específicas para ele. Os REQUISITOS existem: `select_sbd_toe_requirements`."
+            domain_chapters: [...domainChapters].sort((a, b) => a - b).map((n) => String(n).padStart(2, "0")),
+            by_concern: [...new Set(declaredConcerns)].sort().map((concern) => {
+              const own = CONCERN_TO_DOMAIN_CHAPTER[concern];
+              const vocabEntry = vocabForRouting.concerns.values.find((x) => String(x.value) === concern);
+              const mapped = [
+                ...(own !== undefined && own !== 1 && own !== 2 ? [String(own).padStart(2, "0")] : []),
+                ...(vocabEntry?.activates_chapters ?? [])
+                  .map((c) => chapterNumber(c))
+                  .filter((n) => !Number.isNaN(n) && n !== 1 && n !== 2)
+                  .map((n) => String(n).padStart(2, "0"))
+              ];
+              return {
+                concern,
+                basis: mapped.length > 0 ? ("domain_chapter" as const) : ("activated_controls" as const),
+                threat_domain_chapters: [...new Set(mapped)].sort(),
+                shared_with: [...new Set(mapped)].flatMap((ch) =>
+                  Object.entries(CONCERN_TO_DOMAIN_CHAPTER)
+                    .filter(([other, n]) => other !== concern && String(n).padStart(2, "0") === ch)
+                    .map(([other]) => other)
+                )
+              };
+            }),
+            note:
+              "`threat_domain_chapters` são NÚMEROS DE CAPÍTULO, não contagens. `basis` por concern porque um " +
+              "conjunto misto tem concerns dos dois tipos. Atenção ao termo: um capítulo mapeado para ameaças pode " +
+              "ser PARTILHADO com outro concern (ver `shared_with`) e é coisa diferente do `activates_chapters` que " +
+              "o vocabulário publica para a SELECÇÃO — o mesmo concern pode ter um e não ter o outro. " +
+              (hasDomain
+                ? "Os concerns com `threat_domain_chapter` trazem ameaças do domínio mapeado."
+                : "Sem capítulo mapeado, as ameaças chegam pelos capítulos onde se DEFINEM os controlos que o concern activa: são reais e do âmbito activado, mas não são «as ameaças deste domínio». Os REQUISITOS existem: `select_sbd_toe_requirements`.")
           }
         }
       : {}),

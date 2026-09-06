@@ -104,6 +104,25 @@ export function handleGetChapterImplementationChecklist(
       chapter: bundle,
       ...(riskArg ? { risk_level: riskArg } : {}),
       items: page.items.map(toItem),
+      /**
+       * 0.20.0-beta.31 — capítulo publicado SEM itens de checklist: declarado.
+       * `00-fundamentos` é um capítulo canónico e devolvia `items: []` sem uma palavra —
+       * apanhado pela invariante alargada das superfícies de vocabulário, não por um
+       * avaliador. Zero itens não é «nada a implementar»: é um capítulo cujo conteúdo
+       * publicado não tem forma de checklist.
+       */
+      ...(chunks.length === 0
+        ? {
+            unsupported_chapter: {
+              value: bundle,
+              note:
+                `O capítulo \`${bundle}\` é CANÓNICO e publicado, mas o bundle servido não traz chunks de ` +
+                `tipo \`${kind}\` para ele — não há checklist de implementação a projectar. NÃO concluas que o ` +
+                "capítulo não exige nada: usa `get_sbd_toe_chapter_brief` para o que ele cobre, e " +
+                '`select_sbd_toe_requirements(chapters=["' + "${bundle}" + '"])` para os requisitos, se os tiver.',
+            },
+          }
+        : {}),
       totals: { items: chunks.length }
     },
     provenance: {

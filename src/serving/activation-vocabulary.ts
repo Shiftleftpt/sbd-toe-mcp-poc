@@ -211,8 +211,34 @@ export function buildActivationVocabulary(): ActivationVocabulary {
       note: "Activador declarado: a natureza dos dados impõe concerns por regra publicada.",
       values: SENSITIVITY_VALUES.map((value) => {
         const list = [...(SENSITIVITY_CONCERNS[value] ?? [])];
+        /**
+         * 0.20.0-beta.31 — equivalências DECLARADAS (pedido 3×).
+         *
+         * `regulated` e `personal` activam exactamente o mesmo conjunto (verificado: 37
+         * requisitos, ids idênticos) — só muda a string do gatilho. O servidor TEM o padrão
+         * para isto (`inert: true`) e não o aplicava aqui: quem declara `regulated` a pensar
+         * em RGPD art. 9 recebe o mesmo que `personal` e não é avisado. Declara-se a
+         * equivalência e aponta-se para onde a diferença VIVE de facto — o overlay.
+         */
+        const equivalents = SENSITIVITY_VALUES.filter(
+          (other) =>
+            other !== value &&
+            JSON.stringify([...(SENSITIVITY_CONCERNS[other] ?? [])].sort()) === JSON.stringify([...list].sort()) &&
+            list.length > 0
+        );
+        const equivalence =
+          equivalents.length > 0
+            ? {
+                equivalent_to: equivalents,
+                equivalence_note:
+                  `\`${value}\` activa EXACTAMENTE o mesmo que ${equivalents.map((e) => `\`${e}\``).join(", ")} — ` +
+                  "muda a string do gatilho, não o conjunto. Se a distinção importa para o teu caso (ex.: categorias " +
+                  "especiais do RGPD art. 9), ela não vive na selecção: vive no OVERLAY regulatório — " +
+                  "`select_sbd_toe_requirements(..., include_regulatory_overlay=true, regulatory_frameworks=[\"RGPD\"])`.",
+              }
+            : {};
         return list.length > 0
-          ? { value, activates_concerns: list, note: `data_sensitivity='${value}' activa ${list.join(", ")} por regra declarada.` }
+          ? { value, activates_concerns: list, ...equivalence, note: `data_sensitivity='${value}' activa ${list.join(", ")} por regra declarada.` }
           : {
               value,
               activates_concerns: [],

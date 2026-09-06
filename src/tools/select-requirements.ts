@@ -12,8 +12,10 @@
 import { servedKgReleaseTag, servingServerVersion } from "../version-info.js";
 import { VALID_CONCERNS } from "./prepare-codegen-context.js";
 import { runSelection, type SelectionContextInput, type SelectionResult } from "../serving/selection.js";
+import { handleConsultSecurityRequirements } from "./consult-security-requirements.js";
 import { getRegulatoryOverlay, type RegulatoryObligation } from "./regulatory-overlay-loader.js";
 import { selectRequirementsAffordances } from "../serving/affordances.js";
+import { SELECT_PAGINATION } from "../serving/behaviour-notes.js";
 import type { Affordance } from "../serving/protocol-envelope.js";
 
 const DEFAULT_LIMIT = 100;
@@ -169,6 +171,26 @@ export interface SelectRequirementsOutput {
     excluded_by_level_requirements: number;
   };
   meta: { eligible: number; eligible_denominator: string; note: string; notes: string[] };
+  /**
+   * 0.20.0-beta.31 — CONTRAPROVA POSSÍVEL.
+   *
+   * O guia manda contraprovar um vazio contra o `consult`. Mas o `consult` não aceita
+   * `chapters`, não aceita `technologies` e tem `maxItems: 5` em `concerns` — a chamada
+   * principal de um agente real não tem equivalente lá, e a regra que o guia ensina era
+   * impossível de cumprir justamente onde faz falta.
+   *
+   * Decisão desta vaga: NÃO alargar o `consult` (é uma superfície de CATÁLOGO; aceitar
+   * activadores de selecção mudaria o que ela é — foi o que a beta.28 declarou em
+   * `ignored_activators`). Em vez disso o `select` faz a verificação e devolve-a: o que as
+   * duas superfícies têm em comum, se concordam nisso, e o que NÃO é comparável e porquê.
+   */
+  cross_surface_check?: {
+    comparable: boolean;
+    compared_on: string[];
+    not_comparable: string[];
+    agreement: { select: number; consult: number; same_ids: boolean } | null;
+    note: string;
+  };
   /** 0.20.0-beta.26 — cada denominador com nome, valor e definição. */
   denominators: SelectionResult["denominators"];
   next?: Affordance[];
@@ -253,6 +275,47 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
   const limitArg = typeof args["limit"] === "number" ? Math.max(1, Math.floor(args["limit"] as number)) : DEFAULT_LIMIT;
   const page = result.selected.slice(offsetArg, offsetArg + limitArg);
   const nextOffset = offsetArg + page.length < result.selected.length ? offsetArg + page.length : null;
+  /** Contraprova server-side (beta.31): só quando há concerns, que é o que o consult resolve. */
+  let crossSurfaceCheck: SelectRequirementsOutput["cross_surface_check"];
+  if (mode !== "discover") {
+    const notComparable: string[] = [];
+    if (chapters !== undefined && chapters.length > 0) notComparable.push("chapters (o consult não os aceita)");
+    if (categories !== undefined && categories.length > 0) notComparable.push("categories (o consult não os aceita)");
+    if (technologies !== undefined && technologies.length > 0) notComparable.push("technologies (o consult não as aceita)");
+    if (exposure !== undefined) notComparable.push("exposure (o consult aceita e NÃO honra — ver ignored_activators lá)");
+    if (dataSensitivity !== undefined) notComparable.push("data_sensitivity (idem)");
+    const comparableConcerns = (concerns ?? []).slice(0, 5);
+    if (concerns !== undefined && concerns.length > 5)
+      notComparable.push(`concerns além dos 5 primeiros (o consult tem maxItems: 5; declaraste ${concerns.length})`);
+    let agreement: NonNullable<SelectRequirementsOutput["cross_surface_check"]>["agreement"] = null;
+    if (comparableConcerns.length > 0) {
+      const viaConsult = handleConsultSecurityRequirements({ risk_level: risk, concerns: comparableConcerns });
+      const consultIds = new Set(viaConsult.requirements.map((r) => r.requirement_id));
+      const viaSelect = runSelection({ risk_level: risk, mode, concerns: comparableConcerns });
+      const selectIds = new Set(viaSelect.selected.map((r) => r.requirement_id));
+      agreement = {
+        select: selectIds.size,
+        consult: consultIds.size,
+        same_ids: selectIds.size === consultIds.size && [...selectIds].every((id) => consultIds.has(id))
+      };
+    }
+    crossSurfaceCheck = {
+      comparable: agreement !== null,
+      compared_on: comparableConcerns,
+      not_comparable: notComparable,
+      agreement,
+      note:
+        (agreement === null
+          ? "NÃO comparável com o `consult`: esta chamada não declarou concerns, e é por concerns que a outra superfície resolve. "
+          : agreement.same_ids
+            ? `As duas superfícies CONCORDAM na parte comparável (${agreement.select} ids, iguais). `
+            : `DISCORDÂNCIA na parte comparável: select ${agreement.select} vs consult ${agreement.consult}. Uma discordância entre superfícies é SINAL, não ruído — comunica-a. `) +
+        (notComparable.length > 0
+          ? `O resto desta chamada não tem equivalente no \`consult\`: ${notComparable.join("; ")}. A contraprova cobre só o que é comparável — não tomes o silêncio sobre o resto como acordo.`
+          : "Toda esta chamada foi comparável."),
+    };
+  }
+
   const detailArg = str("detail");
   if (detailArg !== undefined && !["full", "standard", "minimal"].includes(detailArg)) {
     throw Object.assign(new Error(`Invalid detail: "${detailArg}". Allowed: full, standard, minimal.`), {
@@ -334,15 +397,14 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
       excluded_by_level_requirements: result.excluded_by_level.reduce((n, g) => n + g.count, 0),
       narrowed_out_requirements: result.narrowed_out.reduce((n, g) => n + g.count, 0)
     },
+    ...(crossSurfaceCheck ? { cross_surface_check: crossSurfaceCheck } : {}),
     denominators: result.denominators,
     meta: {
       eligible: result.eligible_count,
       eligible_denominator: "activated_at_level",
       note:
-        "coverage pagina `selected` por ORDEM DE ID (alfabética por categoria: ACC primeiro, VAL por último) — " +
-        "NÃO é ordem de relevância, e com uma selecção grande as últimas categorias ficam nas páginas finais " +
-        "(ex.: VAL em offset=200). Se procuras uma categoria específica, declara o concern que a activa em vez " +
-        "de paginar até lá. `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão. `eligible` é o denominador `activated_at_level` — os quatro denominadores vêm nomeados e definidos em `denominators`.",
+        SELECT_PAGINATION +
+        " `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão. `eligible` é o denominador `activated_at_level` — os quatro denominadores vêm nomeados e definidos em `denominators`.",
       notes: dieted.note ? [...result.notes, dieted.note] : result.notes
     },
     next: result.needs_input

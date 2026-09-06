@@ -64,6 +64,7 @@ import {
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./serving/server-surface.js";
 import { buildAgentGuide } from "./serving/agent-guide.js";
 import { buildModelResource, buildQuickStart } from "./serving/model-resource.js";
+import { THREAT_ORDERING, SELECT_PAGINATION } from "./serving/behaviour-notes.js";
 import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
@@ -1158,6 +1159,7 @@ class McpRuntime {
             "narrowed_out[] (eligible-without-signal, grouped by category, with reason), excluded_by_level[] and " +
             "out_of_scope_chapters (what no declaration activated, by chapter and count, with how to bring it in) — " +
             "never silent, and the SCOPE of that promise is the universe, not just the baseline. Paginated. " +
+            SELECT_PAGINATION + " " +
             "All data from the published deterministic runtime bundle — nothing is invented.",
           inputSchema: {
             type: "object",
@@ -1266,8 +1268,11 @@ class McpRuntime {
             `Para os outros ${DECLARED_CONCERNS.length - threatDomainConcerns().length} as ameaças chegam pelos capítulos onde se DEFINEM os controlos que o concern activa: ` +
             "são reais e do âmbito activado, mas NÃO são «as ameaças deste domínio». A resposta declara-o em `routing_basis` " +
             "(`domain_chapter` | `activated_controls`) — e a tabela acima diz-to ANTES de gastares a chamada. " +
-            "Em detail='standard'/'minimal' os nomes e ids dos controlos vêm por REFERÊNCIA à `associated_control_legend` — a promessa de campos completos é do detail='full'. ORDEM: por PERTENÇA ao âmbito declarado (capítulo de domínio primeiro; caps. 01/02, governação e meta-ameaças de processo, por último), " +
-            "depois mitigation_confidence, capítulo e id. A paginação segue essa ordem, por isso a página 1 é a parte relevante. " +
+            "Em detail='standard'/'minimal' os nomes e ids dos controlos vêm por REFERÊNCIA à `associated_control_legend` — a promessa de campos completos é do detail='full'. " +
+            // 0.20.0-beta.31: a frase da ORDEM vem da mesma constante que a nota da resposta
+            // usa. Enquanto foram dois textos, divergiram duas versões (o `meta.note` ficou a
+            // dar o conselho oposto ao correcto). A guarda em behaviour-notes.test.ts vigia-o.
+            THREAT_ORDERING + " " +
             "Qualquer outro concern é VÁLIDO e tem requisitos, mas não é roteável AQUI: vem declarado em `unsupported_concerns`, e se TODOS os declarados forem não-roteáveis a resposta é `needs_input` em vez de um payload cheio de ameaças de governação sem relação com o pedido. " +
             "Deterministic threat resolution for an application context using the SbD-ToE ontology threats pipeline. " +
             "Returns threats from the published runtime bundle relevant to the active requirement/chapter scope " +

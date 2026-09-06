@@ -1505,6 +1505,79 @@ export const scenarios = [
       const soB = (model.chapters.values ?? []).filter((x) => !x.reachable_by.includes("A")).length;
       return ok(`${banda.length} capítulos com caminho VERDADEIRO (via estrutural em todos); modelo com 3 formas, ${model.entities.counts.requirements} requisitos e ${model.relations.values.length} relações; ${soB} capítulos só por B; quick-start ${qtk} tk`); } },
 
+  { id: "TC-F-58", axis: "F", title: "0.20.0-beta.31 (classe): TODA a superfície que resolve vocabulário declara o que não mapeia", tool: "get_guide_by_role",
+    run: async (c) => {
+      // o P0: papel canónico, publicado, com assignments vazios e sem uma palavra
+      const r = await c.tool("get_guide_by_role", { risk_level: "L3", role: "fornecedores-terceiros" });
+      if (!r.ok) return fail(r.error);
+      const d = r.data.data ?? r.data;
+      if ((d.assignments ?? []).length !== 0) return fail("fixture mudou: o papel já tem atribuições");
+      if (!d.unsupported_role) return fail("papel canónico com vazio MUDO (o P0 continua vivo)");
+      if (!d.unsupported_role.supported_values?.length) return fail("unsupported_role sem a lista do que a superfície cobre");
+      // A nota PROÍBE a conclusão («Não digas que o papel não tem nada a fazer»); citar a
+      // conclusão para a proibir não é afirmá-la — mesmo tropeço do obituário do minLevel.
+      const semProibicao = (d.unsupported_role.note ?? "").replace(/N[ÃA]O digas[\s\S]*?vazio,?/i, " ");
+      if (/não tem nada a fazer|sem responsabilidades/i.test(semProibicao)) return fail("a nota conclui ausência de responsabilidades");
+      if (!/N[ÃA]O é aus[êe]ncia de responsabilidades|aus[êe]ncia de MAPEAMENTO/i.test(d.unsupported_role.note ?? ""))
+        return fail("a nota não distingue ausência de mapeamento de ausência de responsabilidades");
+      // o agravante: knownRoles omitia o papel que a própria resposta resolveu
+      if (!(d.meta?.knownRoles ?? []).includes("fornecedores-terceiros"))
+        return fail("meta.knownRoles continua a omitir o papel que a resposta resolve como canónico");
+      // controlo: papel com atribuições não traz a banda
+      const dev = await c.tool("get_guide_by_role", { risk_level: "L3", role: "developer" });
+      if (!dev.ok) return fail(dev.error);
+      const dd = dev.data.data ?? dev.data;
+      if (dd.unsupported_role) return fail("falso positivo num papel mapeado");
+      if (!(dd.meta?.distinctUserStoryCount > 0)) return fail("sem denominador de histórias distintas");
+      // varredura da CLASSE nas outras superfícies de vocabulário
+      const outras = [];
+      const ch = await c.tool("get_sbd_toe_chapter_implementation_checklist", { chapter: "00-fundamentos" });
+      if (!ch.ok) return fail(ch.error);
+      const chd = ch.data.data ?? ch.data;
+      if ((chd.items ?? []).length === 0 && !chd.unsupported_chapter) outras.push("chapter_implementation_checklist × 00-fundamentos");
+      const reg = await c.tool("map_sbd_toe_regulatory_activation", { framework: "ENISA-CSA" });
+      if (!reg.ok) return fail(reg.error);
+      const rd = reg.data.data ?? reg.data;
+      if ((rd.activated ?? []).length === 0 && !rd.unsupported_obligations) outras.push("map_regulatory_activation × ENISA-CSA");
+      if (outras.length > 0) return fail(`vazio mudo noutras superfícies de vocabulário: ${outras.join("; ")}`);
+      return ok(`papel canónico declarado em unsupported_role (${d.unsupported_role.supported_values.length} mapeados) e presente em knownRoles; checklist do cap. 00 e overlay ENISA-CSA também declarados; controlo developer limpo (${dd.meta.assignmentCount} atribuições / ${dd.meta.distinctUserStoryCount} histórias)`); } },
+
+  { id: "TC-F-59", axis: "F", title: "0.20.0-beta.31 (bordas): notas geradas da mesma fonte que as descrições; routing_basis por concern; contraprova possível", tool: "get_threat_landscape",
+    run: async (c) => {
+      // a nota fóssil não pode voltar, e a nota tem de descrever o comportamento REAL
+      const t = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["iac"] });
+      if (!t.ok) return fail(t.error);
+      const note = t.data.meta?.note ?? "";
+      if (/não presumas que as primeiras são as mais relevantes/i.test(note))
+        return fail("a nota FÓSSIL da beta.26 continua viva e dá o conselho oposto ao correcto");
+      if (!/PERTEN[ÇC]A ao âmbito declarado/i.test(note)) return fail("a nota não descreve a ordenação actual");
+      const primeira = String((t.data.threats ?? [])[0]?.chapter_id ?? "");
+      if (/^0?[12]-/.test(primeira)) return fail(`a nota promete domínio na página 1 e a resposta abre com ${primeira}`);
+      // a mesma frase tem de estar na DESCRIÇÃO da tool
+      const tools = c.tools ?? [];
+      const desc = String(tools.find((x) => x.name === "get_threat_landscape")?.description ?? "");
+      const frase = "ORDEM: por PERTENÇA ao âmbito declarado";
+      if (!desc.includes(frase) || !note.includes(frase)) return fail("descrição e nota não partilham a frase publicada");
+      // routing_basis desambiguado e por concern
+      const misto = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["architecture", "api", "encryption"] });
+      if (!misto.ok) return fail(misto.error);
+      const rb = misto.data.routing_basis;
+      if (!Array.isArray(rb?.domain_chapters)) return fail("domain_chapters não é uma lista (o número do capítulo era lido como contagem)");
+      if (!Array.isArray(rb?.by_concern) || rb.by_concern.length !== 3) return fail("routing_basis continua escalar num conjunto misto");
+      const bases = new Set(rb.by_concern.map((x) => x.basis));
+      if (bases.size < 2) return fail("conjunto misto com uma só base — a desambiguação não funcionou");
+      // contraprova possível na chamada que o guia ensina
+      const sel = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], detail: "minimal" });
+      if (!sel.ok) return fail(sel.error);
+      const x = sel.data.cross_surface_check;
+      if (!x) return fail("o guia manda contraprovar e a resposta não traz a verificação");
+      if (!x.comparable || !x.agreement?.same_ids) return fail(`contraprova falhou: ${JSON.stringify(x.agreement)}`);
+      const real = await c.tool("select_sbd_toe_requirements", { risk_level: "L3", chapters: ["14-governanca-contratacao"], exposure: "public", detail: "minimal" });
+      if (!real.ok) return fail(real.error);
+      if ((real.data.cross_surface_check?.not_comparable ?? []).length === 0)
+        return fail("uma chamada sem equivalente no consult não declara o que não é comparável");
+      return ok(`nota e descrição partilham a frase publicada; página 1 do domínio (cap. ${primeira.slice(0, 2)}); routing_basis com ${rb.by_concern.length} concerns e ${bases.size} bases; contraprova ${x.agreement.select}=${x.agreement.consult} e ${real.data.cross_surface_check.not_comparable.length} itens declarados como não comparáveis`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

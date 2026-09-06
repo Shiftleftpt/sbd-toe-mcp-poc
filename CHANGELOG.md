@@ -3,11 +3,104 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.30 (beta line, npm `beta`) — TRÊS FORMAS DE PEDIR: declarativo ≠ enumerado. Os concerns eram um ATALHO promovido a interface única: 14 concerns correctos não chegavam ao cap. 14 e a única porta era declarar um ficheiro que não existe. Abre-se a forma B (chapters/categories na própria superfície de selecção, com traço declared_structure), a forma C ganha nome no arranque, publica-se o recurso de MODELO (entidades, relações e cardinalidades reais + as três formas) e um quick-start de 500 tk, e a INVARIANTE DE ALCANÇABILIDADE proíbe caminhos falsos. Selecção por A INALTERADA, ouro byte-idêntico.
+reasoning: v0.20.0-beta.31 (beta line, npm `beta`) — AS BORDAS: o que descreve comportamento passa a ser gerado a partir do comportamento. Invariante alargada às 11 superfícies que resolvem vocabulário (o P0 do get_guide_by_role entrou porque a tool nunca esteve no varrimento) — inventário de 4 instâncias, 2 delas desconhecidas; notas das respostas e descrições das tools passam a ler de uma fonte única (a nota fóssil do threat dava o conselho OPOSTO ao correcto, duas versões atrasada); routing_basis desambiguado e por concern; contraprova possível via cross_surface_check; unsupported_obligations, equivalent_to e denominador de histórias.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.31 — 2026-09-06
+
+**AS BORDAS: o que descreve comportamento tem de ser gerado a partir do comportamento.**
+Autorizado pelo lead («avança», 2026-09-06); §25 da design note. Bundle pin INALTERADO
+(release KG `v1.11.0`); **linha estável intocada**.
+
+> «O NÚCLEO — selecção, bandas, denominadores, traço — está sujeito a geração e a suite. As
+> BORDAS não. **Todos os achados desta versão estão nas bordas**, e todos são da mesma
+> família: texto que descreve comportamento e que não é gerado a partir do comportamento.»
+
+### 1 — Invariante alargada: o INVENTÁRIO das 11 superfícies que resolvem vocabulário
+
+O P0 entrou porque o `get_guide_by_role` **nunca esteve no varrimento**. A regra «onde mais
+vive esta classe?» aplicada ao próprio conjunto de superfícies vigiadas: inventariei as **11
+tools que aceitam um valor de vocabulário** (papéis, fases, capítulos, categorias,
+tecnologias, record_types, frameworks) e meti-as todas na invariante, corrida **antes** de
+corrigir.
+
+| # | instância | quem a conhecia |
+|---|---|---|
+| 1 | `get_guide_by_role × "fornecedores-terceiros"` — papel CANÓNICO, `assignments: []`, sem `unsupported_role` | o avaliador (P0) |
+| 2 | `get_guide_by_role` — `meta.knownRoles` **omitia o papel que a própria resposta resolveu** como canónico | o avaliador (agravante) |
+| 3 | `chapter_implementation_checklist × "00-fundamentos"` — vazio mudo | **ninguém** |
+| 4 | `map_regulatory_activation × "ENISA-CSA"` — vazio mudo | **ninguém** |
+
+**Duas das quatro eram desconhecidas** — o varrimento alargado pagou-se na primeira corrida.
+Todas fechadas: `unsupported_role` (com os papéis que a superfície mapeia e a proibição
+explícita de concluir ausência de responsabilidades), `knownRoles` a partir do vocabulário
+publicado, `unsupported_chapter` no checklist, e **`unsupported_obligations`** no overlay —
+o item que o avaliador pediu quatro vezes, resolvido aqui como instância da classe.
+
+### 2 — Notas das respostas GERADAS da mesma fonte que as descrições
+
+A varredura das notas que descrevem comportamento (6 superfícies) deu **duas**:
+
+| nota | estado |
+|---|---|
+| `meta.note` do `get_threat_landscape` | **FÓSSIL**: descrevia a ordenação da beta.26 e dizia «não presumas que as primeiras são as mais relevantes» — **duas versões atrasada e o conselho OPOSTO ao correcto**, depois de a beta.29 ter posto a página 1 a ser precisamente a relevante |
+| `meta.note` do `select` (paginação) | correcta, mas era um segundo texto manual à espera de divergir |
+
+`serving/behaviour-notes.ts` passa a ser a **fonte única**: a descrição da tool e a nota da
+resposta lêem a MESMA constante, e `behaviour-notes.test.ts` (4 propriedades) guarda que
+aparecem nos dois, que a frase fóssil não volta, e que **a nota descreve o comportamento
+real** (se promete domínio na página 1, a página 1 é do domínio). É a disciplina da beta.25,
+que gerou o agent-guide, estendida ao último texto manual do sistema.
+
+### 3 e 4 — `routing_basis` desambiguado, por concern, e os dois sentidos separados
+
+A nota trazia `"capítulo(s) próprio(s): 4"` — o `4` era o **número do capítulo** e foi lido
+como contagem. Agora `domain_chapters: ["04"]` (lista, sem ambiguidade) e **`by_concern[]`**,
+porque num conjunto misto o `basis` escalar mentia: com `[architecture, api, encryption]` só
+o `architecture` roteia por capítulo mapeado, e a resposta dizia uma coisa só para os três.
+Os dois sentidos de «capítulo próprio» ficam separados: **`threat_domain_chapters`** (o
+mapeamento de ameaças, que pode ser partilhado — `shared_with`) versus **`activates_chapters`**
+(o que o concern activa na SELECÇÃO), que podem divergir no mesmo concern.
+
+> **O valor `domain_chapter` NÃO foi renomeado.** Cheguei a renomeá-lo para
+> `threat_domain_chapter` e dois cenários apanharam-no: é contrato publicado desde a beta.28,
+> e renomeá-lo seria exactamente a classe de dano que esta vaga combate. A ambiguidade estava
+> na NOTA, e é lá que foi corrigida.
+
+### 5 — A contraprova que o guia exige passa a ser possível
+
+O guia manda contraprovar contra o `consult`, mas o `consult` não aceita `chapters`, não
+aceita `technologies` e tem `maxItems: 5` — a chamada principal de um agente real **não tinha
+equivalente**. **Decisão declarada:** não alargar o `consult` (é superfície de CATÁLOGO;
+aceitar activadores de selecção mudaria o que ela é — foi o que a beta.28 declarou em
+`ignored_activators`). Em vez disso o `select` faz a verificação e devolve-a em
+**`cross_surface_check`**: o que é comparável, se concordam nisso (27 = 27, ids iguais), e o
+que **não** é comparável e porquê. Custo: **63 tk**.
+
+### 6 — Menores
+
+- **`equivalent_to`** em `data_sensitivity` (pedido 3×): `regulated` e `personal` activam
+  exactamente o mesmo (37 requisitos, ids idênticos — verificado); a equivalência é declarada
+  e aponta para onde a diferença VIVE de facto, que é o overlay regulatório.
+- **`distinctUserStoryCount`** ao lado do `assignmentCount`: as «US-21 ×4» **não eram
+  duplicação** — são 25 atribuições distintas que partilham 21 histórias. Desduplicar perderia
+  atribuições; o que faltava era o denominador ao lado para o número não ser mal lido.
+
+### Verificação
+
+- **Suite** 799/799 (57 ficheiros) · **Aceitação** 166 → **126 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novos TC-F-58/59).
+- **Ouro byte-idêntico ao da beta.30** nos dois braços: `discover` **10 PASS / 0 / 0**,
+  declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu.**
+- **Orçamentos** 8/8 do `prepare` inalterados.
+- **Gate**: stdout só JSON-RPC · exit 0 · `package_version` coerente.
+- **Um cenário meu voltou a cair na armadilha da CITAÇÃO** (3.ª vez na série): acusou a nota
+  do `unsupported_role` de concluir ausência de responsabilidades quando ela **proíbe** essa
+  conclusão. Corrigido, e a asserção passou a exigir também a distinção explícita entre
+  «ausência de mapeamento» e «ausência de responsabilidades».
 
 ## 0.20.0-beta.30 — 2026-09-06
 

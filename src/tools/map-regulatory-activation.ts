@@ -165,6 +165,25 @@ export function handleMapRegulatoryActivation(
     }));
 
   const distinctObligations = new Set(mappings.map((m) => m.obligation_id).filter(Boolean)).size;
+  /**
+   * 0.20.0-beta.31 — framework PUBLICADO sem mapeamentos: declarado, nunca vazio mudo.
+   *
+   * `ENISA-CSA` é aceite como valor canónico e devolvia `activated: []` sem uma palavra —
+   * a mesma classe do `unsupported_concerns` (beta.23), numa superfície que nunca tinha
+   * sido varrida. O modelo já existia escrito; faltava aplicá-lo aqui. Pedido quatro vezes
+   * pelo avaliador.
+   */
+  const unsupportedObligations =
+    mappings.length === 0
+      ? {
+          framework: framework.short_code,
+          note:
+            `O framework \`${framework.short_code}\` é RECONHECIDO (está no conjunto publicado), mas o ` +
+            "bundle servido não traz mapeamentos obrigação→manual para ele: zero áreas activadas não significa que o " +
+            "framework não se aplique, significa que esta camada de mapeamento ainda não o cobre. É lacuna DECLARADA, " +
+            "não ausência de obrigação. Não afirmes conformidade nem isenção a partir desta resposta.",
+        }
+      : undefined;
 
   // Coverage-preserving pagination over the activated areas.
   const offsetArg = args["offset"];
@@ -193,6 +212,7 @@ export function handleMapRegulatoryActivation(
         name: framework.name
       },
       activated: page.items,
+      ...(unsupportedObligations ? { unsupported_obligations: unsupportedObligations } : {}),
       totals: {
         mappings: mappings.length,
         obligations: distinctObligations,

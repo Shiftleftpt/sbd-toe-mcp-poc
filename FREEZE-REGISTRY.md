@@ -79,6 +79,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 | v0.20.0-beta.5 | 62a1eda (`62a1eda3982147e44369c8a9271ca3697af2680f`; annotated tag object `5165a04a`) | 2026-08-31 | formal KG `v1.7.0` (`29156b86…`, contract v1.14, ontology v2.2, Manual v1.7.1) — same pin and content as stable v0.10.4 | `beta` (superseded) |
 | v0.20.0-beta.6 | 322c38f (`322c38f4dc440aad40bf110b8e20d3d40f623318`; annotated tag object `71098136`) | 2026-08-31 | formal KG `v1.7.0` + MP1 selection operation (= stable 0.11.0 → `102b8166`) | `beta` (superseded) |
 | v0.20.0-beta.7 | 4256ee0 (`4256ee0f09386a45e69012ec565375965f49b0de`; annotated tag object `6e75ef23`) | 2026-08-31 | formal KG `v1.9.0` (`11153c85…`, contract v1.15, 273/29 FIL/PRI — zero-delta over the verified v1.8.0 dev-build) | `beta` (formal batch, «3 sims») |
+| v0.20.0-beta.31 | PENDING (tag commit registado ao fechar) | 2026-09-06 | AS BORDAS: invariante alargada às 11 superfícies de vocabulário (4 instâncias, 2 desconhecidas — get_guide_by_role, checklist cap. 00, overlay ENISA-CSA); notas das respostas e descrições com FONTE ÚNICA (a nota fóssil do threat dava o conselho oposto); routing_basis por concern e desambiguado; cross_surface_check; unsupported_obligations, equivalent_to, distinctUserStoryCount | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.30 | e374f7c (`e374f7c8c1a514b621c314f629b9ad1937224df0`) | 2026-09-06 | TRÊS FORMAS DE PEDIR: forma B (chapters/categories na superfície de selecção, traço declared_structure) e C de primeira classe; recurso `sbd://toe/model` (entidades, relações e cardinalidades reais) + `quick-start` (500 tk vs 13.135); invariante de ALCANÇABILIDADE (0 inalcançáveis, 9 caminhos falsos eliminados); cap. 14 e cap. 01 com porta verdadeira. Selecção por A INALTERADA | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.29 | 2ff3809 (`2ff38091657b20769c250740f8f2ab770e131850`) | 2026-09-06 | navegação: ameaças por PERTENÇA ao âmbito (página 1 deixa de ser governação genérica); roteamento ≠ cobertura publicado antes da chamada (24 sem erro · 11 com domínio próprio, nomeados e medidos); bug do contador da legenda; ordem do setup no guia; nota do operator extend. Selecção INALTERADA | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.28 | 37ef114 (`37ef1144acc86a9949e321949489cec627a82629`) | 2026-09-06 | INVARIANTES ENTRE SUPERFÍCIES (a classe): suite antes dos fixes, inventário de 5 candidatos → 3 reais + 2 falsos positivos da própria suite; `ignored_activators` no consult (59 req. em causa, incl. controlo de acesso); caixa do guia derivada (fim da contradição entre blocos GERADOS); `routing_basis` e dedup opcional (−51%) no threat. Zero dívida | `beta` (`latest` = 0.19.4, estável inalterada) |
@@ -107,7 +108,18 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.30 → `e374f7c8c1a514b621c314f629b9ad1937224df0` (2026-09-06; `release.yml` run 34035926529 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.30` = `beta`, gitHead igual; GitHub pre-release) implementa o desenho das
+**Beta line:** v0.20.0-beta.31 → PENDING (2026-09-06; tag e npm ao fechar) aplica às BORDAS a
+disciplina que o núcleo já tinha: o que descreve comportamento passa a ser gerado a partir do
+comportamento. A invariante entre superfícies alargou-se às 11 tools que resolvem vocabulário — o P0
+entrou porque o `get_guide_by_role` nunca estivera no varrimento — e o inventário deu 4 instâncias,
+DUAS delas desconhecidas (checklist do cap. 00 e overlay ENISA-CSA). As notas das respostas e as
+descrições das tools passam a ler de uma fonte única (`behaviour-notes.ts`), depois de se confirmar que
+o `meta.note` do mapa de ameaças descrevia a ordenação de duas versões antes e dava o conselho OPOSTO
+ao correcto. Mais: `routing_basis` desambiguado e por concern (o número do capítulo era lido como
+contagem), a contraprova que o guia exige passa a ser possível via `cross_surface_check` sem alargar o
+consult, e os menores pedidos há várias rondas (`unsupported_obligations`, `equivalent_to`,
+`distinctUserStoryCount`).
+Prior: v0.20.0-beta.30 → `e374f7c8c1a514b621c314f629b9ad1937224df0` (2026-09-06; `release.yml` run 34035926529 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.30` = `beta`, gitHead igual; GitHub pre-release) implementa o desenho das
 TRÊS FORMAS DE PEDIR ratificado pelo lead: o contrário de «adivinhar prosa» não é «escolher de uma
 lista», é «pedir com precisão». A forma B (estrutura) abre na própria superfície de selecção
 (`chapters`/`categories`, com traço `declared_structure`, mesmas bandas e denominadores), a forma C
@@ -356,6 +368,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.31 registered (bordas: invariante alargada a 11 superfícies com 4 instâncias; fonte única para notas e descrições; routing_basis por concern; cross_surface_check; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.30 tag commit recorded (`e374f7c8`); npm `beta` publish + GitHub pre-release confirmed (run 34035926529); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.30 registered (três formas de pedir: B/C de primeira classe, recurso de modelo + quick-start, invariante de alcançabilidade com 9 caminhos falsos eliminados; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.29 tag commit recorded (`2ff38091`); npm `beta` publish + GitHub pre-release confirmed (run 34034024200); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
