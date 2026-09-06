@@ -63,6 +63,7 @@ import {
 } from "./resources/sbd-toe-resources.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./serving/server-surface.js";
 import { buildAgentGuide } from "./serving/agent-guide.js";
+import { buildModelResource, buildQuickStart } from "./serving/model-resource.js";
 import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
@@ -229,6 +230,12 @@ async function materializeResource(uri: string): Promise<{ mimeType: string; tex
     return { mimeType: "application/json", text: JSON.stringify(buildDerivedIndexCompact(TECHNOLOGY_TO_CHAPTERS), null, 2) };
   }
 
+  if (uri === "sbd://toe/quick-start") {
+    return { mimeType: "application/json", text: JSON.stringify(buildQuickStart(), null, 2) };
+  }
+  if (uri === "sbd://toe/model") {
+    return { mimeType: "application/json", text: JSON.stringify(buildModelResource(), null, 2) };
+  }
   if (uri === "sbd://toe/agent-guide") {
     try {
       return { mimeType: "text/markdown", text: buildAgentGuide() };
@@ -1156,6 +1163,18 @@ class McpRuntime {
             type: "object",
             properties: {
               risk_level: { type: "string", enum: ["L1", "L2", "L3"], description: "Application risk level (drives the baseline)." },
+              chapters: {
+                type: "array",
+                items: { type: "string" },
+                description:
+                  "FORMA B — pedir por ESTRUTURA (0.20.0-beta.30). Ids de capítulo do catálogo publicado (`list_sbd_toe_chapters`), ex.: [\"14-governanca-contratacao\"]. Declaração VERDADEIRA e verificável: não depende de existir um atalho de `concerns` nem de inventar `changed_files`. Mesmas bandas, mesmo traço (`layer: \"declared_structure\"`), mesmos denominadores. Um valor que o catálogo não conhece vem em `unknown_structural`."
+              },
+              categories: {
+                type: "array",
+                items: { type: "string" },
+                description:
+                  "FORMA B — pedir por ESTRUTURA (0.20.0-beta.30). Códigos de categoria (o prefixo dos ids: `AUT-001` → `AUT`), ex.: [\"GOV\"]. Para quando queres exactamente uma família de requisitos e não um agrupamento pré-cozinhado. Ver `sbd://toe/model` para a lista e o que cada uma cobre."
+              },
               detail: {
                 type: "string",
                 enum: ["full", "standard", "minimal"],

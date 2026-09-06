@@ -1210,9 +1210,13 @@ export const scenarios = [
       if (!s.ok) return fail(s.error);
       const c01 = (s.data.out_of_scope_chapters?.chapters ?? []).find((x) => /^01-/.test(x.chapter));
       if (!c01) return fail("cap. 01 não aparece na banda de fora de âmbito");
-      if (!/SUPERF[ÍI]CIE DE ENGENHARIA/i.test(c01.activate_with)) return fail("cap. 01 sem a RAZÃO de não ter activador");
-      if (!/map_sbd_toe_applicability|get_sbd_toe_chapter_brief/.test(c01.activate_with)) return fail("cap. 01 sem caminho alternativo que exista");
-      return ok(`dieta ${medidas.join(", ")} com o mesmo conjunto e reconstrução verificada; ${g.evidence_patterns_without_validation_method} EP sem validation_method declarados; cap. 01 explicado com porta alternativa`); } },
+      // 0.20.0-beta.30: o princípio «superfície de engenharia» foi REVOGADO pelo lead (§23) —
+      // o vocabulário cobre o MANUAL, e o cap. 01 ENSINA a classificar (não calcula o nível).
+      // A asserção passa a ser a do contrato novo: caminho VERDADEIRO, nunca um ficheiro.
+      if (!/chapters=\["01-classificacao-aplicacoes"\]/.test(c01.activate_with))
+        return fail(`cap. 01 sem a via estrutural verdadeira: ${c01.activate_with}`);
+      if (/^changed_files=/.test(c01.activate_with)) return fail("cap. 01 a oferecer um ficheiro inventado");
+      return ok(`dieta ${medidas.join(", ")} com o mesmo conjunto e reconstrução verificada; ${g.evidence_patterns_without_validation_method} EP sem validation_method declarados; cap. 01 com porta estrutural verdadeira`); } },
 
   { id: "TC-F-50", axis: "F", title: "0.20.0-beta.27 (A): consult resolve os 24 concerns e o rule_trace deixa de afirmar o que é falso", tool: "consult_security_requirements",
     run: async (c) => {
@@ -1431,6 +1435,75 @@ export const scenarios = [
       if (/ACRESCEM à selecção/.test(nota)) return fail("a nota do extend continua a descrever o que NÃO acontece");
       if (!/LISTA PARALELA|lista paralela/i.test(nota)) return fail("a nota não diz onde as obrigações realmente vêm");
       return ok(`guia publica ${publicado} com domínio próprio = comportamento real; contador ${mm[1]}/${mm[2]} = arrays; nota do extend descreve a lista paralela (selecção idêntica, ${comOverlay.data.overlay.obligations.length} obrigações)`); } },
+
+  { id: "TC-F-56", axis: "F", title: "0.20.0-beta.30 (forma B): pedir por ESTRUTURA — o cap. 14 e o cap. 01 têm porta VERDADEIRA", tool: "select_sbd_toe_requirements",
+    run: async (c) => {
+      // o caso que motivou o ciclo: 14 concerns correctos não chegavam ao cap. 14
+      const gov = await c.tool("select_sbd_toe_requirements", { risk_level: "L3", chapters: ["14-governanca-contratacao"], limit: 500, detail: "minimal" });
+      if (!gov.ok) return fail(gov.error);
+      const sel = gov.data.selection.selected;
+      if (sel.length === 0) return fail("chapters=['14-governanca-contratacao'] não devolve nada — a forma B não existe");
+      if (!sel.every((r) => /^GOV-/.test(r.requirement_id))) return fail("o pedido por capítulo trouxe requisitos de fora dele");
+      const legend = gov.data.selection_trace_legend ?? [];
+      if (!legend.some((e) => /declared_structure|declared_chapter|forma B/i.test(JSON.stringify(e))))
+        return fail("a inclusão por estrutura não deixou traço próprio");
+      // por categoria
+      const cat = await c.tool("select_sbd_toe_requirements", { risk_level: "L3", categories: ["GOV"], limit: 500, detail: "minimal" });
+      if (!cat.ok) return fail(cat.error);
+      if (cat.data.selection.selected.length !== sel.length) return fail("categories=['GOV'] e chapters=[cap.14] discordam");
+      // cap. 01 — o método de classificação tem porta; o servidor continua a não emitir nível
+      const cla = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", chapters: ["01-classificacao-aplicacoes"], limit: 500, detail: "minimal" });
+      if (!cla.ok) return fail(cla.error);
+      if (cla.data.selection.selected.length === 0) return fail("o cap. 01 continua sem porta");
+      // valor estrutural inválido é DECLARADO, nunca descartado
+      const bad = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", categories: ["XPTO"] });
+      if (!bad.ok) return fail(bad.error);
+      if (!bad.data.unknown_structural?.values?.length) return fail("valor estrutural inválido descartado em silêncio");
+      // a forma A não se mexeu
+      const a1 = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], limit: 500, detail: "minimal" });
+      const a2 = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], limit: 500, detail: "minimal", chapters: [] });
+      if (!a1.ok || !a2.ok) return fail(a1.error ?? a2.error);
+      if (a1.data.selection.selected.length !== a2.data.selection.selected.length) return fail("a forma A mudou de resultado");
+      return ok(`cap. 14 por estrutura: ${sel.length} requisitos GOV (era inalcançável sem inventar changed_files); categories=[GOV] concorda; cap. 01 com ${cla.data.selection.selected.length}; valor inválido declarado; forma A intacta (${a1.data.selection.selected.length})`); } },
+
+  { id: "TC-F-57", axis: "F", title: "0.20.0-beta.30 (alcançabilidade + modelo): nenhum caminho oferecido é falso, e o modelo publica as três formas", tool: "read_sbd_toe_resource",
+    run: async (c) => {
+      // (b) nenhum activate_with oferece SÓ um ficheiro
+      const s = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], detail: "minimal" });
+      if (!s.ok) return fail(s.error);
+      const banda = s.data.out_of_scope_chapters?.chapters ?? [];
+      if (banda.length === 0) return fail("sem banda de fora-de-âmbito — fixture mudou");
+      for (const entry of banda) {
+        if (/^changed_files=/.test(entry.activate_with))
+          return fail(`${entry.chapter}: o único caminho oferecido é declarar um ficheiro que pode não existir`);
+        if (!/chapters=\[/.test(entry.activate_with))
+          return fail(`${entry.chapter}: sem via estrutural (que é sempre verdadeira)`);
+      }
+      // o modelo publica as três formas, derivado
+      const m = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/model" });
+      if (!m.ok) return fail(m.error);
+      const text = typeof m.data?.content === "string" ? m.data.content : JSON.stringify(m.data);
+      const model = JSON.parse(text.slice(text.indexOf("{")));
+      const ways = (model.how_to_ask?.ways ?? []).map((w) => w.id).sort();
+      if (JSON.stringify(ways) !== JSON.stringify(["A", "B", "C"])) return fail(`o modelo não publica as três formas: ${ways.join(",")}`);
+      if (!(model.entities?.counts?.requirements > 0)) return fail("modelo sem contagens reais");
+      if (!(model.relations?.values?.length > 0)) return fail("modelo sem relações com cardinalidades");
+      // as contagens do modelo são as REAIS (contraprova contra o catálogo)
+      const chapters = await c.tool("list_sbd_toe_chapters", {});
+      if (!chapters.ok) return fail(chapters.error);
+      const comReq = (model.chapters?.values ?? []).length;
+      if (comReq === 0 || comReq > (chapters.data.chapters ?? []).length) return fail("capítulos do modelo incoerentes com o catálogo");
+      // e todo o capítulo do modelo tem pelo menos uma forma
+      const semForma = (model.chapters.values ?? []).filter((x) => !(x.reachable_by ?? []).length);
+      if (semForma.length > 0) return fail(`capítulos sem forma de alcance: ${semForma.map((x) => x.chapter).join(", ")}`);
+      // quick-start existe e é barato
+      const q = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/quick-start" });
+      if (!q.ok) return fail(q.error);
+      const qtext = typeof q.data?.content === "string" ? q.data.content : JSON.stringify(q.data);
+      const qtk = Math.round(qtext.length / 4);
+      if (qtk > 1200) return fail(`quick-start com ${qtk} tk — devia ser o arranque barato`);
+      const soB = (model.chapters.values ?? []).filter((x) => !x.reachable_by.includes("A")).length;
+      return ok(`${banda.length} capítulos com caminho VERDADEIRO (via estrutural em todos); modelo com 3 formas, ${model.entities.counts.requirements} requisitos e ${model.relations.values.length} relações; ${soB} capítulos só por B; quick-start ${qtk} tk`); } },
 
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {

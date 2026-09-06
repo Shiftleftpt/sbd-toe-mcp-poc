@@ -132,8 +132,15 @@ export function basisOfSource(source: string): SelectionBasis {
 }
 
 export interface SelectionTraceEntry {
-  layer: "baseline" | "domain_specific" | "declared_category" | "agents_wave" | "named_rule";
-  source: ActivationTraceEntry["source"] | "context_chapter" | "declared_category" | "agents_wave" | "named_rule";
+  layer: "baseline" | "domain_specific" | "declared_category" | "declared_structure" | "agents_wave" | "named_rule";
+  source:
+    | ActivationTraceEntry["source"]
+    | "context_chapter"
+    | "declared_category"
+    /** 0.20.0-beta.30 — forma B: o pedido foi por ESTRUTURA (capítulo ou categoria). */
+    | "declared_structure"
+    | "agents_wave"
+    | "named_rule";
   trigger: string;
   score: number;
   reason: string;
@@ -162,7 +169,7 @@ export interface NarrowedOutGroup {
 export interface ActivatedChapter {
   chapter: string;
   /** O PRIMEIRO activador (estável desde 0.11.0; mantido para compatibilidade). */
-  source: "changed_file" | "technology" | "concern" | "stack";
+  source: "changed_file" | "technology" | "concern" | "stack" | "declared_chapter";
   trigger: string;
   /**
    * 0.20.0-beta.26 — TODOS os activadores deste capítulo, não só o primeiro.
@@ -257,6 +264,8 @@ export interface SelectionResult {
   };
   /** 0.20.0-beta.23: tokens de `technologies` fora do vocabulário — nomeados, nunca descartados em silêncio. */
   unknown_technologies?: string[];
+  /** 0.20.0-beta.30: valores estruturais fora do catálogo publicado — declarados, nunca descartados. */
+  unknown_structural?: string[];
   /** O `task` é contexto registado, não motor (excepto em discover). */
   task_record: { text: string; role: "recorded_context"; affects_selection: boolean };
 }
@@ -272,6 +281,23 @@ export interface SelectionContextInput {
   /** 0.20.0-beta.21 — default `declarative`. */
   mode?: SelectionMode;
   technologies?: string[];
+  /**
+   * 0.20.0-beta.30 — FORMA B: pedir por ESTRUTURA.
+   *
+   * Os `concerns` são um ATALHO — um agrupamento pré-cozinhado de categorias para casos
+   * comuns. Ao promovê-los a interface única, um grafo com dezenas de tipos passou a ser
+   * consumido como um menu de 24 botões: 14 concerns declarados exaustiva e correctamente
+   * não chegavam ao cap. 14, e a única porta publicada era `changed_files=["docs/**"]` —
+   * declarar um ficheiro que não existe. Num contrato cuja regra é «declara só o que sabes
+   * ser verdade», o servidor pedia uma mentira.
+   *
+   * `chapters` e `categories` são declarações VERDADEIRAS e verificáveis contra o catálogo
+   * publicado, na MESMA superfície: mesmas bandas, mesmo traço, mesmos denominadores.
+   * Não são inferência — o LLM continua a declarar; declara uma estrutura em vez de um
+   * conceito.
+   */
+  chapters?: string[];
+  categories?: string[];
 }
 
 /** Chapters activated by the CONTEXT (changed files, technologies, stack, concerns). */
@@ -330,7 +356,10 @@ export function runSelection(context: SelectionContextInput): SelectionResult {
   // aliases sobre a prosa, nem heurísticas de NOME de ficheiro (a tabela de PATHS
   // continua, que essa é dado publicado, não interpretação).
   const activation = activate(input, { declaredOnly: mode !== "discover" });
-  return runSelectionWithActivation(input, activation, context.technologies ?? [], mode);
+  return runSelectionWithActivation(input, activation, context.technologies ?? [], mode, {
+    chapters: context.chapters ?? [],
+    categories: context.categories ?? [],
+  });
 }
 
 /** Tecnologias declaradas normalizadas: valor do vocabulário fechado, ou token exacto dentro do `stack`. */
@@ -439,11 +468,18 @@ function buildNeedsInput(input: NormalizedInput, declared: DeclaredActivators, i
 }
 
 /** Variant for callers that already ran the activation engine (prepare). */
+/** 0.20.0-beta.30 — declaração ESTRUTURAL (forma B). */
+export interface StructuralDeclaration {
+  chapters: readonly string[];
+  categories: readonly string[];
+}
+
 export function runSelectionWithActivation(
   input: NormalizedInput,
   activation: ActivationResult,
   technologiesRaw: readonly string[] = [],
-  mode: SelectionMode = "declarative"
+  mode: SelectionMode = "declarative",
+  structuralRaw: StructuralDeclaration = { chapters: [], categories: [] }
 ): SelectionResult {
   const level = (input.risk_level ?? "L2") as SelectionRiskLevel;
   const declarative = mode !== "discover";
@@ -463,9 +499,39 @@ export function runSelectionWithActivation(
   const ontology = getOntologyData();
   const atLevel = (r: Requirement) => r.applicable_levels?.[level] === true;
 
+  /**
+   * Forma B aplicada: validada contra o CATÁLOGO publicado (não contra uma lista à mão).
+   * Um valor que o catálogo não conhece é DECLARADO, nunca descartado em silêncio — a
+   * mesma regra do `unknown_concerns` e do `unknown_technologies`.
+   */
+  const ontologyForStructure = getOntologyData();
+  const knownChapters = new Set(
+    ontologyForStructure.requirements.map((r) => r.source_bundle).filter((x): x is string => typeof x === "string")
+  );
+  const knownCategories = new Set(ontologyForStructure.requirements.map((r) => r.category));
+  const declaredChaptersB = declarative ? [...new Set(structuralRaw.chapters)].filter((c) => knownChapters.has(c)) : [];
+  const declaredCategoriesB = declarative
+    ? [...new Set(structuralRaw.categories)].filter((c) => knownCategories.has(c))
+    : [];
+  const unknownStructural = declarative
+    ? [
+        ...[...new Set(structuralRaw.chapters)].filter((c) => !knownChapters.has(c)).map((c) => `chapters="${c}"`),
+        ...[...new Set(structuralRaw.categories)].filter((c) => !knownCategories.has(c)).map((c) => `categories="${c}"`),
+      ].sort()
+    : [];
+
   const activatedChapters = activateChapters(input, technologies, activation);
+  for (const chapter of declaredChaptersB)
+    if (!activatedChapters.some((c) => c.chapter === chapter))
+      activatedChapters.push({
+        chapter,
+        source: "declared_chapter",
+        trigger: chapter,
+        activated_by: [{ source: "declared_chapter", trigger: chapter }],
+      });
   const chapterSet = new Set(activatedChapters.map((c) => c.chapter));
   const activatedCategories = categoriesForConcerns(activation.concerns);
+  for (const category of declaredCategoriesB) activatedCategories.add(category);
   const concernByCategory = new Map<string, ActivationTraceEntry>();
   for (const entry of activation.trace) {
     const produced = entry.produced as Concern;
@@ -530,7 +596,14 @@ export function runSelectionWithActivation(
   // declarações VÁLIDAS e INERTES: davam selected:[] sem aviso — o mesmo ponto cego
   // do empty_selection_warning noutra roupa. Qualquer caminho que não active nada
   // responde needs_input, e diz QUAIS declarações foram inertes.
-  if (mode === "declarative" && activatedCategories.size === 0 && activatedChapters.length === 0 && !ses008Declared) {
+  if (
+    mode === "declarative" &&
+    activatedCategories.size === 0 &&
+    activatedChapters.length === 0 &&
+    !ses008Declared &&
+    declaredChaptersB.length === 0 &&
+    declaredCategoriesB.length === 0
+  ) {
     const inert: string[] = [];
     if (declared.exposure !== undefined && (EXPOSURE_ACTIVATION[declared.exposure] ?? []).length === 0)
       inert.push(`exposure="${declared.exposure}"`);
@@ -578,6 +651,7 @@ export function runSelectionWithActivation(
       mode,
       needs_input: buildNeedsInput(input, declared, inert),
       ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
+    ...(unknownStructural.length > 0 ? { unknown_structural: unknownStructural } : {}),
     task_record: taskRecord,
     };
   }
@@ -662,12 +736,41 @@ export function runSelectionWithActivation(
         source: via && via.source === "changed_file" ? "changed_file" : "context_chapter",
         trigger: via?.trigger ?? r.source_bundle ?? "",
         score: 0.9,
-        reason: `capítulo ${r.source_bundle} activado pelo contexto (${via?.source ?? "context"}: ${via?.trigger ?? ""})`,
+        reason:
+          via?.source === "declared_chapter"
+            ? `capítulo ${r.source_bundle} DECLARADO por estrutura (forma B): pedido directo, sem depender de existir um atalho de vocabulário`
+            : `capítulo ${r.source_bundle} activado pelo contexto (${via?.source ?? "context"}: ${via?.trigger ?? ""})`,
       },
     ]);
   }
 
+  // Traço da forma B: uma inclusão por estrutura nunca é anónima.
+  const structuralTrace = (r: Requirement): SelectionTraceEntry | undefined => {
+    if (declaredChaptersB.includes(r.source_bundle ?? "")) 
+      return {
+        layer: "declared_structure",
+        source: "declared_structure",
+        trigger: r.source_bundle ?? "",
+        score: 1,
+        reason: `capítulo ${r.source_bundle} DECLARADO por estrutura (forma B): pedido directo, sem depender de existir um atalho de vocabulário`,
+      };
+    if (declaredCategoriesB.includes(r.category))
+      return {
+        layer: "declared_structure",
+        source: "declared_structure",
+        trigger: r.category,
+        score: 1,
+        reason: `categoria ${r.category} DECLARADA por estrutura (forma B): pedido directo, sem depender de existir um atalho de vocabulário`,
+      };
+    return undefined;
+  };
+
   for (const r of categoryEligible) {
+    const viaStructure = structuralTrace(r);
+    if (viaStructure) {
+      pushSelected(r, [viaStructure]);
+      continue;
+    }
     const entry = concernByCategory.get(r.category);
     pushSelected(r, [
       {
@@ -906,6 +1009,7 @@ export function runSelectionWithActivation(
           : {})
       },
       ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
+    ...(unknownStructural.length > 0 ? { unknown_structural: unknownStructural } : {}),
     task_record: taskRecord,
     };
   }
@@ -951,6 +1055,7 @@ export function runSelectionWithActivation(
     notes,
     mode,
     ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
+    ...(unknownStructural.length > 0 ? { unknown_structural: unknownStructural } : {}),
     ...(out_of_scope_chapters && out_of_scope_chapters.count > 0 ? { out_of_scope_chapters } : {}),
     task_record: taskRecord,
   };
@@ -962,46 +1067,45 @@ export function runSelectionWithActivation(
  * mais específico para quem declara.
  */
 function activationHintFor(chapter: string, categories: readonly string[] = []): string {
+  /**
+   * 0.20.0-beta.30 — O CAMINHO OFERECIDO TEM DE SER VERDADEIRO.
+   *
+   * Antes, quando não havia atalho de vocabulário, oferecia-se o padrão de caminho:
+   * `changed_files=["docs/**"]` para governança, `["aos/**"]` para formação. Isso é pedir
+   * ao chamador que DECLARE UM FICHEIRO QUE PODE NÃO EXISTIR no repositório dele — uma
+   * mentira, num contrato cuja regra é «declara só o que sabes ser verdade». Foi o caso que
+   * motivou este ciclo: 14 concerns declarados correctamente não chegavam ao cap. 14.
+   *
+   * A via ESTRUTURAL (forma B) é sempre verdadeira e sempre disponível: o capítulo existe no
+   * catálogo publicado, e declará-lo é um facto, não uma suposição sobre o repositório.
+   * Ordem de oferta: atalho de conceito (o mais barato) → tecnologia → ESTRUTURA (sempre
+   * verdadeira) → e o caminho de ficheiro só como opção ADICIONAL, quando existir.
+   */
   const vocab = buildActivationVocabulary();
+  const options: string[] = [];
   if (categories.length > 0) {
     const byCategory = vocab.concerns.values
       .filter((c) => c.activates_categories.some((cat) => categories.includes(cat)))
       .map((c) => String(c.value));
-    if (byCategory.length > 0) return `concerns=[${byCategory.slice(0, 2).map((c) => `"${c}"`).join(", ")}]`;
+    if (byCategory.length > 0)
+      options.push(`concerns=[${byCategory.slice(0, 2).map((c) => `"${c}"`).join(", ")}]`);
   }
   const concerns = vocab.concerns.values.filter((c) => c.activates_chapters.includes(chapter)).map((c) => String(c.value));
-  if (concerns.length > 0) return `concerns=[${concerns.slice(0, 2).map((c) => `"${c}"`).join(", ")}]`;
+  if (concerns.length > 0) options.push(`concerns=[${concerns.slice(0, 2).map((c) => `"${c}"`).join(", ")}]`);
   const techs = vocab.technologies.values.filter((t) => t.activates_chapters.includes(chapter)).map((t) => String(t.value));
-  if (techs.length > 0) return `technologies=[${techs.slice(0, 2).map((t) => `"${t}"`).join(", ")}]`;
-  // Os padrões publicados são strings de EXIBIÇÃO: alguns listam alternativas separadas
-  // por " / ". Para a dica ser copiável escolhe-se o padrão mais específico (o que activa
-  // menos capítulos) e só a primeira alternativa.
+  if (techs.length > 0) options.push(`technologies=[${techs.slice(0, 2).map((t) => `"${t}"`).join(", ")}]`);
+
+  // ESTRUTURA: sempre verdadeira, e por isso sempre presente.
+  options.push(`chapters=["${chapter}"]`);
+
   const paths = vocab.changed_files.patterns
     .filter((pattern) => pattern.activates_chapters.includes(chapter))
-    .sort((a, b) => a.activates_chapters.length - b.activates_chapters.length);
-  const first = paths[0];
-  if (first !== undefined) return `changed_files=["${first.pattern.split(" / ")[0]!.trim()}"]`;
-  /**
-   * 0.20.0-beta.26 (achado da beta.24, item 8) — o cap. 01 não tem activador nenhum, e a
-   * razão é estrutural, não uma lacuna do vocabulário: as suas categorias (CLA, e as
-   * irmãs GOV/TRN) não pertencem a nenhum concern porque o vocabulário activa por
-   * SUPERFÍCIE DE ENGENHARIA — o que estás a construir ou a mudar. Classificação de risco,
-   * governação e formação não são superfícies de engenharia: a classificação é o
-   * procedimento que PRODUZ o `risk_level` que todas as outras respostas já usam.
-   *
-   * Decisão desta vaga: NÃO se inventa activador. Dar um a este capítulo mudaria a
-   * selecção de todas as chamadas — e nenhum item desta vaga pode mexer na selecção. Fica
-   * declarado, com a razão e com um caminho que existe (que não é um activador).
-   */
-  const chapterCategories = [...new Set(
-    getOntologyData().requirements.filter((r) => r.source_bundle === chapter).map((r) => r.category)
-  )].sort();
-  return (
-    `SEM ACTIVADOR PUBLICADO: as categorias deste capítulo (${chapterCategories.join(", ")}) não pertencem a nenhum ` +
-    "concern porque o vocabulário activa por SUPERFÍCIE DE ENGENHARIA (o que constróis ou mudas), e este " +
-    "capítulo não é uma. Não é lacuna do vocabulário nem «não aplicável» — chega-se lá por outra porta: " +
-    `map_sbd_toe_applicability(riskLevel) ou get_sbd_toe_chapter_brief(chapter="${chapter}")`
-  );
+    .sort((x, y) => x.activates_chapters.length - y.activates_chapters.length);
+  const firstPath = paths[0];
+  const pathHint =
+    firstPath !== undefined ? ` — ou \`changed_files=["${firstPath.pattern.split(" / ")[0]!.trim()}"]\` SE esses ficheiros existirem mesmo no teu repositório` : "";
+
+  return `${[...new Set(options)].join(" · ")}${pathHint}`;
 }
 
 function buildDenominators(

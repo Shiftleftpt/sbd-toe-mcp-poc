@@ -19,6 +19,7 @@ import { readFileSync } from "node:fs";
 import { resolveAppPath } from "../config.js";
 import { buildActivationVocabulary } from "./activation-vocabulary.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./server-surface.js";
+import { buildModelResource } from "./model-resource.js";
 import { getOntologyData } from "../tools/ontology-loader.js";
 import { handleListSbdToeChapters } from "../tools/structured-tools.js";
 import { handleConsultSecurityRequirements, consultSupportedConcerns } from "../tools/consult-security-requirements.js";
@@ -265,7 +266,47 @@ export function generateCrossSurfaceBlock(): string {
   ].join("\n");
 }
 
+/**
+ * 0.20.0-beta.30 — AS TRÊS FORMAS DE PEDIR, no arranque do guia.
+ *
+ * O guia dizia «declara concerns» como via única. Os concerns são um ATALHO: cobrem os
+ * casos comuns, não o Manual inteiro — e quando não cobrem, a única porta publicada era
+ * inventar um `changed_files`. Este bloco é derivado do mesmo modelo que o recurso
+ * `sbd://toe/model` publica, para o ensino não poder divergir do que o servidor faz.
+ */
+export function generateHowToAskBlock(): string {
+  const model = buildModelResource() as {
+    how_to_ask: { ways: Array<{ id: string; name: string; when: string; example: string }> };
+    chapters: { values: Array<{ chapter: string; reachable_by: string[] }> };
+    categories: { values: Array<{ category: string; reachable_by: string[] }> };
+  };
+  const soB = model.chapters.values.filter((c) => !c.reachable_by.includes("A")).map((c) => c.chapter);
+  const catSoB = model.categories.values.filter((c) => !c.reachable_by.includes("A")).map((c) => c.category);
+  const rows = model.how_to_ask.ways.map(
+    (w) => `| **${w.id} — ${w.name}** | ${w.when.replace(/\|/g, "\\|")} | \`${w.example}\` |`
+  );
+  return [
+    `${DERIVED_NOTE}`,
+    "",
+    "| Forma | Quando | Exemplo executável |",
+    "|---|---|---|",
+    ...rows,
+    "",
+    "**Nenhuma das três é inferência.** Em todas TU declaras — um conceito, uma estrutura ou um nó;",
+    "o servidor nunca interpreta prosa. O que muda é a PRECISÃO do pedido.",
+    "",
+    `**Quando A não chega:** ${soB.length} capítulos não têm atalho de conceito — ${soB.map((c) => "`" + c + "`").join(", ")} — ` +
+      `e ${catSoB.length} categorias — ${catSoB.map((c) => "`" + c + "`").join(", ")}. Não são inalcançáveis:`,
+    "pede-os por ESTRUTURA. O `out_of_scope_chapters` de cada resposta oferece-te o caminho verdadeiro no",
+    "momento em que faz falta — e **nunca te pede para declarar um ficheiro que talvez não exista**.",
+    "",
+    "O mapa completo (entidades, relações, cardinalidades, o que cada forma alcança) está em",
+    "`sbd://toe/model`. Os atalhos da forma A continuam em `sbd://toe/activation-vocabulary`."
+  ].join("\n");
+}
+
 const GENERATORS: Record<string, () => string> = {
+  "how-to-ask": generateHowToAskBlock,
   "cross-surface": generateCrossSurfaceBlock,
   "output-sizes": generateOutputSizesBlock,
   concerns: generateConcernsBlock,

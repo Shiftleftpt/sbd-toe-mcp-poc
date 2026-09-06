@@ -3,11 +3,112 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.29 (beta line, npm `beta`) — navegação: pôr o relevante à frente e dizer a verdade sobre o roteamento. Ameaças ordenadas por PERTENÇA ao âmbito (a página 1 de `integration` passa de MT-001..008 «Overengineering» do cap. 01 para MT-039.. do cap. 03); roteamento ≠ cobertura publicado antes da chamada (24 sem erro · 11 com domínio próprio, nomeados, derivados e iguais ao comportamento); bug do contador da legenda (dizia «0 nomes e 0 ids» com 13 nos arrays); ordem invertida no guia (ressalva antes da instrução); nota do `operator: extend` a descrever o que acontece. Selecção INALTERADA, ouro byte-idêntico.
+reasoning: v0.20.0-beta.30 (beta line, npm `beta`) — TRÊS FORMAS DE PEDIR: declarativo ≠ enumerado. Os concerns eram um ATALHO promovido a interface única: 14 concerns correctos não chegavam ao cap. 14 e a única porta era declarar um ficheiro que não existe. Abre-se a forma B (chapters/categories na própria superfície de selecção, com traço declared_structure), a forma C ganha nome no arranque, publica-se o recurso de MODELO (entidades, relações e cardinalidades reais + as três formas) e um quick-start de 500 tk, e a INVARIANTE DE ALCANÇABILIDADE proíbe caminhos falsos. Selecção por A INALTERADA, ouro byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.30 — 2026-09-06
+
+**As TRÊS FORMAS DE PEDIR: declarativo ≠ enumerado.** Autorizado pelo lead (2026-09-06);
+desenho e as 4 decisões em `mcp-three-ways-to-ask-design-note.md` §7, princípio em §23.
+Bundle pin INALTERADO (release KG `v1.11.0`); **linha estável intocada**.
+
+> **O contrário de «adivinhar prosa» não é «escolher de uma lista» — é «pedir com precisão».**
+> Ao matar a inferência promovemos os `concerns` — que são um ATALHO — a interface única, e
+> um grafo com dezenas de tipos passou a ser consumido como um menu de 24 botões. Prova: 14
+> concerns declarados exaustiva e correctamente não chegaram ao cap. 14, e a única porta
+> publicada era `changed_files=["docs/**"]` — **declarar um ficheiro que não existe**. Num
+> contrato cuja regra é «declara só o que sabes ser verdade», o servidor pedia uma mentira.
+
+### O INVENTÁRIO da alcançabilidade (corrido ANTES de qualquer correcção)
+
+`reachability-invariant.test.ts`, três propriedades. Inventário da primeira corrida:
+
+| | |
+|---|---|
+| capítulos **inalcançáveis** por qualquer forma | **0** |
+| capítulos **sem atalho de conceito** (só por estrutura) | **5**: `01-classificacao-aplicacoes`, `02-requisitos-seguranca`, `06-desenvolvimento-seguro`, `13-formacao-onboarding`, `14-governanca-contratacao` — sendo que 02 e 06 são alcançados de facto pelas categorias da baseline; os **3 verdadeiramente órfãos** são 01, 13 e 14 |
+| categorias sem atalho de conceito | **3**: `CLA`, `TRN`, `GOV` — exactamente as dos três capítulos órfãos |
+| **caminhos FALSOS oferecidos** | **9** (3 capítulos × 3 níveis): `13` e `14` ofereciam SÓ `changed_files=["aos/**"]`/`["docs/**"]`; `01` declarava que não havia caminho nenhum |
+
+Coerência que valida o inventário: as três categorias órfãs são as mesmas que a beta.26 já
+tinha encontrado (`CLA`/`GOV`/`TRN`), e mapeiam exactamente para os três capítulos sem porta.
+
+### 1 — B e C de primeira classe
+
+**B (estrutura) abriu-se na PRÓPRIA superfície de selecção**: `chapters` e `categories` como
+activadores declarados. Escolha declarada: pô-los ao lado da forma A dá-lhes as mesmas
+bandas, o mesmo traço (`layer: "declared_structure"`), os mesmos denominadores e a mesma
+declaração de fora-de-âmbito — a resposta fica comparável e auditável, em vez de mandar o
+chamador para uma tool de listagem crua. É **aditivo**: sem eles, nada muda.
+
+```
+select_sbd_toe_requirements(risk_level="L3", chapters=["14-governanca-contratacao"])  → 14 requisitos GOV
+select_sbd_toe_requirements(risk_level="L3", categories=["GOV"])                      → os mesmos 14
+select_sbd_toe_requirements(risk_level="L2", chapters=["01-classificacao-aplicacoes"]) → 8 requisitos CLA
+```
+
+Valores que o catálogo não conhece vêm em `unknown_structural` — nunca descartados em
+silêncio. **Já existia** e mantém-se: `resolve_entities(record_type, filters)`,
+`get_sbd_toe_verification_matrix(requirement_ids)`, `trace_sbd_toe_requirement_sources`.
+
+**C (navegação) já existia** (`trace_sbd_toe_graph(anchor, lens)`): o que faltava era estatuto
+— passa a estar nomeada e exemplificada no arranque, no modelo e no guia.
+
+### 2 — Recurso de MODELO (e um quick-start)
+
+**`sbd://toe/model`** — o mapa, não a lista de botões. Derivado como tudo o resto: entidades
+com contagens reais (273 requisitos, 233 ameaças, 260 práticas, 20 controlos…), **relações
+com cardinalidades reais** (`requirement → control`: 305 arestas; `artifact → requirement`:
+45; `signal → evidence`: 11…), e cada capítulo e categoria com **a forma que o alcança**.
+Custo: **2.731 tk**.
+
+**`sbd://toe/quick-start`** — o arranque mínimo que o avaliador pediu: **500 tk** contra
+**13.135 tk** do arranque completo (guia + vocabulário), com o resto por leitura dirigida.
+
+### 3 — Invariante de alcançabilidade e o fim dos caminhos falsos
+
+`activate_with` passa a oferecer, por ordem de custo: atalho de conceito → tecnologia →
+**ESTRUTURA (sempre verdadeira)** → e o caminho de ficheiro **só como opção adicional e
+condicionada**: *«ou `changed_files=["docs/**"]` SE esses ficheiros existirem mesmo no teu
+repositório»*. Depois da correcção: **0 caminhos falsos**, e a via estrutural presente em
+todos os capítulos da banda. Custo da banda: 602 → **929 tk** (o preço de oferecer um caminho
+verdadeiro a cada capítulo, em vez de um inventado a alguns).
+
+### 4 — Ensino
+
+O guia deixa de dizer «declara concerns» como via única: abre com **as três formas, quando
+usar cada uma e um exemplo executável de cada** (bloco GERADO do mesmo modelo, para o ensino
+não poder divergir do comportamento), e diz quais os capítulos e categorias que só se
+alcançam por estrutura. Guia: 7.800 → **9.941 tk**; quem quiser o caminho barato lê o
+quick-start de 500.
+
+### 5 — Cap. 01: EXECUTAR ≠ ENSINAR
+
+A precisão do lead fecha a questão antiga: o cap. 01 **explica como fazer a classificação** —
+quem faz o quê, casos de uso, quando no lifecycle — e o que não faz é CALCULAR o nível. O
+erro (meu, na beta.26) foi confundir executar com ensinar, e era absurdo exigir `risk_level`
+em quase todas as tools sem ter caminho para explicar como se obtém. **O cap. 01 tem porta**
+(`chapters=["01-classificacao-aplicacoes"]`, 8 requisitos) e o servidor **continua a nunca
+emitir nível** — o quick-start di-lo explicitamente.
+
+### Verificação
+
+- **Suite** 793/793 (55 ficheiros) · **Aceitação** 164 → **124 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novos TC-F-56/57).
+- **As cinco invariantes anteriores continuam verdes** (conservação, entre-superfícies,
+  contrato-de-superfície, next-verbatim, guia derivado) — 33 asserções, 6/6 ficheiros.
+- **Ouro byte-idêntico ao da beta.29** nos dois braços: `discover` **10 PASS / 0 / 0**,
+  declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção por A não se mexeu.**
+- **Orçamentos** 8/8 do `prepare` inalterados.
+- **Gate**: stdout só JSON-RPC · exit 0 · 12 recursos (com `model` e `quick-start`) ·
+  `package_version` = `sbd://toe/version` = `provenance.server`.
+- **Um cenário meu foi actualizado com a razão declarada**: o TC-F-49 exigia que o cap. 01
+  justificasse não ter activador com o princípio «superfície de engenharia» — **revogado pelo
+  lead no §23**. Passa a exigir o contrato novo: caminho estrutural verdadeiro, nunca um
+  ficheiro.
 
 ## 0.20.0-beta.29 — 2026-09-06
 

@@ -1,0 +1,1685 @@
+{
+  "generated_at": "2026-09-06T13:20:31.350Z",
+  "server": {
+    "name": "sbd-toe-mcp-poc",
+    "version": "0.20.0-beta.30"
+  },
+  "package_version": "0.20.0-beta.30",
+  "consumed_bundle": {
+    "release_tag": "v1.11.0",
+    "source": "release",
+    "sha256": "b7444094f3b4e60e26fd0fd586793445e2b734c6376fb2b327fbd888828d03df",
+    "contract": "v1.17",
+    "manual": "v1.8.0"
+  },
+  "totals": {
+    "total": 164,
+    "PASS": 124,
+    "PART": 17,
+    "FAIL": 0,
+    "SKIP": 23
+  },
+  "executed": 141,
+  "rollup": [
+    {
+      "axis": "A",
+      "name": "Tool coverage",
+      "total": 16,
+      "PASS": 12,
+      "PART": 4,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    {
+      "axis": "B",
+      "name": "By role",
+      "total": 16,
+      "PASS": 13,
+      "PART": 3,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    {
+      "axis": "C",
+      "name": "By surface (AC)",
+      "total": 28,
+      "PASS": 2,
+      "PART": 5,
+      "FAIL": 0,
+      "SKIP": 21
+    },
+    {
+      "axis": "D",
+      "name": "Negatives / invariants",
+      "total": 17,
+      "PASS": 12,
+      "PART": 3,
+      "FAIL": 0,
+      "SKIP": 2
+    },
+    {
+      "axis": "E",
+      "name": "Regression (gate)",
+      "total": 17,
+      "PASS": 16,
+      "PART": 1,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    {
+      "axis": "F",
+      "name": "0.10.0 tools + G1 (added 2026-08-29)",
+      "total": 57,
+      "PASS": 56,
+      "PART": 1,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    {
+      "axis": "G",
+      "name": "Beta-line tools (added 2026-09-01)",
+      "total": 3,
+      "PASS": 3,
+      "PART": 0,
+      "FAIL": 0,
+      "SKIP": 0
+    },
+    {
+      "axis": "H",
+      "name": "Selection vs golden oracle (measurement, not gate; added 2026-08-31)",
+      "total": 10,
+      "PASS": 10,
+      "PART": 0,
+      "FAIL": 0,
+      "SKIP": 0
+    }
+  ],
+  "coverage": {
+    "scenarios": {
+      "total": 164,
+      "executed": 141,
+      "skipped": 23,
+      "executed_pct": 86
+    },
+    "tools": {
+      "exposed": 25,
+      "exercised": 25,
+      "unexercised": [],
+      "calls": {
+        "answer_sbd_toe_manual": 1,
+        "assess_sbd_toe_implementation": 7,
+        "consult_security_requirements": 125,
+        "generate_sbd_toe_skill": 9,
+        "get_guide_by_role": 21,
+        "get_sbd_toe_chapter_brief": 6,
+        "get_sbd_toe_chapter_implementation_checklist": 1,
+        "get_sbd_toe_operating_model": 2,
+        "get_sbd_toe_verification_matrix": 5,
+        "get_threat_landscape": 49,
+        "inspect_sbd_toe_retrieval": 4,
+        "list_sbd_toe_chapters": 5,
+        "map_sbd_toe_applicability": 10,
+        "map_sbd_toe_regulatory_activation": 3,
+        "map_sbd_toe_review_scope": 8,
+        "plan_sbd_toe_repo_governance": 8,
+        "plan_sbd_toe_rollout": 1,
+        "prepare_sbd_toe_codegen_context": 27,
+        "query_sbd_toe_entities": 5,
+        "read_sbd_toe_resource": 25,
+        "resolve_entities": 17,
+        "search_sbd_toe_manual": 6,
+        "select_sbd_toe_requirements": 144,
+        "trace_sbd_toe_graph": 19,
+        "trace_sbd_toe_requirement_sources": 2
+      }
+    },
+    "acceptance_cases": {
+      "total": 28,
+      "covered_oss": [
+        "AC-01",
+        "AC-02",
+        "AC-03",
+        "AC-14",
+        "AC-15",
+        "AC-25",
+        "AC-26"
+      ],
+      "commercial_roadmap": [
+        "AC-04",
+        "AC-05",
+        "AC-06",
+        "AC-07",
+        "AC-08",
+        "AC-09",
+        "AC-10",
+        "AC-11",
+        "AC-12",
+        "AC-13",
+        "AC-16",
+        "AC-17",
+        "AC-18",
+        "AC-19",
+        "AC-20",
+        "AC-21",
+        "AC-22",
+        "AC-23",
+        "AC-24",
+        "AC-27",
+        "AC-28"
+      ]
+    },
+    "roles_x_phases": [
+      "developer × develop @ L2",
+      "appsec-engineer × design @ L3",
+      "qa × test @ L2",
+      "devops-sre × build @ L2",
+      "infrastructure × deploy @ L3",
+      "security-champion × plan @ L1",
+      "product-management × plan @ L2",
+      "grc-compliance × govern @ L3",
+      "auditores × govern @ L3",
+      "procurement × govern @ L2",
+      "training-manager × govern @ L2",
+      "incident-response × operate @ L3",
+      "application-manager × operate @ L2",
+      "gestao-executiva × govern @ L2",
+      "appsec-engineer × operate @ L3",
+      "skill-pack anchored on guide by role+phase (parsimonious)"
+    ]
+  },
+  "results": [
+    {
+      "id": "TC-A-01",
+      "axis": "A",
+      "title": "codegen ready_for_codegen with real citation_map",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "ready; 59 citations all resolve; trace 7; provenance yes",
+      "ms": 43
+    },
+    {
+      "id": "TC-A-02",
+      "axis": "A",
+      "title": "codegen vague task → clarification/decomposition, no ids",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "status=needs_clarification; no citation_map",
+      "ms": 7
+    },
+    {
+      "id": "TC-A-03",
+      "axis": "A",
+      "title": "codegen with regulatory overlay (EXT-DORA) — honest degradation",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PART",
+      "note": "status=needs_input",
+      "owner": "mcp",
+      "ms": 6
+    },
+    {
+      "id": "TC-A-04",
+      "axis": "A",
+      "title": "review scope: auth/.tf/ci paths mapped with reasoning",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PASS",
+      "note": "6 bundles, each with reason; tf→08, ci→07, auth→06",
+      "ms": 2
+    },
+    {
+      "id": "TC-A-05",
+      "axis": "A",
+      "title": "review scope: docs-only change → no domain bundles forced",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PART",
+      "note": "3 foundation/operational bundles (01-classificacao-aplicacoes,02-requisitos-seguranca,14-governanca-contratacao) with explicit README reasons — low scope, not zero",
+      "owner": "mcp",
+      "ms": 1
+    },
+    {
+      "id": "TC-A-06",
+      "axis": "A",
+      "title": "applicability GRADUADA L2 + containers/ci-cd/iac/api-gateway (0.14.0)",
+      "tool": "map_sbd_toe_applicability",
+      "status": "PASS",
+      "note": "15 capítulos graduados (âncora matriz cap. 01), conditional 3 (tech-reasoned), 0 excluídos por semântica",
+      "ms": 5
+    },
+    {
+      "id": "TC-A-07",
+      "axis": "A",
+      "title": "applicability GRADUADA L1: presença total, exigência escalada (0.14.0)",
+      "tool": "map_sbd_toe_applicability",
+      "status": "PASS",
+      "note": "15 capítulos presentes em L1 (ch06 dominant=obrigatorio, ch13=specific); obrigatórios L1 76 < L2 234 — exigência escala, nada excluído",
+      "ms": 3
+    },
+    {
+      "id": "TC-A-08",
+      "axis": "A",
+      "title": "generate_skill deterministic canonical agent-guide",
+      "tool": "generate_sbd_toe_skill",
+      "status": "PASS",
+      "note": "deterministic (39905 chars); guide resource readable",
+      "ms": 121
+    },
+    {
+      "id": "TC-A-09",
+      "axis": "A",
+      "title": "[limite] generate_skill per clientType differentiation",
+      "tool": "generate_sbd_toe_skill",
+      "status": "PART",
+      "note": "gap confirmed: content identical across clientType (no per-client differentiation)",
+      "owner": "roadmap",
+      "ms": 25
+    },
+    {
+      "id": "TC-A-10",
+      "axis": "A",
+      "title": "repo governance artefacts L3 by chapter",
+      "tool": "plan_sbd_toe_repo_governance",
+      "status": "PASS",
+      "note": "15 chapters, 469 artefacts (total 469), sourced note present: true",
+      "ms": 5
+    },
+    {
+      "id": "TC-A-11",
+      "axis": "A",
+      "title": "repo governance pagination walk (offset/limit, coverage-preserving)",
+      "tool": "plan_sbd_toe_repo_governance",
+      "status": "PASS",
+      "note": "5 pages of ≤3 cover all 15 chapters, no loss/duplication",
+      "ms": 10
+    },
+    {
+      "id": "TC-A-12",
+      "axis": "A",
+      "title": "list_chapters L2 with applicability/minLevel",
+      "tool": "list_sbd_toe_chapters",
+      "status": "PASS",
+      "note": "15 chapters, all levels true, demand_by_level graduado (ex. 06→obrigatorio)",
+      "ms": 4
+    },
+    {
+      "id": "TC-A-13",
+      "axis": "A",
+      "title": "query_entities by text with type/chapter/risk filters",
+      "tool": "query_sbd_toe_entities",
+      "status": "PASS",
+      "note": "Requirement × ch.02 × L2: 48 matched over pool 3799 (risk facet on 316); entities cite chunk+path: true; control_objective is not a chunk mention type (→ resolve_entities): total 0, declared",
+      "ms": 1480
+    },
+    {
+      "id": "TC-A-14",
+      "axis": "A",
+      "title": "resolve control_objective exact id or honest total:0",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "total:0 honest; provenance data/publish/runtime/v1/*",
+      "ms": 2
+    },
+    {
+      "id": "TC-A-15",
+      "axis": "A",
+      "title": "resolve regulatory_obligation EXT-DORA",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "6 DORA obligations",
+      "ms": 54
+    },
+    {
+      "id": "TC-A-16",
+      "axis": "A",
+      "title": "search(debug) bounded + inspect_retrieval without model; E5 envelope wiring",
+      "tool": "search_sbd_toe_manual",
+      "status": "PART",
+      "note": "cites; debug bounded (12396 chars); inspect 10590 chars; E5 coverage_map/handles not wired on search",
+      "owner": "roadmap",
+      "ms": 1093
+    },
+    {
+      "id": "TC-B-01",
+      "axis": "B",
+      "title": "guide by role developer × develop @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "developer→developer; 8 assignments, 8 US (index, detail on demand)",
+      "ms": 10
+    },
+    {
+      "id": "TC-B-02",
+      "axis": "B",
+      "title": "guide by role appsec-engineer × design @ L3",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "appsec-engineer→appsec-engineer; 17 assignments, 17 US (index, detail on demand)",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-03",
+      "axis": "B",
+      "title": "guide by role qa × test @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "qa→qa; 5 assignments, 5 US (index, detail on demand)",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-04",
+      "axis": "B",
+      "title": "guide by role devops-sre × build @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "devops-sre→devops-sre; 11 assignments, 11 US (index, detail on demand)",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-05",
+      "axis": "B",
+      "title": "guide by role infrastructure × deploy @ L3",
+      "tool": "get_guide_by_role",
+      "status": "PART",
+      "note": "role \"infrastructure\" → \"infrastructure\" not in canonical vocabulary (13 roles) → 0 assignments; [dados] infrastructure not a canonical role",
+      "owner": "graph",
+      "ms": 9
+    },
+    {
+      "id": "TC-B-06",
+      "axis": "B",
+      "title": "guide by role security-champion × plan @ L1",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "security-champion→security-champion; 1 assignments, 1 US (index, detail on demand)",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-07",
+      "axis": "B",
+      "title": "guide by role product-management × plan @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "product-management→product-owner; 5 assignments, 5 US (index, detail on demand)",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-09",
+      "axis": "B",
+      "title": "guide by role grc-compliance × govern @ L3",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "grc-compliance→grc-compliance; 20 assignments, 20 US (index, detail on demand); [dados]",
+      "ms": 6
+    },
+    {
+      "id": "TC-B-10",
+      "axis": "B",
+      "title": "guide by role auditores × govern @ L3",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "auditores→auditores; 1 assignments, 1 US (index, detail on demand); [dados]/[comercial] evidence-pack is state",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-11",
+      "axis": "B",
+      "title": "guide by role procurement × govern @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PART",
+      "note": "role \"procurement\" → \"procurement\" not in canonical vocabulary (13 roles) → 0 assignments; [dados] procurement not a canonical role; [comercial] tracking is state",
+      "owner": "graph",
+      "ms": 6
+    },
+    {
+      "id": "TC-B-12",
+      "axis": "B",
+      "title": "guide by role training-manager × govern @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PART",
+      "note": "role \"training-manager\" → \"training-manager\" not in canonical vocabulary (13 roles) → 0 assignments; [dados] training-manager not a canonical role; [comercial] completion is state",
+      "owner": "graph",
+      "ms": 5
+    },
+    {
+      "id": "TC-B-13",
+      "axis": "B",
+      "title": "guide by role incident-response × operate @ L3",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "incident-response→operacoes; 8 assignments, 8 US (index, detail on demand); [dados] ir alias; [comercial] live incident is state",
+      "ms": 7
+    },
+    {
+      "id": "TC-B-14",
+      "axis": "B",
+      "title": "guide by role application-manager × operate @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "application-manager→product-owner; 3 assignments, 3 US (index, detail on demand); [dados] app-manager alias; [comercial] posture is state",
+      "ms": 5
+    },
+    {
+      "id": "TC-B-15",
+      "axis": "B",
+      "title": "guide by role gestao-executiva × govern @ L2",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "gestao-executiva→gestao-executiva; 10 assignments, 10 US (index, detail on demand); [dados]; [comercial] KPIs with data are state",
+      "ms": 6
+    },
+    {
+      "id": "TC-B-16",
+      "axis": "B",
+      "title": "guide by role appsec-engineer × operate @ L3",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "appsec-engineer→appsec-engineer; 32 assignments, 32 US (index, detail on demand); [comercial] CVE backlog/SLA is state",
+      "ms": 9
+    },
+    {
+      "id": "TC-B-08",
+      "axis": "B",
+      "title": "skill-pack anchored on guide by role+phase (parsimonious)",
+      "tool": "generate_sbd_toe_skill",
+      "status": "PASS",
+      "note": "coverage chapters 5/15, assignments 8, US 8; 4646 chars (smaller than the generic guide)",
+      "ms": 28
+    },
+    {
+      "id": "TC-C-01",
+      "axis": "C",
+      "title": "AC-01 inline: control + acceptance criterion + citation (size-bounded?)",
+      "tool": "consult_security_requirements",
+      "status": "PART",
+      "note": "consult gives 28 req / 4 controls with ids (8196 chars); answer needs client sampling; no inline size bound (RF-F2 [limite])",
+      "owner": "roadmap",
+      "ms": 1
+    },
+    {
+      "id": "TC-C-02",
+      "axis": "C",
+      "title": "AC-02 tester checklist by phase for an auth change",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PART",
+      "note": "review scope anchors ch.10 + 2 bundles with expectedEvidence; per-phase checklist is prose (answer)",
+      "owner": "roadmap",
+      "ms": 1
+    },
+    {
+      "id": "TC-C-03",
+      "axis": "C",
+      "title": "AC-03 ChatOps: manual statement with verifiable citation (session token TTL)",
+      "tool": "search_sbd_toe_manual",
+      "status": "PASS",
+      "note": "5 cited chunks with URLs; session/TTL content present",
+      "ms": 541
+    },
+    {
+      "id": "TC-C-04",
+      "axis": "C",
+      "title": "AC-04 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-05",
+      "axis": "C",
+      "title": "AC-05 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-06",
+      "axis": "C",
+      "title": "AC-06 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-07",
+      "axis": "C",
+      "title": "AC-07 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-08",
+      "axis": "C",
+      "title": "AC-08 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-09",
+      "axis": "C",
+      "title": "AC-09 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-10",
+      "axis": "C",
+      "title": "AC-10 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-11",
+      "axis": "C",
+      "title": "AC-11 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-12",
+      "axis": "C",
+      "title": "AC-12 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-13",
+      "axis": "C",
+      "title": "AC-13 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-16",
+      "axis": "C",
+      "title": "AC-16 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-17",
+      "axis": "C",
+      "title": "AC-17 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-18",
+      "axis": "C",
+      "title": "AC-18 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-19",
+      "axis": "C",
+      "title": "AC-19 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-20",
+      "axis": "C",
+      "title": "AC-20 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-21",
+      "axis": "C",
+      "title": "AC-21 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-22",
+      "axis": "C",
+      "title": "AC-22 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-23",
+      "axis": "C",
+      "title": "AC-23 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-24",
+      "axis": "C",
+      "title": "AC-24 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-27",
+      "axis": "C",
+      "title": "AC-27 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-28",
+      "axis": "C",
+      "title": "AC-28 — commercial / stateful surface (L4a/L4b)",
+      "tool": "—",
+      "status": "SKIP",
+      "note": "commercial roadmap (interventive/stateful) — documented, not run",
+      "ms": 0
+    },
+    {
+      "id": "TC-C-14",
+      "axis": "C",
+      "title": "AC-14 architecture: threats contextualised (not a ch.02 dump)",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "159 threats over 04-arquitetura-segura,03-threat-modeling,08-iac-infraestrutura,09-containers-imagens,11-deploy-seguro,12-monitorizacao-operacoes,13-formacao-onboarding,14-governanca-contratacao,01-classificacao-aplicacoes,02-requisitos-seguranca",
+      "ms": 11
+    },
+    {
+      "id": "TC-C-15",
+      "axis": "C",
+      "title": "AC-15 pentester role → assignments",
+      "tool": "get_guide_by_role",
+      "status": "PART",
+      "note": "gap confirmed: pentester → 0 assignments (not a canonical role); threat_landscape auth gives 25 threats with 1 antipattern-linked",
+      "owner": "graph",
+      "ms": 11
+    },
+    {
+      "id": "TC-C-25",
+      "axis": "C",
+      "title": "AC-25 training: curriculum by role (OSS part)",
+      "tool": "generate_sbd_toe_skill",
+      "status": "PART",
+      "note": "curriculum ≡ role skill-pack (coverage {\"chapters\":12,\"of_total_chapters\":15,\"assignments\":25,\"user_stories\":21,\"checklist_items\":115}); who-has-not-completed is commercial state",
+      "owner": "roadmap",
+      "ms": 17
+    },
+    {
+      "id": "TC-C-26",
+      "axis": "C",
+      "title": "AC-26 PO: security acceptance criteria grounded in CO/chapter",
+      "tool": "consult_security_requirements",
+      "status": "PART",
+      "note": "5 PO plan stories with BDD acceptance criteria (structured); prose composition needs the client model",
+      "owner": "roadmap",
+      "ms": 6
+    },
+    {
+      "id": "TC-D-01",
+      "axis": "D",
+      "title": "scope-gate: 'Torna a minha app segura'",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "status=needs_decomposition, zero ids",
+      "ms": 1
+    },
+    {
+      "id": "TC-D-02",
+      "axis": "D",
+      "title": "scope-gate: apply the whole manual to my pipeline",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "needs_decomposition; suggestions 2",
+      "ms": 1
+    },
+    {
+      "id": "TC-D-03",
+      "axis": "D",
+      "title": "scope-gate: quantum-resistant blockchain → unsupported_scope",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "unsupported_scope, zero ids",
+      "ms": 0
+    },
+    {
+      "id": "TC-D-04",
+      "axis": "D",
+      "title": "não-inventar: invent a quantum-safe requirement with id",
+      "tool": "answer_sbd_toe_manual",
+      "status": "SKIP",
+      "note": "server returns retrieval context only (no sampling in this client): 6 real ids echoed, no generation — refusal is the client model's; verdict needs an LLM client",
+      "ms": 461
+    },
+    {
+      "id": "TC-D-05",
+      "axis": "D",
+      "title": "não-inventar: CO-9999 → not found, no fabricated description",
+      "tool": "resolve_entities",
+      "status": "PART",
+      "note": "resolve total:0 honest; query_entities falls back to semantic search (3799 chunks) instead of an explicit not_found",
+      "owner": "mcp",
+      "ms": 409
+    },
+    {
+      "id": "TC-D-06",
+      "axis": "D",
+      "title": "não-inventar: leading question (key rotation 24h)",
+      "tool": "answer_sbd_toe_manual",
+      "status": "SKIP",
+      "note": "grounded-or-nothing refusal is the client model's behaviour; server only retrieves — needs an LLM client",
+      "ms": 0
+    },
+    {
+      "id": "TC-D-07",
+      "axis": "D",
+      "title": "parsimónia: list user stories of ch.12 as an index",
+      "tool": "resolve_entities",
+      "status": "PART",
+      "note": "18/18 stories returned with bdd/checklist bodies (fields capped at 8) — no index-only mode; affordances present: true",
+      "owner": "mcp",
+      "ms": 3
+    },
+    {
+      "id": "TC-D-08",
+      "axis": "D",
+      "title": "affordance: chapter brief signals detail + handle",
+      "tool": "get_sbd_toe_chapter_brief",
+      "status": "PASS",
+      "note": "3 actionable affordances (query_sbd_toe_entities, get_guide_by_role, get_sbd_toe_chapter_implementation_checklist); artifacts 31",
+      "ms": 110
+    },
+    {
+      "id": "TC-D-09",
+      "axis": "D",
+      "title": "never-silent-trunc: consult declares totals",
+      "tool": "consult_security_requirements",
+      "status": "PASS",
+      "note": "N=M declared (7 req, 10 controls); gaps declared 0",
+      "ms": 17
+    },
+    {
+      "id": "TC-D-10",
+      "axis": "D",
+      "title": "never-silent-trunc: threat landscape PAGINADO com coverage+size_estimate (0.15.0)",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "paginado: 25/233 + size_estimate (regra G1 fechada)",
+      "ms": 4
+    },
+    {
+      "id": "TC-D-11",
+      "axis": "D",
+      "title": "determinism: resolve ×2 byte-identical",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "identical (10 records)",
+      "ms": 3
+    },
+    {
+      "id": "TC-D-12",
+      "axis": "D",
+      "title": "determinism: consult ×2 same ids same order",
+      "tool": "consult_security_requirements",
+      "status": "PASS",
+      "note": "same ids, same order",
+      "ms": 2
+    },
+    {
+      "id": "TC-D-13",
+      "axis": "D",
+      "title": "vector-overreach: lookup query stays deterministic (vector off)",
+      "tool": "inspect_sbd_toe_retrieval",
+      "status": "PASS",
+      "note": "only source=mcp hits; no vector recall by default",
+      "ms": 449
+    },
+    {
+      "id": "TC-D-14",
+      "axis": "D",
+      "title": "vector-overreach: inspect exposes the method",
+      "tool": "inspect_sbd_toe_retrieval",
+      "status": "PASS",
+      "note": "method exposed (index, rank, localScore); deterministic",
+      "ms": 268
+    },
+    {
+      "id": "TC-D-15",
+      "axis": "D",
+      "title": "citação: guide answers carry real ids",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "17 assignments each with chapter_id + practice_id (+ user_story 17)",
+      "ms": 7
+    },
+    {
+      "id": "TC-D-16",
+      "axis": "D",
+      "title": "citação+não-inventar: applicability for 'fintech AI agentic'",
+      "tool": "map_sbd_toe_applicability",
+      "status": "PART",
+      "note": "rejects unknown technologies with the allowed vocabulary (no silent fill); ml-ai is the grounded proxy — no not_covered field",
+      "owner": "mcp",
+      "ms": 1
+    },
+    {
+      "id": "TC-D-17",
+      "axis": "D",
+      "title": "scope-gate+parsimónia: review without diff asks for paths",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PASS",
+      "note": "asks for paths (rpc -32602)",
+      "ms": 1
+    },
+    {
+      "id": "TC-F-01",
+      "axis": "F",
+      "title": "verification matrix L2 — paginated EXPECTED side, declared gaps",
+      "tool": "get_sbd_toe_verification_matrix",
+      "status": "PASS",
+      "note": "rows 5/247, hasMore true, EP-gaps 0, provenance true",
+      "ms": 5
+    },
+    {
+      "id": "TC-F-02",
+      "axis": "F",
+      "title": "operating model — sections paginated with provenance",
+      "tool": "get_sbd_toe_operating_model",
+      "status": "PASS",
+      "note": "sections 2/30, hasMore true, source data/publish/indexes/mcp_chunks.jsonl (b",
+      "ms": 105
+    },
+    {
+      "id": "TC-F-03",
+      "axis": "F",
+      "title": "chapter implementation checklist ch.09 — cited items, paginated",
+      "tool": "get_sbd_toe_chapter_implementation_checklist",
+      "status": "PASS",
+      "note": "2/2 items, cited; hasMore false",
+      "ms": 3
+    },
+    {
+      "id": "TC-F-04",
+      "axis": "F",
+      "title": "rollout plan — 8 canonical phases mapped to chapters, paginated",
+      "tool": "plan_sbd_toe_rollout",
+      "status": "PASS",
+      "note": "8 phases, 8 with a chapter anchor, canonical order true, model phase-ordered-mvp, total 8",
+      "ms": 11
+    },
+    {
+      "id": "TC-F-05",
+      "axis": "F",
+      "title": "assess — not_reported nunca é pass; {} rejeitado (0.15.1); thresholds citados",
+      "tool": "assess_sbd_toe_implementation",
+      "status": "PASS",
+      "note": "not_reported ✓, posture=not_assessed; {} rejeitado; total 92, hasMore true",
+      "ms": 97
+    },
+    {
+      "id": "TC-F-06",
+      "axis": "F",
+      "title": "regulatory activation DORA — chapters activated, counts, paginated",
+      "tool": "map_sbd_toe_regulatory_activation",
+      "status": "PASS",
+      "note": "DORA: 3/15 chapters, mappings 1678, obligations 6; unknown framework → honest empty/error",
+      "ms": 97
+    },
+    {
+      "id": "TC-F-08",
+      "axis": "F",
+      "title": "curated requirement→control layer v3 (KG v1.8.0 dev-build): 305 links, 0 unlinked, curated 16, catalogue rules tolerated",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "305 links (file+surface), gaps L1/L2/L3 = 0/0/0, curated 12+4 on surface, justifications incl. catalogue_rule/_secondary tolerated; AUT-006/007/008 → identity (C1), AUT-010 → monitoring, INT-007 + LOG → monitoring",
+      "ms": 7
+    },
+    {
+      "id": "TC-F-09",
+      "axis": "F",
+      "title": "data_protection domain present (ontology v2.2): control served with links",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "1 data_protection control(s) (CTRL-data-protection-criptografia-aplicacional-e-proteccao-de-dados-a4afa5b411), 21 requirement links, active in consult L3 (1, _confidence direct)",
+      "ms": 5
+    },
+    {
+      "id": "TC-F-10",
+      "axis": "F",
+      "title": "AUT requirements resolve to C1 (identity) — never CAP (classificação) or DEV (desenvolvimento)",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "10 AUT requirements all linked; 10 → C1 (identity-identidade-autenticacao-e-sessoes), AUT-010 → monitoring; none to CAP/DEV",
+      "ms": 1
+    },
+    {
+      "id": "TC-F-07",
+      "axis": "F",
+      "title": "G1 gate — every set-returning tool exposes offset/limit",
+      "tool": "tools/list",
+      "status": "PART",
+      "note": "set-returning tools without offset/limit: consult_security_requirements, get_guide_by_role (declared totals only)",
+      "owner": "mcp",
+      "ms": 0
+    },
+    {
+      "id": "TC-E-01",
+      "axis": "E",
+      "title": "threat mitigation structural (L2, logging): mitigated_by + associated_control_ids resolve",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "15/15 threats with mitigated_by AND associated_control_ids, all ids resolve",
+      "ms": 16
+    },
+    {
+      "id": "TC-E-02",
+      "axis": "E",
+      "title": "threat mitigation structural (L2, auth incl. ch.02 via C1): mitigated_by + associated_control_ids resolve",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "95 threats (ch.02 in scope via C1's defining chapter) with mitigated_by AND associated_control_ids, all resolve",
+      "ms": 6
+    },
+    {
+      "id": "TC-E-03",
+      "axis": "E",
+      "title": "review path-map: containers → ch.09",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PASS",
+      "note": "all 4 → 09 with reason",
+      "ms": 1
+    },
+    {
+      "id": "TC-E-04",
+      "axis": "E",
+      "title": "review path-map: *.tf/*.bicep → ch.08",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PASS",
+      "note": "both → 08",
+      "ms": 1
+    },
+    {
+      "id": "TC-E-05",
+      "axis": "E",
+      "title": "review path-map: non-GitHub CI → ch.07; .env → config/secrets",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PASS",
+      "note": "5 CI systems → 07; .env → 06-desenvolvimento-seguro",
+      "ms": 0
+    },
+    {
+      "id": "TC-E-06",
+      "axis": "E",
+      "title": "review path-map: Python source recognised as code",
+      "tool": "map_sbd_toe_review_scope",
+      "status": "PASS",
+      "note": "→ 02-requisitos-seguranca,06-desenvolvimento-seguro,10-testes-seguranca",
+      "ms": 1
+    },
+    {
+      "id": "TC-E-07",
+      "axis": "E",
+      "title": "query exact-id OPS-002 (ch.12, requirement)",
+      "tool": "query_sbd_toe_entities",
+      "status": "PASS",
+      "note": "exact_id, total 1",
+      "ms": 0
+    },
+    {
+      "id": "TC-E-08",
+      "axis": "E",
+      "title": "query exact-id CLA-001",
+      "tool": "query_sbd_toe_entities",
+      "status": "PASS",
+      "note": "exact_id first",
+      "ms": 1
+    },
+    {
+      "id": "TC-E-09",
+      "axis": "E",
+      "title": "applicability conditional by technologies (iac, containers, ml-ai)",
+      "tool": "map_sbd_toe_applicability",
+      "status": "PASS",
+      "note": "08/09 conditional with technology reasons",
+      "ms": 2
+    },
+    {
+      "id": "TC-E-10",
+      "axis": "E",
+      "title": "applicability sensitivity: technologies=[] → no conditional 08/09",
+      "tool": "map_sbd_toe_applicability",
+      "status": "PASS",
+      "note": "conditional vazio sem technologies (sensibilidade vs E-09); 08 presente com demand graduada (obrigatorio) — presença nunca é exclusão (0.14.0)",
+      "ms": 1
+    },
+    {
+      "id": "TC-E-11",
+      "axis": "E",
+      "title": "chapter brief ch.12 carries role + honest topics",
+      "tool": "get_sbd_toe_chapter_brief",
+      "status": "PASS",
+      "note": "role 6, phases 6, artifacts 26",
+      "ms": 2
+    },
+    {
+      "id": "TC-E-12",
+      "axis": "E",
+      "title": "chapter brief ch.08 role present without over-promise",
+      "tool": "get_sbd_toe_chapter_brief",
+      "status": "PASS",
+      "note": "role 6, phases 5",
+      "ms": 1
+    },
+    {
+      "id": "TC-E-13",
+      "axis": "E",
+      "title": "search debug bounded to topK (KB not MB)",
+      "tool": "search_sbd_toe_manual",
+      "status": "PASS",
+      "note": "12932 chars",
+      "ms": 528
+    },
+    {
+      "id": "TC-E-14",
+      "axis": "E",
+      "title": "search debug scales with topK, always bounded",
+      "tool": "search_sbd_toe_manual",
+      "status": "PASS",
+      "note": "6991 < 32867 chars",
+      "ms": 1007
+    },
+    {
+      "id": "TC-E-15",
+      "axis": "E",
+      "title": "[limite] E5 envelope (coverage_map handles + size_estimate) on large search",
+      "tool": "search_sbd_toe_manual",
+      "status": "PART",
+      "note": "no E5 envelope on search (bounded 5921 chars; 8 cited chunks); pagination/size_estimate live on the structured tools instead",
+      "owner": "roadmap",
+      "ms": 233
+    },
+    {
+      "id": "TC-E-16",
+      "axis": "E",
+      "title": "rich US: US-02 ch.12 multi-clause bdd + checklist",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "bdd 3 clauses, checklist 3",
+      "ms": 0
+    },
+    {
+      "id": "TC-E-17",
+      "axis": "E",
+      "title": "rich US: US-01 ch.01 foundational bdd + checklist",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "bdd 3, checklist 8",
+      "ms": 1
+    },
+    {
+      "id": "TC-F-11",
+      "axis": "F",
+      "title": "select_sbd_toe_requirements (MP1): baseline ∪ contexto, narrowing declarado, G1",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "walk 33 selected (CNT/DPL in, AUT narrowed with reason), traces on all, narrowed_out 101 declared",
+      "ms": 11
+    },
+    {
+      "id": "TC-F-12",
+      "axis": "F",
+      "title": "select (MP1): activadores declarados (agents, data_sensitivity) + overlay extend",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "agents → AGN ×4 + wave; regulated → ENC in; overlay extend 14 AI Act obligations",
+      "ms": 4
+    },
+    {
+      "id": "TC-F-13",
+      "axis": "F",
+      "title": "camada de ensino (R3): guide → select → aprofundar via narrowed_out/sinal",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "guide teaches select+bands+index; SES narrowed with reason → recovered by adding the session signal (8 SES back); next[] → prepare+consult",
+      "ms": 10
+    },
+    {
+      "id": "TC-F-14",
+      "axis": "F",
+      "title": "R-image (v1.8.0): 'imagem' docker → CNT, 'imagem' ficheiro → FIL (desambiguação declarada)",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "docker → CNT ×11 sem FIL; ficheiro → FIL ×8 sem CNT",
+      "ms": 3
+    },
+    {
+      "id": "TC-F-15",
+      "axis": "F",
+      "title": "SES-008-por-tecnologia (Author): JWT activa SES-008 a qualquer nível, nomeado no trace",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "JWT@L1 → SES-008 com regra nomeada no trace; sem JWT → nível manda (SES-008 fora)",
+      "ms": 2
+    },
+    {
+      "id": "TC-F-16",
+      "axis": "F",
+      "title": "read_sbd_toe_resource (0.13.0): espelho de resources/read — estático, templado e URI desconhecido declarado",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "version (kg=v1.11.0) + templated codegen-instructions via tool; unknown URI → erro declarado com lista derivada",
+      "ms": 1
+    },
+    {
+      "id": "TC-F-17",
+      "axis": "F",
+      "title": "stamp de versão por resposta + inspect com proveniência do pin (0.13.0)",
+      "tool": "consult_security_requirements + inspect_sbd_toe_retrieval",
+      "status": "PASS",
+      "note": "provenance.kg=v1.11.0 em consult+select; inspect apresenta o Pin servido (fim do n/d não-declarado)",
+      "ms": 389
+    },
+    {
+      "id": "TC-F-18",
+      "axis": "F",
+      "title": "threat_landscape paginado (0.15.0): default 25, coverage+size_estimate, enum agents",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "default 25/233 threats, size≈5731tk, página 2 avança, enum agents aceite",
+      "ms": 13
+    },
+    {
+      "id": "TC-F-19",
+      "axis": "F",
+      "title": "banda excluded_by_level (0.15.0): select declara exclusões de nível; prepare com counts",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "select L1: 15 categorias excluídas por nível (60 reqs) DECLARADAS; prepare counts ✓",
+      "ms": 4
+    },
+    {
+      "id": "TC-F-20",
+      "axis": "F",
+      "title": "fases (0.15.0): alias implement→develop; desconhecida ⇒ phase_warning; tool_prefix",
+      "tool": "get_guide_by_role",
+      "status": "PASS",
+      "note": "implement→develop (8 assignments); banana → warning c/ 8 knownPhases; tool_prefix aplicado",
+      "ms": 34
+    },
+    {
+      "id": "TC-F-21",
+      "axis": "F",
+      "title": "erros harmonizados (0.15.0): brief/orgScope/slot declarados com listas de válidos",
+      "tool": "get_sbd_toe_chapter_brief",
+      "status": "PASS",
+      "note": "brief fantasma → lista de 15 ids; '8' resolve; orgScope warning; slot inválido lista slots; char paging 500/39763",
+      "ms": 11
+    },
+    {
+      "id": "TC-F-22",
+      "axis": "F",
+      "title": "index-compact DERIVADO (0.15.0) + aliases de naming risk_level↔riskLevel",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "index 2.0-derived (15 caps, demand_by_level, 0 minLevel); aliases de nível nos 2 sentidos ✓",
+      "ms": 3
+    },
+    {
+      "id": "TC-F-23",
+      "axis": "F",
+      "title": "0.15.1: tool_prefix placeholder visível + brief.next sem id inválido + mode verdadeiro",
+      "tool": "generate_sbd_toe_skill",
+      "status": "PASS",
+      "note": "placeholder+instrução sem parâmetro; next do brief inválido usa placeholder genérico",
+      "ms": 13
+    },
+    {
+      "id": "TC-F-24",
+      "axis": "F",
+      "title": "0.15.1: assess — kpi_values {} rejeitado; gaps_offset walk; posture below vs not_assessed",
+      "tool": "assess_sbd_toe_implementation",
+      "status": "PASS",
+      "note": "{} → erro instrutivo; posture not_assessed sem avaliação; gaps walk 92/92 com coverage própria",
+      "ms": 78
+    },
+    {
+      "id": "TC-F-25",
+      "axis": "F",
+      "title": "0.16.0: dívida de dados exposta — artifacts nos assignments, control_names nas ameaças, totais com semântica",
+      "tool": "get_guide_by_role + get_threat_landscape + plan_repo_governance",
+      "status": "PASS",
+      "note": "artifacts 25/25 no guide; control_names 95/95; totais 45 distinct / 469 relações com semântica declarada",
+      "ms": 16
+    },
+    {
+      "id": "TC-F-26",
+      "axis": "F",
+      "title": "0.17.0: resolve_entities valida chaves de filtro (caso do lead ACC-001/ACC-003)",
+      "tool": "resolve_entities",
+      "status": "PASS",
+      "note": "'id' → unknown_filter_fields + 12 valid_fields derivados; dot-notation ✓/✗ declarada; requirement_id → 2 (o 0-silencioso do lead morreu)",
+      "ms": 4
+    },
+    {
+      "id": "TC-F-27",
+      "axis": "F",
+      "title": "0.17.0: cadeia requisito→prova — select → verification_matrix(requirement_ids)",
+      "tool": "get_sbd_toe_verification_matrix",
+      "status": "PASS",
+      "note": "select→matrix: 4 requisitos com prova de 4 pedidos; REQ-XXX-999 declarado sem EvidencePattern; next fecha a cadeia",
+      "ms": 10
+    },
+    {
+      "id": "TC-F-28",
+      "axis": "F",
+      "title": "0.18.0 (estação 3): rastreabilidade requisito→fonte — DEP-001 e FIL-002 numa chamada",
+      "tool": "trace_sbd_toe_requirement_sources",
+      "status": "PASS",
+      "note": "FIL-002 direct ×3 + DEP-001 compensado (1º salto exact@0.95); fake declarado; meta 17/254/19; dieta ✓",
+      "ms": 14
+    },
+    {
+      "id": "TC-F-29",
+      "axis": "F",
+      "title": "0.19.0 (ronda 3): paráfrase — basis declared/lexical + aviso de dominância + razão sensível-à-redacção",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "rica 57 vs magra 8; basis nos traces; narrowed diz 'sensível à redacção'; aviso share=1 c/ 1 concerns candidatos; declarado → sem aviso",
+      "ms": 3
+    },
+    {
+      "id": "TC-F-30",
+      "axis": "F",
+      "title": "0.19.0: slot por índice com lista REAL derivada (o «Slots válidos: .» morreu)",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "slot inválido → catálogo real por índice+when; slot '0' (when=always) devolvido",
+      "ms": 0
+    },
+    {
+      "id": "TC-F-31",
+      "axis": "F",
+      "title": "0.19.1 (ronda 4): V2 vazio=ALARME; V4 declarado vence lexical; replay-SES continua morto",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "V2: alarme c/ 17 candidatos, sem matrix no next; V4: SES ×8 preservado sem contradição; replay-SES morto (×8 narrowed); V1/V3 57≠8 ambas avisadas",
+      "ms": 6
+    },
+    {
+      "id": "TC-F-32",
+      "axis": "F",
+      "title": "0.19.2: next calibrado com os limites do destino (round-trip executável)",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "sugestão [auth,integration,validation] aceite: select re-run 58 selected, prepare ready_for_codegen; página 53 c/ tecto ≤50 declarado",
+      "ms": 8
+    },
+    {
+      "id": "TC-F-33",
+      "axis": "F",
+      "title": "0.19.3: seguir 3 next à letra → 3 funcionam; matrix impõe o tecto real",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "3 next à letra: resolve requirement+[ACC-001] → 1 recs; matrix [ACC-001,ACC-002,ACC-003] ok (via estabilização); uri sbd://toe/ontology lido; 63 ids rejeitados c/ tecto 50; record_type desconhecido DECLARADO c/ 26 válidos",
+      "ms": 13
+    },
+    {
+      "id": "TC-F-34",
+      "axis": "F",
+      "title": "0.19.4: tecto por-id no prepare (caso 88-reqs @ minimal) + round-trip da divisão ensinada",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "88@minimal → needs_decomposition declarado (tecto 78, ~68 tk/req, proj 9166>8450); divisão seguida: [auth]→28 reqs, [validation]→15 reqs; full sem tecto ✓",
+      "ms": 39
+    },
+    {
+      "id": "TC-F-35",
+      "axis": "F",
+      "title": "0.20.0-beta.21: declarativo primeiro — needs_input ensina, declaração selecciona, redacção não decide",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "needs_input ensina (candidatos 4, exemplo executável → 42 req.); 3 redacções ⇒ 1 conjunto (44 req.); baseline explícita 100",
+      "ms": 47
+    },
+    {
+      "id": "TC-F-36",
+      "axis": "F",
+      "title": "0.20.0-beta.21: sbd://toe/activation-vocabulary — vocabulário fechado, derivado e executável",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "24 concerns, 9 tecnologias, 13 padrões de path, 13 papéis, 8 fases; promessa auth@L2=27 confirmada na selecção",
+      "ms": 12
+    },
+    {
+      "id": "TC-F-37",
+      "axis": "F",
+      "title": "0.20.0-beta.22 (caminho para 9): guarda anti-zero indexada à ACTIVAÇÃO + ausências declaradas",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "inertes → needs_input nomeando 2; nível L1 → needs_input c/ 15 grupos excluded_by_level; gralha 'authz' declarada c/ 24 valores válidos; baseline explícita 100",
+      "ms": 22
+    },
+    {
+      "id": "TC-F-38",
+      "axis": "F",
+      "title": "0.20.0-beta.22: nada acontece sem traço — stack_token, named_rule, concern_slice_mapping e enum gerado",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "stack_token ×1, named_rule SES-008 ✓, 0 task_term órfãos (1 concern_slice_mapping), enum 24 idêntico nas 3 tools",
+      "ms": 28
+    },
+    {
+      "id": "TC-F-39",
+      "axis": "F",
+      "title": "0.20.0-beta.23 (P0-1): CONSERVAÇÃO — o motor não deita fora o que o vocabulário PROMETE",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "conservação verificada: build@L3=19/19 (bandas 140); supply_chain@L3=36/36 (bandas 145); release@L3=26/26 (bandas 147); deployment@L3=43/43 (bandas 157); build@L1=9/9 (bandas 140); DEV-003 presente com traço declared_category",
+      "ms": 47
+    },
+    {
+      "id": "TC-F-40",
+      "axis": "F",
+      "title": "0.20.0-beta.23 (P0-2): get_threat_landscape declara os concerns que NÃO resolve (zero nunca é mudo)",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "valor por resolver declarado (24 suportados); misto mantém a declaração com 95 ameaças; 'auth' limpo",
+      "ms": 10
+    },
+    {
+      "id": "TC-F-41",
+      "axis": "F",
+      "title": "0.20.0-beta.23 (P0-3): guarda anti-zero cobre `technologies` — e a declaração com efeito não é descartada",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "jwt declarado → SES-008 (1 req.), simétrico com stack; 'cobol' nomeado como inerte e em unknown_technologies",
+      "ms": 18
+    },
+    {
+      "id": "TC-F-42",
+      "axis": "F",
+      "title": "0.20.0-beta.23 (P1): a proveniência diz QUE SERVIDOR respondeu (kg ≠ server)",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "provenance.server=0.20.0-beta.30 em 4 ferramentas, distinto de kg",
+      "ms": 22
+    },
+    {
+      "id": "TC-F-43",
+      "axis": "F",
+      "title": "0.20.0-beta.24 (item 1): agent-guide GERADO — publica o vocabulário (24), não a cobertura do mapa de ameaças (13)",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "guia derivado: 24 concerns publicados (era 13); mecanismo de não-roteáveis vivo (1 para o valor inválido); contagens = vocabulário; recursos e prompts completos",
+      "ms": 13
+    },
+    {
+      "id": "TC-F-44",
+      "axis": "F",
+      "title": "0.20.0-beta.24 (item 2): âmbito da promessa — o que nenhuma declaração activou é DECLARADO, não omitido",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "14 capítulos declarados, 133 requisitos fora de âmbito, dica 'supply_chain' verificada a trazer o cap. 05; selecção inalterada (27)",
+      "ms": 26
+    },
+    {
+      "id": "TC-F-45",
+      "axis": "F",
+      "title": "0.20.0-beta.24 (item 3): higiene do `task` — task_context canónico, alias mantido, sem promessas de inferência",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "task_context canónico e registado (affects_selection=false), alias equivalente, discover intacto (35 req.), descrição sem resíduos",
+      "ms": 19
+    },
+    {
+      "id": "TC-F-46",
+      "axis": "F",
+      "title": "0.20.0-beta.25 (adenda): o guia não publica a teoria do minLevel nem descreve menos bandas do que a resposta traz",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "minLevel retirada e declarada, 15 capítulos presentes em todos os níveis, 4 bandas nomeadas, tamanho L2 medido (47k), search marcado não-normativo",
+      "ms": 10
+    },
+    {
+      "id": "TC-F-47",
+      "axis": "F",
+      "title": "0.20.0-beta.26 (item 1): evidence_patterns por PERTENÇA ao âmbito, não por prefixo alfabético",
+      "tool": "prepare_sbd_toe_codegen_context",
+      "status": "PASS",
+      "note": "sonda A: 0/5 EPs fora do âmbito (era 5/5); pertença monótona em minimal/standard/full; debug.notes com returned=5 e cap efectivo",
+      "ms": 27
+    },
+    {
+      "id": "TC-F-48",
+      "axis": "F",
+      "title": "0.20.0-beta.26 (itens 2,3,5,6): threat needs_input, traço multi-activador, denominadores, obligation_ids",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "threat needs_input a 730 tk (era ~8,4k); cap. 08 com 2 activadores; 4 denominadores definidos (114/136/247/273); 3 obligation_ids",
+      "ms": 61
+    },
+    {
+      "id": "TC-F-49",
+      "axis": "F",
+      "title": "0.20.0-beta.26 (itens 4,7,8): dieta do select sem perda, cobertura parcial declarada, cap. 01 explicado",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "dieta standard −40%, minimal −47% com o mesmo conjunto e reconstrução verificada; 4 EP sem validation_method declarados; cap. 01 com porta estrutural verdadeira",
+      "ms": 34
+    },
+    {
+      "id": "TC-F-50",
+      "axis": "F",
+      "title": "0.20.0-beta.27 (A): consult resolve os 24 concerns e o rule_trace deixa de afirmar o que é falso",
+      "tool": "consult_security_requirements",
+      "status": "PASS",
+      "note": "24 concerns resolvidos e concordantes com o vocabulário; rule_trace verdadeiro; gralha declarada; privacy@L1 com empty_at_level (existem em L2/L3)",
+      "ms": 25
+    },
+    {
+      "id": "TC-F-51",
+      "axis": "F",
+      "title": "0.20.0-beta.27 (B+C): guia manda CONTRAPROVAR e as superfícies concordam sobre o mesmo bundle",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "guia manda contraprovar e publica a cobertura por superfície; 72 pares concern×nível concordantes entre vocabulário, select e consult",
+      "ms": 592
+    },
+    {
+      "id": "TC-F-52",
+      "axis": "F",
+      "title": "0.20.0-beta.28 (classe): activador aceite pelo schema tem efeito OU vem declarado, em TODAS as superfícies",
+      "tool": "consult_security_requirements",
+      "status": "PASS",
+      "note": "consult declara exposure+data_sensitivity com 59 requisitos em causa (= diferença real) e rule_trace próprio; 3 pares superfície×activador varridos, nenhum mudo",
+      "ms": 15
+    },
+    {
+      "id": "TC-F-53",
+      "axis": "F",
+      "title": "0.20.0-beta.28: guia sem contradição entre blocos gerados; threat com base de routing e dedup opcional",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "sem contradição entre blocos gerados; routing_basis files=activated_controls / iac=domain_chapter; dedup 6734 → 6017 tk (-11%) com full intacto",
+      "ms": 18
+    },
+    {
+      "id": "TC-F-54",
+      "axis": "F",
+      "title": "0.20.0-beta.29 (item 1): ameaças ordenadas por PERTENÇA — a página 1 deixa de ser governação genérica",
+      "tool": "get_threat_landscape",
+      "status": "PASS",
+      "note": "integration: 25/25 específicas na p.1; iac: 25/25 específicas na p.1; logging: 15/15 específicas na p.1; files: 25/25 específicas na p.1; caps. 01/02 no fim do conjunto completo (218 ameaças)",
+      "ms": 23
+    },
+    {
+      "id": "TC-F-55",
+      "axis": "F",
+      "title": "0.20.0-beta.29 (itens 2,3,5): roteamento ≠ cobertura, contador da legenda, e a nota do extend diz o que acontece",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "guia publica 11 com domínio próprio = comportamento real; contador 3/3 = arrays; nota do extend descreve a lista paralela (selecção idêntica, 6 obrigações)",
+      "ms": 94
+    },
+    {
+      "id": "TC-F-56",
+      "axis": "F",
+      "title": "0.20.0-beta.30 (forma B): pedir por ESTRUTURA — o cap. 14 e o cap. 01 têm porta VERDADEIRA",
+      "tool": "select_sbd_toe_requirements",
+      "status": "PASS",
+      "note": "cap. 14 por estrutura: 14 requisitos GOV (era inalcançável sem inventar changed_files); categories=[GOV] concorda; cap. 01 com 8; valor inválido declarado; forma A intacta (27)",
+      "ms": 34
+    },
+    {
+      "id": "TC-F-57",
+      "axis": "F",
+      "title": "0.20.0-beta.30 (alcançabilidade + modelo): nenhum caminho oferecido é falso, e o modelo publica as três formas",
+      "tool": "read_sbd_toe_resource",
+      "status": "PASS",
+      "note": "14 capítulos com caminho VERDADEIRO (via estrutural em todos); modelo com 3 formas, 273 requisitos e 5 relações; 5 capítulos só por B; quick-start 583 tk",
+      "ms": 12
+    },
+    {
+      "id": "TC-G-01",
+      "axis": "G",
+      "title": "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)",
+      "tool": "trace_sbd_toe_graph",
+      "status": "PASS",
+      "note": "determinístico; walks completos sem fuga de IRI: slice_implementation=270, objective_realization=270, mechanism_provenance=270",
+      "ms": 108
+    },
+    {
+      "id": "TC-G-02",
+      "axis": "G",
+      "title": "trace sem resultado: resposta declarada, nunca silenciosa (anchor fora da projecção v1)",
+      "tool": "trace_sbd_toe_graph",
+      "status": "PASS",
+      "note": "0 rows/total 0 declarados com anchor ecoado + provenance.note (âmbito v1); anchor inexistente idem",
+      "ms": 2
+    },
+    {
+      "id": "TC-G-03",
+      "axis": "G",
+      "title": "trace com input inválido: erro declarado (-32602), nunca sucesso vazio",
+      "tool": "trace_sbd_toe_graph",
+      "status": "PASS",
+      "note": "lens inválida/em falta → erro declarado que nomeia o campo («Invalid or missing \"lens\".…»)",
+      "ms": 0
+    },
+    {
+      "id": "TC-H-01",
+      "axis": "H",
+      "title": "GC-01 — Upload de ficheiros com autenticação e RBAC (⚠ caso contaminado — nota do oráculo)",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (29/29), precisão-estrita 100%, excesso 46; consult: cobertura 69%, precisão 100%, excesso 18",
+      "ms": 8
+    },
+    {
+      "id": "TC-H-02",
+      "axis": "H",
+      "title": "GC-02 — API REST pública com rate limiting",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (22/22), precisão-estrita 100%, excesso 61; consult: cobertura 82%, precisão 84%, excesso 24",
+      "ms": 5
+    },
+    {
+      "id": "TC-H-03",
+      "axis": "H",
+      "title": "GC-03 — Serviço containerizado com deploy em Kubernetes",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (20/20), precisão-estrita 100%, excesso 13; consult: cobertura 100%, precisão 68%, excesso 149",
+      "ms": 5
+    },
+    {
+      "id": "TC-H-04",
+      "axis": "H",
+      "title": "GC-04 — Módulo Terraform de rede + segredos",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (14/14), precisão-estrita 100%, excesso 11; consult: cobertura 100%, precisão 100%, excesso 11",
+      "ms": 4
+    },
+    {
+      "id": "TC-H-05",
+      "axis": "H",
+      "title": "GC-05 — Pipeline CI com build e push de imagem",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (19/19), precisão-estrita 100%, excesso 55; consult: cobertura 16%, precisão 100%, excesso 4",
+      "ms": 6
+    },
+    {
+      "id": "TC-H-06",
+      "axis": "H",
+      "title": "GC-06 — App com dados pessoais e overlay regulatório (AI Act)",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (16/16), precisão-estrita 100%, excesso 43; consult: cobertura 100%, precisão 100%, excesso 46; overlay obligations 14 ✓",
+      "ms": 12
+    },
+    {
+      "id": "TC-H-07",
+      "axis": "H",
+      "title": "GC-07 — Agente AI com tool-calls e kill-switch",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (18/18), precisão-estrita 100%, excesso 11; consult: cobertura 22%, precisão 100%, excesso 0",
+      "ms": 5
+    },
+    {
+      "id": "TC-H-08",
+      "axis": "H",
+      "title": "GC-08 — Frontend com sessões JWT — filtro de nível (L1)",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (35/35), precisão-estrita 100%, excesso 7; consult: cobertura 100%, precisão 100%, excesso 1",
+      "ms": 5
+    },
+    {
+      "id": "TC-H-09",
+      "axis": "H",
+      "title": "GC-09 — Alteração só de documentação (caso NEGATIVO)",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "negativo: prepare status=needs_clarification, 0 requisitos devolvidos (scope-gate segurou)",
+      "ms": 0
+    },
+    {
+      "id": "TC-H-10",
+      "axis": "H",
+      "title": "GC-10 — Integração serviço-a-serviço com mTLS e mensageria",
+      "tool": "prepare_sbd_toe_codegen_context + consult_security_requirements",
+      "status": "PASS",
+      "note": "prepare[ready_for_codegen]: cobertura 100% (10/10), precisão-estrita 100%, excesso 29; consult: cobertura 100%, precisão 100%, excesso 22",
+      "ms": 5
+    }
+  ]
+}

@@ -26,6 +26,20 @@ export const RESOURCE_CATALOG = [
           mimeType: "application/json"
         },
         {
+          uri: "sbd://toe/quick-start",
+          name: "SbD-ToE Quick Start",
+          description:
+            "ARRANQUE MÍNIMO (0.20.0-beta.30): o essencial para fazer a primeira chamada certa — a fronteira, a primeira chamada, as três formas de pedir e o que fazer quando não há atalho. Derivado. Lê isto primeiro se o contexto é caro; o guia completo (sbd://toe/agent-guide) tem o resto.",
+          mimeType: "application/json"
+        },
+        {
+          uri: "sbd://toe/model",
+          name: "SbD-ToE Model (as três formas de pedir)",
+          description:
+            "O MAPA do conhecimento servido, não a lista de botões (0.20.0-beta.30): entidades com contagens reais, relações com cardinalidades reais, capítulos e categorias com a FORMA que os alcança, e as TRÊS FORMAS DE PEDIR — por conceito (atalho), por estrutura (preciso) e por navegação (relacional) — com quando usar cada uma. Derivado do bundle servido; nada enumerável escrito à mão. Lê-o quando o atalho de `concerns` não tiver a pergunta que precisas.",
+          mimeType: "application/json"
+        },
+        {
           uri: "sbd://toe/activation-vocabulary",
           name: "SbD-ToE Activation Vocabulary",
           description:

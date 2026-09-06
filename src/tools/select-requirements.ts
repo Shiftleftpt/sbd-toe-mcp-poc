@@ -133,6 +133,11 @@ export interface SelectRequirementsOutput {
    * Mesma classe do `unknown_concerns` — num contrato declarativo uma gralha custa a
    * activação inteira, e o descarte em silêncio é a falha.
    */
+  /** 0.20.0-beta.30: valores estruturais fora do catálogo — declarados, nunca descartados. */
+  unknown_structural?: {
+    values: string[];
+    note: string;
+  };
   unknown_technologies?: {
     values: string[];
     vocabulary_resource: string;
@@ -186,6 +191,8 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
   const task = str("task_context") ?? str("task");
   const stack = str("stack"), exposure = str("exposure"), dataSensitivity = str("data_sensitivity");
   const concerns = arr("concerns"), changedFiles = arr("changed_files"), technologies = arr("technologies");
+  // 0.20.0-beta.30 — forma B (estrutura) na mesma superfície da forma A (conceito).
+  const chapters = arr("chapters"), categories = arr("categories");
   const modeArg = str("mode");
   if (modeArg !== undefined && !["declarative", "baseline", "discover"].includes(modeArg)) {
     throw Object.assign(new Error(`Invalid mode: "${modeArg}". Allowed: declarative, baseline, discover.`), {
@@ -202,7 +209,9 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
     ...(dataSensitivity !== undefined ? { data_sensitivity: dataSensitivity } : {}),
     ...(concerns !== undefined ? { concerns } : {}),
     ...(changedFiles !== undefined ? { changed_files: changedFiles } : {}),
-    ...(technologies !== undefined ? { technologies } : {})
+    ...(technologies !== undefined ? { technologies } : {}),
+    ...(chapters !== undefined ? { chapters } : {}),
+    ...(categories !== undefined ? { categories } : {})
   };
   const result = runSelection(context);
   const unknownConcerns = result.input.unknownConcerns;
@@ -277,6 +286,14 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
             valid_values: [...VALID_CONCERNS],
             vocabulary_resource: "sbd://toe/activation-vocabulary",
             note: `Valores fora do conjunto fechado, IGNORADOS nesta selecção: ${unknownConcerns.join(", ")}. Num contrato declarativo o vocabulário é o único canal — uma gralha custa a categoria inteira, por isso é declarada e nunca descartada em silêncio. Corrige e re-chama.`
+          }
+        }
+      : {}),
+    ...(result.unknown_structural && result.unknown_structural.length > 0
+      ? {
+          unknown_structural: {
+            values: [...result.unknown_structural],
+            note: `Valores estruturais que o catálogo publicado não conhece, IGNORADOS: ${result.unknown_structural.join(", ")}. Os capítulos válidos vêm em \`list_sbd_toe_chapters\`; as categorias são o prefixo dos ids (\`AUT-001\` → \`AUT\`) e estão em \`sbd://toe/model\`.`
           }
         }
       : {}),

@@ -12,10 +12,18 @@ You are an engineering agent operating in a repository governed by the
 
 **Tu tens o contexto. Eu tenho o conhecimento. A fronteira é essa.**
 
+O contrário de «adivinhar prosa» não é «escolher de uma lista» — é **pedir com precisão**.
+Há três formas de o fazer, e as três são declarativas.
+
 Lê o pedido, o código e a conversa — e **DECLARA** o que interpretaste:
 `risk_level`, `concerns`, `exposure`, `data_sensitivity`, `technologies`, `changed_files`.
 **Eu não interpreto prosa**: respondo com o que o KG sabe sobre o que declaraste, mais as
 adjacências do grafo, de forma reproduzível e auditável.
+
+### As TRÊS FORMAS DE PEDIR
+
+<!-- BEGIN GENERATED: how-to-ask -->
+<!-- END GENERATED: how-to-ask -->
 
 1. **Lê o vocabulário** — `read_sbd_toe_resource(uri="sbd://toe/activation-vocabulary")`.
    É a lista **fechada** de valores que aceito e, para cada valor, **o que ele activa**
