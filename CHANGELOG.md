@@ -3,11 +3,84 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.24 (beta line, npm `beta`) — a última peça manual e o âmbito da promessa. (1) agent-guide GERADO do vocabulário e da superfície real: a tabela que publicava como «ontology-controlled vocabulary» era, carácter a carácter, o supported_values do mapa de ameaças (13 em vez de 24). (2) A promessa never-silent passa a valer para o UNIVERSO: out_of_scope_chapters declara por capítulo o que nenhuma declaração activou, com caminho de recuperação derivado; a invariante de conservação varre o universo. (3) Higiene do `task`: resíduos que prometiam inferência corrigidos e `task_context` como nome canónico (alias `task` mantido). Bundle e linha estável inalterados.
+reasoning: v0.20.0-beta.25 (beta line, npm `beta`) — adenda ao beta.24: mata explicitamente a teoria do minLevel na GERAÇÃO do guia (sobrevivia numa coluna «Presente desde» que a beta.24 introduziu) e varre o guia inteiro por afirmações que contradizem o comportamento actual: «TWO bands» (são quatro desde 0.15.0), «L1 reduz o âmbito», a doutrina pré-declarativa («a task refina»), tamanhos de resposta folclóricos (22k/36k contra 32k/47k/51k medidos), estampa de proveniência incompleta e o search_sbd_toe_manual apresentado sem a marca NÃO-NORMATIVO que a própria tool declara. Bundle e linha estável inalterados.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.25 — 2026-09-06
+
+**Adenda ao beta.24: a teoria do minLevel, e o resto do que o guia dizia a mais.**
+Autorizado pelo lead (adenda ao ciclo beta.24, 2026-09-06). Bundle pin INALTERADO (release
+KG `v1.11.0`); **linha estável intocada**. Vaga própria porque a beta.24 já estava
+publicada e a tag é imutável — a história é append-only.
+
+### A teoria do minLevel, morta explicitamente
+
+O relatório integral do avaliador apontava a coluna **«Min level»** (06→L2, 11→L2, 13→L3) e
+o **«L2 unlocks + chapters 06, 11»** — retiradas na 0.14.0 e contraditas pelas próprias
+tools (`list_sbd_toe_chapters`: *«the binary minLevel theory is retired»*;
+`map_sbd_toe_applicability`: *«nothing is excluded by level»*).
+
+**Verificado antes de agir:** essas duas afirmações concretas já tinham desaparecido na
+beta.24, quando as tabelas escritas à mão passaram a geradas — o avaliador leu a beta.23.
+**Mas a teoria sobreviveu, e num sítio pior: num bloco gerado pela própria beta.24.** A
+coluna **«Presente desde»** calculava o primeiro nível com aplicabilidade e reintroduzia o
+modelo *pela forma* — dizia ao leitor que a presença de um capítulo «começa» algures.
+Renderizava `L1` nos 15, portanto era vácua **e** enganosa.
+
+A coluna foi eliminada e os dois blocos gerados (`chapters`, `risk-levels`) passam a abrir
+com a mesma frase explícita: nenhum capítulo se exclui por nível, todos os 15 estão
+presentes em L1/L2/L3, o que escala é a exigência, **não existe «unlock»**, e **nenhuma
+coluna deste guia volta a dizer quando um capítulo começa, porque nenhum começa**.
+
+### A varredura do guia inteiro — o que mais contradizia o comportamento actual
+
+| # | Afirmação do guia | Comportamento real |
+|---|---|---|
+| 1 | «returns **TWO bands**, both always listed» (e mais duas ocorrências: «two bands, above», «the same **two-band** summary») | **Quatro** bandas: `selected[]`, `narrowed_out[]`, `excluded_by_level[]` (0.15.0) e `out_of_scope_chapters` (beta.24) |
+| 2 | «An L1 risk level **reduces the SCOPE** of required security controls» | Reduz a **EXIGÊNCIA**; o âmbito não muda («nothing is excluded by level») |
+| 3 | «baseline ∪ chapters, **narrowed by declared task signals**» | O texto da tarefa **nunca** é activador no modo declarativo |
+| 4 | «o grupo SES volta **quando a task menciona** sessão/login/token» | Volta quando **declaras** `technologies=["jwt"]` |
+| 5 | «ACTIVADORES ESTRUTURADOS primeiro — **`task`** + exposure + … ; medição da ronda 5: 63 vs 7 da task sozinha; **a task refina**» | Doutrina pré-declarativa inteira: `task` listado como activador, e a promessa de que refina |
+| 6 | `params: risk_level, **task?**, …` | `task_context?` (registado, inerte) e `mode?` (declarative\|baseline\|discover), ausente da lista |
+| 7 | «Output size: L1 ≈ **22k**, L2 ≈ **36k**, L3 ≈ **36k** chars» | **32k / 47k / 51k** medidos — 30 a 45% de erro numa afirmação que o agente usa para decidir se cabe no contexto |
+| 8 | «Every tool response carries the compact stamp `provenance.kg`» | Também `provenance.server` desde a beta.23 (`kg` é o conhecimento servido, `server` é quem serviu) |
+| 9 | «activadores estruturados (`exposure`, `data_sensitivity`, **`stack`**, `changed_files`)» | Sem `concerns` nem `technologies`, e a promover `stack`, que o v1.18 explicitamente demove |
+| 10 | `search_sbd_toe_manual` apresentado como par das superfícies de requisitos | A **própria tool** declara-se **NÃO-NORMATIVA**: «nunca caminho para um conjunto de requisitos» — o guia omitia-o e o routing mandava-lhe «What is X?» sem marca |
+
+Os **tamanhos passaram a bloco GERADO** (`output-sizes`), medidos nesta build sobre
+`consult_security_requirements` (~23 ms uma vez por processo): números medidos em vez de
+recordados. As restantes são prosa autoral corrigida — a doutrina do #5 foi reescrita para
+o que a linha faz hoje, com o porquê medido (a mesma feature em cinco redacções dava de 0 a
+58 requisitos quando a prosa decidia).
+
+### A guarda cresceu (e apanhou três instâncias vivas)
+
+`agent-guide-derived.test.ts` passa de 6 para 10 propriedades: a teoria do minLevel não
+volta (padrões proibidos, com a frase que a **enterra** excluída da varredura — nomear a
+teoria para a matar não pode contar como publicá-la); o guia não descreve menos bandas do
+que a resposta traz; os tamanhos anunciados batem com uma medição fresca; o guia não promete
+inferência a partir do texto; e repete as declarações que as tools fazem sobre si próprias.
+
+Ao correr pela primeira vez, a guarda apanhou **três** instâncias que a varredura manual
+tinha deixado passar: duas de linguagem de «unlock»/«só se aplica a partir de» (afinal
+dentro do próprio obituário — falso positivo meu, corrigido na guarda) e **uma terceira
+ocorrência real de «two bands»** («Task-scoped recommendation with declared narrowing (two
+bands, above)») que eu não tinha visto.
+
+Varredura mecânica adicional: **todos os parâmetros que o guia nomeia existem nos schemas
+reais** — zero divergências.
+
+### Verificação
+
+- **Suite**: 774/774 (51 ficheiros) · **Aceitação**: 153 → **113 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novo TC-F-46).
+- **Ouro**: byte-idêntico ao da beta.24 — `discover` **10 PASS / 0 / 0**, declarativo
+  **6 PASS / 4 PART / 0 FAIL**.
+- **Orçamentos**: 8/8 gates hard inalterados. **Gate**: stdout só JSON-RPC · exit 0 ·
+  `package_version` = `sbd://toe/version` = `provenance.server`.
 
 ## 0.20.0-beta.24 — 2026-09-06
 

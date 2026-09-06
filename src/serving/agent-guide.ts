@@ -21,6 +21,7 @@ import { buildActivationVocabulary } from "./activation-vocabulary.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./server-surface.js";
 import { getOntologyData } from "../tools/ontology-loader.js";
 import { handleListSbdToeChapters } from "../tools/structured-tools.js";
+import { handleConsultSecurityRequirements } from "../tools/consult-security-requirements.js";
 
 type GuideChapter = {
   id: string;
@@ -36,6 +37,23 @@ function guideChapters(): GuideChapter[] {
 
 const BEGIN = (id: string) => `<!-- BEGIN GENERATED: ${id} -->`;
 const END = (id: string) => `<!-- END GENERATED: ${id} -->`;
+
+/**
+ * 0.20.0-beta.25 — a teoria do minLevel morre EXPLICITAMENTE.
+ *
+ * A aplicabilidade graduada (0.14.0) retirou o modelo binário «este capítulo só começa a
+ * aplicar-se em L2». `list_sbd_toe_chapters` di-lo («the binary minLevel theory is
+ * retired») e `map_sbd_toe_applicability` também («nothing is excluded by level») — mas o
+ * guia continuava a publicar a teoria, primeiro numa coluna «Min level» escrita à mão
+ * (06→L2, 11→L2, 13→L3) e no «L2 unlocks + chapters 06, 11», e depois — já gerado — numa
+ * coluna «Presente desde» que a reintroduzia pela forma. Nenhuma coluna deste guia volta
+ * a dizer quando um capítulo «começa»: TODOS estão presentes em TODOS os níveis.
+ */
+export const MINLEVEL_RETIRED =
+  "**Aplicabilidade GRADUADA (0.14.0): nenhum capítulo se exclui por nível.** Todos os 15 estão " +
+  "presentes em L1, L2 e L3 — o que escala é a EXIGÊNCIA, não a presença. A teoria binária do " +
+  "`minLevel` («o capítulo N só se aplica a partir de LX») está RETIRADA: não existe «unlock» de " +
+  "capítulos por nível, e nenhuma coluna aqui diz quando um capítulo começa, porque nenhum começa.";
 
 /** Nota que acompanha cada bloco: quem lê o guia tem de saber o que é derivado. */
 const DERIVED_NOTE = "*(gerado — não editar à mão; a suite guarda a igualdade com a fonte)*";
@@ -132,16 +150,14 @@ export function generatePromptsBlock(): string {
 export function generateChaptersBlock(): string {
   const chapters = guideChapters();
   const rows = chapters.map((c) => {
-    const app = c.applicability ?? {};
-    const min = (["L1", "L2", "L3"] as const).find((l) => app[l] === true) ?? "—";
     const demand = c.demand_by_level ?? {};
-    return `| \`${c.id}\` | ${c.title} | ${min} | ${demand.L1 ?? "—"} / ${demand.L2 ?? "—"} / ${demand.L3 ?? "—"} |`;
+    return `| \`${c.id}\` | ${c.title} | ${demand.L1 ?? "—"} / ${demand.L2 ?? "—"} / ${demand.L3 ?? "—"} |`;
   });
   return [
-    `**${rows.length} capítulos.** Presença é sempre total; o que escala com o nível é a EXIGÊNCIA. ${DERIVED_NOTE}`,
+    `**${rows.length} capítulos.** ${MINLEVEL_RETIRED} ${DERIVED_NOTE}`,
     "",
-    "| chapterId | Title | Presente desde | Exigência L1 / L2 / L3 |",
-    "|---|---|---|---|",
+    "| chapterId | Title | Exigência L1 / L2 / L3 |",
+    "|---|---|---|",
     ...rows
   ].join("\n");
 }
@@ -154,7 +170,7 @@ export function generateRiskLevelsBlock(): string {
     return `| \`${level}\` | ${present} de ${chapters.length} | ${mandatory} obrigatórios |`;
   });
   return [
-    `Aplicabilidade GRADUADA (0.14.0): nenhum capítulo se exclui por nível — muda a exigência. ${DERIVED_NOTE}`,
+    `${MINLEVEL_RETIRED} ${DERIVED_NOTE}`,
     "",
     "| Level | Capítulos presentes | Exigência |",
     "|---|---|---|",
@@ -162,7 +178,30 @@ export function generateRiskLevelsBlock(): string {
   ].join("\n");
 }
 
+/**
+ * Tamanhos de resposta MEDIDOS, não recordados. O guia anunciava «L1 ≈ 22k, L2 ≈ 36k,
+ * L3 ≈ 36k chars»; a medição dá 32k / 47k / 51k — 30 a 45% de erro numa afirmação que o
+ * agente usa para decidir se cabe no contexto. Medir custa ~23 ms uma vez por processo.
+ */
+export function generateOutputSizesBlock(): string {
+  const rows = (["L1", "L2", "L3"] as const).map((level) => {
+    const full = JSON.stringify(handleConsultSecurityRequirements({ risk_level: level })).length;
+    const scoped = JSON.stringify(handleConsultSecurityRequirements({ risk_level: level, concerns: ["auth"] })).length;
+    return `| \`${level}\` | ≈ ${(full / 1000).toFixed(0)}k chars | ≈ ${(scoped / 1000).toFixed(0)}k chars |`;
+  });
+  return [
+    `Medido nesta build sobre \`consult_security_requirements\` (o \`concerns\` de exemplo é \`["auth"]\`). ${DERIVED_NOTE}`,
+    "",
+    "| Nível | Resposta completa | Com `concerns` declarados |",
+    "|---|---|---|",
+    ...rows,
+    "",
+    "**Declara sempre `concerns` para delimitar L2/L3** — a resposta completa pode exceder o contexto."
+  ].join("\n");
+}
+
 const GENERATORS: Record<string, () => string> = {
+  "output-sizes": generateOutputSizesBlock,
   concerns: generateConcernsBlock,
   activators: generateActivatorsBlock,
   roles: generateRolesBlock,

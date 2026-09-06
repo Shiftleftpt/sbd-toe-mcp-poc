@@ -14,11 +14,13 @@ import {
   buildAgentGuide,
   readAgentGuideTemplate,
   markersInTemplate,
-  GENERATED_BLOCK_IDS
+  GENERATED_BLOCK_IDS,
+  MINLEVEL_RETIRED
 } from "./agent-guide.js";
 import { buildActivationVocabulary } from "./activation-vocabulary.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./server-surface.js";
 import { threatConcernSupport } from "../tools/get-threat-landscape.js";
+import { handleConsultSecurityRequirements } from "../tools/consult-security-requirements.js";
 
 const guide = buildAgentGuide();
 const vocab = buildActivationVocabulary();
@@ -105,6 +107,63 @@ describe("invariante beta.24 — agent-guide derivado", () => {
     expect(suspect.length).toBeGreaterThan(5);
     const ghosts = suspect.filter((n) => !toolNames.has(n) && !PROMPT_CATALOG.some((p) => p["name"] === n));
     expect(ghosts, `tools nomeadas no guia que não existem: ${ghosts.join(", ")}`).toEqual([]);
+  });
+
+  /**
+   * 0.20.0-beta.25 — a teoria do minLevel não volta.
+   *
+   * Retirada em 0.14.0 (aplicabilidade graduada) e contradita pelas próprias tools
+   * (`list_sbd_toe_chapters`: «the binary minLevel theory is retired»;
+   * `map_sbd_toe_applicability`: «nothing is excluded by level»), sobreviveu na
+   * documentação-mãe: primeiro escrita à mão («Min level» 06→L2/11→L2/13→L3 e «L2 unlocks
+   * + chapters 06, 11») e depois, já gerada, numa coluna «Presente desde» que a
+   * reintroduzia pela forma.
+   */
+  it("o guia servido não publica a teoria do minLevel (retirada em 0.14.0)", () => {
+    const banned: Array<[RegExp, string]> = [
+      [/Min level/i, "coluna «Min level»"],
+      [/Presente desde/i, "coluna «Presente desde» (reintroduz a teoria pela forma)"],
+      [/unlocks?\b/i, "linguagem de «unlock» de capítulos por nível"],
+      [/\+ chapters? \d/i, "«+ chapters NN» — capítulos que só entram a partir de um nível"],
+      [/só se aplica a partir de|only applies from/i, "capítulo que «só se aplica a partir de»"]
+    ];
+    // A frase que ENTERRA a teoria nomeia-a — não pode ser lida como se a publicasse.
+    const withoutObituary = guide.split(MINLEVEL_RETIRED).join(" ");
+    const hits = banned.filter(([re]) => re.test(withoutObituary)).map(([, label]) => label);
+    expect(hits, `teoria do minLevel viva no guia: ${hits.join("; ")}`).toEqual([]);
+    // e a afirmação positiva tem de estar lá
+    expect(guide).toMatch(/nenhum cap[íi]tulo se exclui por n[íi]vel/i);
+  });
+
+  it("o guia não descreve bandas a menos do que a resposta traz", () => {
+    expect(guide, "«TWO bands» — são quatro desde 0.15.0/beta.24").not.toMatch(/TWO bands|two-band/i);
+    for (const band of ["selected[]", "narrowed_out[]", "excluded_by_level", "out_of_scope_chapters"])
+      expect(guide, `banda ausente do guia: ${band}`).toContain(band);
+  });
+
+  it("os tamanhos de resposta anunciados são MEDIDOS, não recordados", () => {
+    for (const level of ["L1", "L2", "L3"] as const) {
+      const measured = Math.round(JSON.stringify(handleConsultSecurityRequirements({ risk_level: level })).length / 1000);
+      const row = guide.split("\n").find((l) => l.startsWith(`| \`${level}\` | ≈ `));
+      expect(row, `sem linha de tamanho para ${level}`).toBeDefined();
+      expect(row, `tamanho anunciado para ${level} diverge do medido (${measured}k)`).toContain(`≈ ${measured}k chars`);
+    }
+  });
+
+  it("o guia repete as declarações que as próprias tools fazem (search é NÃO-NORMATIVO)", () => {
+    expect(guide, "o guia apresenta search_sbd_toe_manual sem a marca que a tool declara").toMatch(
+      /search_sbd_toe_manual[\s\S]{0,120}N[ÃA]O-NORMATIVO/i
+    );
+  });
+
+  it("o guia não promete inferência a partir do texto da tarefa", () => {
+    const residues: Array<[RegExp, string]> = [
+      [/narrowed by declared task signals/i, "«narrowed by declared task signals»"],
+      [/a task refina/i, "«a task refina»"],
+      [/when the task mentions/i, "«when the task mentions …» como caminho de recuperação"]
+    ];
+    const hits = residues.filter(([re]) => re.test(guide)).map(([, label]) => label);
+    expect(hits, `resíduos de inferência no guia: ${hits.join("; ")}`).toEqual([]);
   });
 
   it("o guia é determinístico e não deixa marcadores por expandir", () => {

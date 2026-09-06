@@ -1059,6 +1059,41 @@ export const scenarios = [
       if (!/task_context/.test(JSON.stringify(sel.inputSchema ?? {}))) return fail("schema sem o nome canónico task_context");
       return ok(`task_context canónico e registado (affects_selection=false), alias equivalente, discover intacto (${disc.data.selection.selected.length} req.), descrição sem resíduos`); } },
 
+  { id: "TC-F-46", axis: "F", title: "0.20.0-beta.25 (adenda): o guia não publica a teoria do minLevel nem descreve menos bandas do que a resposta traz", tool: "read_sbd_toe_resource",
+    run: async (c) => {
+      const g = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/agent-guide" });
+      if (!g.ok) return fail(g.error);
+      const guide = typeof g.data?.content === "string" ? g.data.content : JSON.stringify(g.data);
+      // a frase que ENTERRA a teoria nomeia-a; corta-se antes de procurar a teoria viva
+      const obituary = /\*\*Aplicabilidade GRADUADA[\s\S]*?porque nenhum começa\./g;
+      const body = guide.replace(obituary, " ");
+      const banned = [[/Min level/i, "coluna «Min level»"], [/Presente desde/i, "coluna «Presente desde»"],
+                      [/unlocks?\b/i, "linguagem de «unlock»"], [/\+ chapters? \d/i, "«+ chapters NN»"]];
+      const hits = banned.filter(([re]) => re.test(body)).map(([, l]) => l);
+      if (hits.length > 0) return fail(`teoria do minLevel viva no guia: ${hits.join("; ")}`);
+      if (!/nenhum cap[íi]tulo se exclui por n[íi]vel/i.test(guide)) return fail("o guia não afirma a aplicabilidade graduada");
+      // as tools dizem o mesmo — o guia não pode contradizê-las
+      const ch = await c.tool("list_sbd_toe_chapters", {});
+      if (!ch.ok) return fail(ch.error);
+      const chapters = ch.data.chapters ?? [];
+      if (chapters.length === 0) return fail("sem capítulos para verificar");
+      const notPresent = chapters.filter((x) => !(x.applicability?.L1 && x.applicability?.L2 && x.applicability?.L3));
+      if (notPresent.length > 0) return fail(`fixture mudou: ${notPresent.length} capítulos não presentes em todos os níveis`);
+      // bandas: o guia tem de nomear as quatro
+      if (/TWO bands|two-band/i.test(guide)) return fail("o guia ainda anuncia «two bands» (são quatro desde 0.15.0/beta.24)");
+      for (const band of ["selected[]", "narrowed_out[]", "excluded_by_level", "out_of_scope_chapters"])
+        if (!guide.includes(band)) return fail(`banda ausente do guia: ${band}`);
+      // tamanhos anunciados = medidos
+      const l2 = await c.tool("consult_security_requirements", { risk_level: "L2" });
+      if (!l2.ok) return fail(l2.error);
+      const measured = Math.round(JSON.stringify(l2.data).length / 1000);
+      if (!new RegExp(`≈ ${measured}k chars`).test(guide))
+        return fail(`o guia anuncia um tamanho para L2 que não é o medido (${measured}k)`);
+      // e o search continua marcado como não-normativo
+      if (!/search_sbd_toe_manual[\s\S]{0,160}N[ÃA]O-NORMATIVO/i.test(guide))
+        return fail("o guia apresenta search_sbd_toe_manual sem a marca NÃO-NORMATIVO que a tool declara");
+      return ok(`minLevel retirada e declarada, ${chapters.length} capítulos presentes em todos os níveis, 4 bandas nomeadas, tamanho L2 medido (${measured}k), search marcado não-normativo`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];
