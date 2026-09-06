@@ -165,14 +165,44 @@ export function handleExplainTopic(args: Record<string, unknown>): ExplainTopicR
       // lá. A porta existe e diz onde eles estão.
       note:
         (antipatterns.length === 0
-          ? `NENHUM antipadrão publicado para este tópico. Isto NÃO significa que não haja nada a evitar: o Manual publica os ${(o.antipatterns ?? []).length} antipadrões por CAPÍTULO de domínio (${[...new Set((o.antipatterns ?? []).flatMap((a) => (a as { bundle_ids?: string[] }).bundle_ids ?? []))].sort().join(", ")}) e este tópico não é um deles. Pede por \`chapter\` para os ver, ou \`resolve_entities(record_type="antipattern")\` para todos. `
+          ? `NENHUM antipadrão ESTRUTURALMENTE ligado a este tópico. Isto NÃO significa que não haja nada a evitar — ` +
+            `e a consequência de o deixar assim é conhecida: quem segue o atalho sai a pensar que o Manual nada diz ` +
+            `sobre o que evitar aqui. Por isso o catálogo COMPLETO vem em \`elsewhere\`: são ${(o.antipatterns ?? []).length}, ` +
+            "com o capítulo de cada um e a chamada concreta para o ler. O servidor NÃO afirma quais são relevantes para " +
+            "este tópico — não tem ligação publicada que o diga, e não a inventa: lê os rótulos e decide tu. "
           : `O QUE NÃO FAZER — ${antipatterns.length} antipadrões publicados para este tópico. `) +
         "É a metade do Manual " +
         "que não tinha caminho próprio até 0.20.0-beta.35. As ligações a requisitos e ameaças são as que o " +
         `bundle publica (${apReqLinks.length} req · ${apThreatLinks.length} ameaças no TOTAL do bundle — são POUCAS, ` +
         "e não se inventam: um antipadrão sem ligação continua a ser conhecimento válido do Manual).",
       total: antipatterns.length,
-      values: antipatterns
+      values: antipatterns,
+      /**
+       * Conservação NA BANDA (emenda v1.2 do oráculo): uma banda anunciada e vazia, havendo
+       * conteúdo no bundle, tem de dar o CAMINHO CONCRETO — não a lista genérica de onde
+       * «poderá estar». Aqui o caminho é o catálogo inteiro (são 26) com a chamada por
+       * capítulo, porque o servidor não tem ligação estrutural que diga quais interessam a
+       * este tópico e não a inventa.
+       */
+      ...(antipatterns.length === 0
+        ? {
+            elsewhere: {
+              note:
+                "Todos os antipadrões publicados, com a chamada concreta por capítulo. Um deles pode ser " +
+                "exactamente sobre o teu tópico sem o bundle publicar a ligação — é por isso que vêm aqui inteiros.",
+              by_chapter: [...new Set((o.antipatterns ?? []).flatMap((a) => (a as { bundle_ids?: string[] }).bundle_ids ?? []))]
+                .sort()
+                .map((ch) => ({
+                  chapter: ch,
+                  total: (o.antipatterns ?? []).filter((a) => ((a as { bundle_ids?: string[] }).bundle_ids ?? []).includes(ch)).length,
+                  read_with: `explain_sbd_toe_topic(chapter="${ch}")`,
+                  labels: (o.antipatterns ?? [])
+                    .filter((a) => ((a as { bundle_ids?: string[] }).bundle_ids ?? []).includes(ch))
+                    .map((a) => (a as { label?: string }).label)
+                }))
+            }
+          }
+        : {})
     },
     guidance: {
       note: "ORIENTAÇÃO — práticas: descrevem COMO fazer. Não são exigíveis por si; o que é exigível são os requisitos.",

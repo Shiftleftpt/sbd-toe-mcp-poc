@@ -1001,6 +1001,11 @@ class McpRuntime {
           inputSchema: {
             type: "object",
             properties: {
+              chapter: {
+                type: "string",
+                description:
+                  "0.20.0-beta.36 — restringe a avaliação a UM capítulo (ex.: `07-cicd-seguro`). Sem isto, avalia o Manual inteiro: 4 KPIs de um capítulo faziam o `posture` fechar sobre 95 KPIs com 91 não reportados — um veredicto que não é o da pergunta. O bloco `scope` explica sempre o denominador."
+              },
               kpi_values: {
                 type: "object",
                 description: "Map of metric_id → numeric value (e.g. {\"ARC-K01\": 85}). Non-numeric values ignored.",

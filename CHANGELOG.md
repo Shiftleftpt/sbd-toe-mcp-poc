@@ -3,11 +3,112 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.35 (beta line, npm `beta`) — GR-05 fechado: `explain_sbd_toe_topic` dá superfície à leitura CONSULT, com banda própria para os 26 ANTIPADRÕES e com o `risk_level` a ANOTAR em vez de exigir (fronteira mantida: continua obrigatório na selecção, prepare e capacidade). GR-05: SERVIDO-MAL → SERVIDO (7/7). GR-04 fica SERVIDO-MAL e é ACHADO DE CONTEÚDO: o bundle não publica taxonomia decide-vs-delega — serve-se a `proportionality` que existe, sem inventar a que falta. Selecção intocada; ouro H byte-idêntico.
+reasoning: v0.20.0-beta.36 (beta line, npm `beta`) — as bordas outra vez: as invariantes de varrimento passam a correr sobre o INVENTÁRIO VIVO (tools/list em tempo de teste) e apanharam à primeira o `metrics=` que devia ser `kpi_values`; conservação NA BANDA (emenda v1.2) com caminho concreto; o escasso declara-se; `assess` com âmbito e denominador explicado; `activated_by` com a cadeia completa; `unmodelled_signals`. Eixo I sob v1.2: 3·2·1 (antes) → 4·1·1 (depois), com GR-05 a voltar a SERVIDO. Selecção intocada; ouro H byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.36 — 2026-09-06
+
+**As bordas outra vez: o que descreve a interface tem de ser gerado dela.** Autorizado pelo
+lead («sim», 2026-09-06) a partir do assessment externo da beta.35 (**8/10, a nota mais alta
+desde a b.21**) e da emenda **v1.2** do oráculo. Bundle pin INALTERADO (release KG `v1.11.0`);
+**linha estável intocada**. *GR-03 e GR-04 fora desta vaga por decisão do lead.*
+
+### 1 — As invariantes varrem o INVENTÁRIO VIVO (e o que apanharam)
+
+A next-verbatim existe desde a 0.19.3 e a de superfícies desde a beta.28 — e mesmo assim o
+`metrics={…}` passou, porque a tool é **nova e entrou depois do varrimento**. É o
+`get_guide_by_role` a repetir-se: **a classe não é o defeito, é a LISTA ESTÁTICA.**
+
+`live-inventory-invariant.test.ts` deriva o conjunto a varrer do `tools/list` **real, em tempo
+de teste**: uma tool nova entra sozinha, e **se a derivação falhar a suite parte** em vez de
+varrer uma lista velha. Primeira corrida, sobre as 28 tools servidas:
+
+| # | achado | veredicto |
+|---|---|---|
+| 1 | `get_sbd_toe_chapter_capability` → `assess_sbd_toe_implementation`: sugere **`metrics=`**, o parâmetro é **`kpi_values`** | **REAL** — a instância que o despacho previa, apanhada pela invariante e não por inspecção |
+| 2–4 | `d=`, `evel=` em três tools | **falsos positivos meus** — o regex apanhava a cauda de `riskLevel="…"`; corrigido com fronteira de palavra antes de confiar no inventário |
+
+**Nas três tools novas (playbook, capability, explain): uma instância, no `capability`.**
+
+### 3 — Conservação NA BANDA (emenda v1.2), e o que o servidor pode honestamente dizer
+
+`explain(concern="secrets")` dava 0 antipadrões enquanto o cap. 07 tem dois — «*uso de
+segredos estáticos*» e «*exposição excessiva de contexto em logs e artefactos*».
+
+**Investigado antes de corrigir:** o `secrets` publica `activates_chapters: []`, e os seus
+requisitos (CFG/ENC) vivem no cap. 02. **Estruturalmente o servidor não sabe** que aqueles
+antipadrões são sobre segredos — sabê-lo exigiria ler os rótulos, que é a inferência que a
+beta.21 matou. Não a reintroduzi.
+
+O que ele sabe e passa a dar é o **caminho concreto**: são só 26, e a banda vazia traz agora
+`elsewhere.by_chapter` com **a chamada executável e os rótulos** por capítulo. Quem pergunta
+por `secrets` lê «uso de segredos estáticos» na própria resposta, com
+`explain_sbd_toe_topic(chapter="07-cicd-seguro")` ao lado — e a nota diz explicitamente que o
+servidor **não afirma** quais são relevantes, porque não tem ligação publicada que o diga.
+Custo: **+535 tk**, e só quando a banda está vazia.
+
+### 4, 5, 6, 7 — o resto da família
+
+- **O escasso declara-se** (v1.2 regra 2): o `implementation_checklist` do cap. 07 traz agora
+  `scarcity`, que diz que são 2 blocos, que **não é um checklist de capacidade**, e para onde
+  ir em vez disso. **Sobe como achado de CONTEÚDO ao Author** — não enriqueci o checklist.
+- **`assess` com âmbito**: `chapter="07-cicd-seguro"` faz o veredicto ser **do capítulo**
+  (95 → **7** aplicáveis) em vez de fechar `below` com 91 não reportados. E o bloco `scope`
+  **explica o denominador**: 99 publicados, 7 aplicáveis a este nível, e porquê (o
+  `thresholds_by_level` não define alvo para todos — é proporcionalidade, não omissão).
+- **`activated_by` com a cadeia completa**: declarando `secrets` + `exposure="public"` e nunca
+  `architecture`, o cap. 04 vinha atribuído a `trigger: architecture`. Agora o `activated_by`
+  regista **também o elo de origem** e a `derived_chain` diz a cadeia inteira:
+  `exposure=public → concerns=["architecture"] (regra publicada) → 04-arquitetura-segura`.
+- **`unmodelled_signals[]`** — 4ª aplicação do padrão: o que do `task_context` não ancora em
+  vocabulário nenhum sai **declarado**. «Aplicação multi-tenant» devolve
+  `["isolamento", "multi-tenant"]` com a nota que separa **«não te perguntei isso» de «não
+  sei o que isso é»**. Não selecciona nada: é uma varredura léxica do texto REGISTADO com um
+  único fim, declarar ignorância — e é conservadora de propósito (compostos hifenizados e
+  termos longos fora do vocabulário), porque ruído aqui mina a declaração.
+
+### O painel do Eixo I sob v1.2, antes → depois (medido, não afirmado)
+
+Corri o painel contra a **build da beta.35** com o critério v1.2 aplicado, e depois contra
+esta:
+
+| | GR-01 | GR-02 | GR-03 | GR-04 | GR-05 | GR-06 | painel |
+|---|---|---|---|---|---|---|---|
+| **beta.35 sob v1.2** | SERVIDO | SERVIDO | NÃO SERVIDO | SERVIDO-MAL | **SERVIDO-MAL** | SERVIDO | **3 · 2 · 1** |
+| **beta.36** | SERVIDO | SERVIDO | NÃO SERVIDO | SERVIDO-MAL | **SERVIDO** | SERVIDO | **4 · 1 · 1** |
+
+O «antes» bate exactamente com a re-classificação que a emenda previu. **GR-05 volta a
+SERVIDO** porque a disjunção da regra 1 está satisfeita: o conteúdo não aparece na banda mas
+vem **com caminho concreto** — a evidência é o `elsewhere.by_chapter` com 8 capítulos, chamada
+executável e rótulos.
+
+### Achados de CONTEÚDO que sobem ao lead
+
+1. **A magreza do `implementation_checklist`** — 2 blocos de prosa para o cap. 07; declarada,
+   não enriquecida.
+2. **Não há ligação publicada antipadrão↔tópico** — os do cap. 07 são sobre segredos e nada
+   no bundle o diz. Enquanto não houver, o servidor dá o catálogo e recusa-se a afirmar.
+
+### Item 8 (persistentes): o que fica
+
+`equivalent_to` em `data_sensitivity` **já estava feito na beta.31** (`regulated ≡ personal`,
+verificado). Ficam por fazer, e reportados: `unsupported_obligations` por ARTIGO dentro de
+framework coberto (5ª vez pedido), a paginação a reserializar o preâmbulo, e o quick-start
+validado contra o roteamento das 4 leituras — não sacrifiquei 1-7 por eles, como mandado.
+
+### Verificação
+
+- **Suite** 801/801 (58 ficheiros) · **Aceitação** 170 → **130 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novo TC-F-63).
+- **As nove invariantes verdes** (41 asserções), com a do inventário vivo a juntar-se.
+- **Ouro do Eixo H byte-idêntico ao da beta.35** nos dois braços: `discover`
+  **10 PASS / 0 / 0**, declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu.**
+- **Orçamentos** 8/8 do `prepare` inalterados. **Gate**: stdout só JSON-RPC · exit 0.
+- **Dois cenários meus tinham predicados velhos** (procuravam frases que esta vaga
+  reescreveu) — corrigidos para a formulação da emenda, não para o texto antigo.
 
 ## 0.20.0-beta.35 — 2026-09-06
 

@@ -1682,8 +1682,10 @@ export const scenarios = [
       if (!/manual-grounded/i.test(d.provenance?.note ?? "")) return fail("sem proveniência manual-grounded");
       // ANTIPADRÕES: banda própria; zero é DECLARADO, nunca mudo
       if (!d.anti_patterns) return fail("sem banda de antipadrões — «o que NÃO fazer» continua sem porta");
-      if ((d.anti_patterns.total ?? 0) === 0 && !/NENHUM antipadrão publicado[\s\S]*resolve_entities/.test(d.anti_patterns.note ?? ""))
-        return fail("zero antipadrões sem declarar onde eles estão");
+      // 0.20.0-beta.36 (emenda v1.2): o vazio deixa de bastar declarar — tem de trazer
+      // CAMINHO CONCRETO. O predicado antigo procurava a frase que a beta.36 reescreveu.
+      if ((d.anti_patterns.total ?? 0) === 0 && !(d.anti_patterns.elsewhere?.by_chapter ?? []).some((x) => /\(chapter="/.test(String(x.read_with ?? ""))))
+        return fail("zero antipadrões sem CAMINHO CONCRETO para onde eles estão (v1.2)");
       const iac = await c.tool("explain_sbd_toe_topic", { concern: "iac" });
       if (!iac.ok) return fail(iac.error);
       if (!((iac.data.anti_patterns?.total ?? 0) > 0)) return fail("um tópico COM antipadrões devolve zero");
@@ -1701,6 +1703,61 @@ export const scenarios = [
       const sel = await c.tool("select_sbd_toe_requirements", { concerns: ["auth"] });
       if (sel.ok) return fail("o select passou a aceitar chamada sem risk_level — a fronteira quebrou");
       return ok(`CONSULT sem nível: ${d.requirements.total} requisitos, ${d.guidance.practices} práticas, ${d.proof.evidence_patterns} provas, ${d.threats.total} ameaças, ${d.where_in_lifecycle.phases.length} fases; antipadrões com banda própria (${iac.data.anti_patterns.total} em iac, zero DECLARADO em secrets); nível anota e não filtra; select continua a exigi-lo`); } },
+
+  { id: "TC-F-63", axis: "F", title: "0.20.0-beta.36: inventário VIVO, conservação NA BANDA, âmbito do assess e cadeia de activação", tool: "explain_sbd_toe_topic",
+    run: async (c) => {
+      // (1+2) os `next` de TODAS as tools servidas apontam para parâmetros que existem
+      const schemas = new Map((c.tools ?? []).map((t) => [t.name, Object.keys(t.inputSchema?.properties ?? {})]));
+      if (schemas.size < 20) return fail("não foi possível derivar o inventário vivo");
+      const cap = await c.tool("get_sbd_toe_chapter_capability", { chapter: "07-cicd-seguro", risk_level: "L2" });
+      if (!cap.ok) return fail(cap.error);
+      for (const n of cap.data.next ?? []) {
+        const params = schemas.get(n.tool);
+        if (!params) return fail(`sugere tool inexistente: ${n.tool}`);
+        for (const m of String(n.with ?? "").matchAll(/(?:^|[\s,({])([a-z][a-z_]*)\s*=/g))
+          if (!params.includes(String(m[1]))) return fail(`${n.tool}: sugere \`${m[1]}=\` que não existe (tem: ${params.join(", ")})`);
+      }
+      // (3) conservação NA BANDA: vazia havendo conteúdo ⇒ caminho CONCRETO
+      const secrets = await c.tool("explain_sbd_toe_topic", { concern: "secrets" });
+      if (!secrets.ok) return fail(secrets.error);
+      const ap = secrets.data.anti_patterns;
+      if (!ap) return fail("banda de antipadrões não anunciada");
+      if ((ap.total ?? 0) === 0) {
+        const ew = ap.elsewhere?.by_chapter ?? [];
+        if (ew.length === 0) return fail("banda vazia sem caminho: v1.2 exige caminho CONCRETO");
+        if (!ew.every((x) => /\(chapter="/.test(String(x.read_with ?? "")))) return fail("caminho genérico, não concreto");
+        if (!ew.some((x) => (x.labels ?? []).length > 0)) return fail("caminho sem os rótulos — o consumidor não sabe se lhe interessa");
+        const c07 = ew.find((x) => /^07-/.test(x.chapter));
+        if (!c07 || !(c07.labels ?? []).some((l) => /segredo/i.test(l)))
+          return fail("o caminho não expõe os antipadrões do cap. 07 que são sobre segredos");
+      }
+      // (4) o escasso declara-se
+      const chk = await c.tool("get_sbd_toe_chapter_implementation_checklist", { chapter: "07-cicd-seguro" });
+      if (!chk.ok) return fail(chk.error);
+      const cd = chk.data.data ?? chk.data;
+      if ((cd.items ?? []).length <= 3 && !cd.scarcity) return fail("checklist magro e não declarado (v1.2 regra 2)");
+      // (5) âmbito do assess + denominador explicado
+      const global = await c.tool("assess_sbd_toe_implementation", { risk_level: "L3", kpi_values: { "CIC-K01": 90 } });
+      const scoped = await c.tool("assess_sbd_toe_implementation", { risk_level: "L3", chapter: "07-cicd-seguro", kpi_values: { "CIC-K01": 90 } });
+      if (!global.ok || !scoped.ok) return fail(global.error ?? scoped.error);
+      const gd = global.data.data ?? global.data, sd = scoped.data.data ?? scoped.data;
+      if (!(sd.totals.applicable < gd.totals.applicable)) return fail("o `chapter` não restringiu o âmbito");
+      if (!sd.scope || !/DENOMINADORES/.test(sd.scope.note ?? "")) return fail("o denominador continua por explicar");
+      // (6) cadeia de activação completa
+      const sel = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["secrets"], exposure: "public", detail: "minimal" });
+      if (!sel.ok) return fail(sel.error);
+      const arq = (sel.data.context?.activated_chapters ?? []).find((x) => /^04-/.test(x.chapter));
+      if (!arq) return fail("fixture mudou: o cap. 04 não é activado");
+      if (!(arq.activated_by ?? []).some((a) => /^exposure=/.test(a.trigger)))
+        return fail("o activated_by regista só o último elo — a cadeia continua quebrada");
+      if (!(arq.derived_chain ?? []).length) return fail("sem cadeia derivada para um concern não declarado");
+      // (7) unmodelled_signals
+      const mt = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], task_context: "Aplicação multi-tenant com isolamento por cliente", detail: "minimal" });
+      if (!mt.ok) return fail(mt.error);
+      if (!(mt.data.unmodelled_signals?.values ?? []).includes("multi-tenant"))
+        return fail("o servidor não declara o que não conseguiu ancorar");
+      if (!/IGNOR[ÂA]NCIA|não sei/i.test(mt.data.unmodelled_signals.note ?? "")) return fail("a nota não distingue «não perguntei» de «não sei»");
+      return ok(`next validados contra ${schemas.size} schemas vivos; banda vazia com caminho concreto (${(ap.elsewhere?.by_chapter ?? []).length} capítulos com rótulos); escassez declarada; assess ${gd.totals.applicable}→${sd.totals.applicable} com denominador; cadeia exposure→architecture→cap.04; ${mt.data.unmodelled_signals.values.length} sinais não modelados declarados`); } },
 
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {

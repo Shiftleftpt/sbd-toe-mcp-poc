@@ -49,12 +49,23 @@ const piece = (name, found, evidence, opts = {}) => ({
  * naquele momento · GR-05 = a resposta de conhecimento atravessada · GR-06 = o arranque
  * configurável. Uma peça servida só por superfície NÃO-NORMATIVA nunca conta como servida.
  */
-function classify({ pieces, mustNotViolations }, centralPiece) {
+/**
+ * EMENDA v1.2, regra 1 — CONSERVAÇÃO NA BANDA. O que o bundle tem para o âmbito perguntado
+ * aparece na banda, OU é declarado com CAMINHO CONCRETO para onde está. Banda anunciada e
+ * vazia, havendo conteúdo no bundle e SEM caminho concreto ⇒ SERVIDO-MAL, mesmo com todas
+ * as peças presentes. Verificável mecanicamente; não pede juízo editorial.
+ */
+function bandViolations(probe) {
+  return (probe.bands ?? []).filter((b) => b.announced && b.empty && b.bundleHasContent && !b.concretePath);
+}
+
+function classify({ pieces, mustNotViolations, bands }, centralPiece) {
   const central = pieces.find((p) => p.name === centralPiece);
   if (central === undefined) return NAO_SERVIDO;
   if (!central.found || central.nonNormative) return NAO_SERVIDO;
   const missing = pieces.filter((p) => !p.found || p.nonNormative);
-  if (missing.length === 0 && mustNotViolations.length === 0) return SERVIDO;
+  const bandFails = bandViolations({ bands });
+  if (missing.length === 0 && mustNotViolations.length === 0 && bandFails.length === 0) return SERVIDO;
   return SERVIDO_MAL;
 }
 
@@ -128,6 +139,9 @@ export const readingCases = [
       const mustNotViolations = [];
       if (items.length === 0 && (gov.data?.selection?.selected ?? []).length > 0)
         notes.push("sem checklist, a única resposta disponível seria a lista de requisitos (must-NOT do caso)");
+      const scarcity = checklist.ok ? (checklist.data?.data ?? checklist.data ?? {}).scarcity : undefined;
+      if (scarcity) notes.push(`ESCASSEZ DECLARADA (v1.2 regra 2): ${scarcity.items} bloco(s) — achado de CONTEÚDO, sobe ao Author`);
+      else if (items.length > 0 && items.length <= 3) notes.push("checklist MAGRO e NÃO declarado (v1.2 regra 2)");
       return { path: checklist.ok, pieces, mustNotViolations, used, notes };
     },
   },
@@ -352,9 +366,14 @@ export const readingCases = [
         piece(
           // servido = há CAMINHO e a resposta é honesta: os antipadrões do tópico, ou o zero
           // DECLARADO com o sítio onde eles estão. Zero mudo continuaria a não servir.
+          // v1.2 regra 1: servida se o conteúdo aparece na banda OU vem com CAMINHO
+          // CONCRETO para onde está. (O predicado anterior procurava uma frase que a
+          // beta.36 reescreveu — defeito da medição, corrigido para a formulação da emenda.)
           "antipadrões (o que NÃO fazer)",
-          Boolean(t.anti_patterns) && ((t.anti_patterns.total ?? 0) > 0 || /NENHUM antipadrão publicado[\s\S]*resolve_entities/.test(t.anti_patterns.note ?? "")),
-          `banda própria: ${t.anti_patterns?.total ?? 0} neste tópico${(t.anti_patterns?.total ?? 0) === 0 ? " (zero DECLARADO, com onde encontrá-los)" : ""}`
+          Boolean(t.anti_patterns) &&
+            ((t.anti_patterns.total ?? 0) > 0 ||
+              (t.anti_patterns.elsewhere?.by_chapter ?? []).some((x) => /\(chapter="/.test(String(x.read_with ?? "")))),
+          `banda própria: ${t.anti_patterns?.total ?? 0} neste tópico${(t.anti_patterns?.total ?? 0) === 0 ? ` (vazio com CAMINHO CONCRETO: ${(t.anti_patterns?.elsewhere?.by_chapter ?? []).length} capítulos com chamada executável e rótulos)` : ""}`
         ),
         piece("proveniência marcada (manual-grounded)", Boolean(cd.provenance ?? consult.data?.provenance), "provenance no payload"),
         piece(
@@ -368,7 +387,27 @@ export const readingCases = [
       const mustNotViolations = [];
       if (requiresLevel) mustNotViolations.push("exige risk_level para responder a uma pergunta de conhecimento");
       notes.push("a pergunta foi feita como o oráculo a escreve: sem tarefa, sem projecto e sem `risk_level`");
-      return { path: topic.ok || consult.ok, pieces, mustNotViolations, used, notes };
+      // v1.2: a banda dos antipadrões é anunciada pela tool — avalia-se a conservação nela.
+      const apTotal = t.anti_patterns?.total ?? 0;
+      const elsewhere = t.anti_patterns?.elsewhere?.by_chapter ?? [];
+      const bundleHasAntipatterns = elsewhere.reduce((n, x) => n + (x.total ?? 0), 0) > 0 || apTotal > 0;
+      const bands = [
+        {
+          name: "anti_patterns",
+          announced: Boolean(t.anti_patterns),
+          empty: apTotal === 0,
+          bundleHasContent: bundleHasAntipatterns,
+          // caminho CONCRETO = a chamada executável por capítulo, não a lista genérica
+          concretePath: elsewhere.some((x) => typeof x.read_with === "string" && /\(chapter="/.test(x.read_with))
+        }
+      ];
+      if (apTotal === 0)
+        notes.push(
+          bands[0].concretePath
+            ? `banda vazia com CAMINHO CONCRETO: ${elsewhere.length} capítulos com chamada executável e rótulos`
+            : "banda vazia SEM caminho concreto (v1.2 ⇒ SERVIDO-MAL)"
+        );
+      return { path: topic.ok || consult.ok, pieces, mustNotViolations, used, notes, bands };
     },
   },
   {
@@ -442,6 +481,9 @@ export async function runReadingCase(client, rc) {
     };
   }
   const verdict = classify(probe, rc.centralPiece);
+  const bandFails = bandViolations(probe).map(
+    (b) => `banda \`${b.name}\` anunciada e VAZIA havendo conteúdo no bundle, sem caminho concreto (v1.2)`
+  );
   const missing = probe.pieces
     .filter((p) => !p.found || p.nonNormative)
     .map((p) => `${p.name}${p.nonNormative ? " (só por superfície NÃO-NORMATIVA)" : ""} — ${p.evidence}`);
@@ -453,7 +495,8 @@ export async function runReadingCase(client, rc) {
     verdict,
     centralPiece: rc.centralPiece,
     pieces: probe.pieces,
-    missing,
+    missing: [...missing, ...bandFails],
+    bands: probe.bands ?? [],
     mustNotViolations: probe.mustNotViolations,
     used: [...new Set(probe.used)],
     notes: probe.notes,

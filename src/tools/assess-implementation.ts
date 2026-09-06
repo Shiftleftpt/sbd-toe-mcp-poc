@@ -97,6 +97,13 @@ export interface AssessData {
   per_kpi: KpiResult[];
   gaps: KpiResult[];
   totals: { applicable: number; meets: number; gaps: number; not_reported: number };
+  /** 0.20.0-beta.36 — âmbito da avaliação e o DENOMINADOR explicado. */
+  scope: {
+    chapter?: string;
+    published_total: number;
+    applicable_at_level: number;
+    note: string;
+  };
   /** Count of gaps actually returned in `gaps` (≤ totals.gaps — page per_kpi for the rest). */
   gaps_returned: number;
   gaps_coverage: { total: number; returned: number; offset: number; nextOffset: number | null; hasMore: boolean };
@@ -127,7 +134,13 @@ export function handleAssessImplementation(args: Record<string, unknown>): Proto
     if (typeof v === "number" && Number.isFinite(v)) submitted.set(k, v);
   }
 
-  const metrics = loadMetrics();
+  /**
+   * 0.20.0-beta.36 — ÂMBITO. Quatro KPIs do cap. 07 faziam avaliar 95 do Manual inteiro e
+   * fechar com `posture: below` e 91 not_reported — um veredicto que não é o da pergunta.
+   * `chapter` restringe o universo; sem ele, o global mantém-se como estava.
+   */
+  const chapterScope = typeof args["chapter"] === "string" ? (args["chapter"] as string) : undefined;
+  const metrics = loadMetrics().filter((m) => chapterScope === undefined || m.chapter_id === chapterScope);
   // 0.15.1 (item 5): auto-relato VAZIO é rejeitado com erro instrutivo — um objecto {}
   // não é uma avaliação; a lista de metric_ids válidos é derivada do catálogo.
   if (kpiValuesArg && typeof kpiValuesArg === "object" && Object.keys(kpiValuesArg as object).length === 0) {
@@ -227,6 +240,18 @@ export function handleAssessImplementation(args: Record<string, unknown>): Proto
       per_kpi: page.items,
       gaps: boundedGaps,
       totals: { applicable, meets, gaps: gaps.length, not_reported: notReported },
+      scope: {
+        ...(chapterScope !== undefined ? { chapter: chapterScope } : {}),
+        published_total: loadMetrics().length,
+        applicable_at_level: applicable,
+        note:
+          (chapterScope !== undefined
+            ? `Avaliação RESTRITA ao capítulo \`${chapterScope}\`: o veredicto é DESTE âmbito, não do Manual inteiro. `
+            : "Avaliação do Manual INTEIRO — se a tua pergunta é sobre um capítulo, passa `chapter` ou o `posture` responde a uma pergunta que não fizeste. ") +
+          `DENOMINADORES: o Manual publica ${loadMetrics().length} KPIs no total; ${applicable} aplicam-se a ${riskLevel} ` +
+          "(a diferença são KPIs cujo `thresholds_by_level` não define alvo para este nível — não é omissão, é proporcionalidade). " +
+          "Os KPIs que o Manual define pedem-se em `get_sbd_toe_chapter_capability`.",
+      },
       gaps_returned: boundedGaps.length,
       gaps_coverage: { total: gapsSorted.length, returned: boundedGaps.length, offset: gapsOffset, nextOffset: gapsNext, hasMore: gapsNext !== null },
       unknown_metrics: unknownMetrics,

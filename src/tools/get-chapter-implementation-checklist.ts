@@ -123,6 +123,25 @@ export function handleGetChapterImplementationChecklist(
             },
           }
         : {}),
+      /**
+       * 0.20.0-beta.36 (emenda v1.2, 2ª regra) — O ESCASSO DECLARA-SE.
+       * O cap. 07 devolve 2 blocos e nada dizia que era pouco. Mesma regra do «zero
+       * declarado»: a resposta diz que é magro e porquê (é o que o Manual publica ali).
+       * A magreza sobe como achado de CONTEÚDO ao Author — não se enriquece aqui.
+       */
+      ...(chunks.length > 0 && chunks.length <= 3
+        ? {
+            scarcity: {
+              items: chunks.length,
+              note:
+                `MAGRO e declarado: o Manual publica ${chunks.length} bloco(s) de checklist para \`${bundle}\` — ` +
+                "não é um checklist de capacidade organizacional, são as secções de prosa que existem. " +
+                "NÃO concluas que implementar este capítulo tem 2 passos. Para a capacidade e a medida usa " +
+                `\`get_sbd_toe_chapter_capability(chapter="${bundle}")\`; para o que o capítulo cobre, ` +
+                `\`get_sbd_toe_chapter_brief(chapterId="${bundle}")\`.`
+            }
+          }
+        : {}),
       totals: { items: chunks.length }
     },
     provenance: {

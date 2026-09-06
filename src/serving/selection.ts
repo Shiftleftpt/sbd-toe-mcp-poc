@@ -169,7 +169,7 @@ export interface NarrowedOutGroup {
 export interface ActivatedChapter {
   chapter: string;
   /** O PRIMEIRO activador (estável desde 0.11.0; mantido para compatibilidade). */
-  source: "changed_file" | "technology" | "concern" | "stack" | "declared_chapter";
+  source: "changed_file" | "technology" | "concern" | "stack" | "declared_chapter" | "exposure" | "data_sensitivity";
   trigger: string;
   /**
    * 0.20.0-beta.26 — TODOS os activadores deste capítulo, não só o primeiro.
@@ -180,6 +180,12 @@ export interface ActivatedChapter {
    * parecer errado a quem o testa.
    */
   activated_by: Array<{ source: ActivatedChapter["source"]; trigger: string }>;
+  /**
+   * 0.20.0-beta.36 — a cadeia, quando o concern NÃO foi declarado pelo chamador e chegou
+   * por regra publicada de `exposure`/`data_sensitivity`. Sem isto, o traço nomeava um
+   * concern que o chamador nunca escreveu e a auditabilidade quebrava-se.
+   */
+  derived_chain?: string[];
 }
 
 /** Declarações que a selecção aceita — o vocabulário está em sbd://toe/activation-vocabulary. */
@@ -266,6 +272,21 @@ export interface SelectionResult {
   unknown_technologies?: string[];
   /** 0.20.0-beta.30: valores estruturais fora do catálogo publicado — declarados, nunca descartados. */
   unknown_structural?: string[];
+  /**
+   * 0.20.0-beta.36 — O QUE O SERVIDOR NÃO SABE ANCORAR (4ª aplicação do padrão que já vive
+   * em `unsupported_concerns`, `unsupported_role` e `no_cross_check`).
+   *
+   * Caso medido: uma app «multi-tenant». Não há concern nem technology para isolamento
+   * multi-inquilino; o assunto chega indirecto por ARC-006 e NADA o assinalava. O chamador
+   * não conseguia distinguir «não te perguntei isso» de «não sei o que isso é».
+   *
+   * Isto NÃO é inferência: nada aqui selecciona seja o que for. É uma varredura léxica do
+   * texto que o chamador REGISTOU, com um único fim — declarar ignorância.
+   */
+  unmodelled_signals?: {
+    values: string[];
+    note: string;
+  };
   /** O `task` é contexto registado, não motor (excepto em discover). */
   task_record: { text: string; role: "recorded_context"; affects_selection: boolean };
 }
@@ -331,8 +352,39 @@ function activateChapters(
   for (const [token, chapters] of Object.entries(TECHNOLOGY_TO_CHAPTERS)) {
     if (stackLower.includes(token)) for (const chapter of chapters) push(chapter, "stack", token);
   }
+  /**
+   * 0.20.0-beta.36 — a CADEIA completa, não o último elo.
+   *
+   * Declarando `secrets` + `exposure="public"` e nunca `architecture`, a banda atribuía o
+   * cap. 04 a `trigger: architecture` — um concern que o chamador não declarou. O traço
+   * tinha a verdade («exposure='public' activates architecture»), mas o `activated_by`
+   * registava só o fim: `exposure → architecture → cap. 04`. A promessa de auditabilidade
+   * quebra-se aí: quem retira o `architecture` da chamada não desactiva o capítulo.
+   */
+  const upstreamOf = (concern: string): Array<{ source: ActivatedChapter["source"]; trigger: string }> => {
+    const out: Array<{ source: ActivatedChapter["source"]; trigger: string }> = [];
+    if (input.exposure !== undefined && (EXPOSURE_ACTIVATION[input.exposure] ?? []).includes(concern as Concern))
+      out.push({ source: "exposure" as ActivatedChapter["source"], trigger: `exposure=${input.exposure}` });
+    if (input.data_sensitivity !== undefined && (SENSITIVITY_ACTIVATION[input.data_sensitivity] ?? []).includes(concern as Concern))
+      out.push({ source: "data_sensitivity" as ActivatedChapter["source"], trigger: `data_sensitivity=${input.data_sensitivity}` });
+    return out;
+  };
   for (const concern of activation.concerns) {
-    for (const chapter of CONCERN_TO_DOMAIN_CHAPTERS[concern] ?? []) push(chapter, "concern", concern);
+    for (const chapter of CONCERN_TO_DOMAIN_CHAPTERS[concern] ?? []) {
+      push(chapter, "concern", concern);
+      const entry = byChapter.get(chapter);
+      if (entry !== undefined) {
+        const declaredByCaller = input.concerns.includes(concern as Concern);
+        for (const up of upstreamOf(concern))
+          if (!entry.activated_by.some((a) => a.trigger === up.trigger))
+            entry.activated_by.push(up);
+        if (!declaredByCaller && entry.activated_by.some((a) => /^(exposure|data_sensitivity)=/.test(a.trigger)))
+          entry.derived_chain = [
+            ...(entry.derived_chain ?? []),
+            `${entry.activated_by.find((a) => /^(exposure|data_sensitivity)=/.test(a.trigger))?.trigger} → concerns=["${concern}"] (regra publicada) → ${chapter}`
+          ];
+      }
+    }
   }
   return out;
 }
@@ -485,6 +537,39 @@ export function runSelectionWithActivation(
   const declarative = mode !== "discover";
   const technologies = declarative ? normalizeDeclaredTechnologies(technologiesRaw, input.stack) : technologiesRaw;
   const declared = declaredActivatorsOf(input, technologies);
+  /**
+   * Termos do `task_context` que não ancoram em NENHUM valor do vocabulário. Conservador de
+   * propósito: só compostos hifenizados e termos longos fora de uma lista de palavras
+   * comuns — um falso positivo aqui é ruído, e ruído mina a declaração.
+   */
+  const unmodelledSignals = (() => {
+    if (!declarative) return [];
+    const text = (input.taskTrimmed ?? "").toLowerCase();
+    if (text.length === 0) return [];
+    const vocab = buildActivationVocabulary();
+    const known = new Set<string>([
+      ...vocab.concerns.values.map((c) => String(c.value)),
+      ...vocab.technologies.values.map((t) => String(t.value)),
+      ...vocab.exposure.values.map((e) => String(e.value)),
+      ...vocab.data_sensitivity.values.map((d) => String(d.value)),
+    ]);
+    const COMMON = new Set([
+      "para", "com", "dados", "aplicacao", "aplicação", "sistema", "novo", "nova", "utilizador",
+      "utilizadores", "implementar", "criar", "adicionar", "endpoint", "servico", "serviço",
+      "feature", "funcionalidade", "projecto", "projeto", "equipa", "cliente", "clientes",
+      "that", "with", "the", "and", "for", "our", "new", "data", "users", "service", "application",
+    ]);
+    const out = new Set<string>();
+    for (const token of text.split(/[^a-zà-ú0-9-]+/).filter(Boolean)) {
+      const hyphenated = token.includes("-") && token.length >= 7;
+      const longWord = !token.includes("-") && token.length >= 8;
+      if (!hyphenated && !longWord) continue;
+      if (known.has(token) || COMMON.has(token)) continue;
+      if ([...known].some((k) => token.includes(k) || k.includes(token))) continue;
+      out.add(token);
+    }
+    return [...out].sort().slice(0, 8);
+  })();
   // beta.23 (P0-3): a regra nomeada SES-008 é EFEITO de uma tecnologia declarada.
   // Tem de ser conhecida ANTES da guarda anti-zero — senão a guarda deita fora uma
   // declaração que activa mesmo alguma coisa (era o caso de `technologies:["jwt"]`).
@@ -652,6 +737,19 @@ export function runSelectionWithActivation(
       needs_input: buildNeedsInput(input, declared, inert),
       ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
     ...(unknownStructural.length > 0 ? { unknown_structural: unknownStructural } : {}),
+    ...(unmodelledSignals.length > 0
+      ? {
+          unmodelled_signals: {
+            values: unmodelledSignals,
+            note:
+              `Termos do teu \`task_context\` que NÃO ancoram em nenhum valor do vocabulário: ${unmodelledSignals.join(", ")}. ` +
+              "Isto NÃO seleccionou nada — é uma declaração de IGNORÂNCIA, para distinguires «não te perguntei isso» de " +
+              "«não sei o que isso é». O assunto pode estar coberto por requisitos que o Manual publica sob outro nome " +
+              "(pede por estrutura: `chapters`/`categories`, ou `explain_sbd_toe_topic`), ou pode simplesmente não estar " +
+              "modelado. Não assumas cobertura a partir do silêncio."
+          }
+        }
+      : {}),
     task_record: taskRecord,
     };
   }
@@ -1010,6 +1108,19 @@ export function runSelectionWithActivation(
       },
       ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
     ...(unknownStructural.length > 0 ? { unknown_structural: unknownStructural } : {}),
+    ...(unmodelledSignals.length > 0
+      ? {
+          unmodelled_signals: {
+            values: unmodelledSignals,
+            note:
+              `Termos do teu \`task_context\` que NÃO ancoram em nenhum valor do vocabulário: ${unmodelledSignals.join(", ")}. ` +
+              "Isto NÃO seleccionou nada — é uma declaração de IGNORÂNCIA, para distinguires «não te perguntei isso» de " +
+              "«não sei o que isso é». O assunto pode estar coberto por requisitos que o Manual publica sob outro nome " +
+              "(pede por estrutura: `chapters`/`categories`, ou `explain_sbd_toe_topic`), ou pode simplesmente não estar " +
+              "modelado. Não assumas cobertura a partir do silêncio."
+          }
+        }
+      : {}),
     task_record: taskRecord,
     };
   }
@@ -1056,6 +1167,19 @@ export function runSelectionWithActivation(
     mode,
     ...(unknownTechnologies.length > 0 ? { unknown_technologies: unknownTechnologies } : {}),
     ...(unknownStructural.length > 0 ? { unknown_structural: unknownStructural } : {}),
+    ...(unmodelledSignals.length > 0
+      ? {
+          unmodelled_signals: {
+            values: unmodelledSignals,
+            note:
+              `Termos do teu \`task_context\` que NÃO ancoram em nenhum valor do vocabulário: ${unmodelledSignals.join(", ")}. ` +
+              "Isto NÃO seleccionou nada — é uma declaração de IGNORÂNCIA, para distinguires «não te perguntei isso» de " +
+              "«não sei o que isso é». O assunto pode estar coberto por requisitos que o Manual publica sob outro nome " +
+              "(pede por estrutura: `chapters`/`categories`, ou `explain_sbd_toe_topic`), ou pode simplesmente não estar " +
+              "modelado. Não assumas cobertura a partir do silêncio."
+          }
+        }
+      : {}),
     ...(out_of_scope_chapters && out_of_scope_chapters.count > 0 ? { out_of_scope_chapters } : {}),
     task_record: taskRecord,
   };

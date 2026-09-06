@@ -163,7 +163,7 @@ export function handleGetChapterCapability(args: Record<string, unknown>): Chapt
       {
         intent: "Avaliar-te contra ESTES KPIs (traz os teus valores medidos)",
         tool: "assess_sbd_toe_implementation",
-        with: `risk_level="${level ?? "L2"}", metrics={"${page.items[0]?.metric_id ?? "ARC-K01"}": <valor medido>}`,
+        with: `risk_level="${level ?? "L2"}", kpi_values={"${page.items[0]?.metric_id ?? "ARC-K01"}": <valor medido>}`,
         kind: "structural" as const
       },
       {

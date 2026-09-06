@@ -135,6 +135,8 @@ export interface SelectRequirementsOutput {
    * Mesma classe do `unknown_concerns` — num contrato declarativo uma gralha custa a
    * activação inteira, e o descarte em silêncio é a falha.
    */
+  /** 0.20.0-beta.36: o que o servidor NÃO conseguiu ancorar em vocabulário nenhum. */
+  unmodelled_signals?: SelectionResult["unmodelled_signals"];
   /** 0.20.0-beta.30: valores estruturais fora do catálogo — declarados, nunca descartados. */
   unknown_structural?: {
     values: string[];
@@ -352,6 +354,7 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
           }
         }
       : {}),
+    ...(result.unmodelled_signals ? { unmodelled_signals: result.unmodelled_signals } : {}),
     ...(result.unknown_structural && result.unknown_structural.length > 0
       ? {
           unknown_structural: {
