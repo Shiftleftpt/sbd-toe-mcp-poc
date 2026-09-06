@@ -572,7 +572,7 @@
         "rastreabilidade_role": "substrate_landing",
         "manual_chapter": "04-arquitetura-segura",
         "manual_file": "canon/25-rastreabilidade.md",
-        "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+        "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
         "v1_entity_ids": [
           "ACO-IAT-001",
           "ACO-IAT-002",
@@ -599,7 +599,7 @@
         "rastreabilidade_role": "substrate_landing",
         "manual_chapter": "06-desenvolvimento-seguro",
         "manual_file": "canon/25-rastreabilidade.md",
-        "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+        "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
         "v1_entity_ids": [
           "ACO-IVF-001",
           "ACO-IVF-002",
@@ -627,7 +627,7 @@
         "rastreabilidade_role": "placeholder",
         "manual_chapter": null,
         "manual_file": null,
-        "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+        "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
         "v1_entity_ids": [
           "ACA-IAT-001",
           "ACA-IAT-002",
@@ -733,7 +733,7 @@
   },
   "repeat_call_hint": "Identical input returns this exact payload (deterministic) — reuse the context already received; deepen via detail:'minimal' or a targeted consult_security_requirements.",
   "provenance": {
-    "kg": "v1.11.0",
+    "kg": "dev:f87d5b46bf10",
     "server": "<pkg>",
     "runtime_v0": "data/publish/runtime/*.json + data/publish/ontology/*",
     "runtime_v1": "data/publish/runtime/v1/*",

@@ -1,6 +1,6 @@
 {
   "agent": "lifecycle_extractor",
-  "generated_at": "2026-09-03T17:05:02Z",
+  "generated_at": "2026-09-06T21:42:52Z",
   "items": [
     {
       "confidence": 0.91,
@@ -5217,10 +5217,10 @@
       "warnings": []
     }
   ],
-  "run_id": "20260903T170502Z",
+  "run_id": "20260906T214252Z",
   "source": {
     "branch": "HEAD",
-    "commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+    "commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
     "corpus_root": "manuals_src/docs/sbd-toe",
     "repo_url": "git@github.com:SbD-ToE/sbd-toe-manual.git"
   },

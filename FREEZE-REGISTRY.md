@@ -79,6 +79,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 | v0.20.0-beta.5 | 62a1eda (`62a1eda3982147e44369c8a9271ca3697af2680f`; annotated tag object `5165a04a`) | 2026-08-31 | formal KG `v1.7.0` (`29156b86…`, contract v1.14, ontology v2.2, Manual v1.7.1) — same pin and content as stable v0.10.4 | `beta` (superseded) |
 | v0.20.0-beta.6 | 322c38f (`322c38f4dc440aad40bf110b8e20d3d40f623318`; annotated tag object `71098136`) | 2026-08-31 | formal KG `v1.7.0` + MP1 selection operation (= stable 0.11.0 → `102b8166`) | `beta` (superseded) |
 | v0.20.0-beta.7 | 4256ee0 (`4256ee0f09386a45e69012ec565375965f49b0de`; annotated tag object `6e75ef23`) | 2026-08-31 | formal KG `v1.9.0` (`11153c85…`, contract v1.15, 273/29 FIL/PRI — zero-delta over the verified v1.8.0 dev-build) | `beta` (formal batch, «3 sims») |
+| v0.20.0-beta.37 | PENDING (`PENDING`) | 2026-09-06 | vista PROCESSUAL servida: `get_sbd_toe_macro_processes` (leitura PROGRAMA) com os cinco MP-01..05, a ordem de adopção publicada (só `dependency`; as 9 `feedback` fora dela, com prova de que com elas o grafo cicla), pré-requisitos com o artefacto consumido, papéis e percurso de capítulos; três limites DECLARADOS (sem entidade «programa»; travessia MP↔fase é lacuna; três segmentações sem contenção). Re-pin do beta para o dev-build `kg-v1-manual-v1.8.1-aligned-2026-09-06` (`f87d5b46bf10`, contract v1.18): moveu só proveniência — ouro H byte-idêntico. **Eixo I: 4·1·1 → 5·1·0, GR-03 NÃO SERVIDO → SERVIDO (6/6)** | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.36 | b264611 (`b26461181e74ecf8e8f5628f010b1bda00e5ffe5`) | 2026-09-06 | as invariantes varrem o INVENTÁRIO VIVO (tools/list em tempo de teste) e apanharam o `metrics=`/`kpi_values` à primeira; conservação NA BANDA com caminho concreto (v1.2); escassez declarada; assess com âmbito e denominador; cadeia de activação completa; `unmodelled_signals`. **Eixo I sob v1.2: 3·2·1 → 4·1·1, GR-05 volta a SERVIDO** | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.35 | fe4f59a (`fe4f59aeec8972db0b6cd02d35b121de8621e9ee`) | 2026-09-06 | GR-05 fechado: `explain_sbd_toe_topic` (leitura CONSULT) com banda própria para os 26 ANTIPADRÕES e o `risk_level` a ANOTAR em vez de exigir — fronteira mantida na selecção/prepare/capacidade. **GR-05: SERVIDO-MAL → SERVIDO**; GR-04 fica SERVIDO-MAL e é ACHADO DE CONTEÚDO (o bundle não publica decide-vs-delega; serve-se a `proportionality` que existe) | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.34 | 4f56bbe (`4f56bbe29cba92696324faa2be27e8857b709bbd`) | 2026-09-06 | CAPACIDADE: `get_sbd_toe_chapter_capability` (99 KPIs com thresholds por nível + artefactos), ciclo fechado com o assess nos dois sentidos, leitura IMPL vs GUIDE declarada na resposta e no guia. **GR-01 no Eixo I: NÃO SERVIDO → SERVIDO**; o «0 artefactos» era defeito da SONDA (o brief servia 29); lacuna do checklist declarada | `beta` (`latest` = 0.19.4, estável inalterada) |
@@ -113,7 +114,24 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.36 → `b26461181e74ecf8e8f5628f010b1bda00e5ffe5` (2026-09-06; `release.yml` run 34055196074 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.36` = `beta`, gitHead igual; GitHub pre-release) fecha a classe que o
+**Beta line:** v0.20.0-beta.37 → `PENDING` (2026-09-06; `release.yml` run PENDING publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.37` = `beta`, gitHead igual; GitHub pre-release) serve a VISTA
+PROCESSUAL. A montante, o Codex publicou os macro-processos como dados; faltava a última perna — o
+serving. `get_sbd_toe_macro_processes` dá a leitura PROGRAMA («por onde começamos, e com que
+sequência?»): os cinco MP com pergunta, invariante, dono e percurso de capítulos, e a ORDEM DE ADOPÇÃO
+que a fonte publica — `MP-01 → {MP-02 ∥ MP-04} → MP-03 → MP-05`. **A ordem deriva exclusivamente das
+arestas `dependency`**; as 9 de `feedback` vêm servidas em banda própria e fora da ordem por definição.
+O TC-F-64 não acredita na declaração: reconstrói o grafo COM as feedback e **exige que cicle** — se
+deixar de ciclar, a exclusão deixou de ser demonstrável e a suite parte. Três limites vão declarados na
+resposta e no guia: **não existe entidade «programa»** (recusa de curadoria, ratificada), a travessia
+MP↔fase do SDLC é **lacuna publicada** que não se deriva de capítulos, e MacroProcess/capítulo/fase são
+**três segmentações paralelas** — `traverses_bundles` é percurso, nunca contenção. O beta re-pina o
+dev-build `kg-v1-manual-v1.8.1-aligned-2026-09-06` (`f87d5b46bf10`, contract v1.18, manual v1.8.1 +
+ontologia v2.5), que traz `semantic/macro_processes.jsonl` e `semantic/mp_edges.jsonl`: **moveu 139
+linhas de proveniência e ZERO de conteúdo**, e o ouro do Eixo H ficou byte-idêntico nos dois braços.
+**Eixo I: 4·1·1 → 5·1·0**, com o GR-03 a subir de NÃO SERVIDO (2/6) a SERVIDO (6/6) — e a subir **sem**
+que a entidade «programa» exista, porque a peça central ratificada é «MP1–MP5 como dados» e a ausência
+da entidade está declarada, não contornada.
+Prior: v0.20.0-beta.36 → `b26461181e74ecf8e8f5628f010b1bda00e5ffe5` (2026-09-06; `release.yml` run 34055196074 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.36` = `beta`, gitHead igual; GitHub pre-release) fecha a classe que o
 assessment externo (8/10, a nota mais alta desde a b.21) identificou como a única que resta: «texto e
 metadados que descrevem a interface sem serem gerados a partir dela». A lição própria é que a
 invariante next-verbatim não apanhou o `metrics` vs `kpi_values` porque a tool era NOVA — a lista era
@@ -423,6 +441,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.37 registered (vista processual MP-01..05 + ordem de adopção; ordem só por dependency com prova de ciclo; três limites declarados; **bundle re-pin: release KG v1.11.0 → dev-build kg-v1-manual-v1.8.1-aligned-2026-09-06, sha256 f87d5b46bf10…, contract v1.18** — proveniência apenas, conteúdo inalterado; Eixo I 4·1·1 → 5·1·0). Tag on the commit introducing this row. No frozen state touched; stable line (latest 0.19.4, KG formal v1.11.0) unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.36 tag commit recorded (`b2646118`); npm `beta` publish + GitHub pre-release confirmed (run 34055196074); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.36 registered (invariantes sobre inventário vivo; conservação na banda v1.2; assess com âmbito; cadeia de activação; unmodelled_signals; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.35 tag commit recorded (`fe4f59ae`); npm `beta` publish + GitHub pre-release confirmed (run 34052937325); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |

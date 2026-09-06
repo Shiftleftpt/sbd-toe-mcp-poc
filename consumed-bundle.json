@@ -2,25 +2,24 @@
   "_doc": "Pontifex bundle pin (PROGRAMME-PRESERVATION-PROTOCOL §0.6 / AGENTS.md Rule 4). Declares the Codex build artefact this MCP serves. Materialized + maintained by scripts/sync-bundle.mjs (digest-verified against the artefact .sha256), validated by scripts/verify-consumed-bundle.mjs (run in `npm run check`). source: dev-build = cycle snapshot; release = formal vX.Y.Z. release_sha256 is the verified artefact digest — never invented.",
   "pin_version": 1,
   "pinned_at": "2026-08-31",
-  "consumer_contract_version": "v1.17",
-  "substrate_version": "manual-v1.8.0+sbdtoe-ontology-v2.4",
+  "consumer_contract_version": "v1.18",
+  "substrate_version": "manual-v1.8.1+sbdtoe-ontology-v2.5",
   "kg_bundle": {
-    "release_tag": "v1.11.0",
-    "release_sha256": "b7444094f3b4e60e26fd0fd586793445e2b734c6376fb2b327fbd888828d03df",
-    "source": "release",
-    "release_ref": "SbD-ToE/sbd-toe-knowledge-graph@v1.11.0",
-    "surface_built_at": "2026-09-03T17:05:41.982190+00:00",
-    "tag_scheme": "semver",
-    "synced_at": "2026-09-03",
-    "artefact": "sbd-toe-knowledge-graph-bundle-v1.11.0.zip"
+    "release_tag": "kg-v1-manual-v1.8.1-aligned-2026-09-06",
+    "release_sha256": "f87d5b46bf109429beefd4e984f667ae22ad4c6155f8d0b8578c1351f4efb8d5",
+    "source": "dev-build",
+    "surface_built_at": "2026-09-06T21:43:34.950216+00:00",
+    "tag_scheme": "cycle-aligned",
+    "synced_at": "2026-09-06",
+    "artefact": "sbd-toe-knowledge-graph-bundle-kg-v1-manual-v1.8.1-aligned-2026-09-06-snapshot.zip"
   },
   "inputs": {
     "manual": {
       "repo": "SbD-ToE/sbd-toe-manual",
-      "commit": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
-      "tag": "v1.8.0",
-      "version": "1.8.0",
-      "generated_at": "2026-09-03T17:05:02Z"
+      "commit": "ea6b396b9caa77beddf1096b56250fe073796e8f",
+      "tag": "v1.8.1",
+      "version": "1.8.1",
+      "generated_at": "2026-09-06T21:42:52Z"
     },
     "ontology": {
       "repo": "SbD-ToE/sbd-toe-ontology",

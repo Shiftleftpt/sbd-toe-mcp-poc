@@ -226,28 +226,17 @@ export const readingCases = [
     async probe(client) {
       const used = [];
       const notes = [];
-      const rollout = await client.tool("plan_sbd_toe_rollout", {});
-      used.push("plan_sbd_toe_rollout");
-      const rd = rollout.ok ? (rollout.data?.data ?? rollout.data ?? {}) : {};
       /**
-       * Os MP1–MP5 contam como servidos SÓ se existirem como ENTIDADES. A 1ª versão desta
-       * sonda testava o texto da resposta do `query_sbd_toe_entities` e casava com o TÍTULO
-       * de um chunk («os-cinco-macro-processos») — ou seja, com a PROSA que o oráculo já
-       * declara existir. Falso positivo da medição, da mesma família do que o controlo
-       * positivo apanhou na beta.32.
+       * 0.20.0-beta.37: os MP1–MP5 deixaram de ser prosa e passaram a dados; a sonda usa a
+       * superfície processual, como um agente usaria. A verificação de que são ENTIDADES
+       * mantém-se — foi ela que apanhou o falso positivo da beta.33 (o regex casava com o
+       * título de um chunk).
        */
-      const mp = await client.tool("query_sbd_toe_entities", { query: "MP1 macro-processo programa" });
-      used.push("query_sbd_toe_entities");
-      const mpTypes = ["macro_process", "macroprocess", "programme", "program", "phase"];
-      let mpFound = false;
-      for (const rt of mpTypes) {
-        const probe = await client.tool("resolve_entities", { record_type: rt, limit: 1 });
-        if (probe.ok && (probe.data?.total ?? 0) > 0 && /MP-?[1-5]/i.test(JSON.stringify(probe.data?.entities ?? []))) {
-          mpFound = true;
-          break;
-        }
-      }
-      used.push("resolve_entities");
+      const prog = await client.tool("get_sbd_toe_macro_processes", {});
+      used.push("get_sbd_toe_macro_processes");
+      const p = prog.ok ? prog.data ?? {} : {};
+      const mps = p.macro_processes ?? [];
+      const levels = p.adoption_order?.levels ?? [];
       const cla = await client.tool("select_sbd_toe_requirements", {
         risk_level: "L1",
         chapters: ["01-classificacao-aplicacoes"],
@@ -255,26 +244,56 @@ export const readingCases = [
         limit: 50,
       });
       used.push("select_sbd_toe_requirements");
-      const phases = rd.phases ?? rd.rollout ?? rd.steps ?? [];
+      const gov = await client.tool("select_sbd_toe_requirements", {
+        risk_level: "L2",
+        chapters: ["14-governanca-contratacao"],
+        detail: "minimal",
+        limit: 200,
+      });
+      // travessia longitudinal: há MP que atravessa o cap. 14 E outros capítulos?
+      const longitudinal = mps.filter((m) => (m.traverses_bundles ?? []).includes("14-governanca-contratacao"));
       const pieces = [
-        piece("travessia longitudinal (cap. 14: governo em operação E pôr o programa de pé)", false, "sem entidade de «programa»"),
-        piece("ordem/fases do programa", Array.isArray(phases) && phases.length > 0, `${Array.isArray(phases) ? phases.length : 0} fases no rollout`),
-        piece("o que é pré-requisito de quê", false, "o rollout declara que o DAG de dependências está adiado"),
-        piece("papéis a criar", false, "sem caminho para papéis do PROGRAMA (só papéis de prática)"),
-        piece(
-          "ligação à classificação (cap. 01) como primeiro passo",
-          cla.ok && (cla.data?.selection?.selected ?? []).length > 0,
-          `${(cla.data?.selection?.selected ?? []).length} requisitos CLA alcançáveis por estrutura`
-        ),
         piece(
           "macro-processos MP1–MP5 como dados",
-          mpFound,
-          mpFound ? "existem como entidades" : "só PROSA nos chunks — não existem como entidades no KG"
+          mps.length === 5 && levels.length > 0,
+          mps.length === 5 ? `${mps.length} macro-processos publicados, ordem em ${levels.length} níveis` : "sem sequência publicada"
+        ),
+        piece(
+          "travessia longitudinal (cap. 14: governo em operação E pôr o programa de pé)",
+          longitudinal.length > 0 && (gov.data?.selection?.selected ?? []).length > 0,
+          `${longitudinal.length} MP atravessam o cap. 14; ${(gov.data?.selection?.selected ?? []).length} requisitos GOV alcançáveis`
+        ),
+        piece(
+          "ordem/fases do programa",
+          levels.length > 0 && Boolean(p.adoption_order?.rule),
+          `ordem publicada em ${levels.length} níveis, com a regra declarada`
+        ),
+        piece(
+          "o que é pré-requisito de quê",
+          (p.prerequisites?.total ?? 0) > 0,
+          `${p.prerequisites?.total ?? 0} pares dependency, com o artefacto consumido; ${p.feedback_loops?.total ?? 0} feedback DECLARADAS fora da ordem`
+        ),
+        piece(
+          "papéis a criar",
+          (p.roles_involved?.values ?? []).length > 0,
+          `${(p.roles_involved?.values ?? []).length} papéis nomeados pelos MP (dono + participantes)`
+        ),
+        piece(
+          "ligação à classificação (cap. 01) como primeiro passo",
+          (cla.data?.selection?.selected ?? []).length > 0 && String(p.adoption_order?.first_step ?? "") === "MP-01",
+          `primeiro passo publicado: ${p.adoption_order?.first_step ?? "—"}; ${(cla.data?.selection?.selected ?? []).length} requisitos CLA`
         ),
       ];
       const mustNotViolations = [];
-      notes.push("o oráculo declara NÃO SERVIDO esperado por construção enquanto os MP1–MP5 não forem modelados");
-      return { path: rollout.ok, pieces, mustNotViolations, used, notes };
+      // must-NOT: devolver os 273 requisitos, ou um capítulo isolado como se fosse o programa
+      const payload = JSON.stringify(p);
+      const reqIds = (payload.match(/[A-Z]{3}-\d{3}/g) ?? []).length;
+      if (reqIds > 60) mustNotViolations.push(`a vista de programa devolve ${reqIds} ids de requisito — é a leitura GUIDE, não a PROGRAMA`);
+      if (mps.length === 1) mustNotViolations.push("devolve um único agregado como se fosse o programa");
+      if (p.declared_limits?.no_programme_entity) notes.push("limite DECLARADO: não existe entidade «programa» (recusa de curadoria ratificada)");
+      if (p.declared_limits?.sdlc_phase_traversal) notes.push("lacuna DECLARADA: travessia MP↔fase do SDLC é parcial e não publicada");
+      if (p.adoption_order?.excluded_from_order) notes.push(`ordem = só dependency; ${p.adoption_order.excluded_from_order.count} feedback excluídas por definição`);
+      return { path: prog.ok, pieces, mustNotViolations, used, notes };
     },
   },
   {

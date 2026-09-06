@@ -68,6 +68,7 @@ import { THREAT_ORDERING, SELECT_PAGINATION } from "./serving/behaviour-notes.js
 import { handleGetPlaybook } from "./tools/get-playbook.js";
 import { handleGetChapterCapability } from "./tools/get-chapter-capability.js";
 import { handleExplainTopic } from "./tools/explain-topic.js";
+import { handleGetMacroProcesses } from "./tools/get-macro-processes.js";
 import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
@@ -1038,6 +1039,23 @@ class McpRuntime {
               limit: { type: "number" }
             },
             required: [],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "get_sbd_toe_macro_processes",
+          title: "Get SbD-ToE Macro-Processes (PROGRAMA)",
+          description:
+            "LEITURA PROGRAMA (0.20.0-beta.37) — «por onde começamos e com que SEQUÊNCIA?». Serve os cinco macro-processos MP-01..05 que o Manual publica (pergunta, continuidade, invariante, dono, participantes, percurso de capítulos, indicadores, pontos de controlo, evidência esperada, proporcionalidade L1-L3) e a **ORDEM DE ADOPÇÃO publicada**. " +
+            "A ordem deriva EXCLUSIVAMENTE das arestas `dependency`: as `feedback` são realimentação e ficam FORA dela — se entrassem, os cinco macro-processos ciclariam. " +
+            "NÃO é a leitura GUIDE (que requisitos se aplicam a uma tarefa) nem a IMPL (a capacidade de um capítulo): devolver os 273 requisitos, ou um capítulo isolado, seria responder a outra pergunta. " +
+            "Limites DECLARADOS na resposta: não existe entidade «programa» (recusa de curadoria, ratificada); a travessia MP↔fase do SDLC é lacuna publicada e não se deriva; e MacroProcess, capítulo e fase são três segmentações paralelas — `traverses_bundles` é percurso, nunca contenção.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              mp_id: { type: "string", description: "Um macro-processo em detalhe (ex.: `MP-01`). Sem isto, devolve a vista de PROGRAMA: ordem de adopção, os cinco MP e os pré-requisitos." }
+            },
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -2226,6 +2244,13 @@ class McpRuntime {
             duration_ms: Date.now() - startedAt,
             ...metadata,
             message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "get_sbd_toe_macro_processes": {
+          const result = handleGetMacroProcesses(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           return;
         }

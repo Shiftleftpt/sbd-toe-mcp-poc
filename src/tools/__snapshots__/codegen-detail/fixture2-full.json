@@ -2812,7 +2812,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-001",
       "v1_entity_name": "Authentication Strength And Identity Assurance",
       "source": "runtime_v1"
@@ -2821,7 +2821,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-002",
       "v1_entity_name": "Authorization Policy Integrity And Least Privilege",
       "source": "runtime_v1"
@@ -2830,7 +2830,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-003",
       "v1_entity_name": "Access Revocation And Privilege Lifecycle Integrity",
       "source": "runtime_v1"
@@ -2839,7 +2839,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-004",
       "v1_entity_name": "Session And Token Trust Boundaries",
       "source": "runtime_v1"
@@ -2848,7 +2848,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-005",
       "v1_entity_name": "API Caller Trust And Service Boundary Enforcement",
       "source": "runtime_v1"
@@ -2857,7 +2857,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-006",
       "v1_entity_name": "Access Abuse Detection And Auditability",
       "source": "runtime_v1"
@@ -2866,7 +2866,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IAT-007",
       "v1_entity_name": "Identity And Access Control Integrity",
       "source": "runtime_v1"
@@ -2875,7 +2875,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-001",
       "v1_entity_name": "External Input Contract Validation",
       "source": "runtime_v1"
@@ -2884,7 +2884,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-002",
       "v1_entity_name": "Schema, Type And Allowlist Discipline",
       "source": "runtime_v1"
@@ -2893,7 +2893,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-003",
       "v1_entity_name": "Injection-Resistant Input Handling And Dangerous Pattern Exclusion",
       "source": "runtime_v1"
@@ -2902,7 +2902,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-004",
       "v1_entity_name": "Validation Before Internal Use And Trust Crossing",
       "source": "runtime_v1"
@@ -2911,7 +2911,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-005",
       "v1_entity_name": "Controlled Failure And Non-Revealing Client Error Surface",
       "source": "runtime_v1"
@@ -2920,7 +2920,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-006",
       "v1_entity_name": "Centralized Error Handling And Sensitive Error Logging Hygiene",
       "source": "runtime_v1"
@@ -2929,7 +2929,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-008",
       "v1_entity_name": "Context-Aware Output Encoding And Rendering Safety",
       "source": "runtime_v1"
@@ -2938,7 +2938,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-IVF-007",
       "v1_entity_name": "Input Validation And Safe Failure Integrity",
       "source": "runtime_v1"
@@ -2947,7 +2947,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-001",
       "v1_entity_name": "Critical Security Event Coverage And Catalog Discipline",
       "source": "runtime_v1"
@@ -2956,7 +2956,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-002",
       "v1_entity_name": "Structured Audit Fields And Machine-Readable Log Shape",
       "source": "runtime_v1"
@@ -2965,7 +2965,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-003",
       "v1_entity_name": "Log Integrity Protection And Access Discipline",
       "source": "runtime_v1"
@@ -2974,7 +2974,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-004",
       "v1_entity_name": "Audit Record Retention And Lifecycle Governance",
       "source": "runtime_v1"
@@ -2983,7 +2983,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-005",
       "v1_entity_name": "Centralized Log Ingestion And Source Accountability",
       "source": "runtime_v1"
@@ -2992,7 +2992,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-006",
       "v1_entity_name": "Logging Pipeline Health And Silent-Failure Visibility",
       "source": "runtime_v1"
@@ -3001,7 +3001,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACO-SLG-007",
       "v1_entity_name": "Security Logging And Audit Trail Assurance",
       "source": "runtime_v1"
@@ -3010,7 +3010,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IAT-001",
       "v1_entity_name": "Authentication And Federation Protocols",
       "source": "runtime_v1"
@@ -3019,7 +3019,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IAT-002",
       "v1_entity_name": "Access Policy Enforcement",
       "source": "runtime_v1"
@@ -3028,7 +3028,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IAT-003",
       "v1_entity_name": "Periodic Review And Access Audit",
       "source": "runtime_v1"
@@ -3037,7 +3037,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IAT-004",
       "v1_entity_name": "Short-Lived Token Controls",
       "source": "runtime_v1"
@@ -3046,7 +3046,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IAT-005",
       "v1_entity_name": "API Gateway Mutual Authentication",
       "source": "runtime_v1"
@@ -3055,7 +3055,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IAT-006",
       "v1_entity_name": "Structured Logging And Effective Configuration Recording",
       "source": "runtime_v1"
@@ -3064,7 +3064,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IVF-001",
       "v1_entity_name": "Code Review For Input And Error Discipline",
       "source": "runtime_v1"
@@ -3073,7 +3073,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IVF-002",
       "v1_entity_name": "Static Rulepacks And Security Linters",
       "source": "runtime_v1"
@@ -3082,7 +3082,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IVF-003",
       "v1_entity_name": "Schema And Contract Validators",
       "source": "runtime_v1"
@@ -3091,7 +3091,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IVF-004",
       "v1_entity_name": "Centralized Error Translation And Redaction",
       "source": "runtime_v1"
@@ -3100,7 +3100,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-IVF-005",
       "v1_entity_name": "Context-Aware Encoder Selection And Application",
       "source": "runtime_v1"
@@ -3109,7 +3109,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-SLG-001",
       "v1_entity_name": "Machine-Readable Structured Logging",
       "source": "runtime_v1"
@@ -3118,7 +3118,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-SLG-002",
       "v1_entity_name": "Central Log Ingestion And Normalization",
       "source": "runtime_v1"
@@ -3127,7 +3127,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-SLG-003",
       "v1_entity_name": "Log Integrity And Access Controls",
       "source": "runtime_v1"
@@ -3136,7 +3136,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACM-SLG-004",
       "v1_entity_name": "Logging Failure Visibility Controls",
       "source": "runtime_v1"
@@ -3145,7 +3145,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IAT-001",
       "v1_entity_name": "Strong Authentication And Step-Up Enforcement",
       "source": "runtime_v1"
@@ -3154,7 +3154,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IAT-002",
       "v1_entity_name": "Least-Privilege Authorization Governance",
       "source": "runtime_v1"
@@ -3163,7 +3163,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IAT-003",
       "v1_entity_name": "Access Review And Timely Revocation",
       "source": "runtime_v1"
@@ -3172,7 +3172,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IAT-004",
       "v1_entity_name": "Bounded Session And Token Management",
       "source": "runtime_v1"
@@ -3181,7 +3181,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IAT-005",
       "v1_entity_name": "Authenticated API Boundary Enforcement",
       "source": "runtime_v1"
@@ -3190,7 +3190,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "04-arquitetura-segura",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IAT-006",
       "v1_entity_name": "Access Abuse Monitoring And Audit Trail",
       "source": "runtime_v1"
@@ -3199,7 +3199,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-001",
       "v1_entity_name": "Boundary Input Validation",
       "source": "runtime_v1"
@@ -3208,7 +3208,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-002",
       "v1_entity_name": "Schema And Allowlist Enforcement",
       "source": "runtime_v1"
@@ -3217,7 +3217,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-003",
       "v1_entity_name": "Dangerous Pattern Exclusion",
       "source": "runtime_v1"
@@ -3226,7 +3226,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-004",
       "v1_entity_name": "Pre-Use Data Validation Discipline",
       "source": "runtime_v1"
@@ -3235,7 +3235,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-005",
       "v1_entity_name": "Non-Revealing Error Surface Control",
       "source": "runtime_v1"
@@ -3244,7 +3244,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-006",
       "v1_entity_name": "Centralized Error Governance",
       "source": "runtime_v1"
@@ -3253,7 +3253,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "06-desenvolvimento-seguro",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-IVF-007",
       "v1_entity_name": "Context-Aware Output Encoding At Rendering Boundaries",
       "source": "runtime_v1"
@@ -3262,7 +3262,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-SLG-001",
       "v1_entity_name": "Critical Event Catalog Governance",
       "source": "runtime_v1"
@@ -3271,7 +3271,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-SLG-002",
       "v1_entity_name": "Structured And Centralized Security Logging",
       "source": "runtime_v1"
@@ -3280,7 +3280,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-SLG-003",
       "v1_entity_name": "Log Integrity And Protected Access",
       "source": "runtime_v1"
@@ -3289,7 +3289,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-SLG-004",
       "v1_entity_name": "Log Retention And Lifecycle Governance",
       "source": "runtime_v1"
@@ -3298,7 +3298,7 @@
       "rastreabilidade_role": "substrate_landing",
       "manual_chapter": "12-monitorizacao-operacoes",
       "manual_file": "canon/25-rastreabilidade.md",
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACP-SLG-005",
       "v1_entity_name": "Logging Pipeline Health Visibility",
       "source": "runtime_v1"
@@ -3307,7 +3307,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IAT-001",
       "source": "runtime_v1"
     },
@@ -3315,7 +3315,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IAT-002",
       "source": "runtime_v1"
     },
@@ -3323,7 +3323,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IAT-003",
       "source": "runtime_v1"
     },
@@ -3331,7 +3331,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IAT-004",
       "source": "runtime_v1"
     },
@@ -3339,7 +3339,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IAT-005",
       "source": "runtime_v1"
     },
@@ -3347,7 +3347,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IAT-006",
       "source": "runtime_v1"
     },
@@ -3355,7 +3355,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IVF-001",
       "source": "runtime_v1"
     },
@@ -3363,7 +3363,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IVF-002",
       "source": "runtime_v1"
     },
@@ -3371,7 +3371,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IVF-003",
       "source": "runtime_v1"
     },
@@ -3379,7 +3379,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IVF-004",
       "source": "runtime_v1"
     },
@@ -3387,7 +3387,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IVF-005",
       "source": "runtime_v1"
     },
@@ -3395,7 +3395,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-IVF-006",
       "source": "runtime_v1"
     },
@@ -3403,7 +3403,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-SLG-001",
       "source": "runtime_v1"
     },
@@ -3411,7 +3411,7 @@
       "rastreabilidade_role": "placeholder",
       "manual_chapter": null,
       "manual_file": null,
-      "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+      "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
       "v1_entity_id": "ACA-SLG-002",
       "source": "runtime_v1"
     }
@@ -4106,7 +4106,7 @@
     "residual_risk": "<fill: anything NOT addressed by this change>"
   },
   "provenance": {
-    "kg": "v1.11.0",
+    "kg": "dev:f87d5b46bf10",
     "server": "<pkg>",
     "runtime_v0": "data/publish/runtime/*.json + data/publish/ontology/*",
     "runtime_v1": "data/publish/runtime/v1/*",

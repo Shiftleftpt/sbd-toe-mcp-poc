@@ -1759,6 +1759,61 @@ export const scenarios = [
       if (!/IGNOR[ÂA]NCIA|não sei/i.test(mt.data.unmodelled_signals.note ?? "")) return fail("a nota não distingue «não perguntei» de «não sei»");
       return ok(`next validados contra ${schemas.size} schemas vivos; banda vazia com caminho concreto (${(ap.elsewhere?.by_chapter ?? []).length} capítulos com rótulos); escassez declarada; assess ${gd.totals.applicable}→${sd.totals.applicable} com denominador; cadeia exposure→architecture→cap.04; ${mt.data.unmodelled_signals.values.length} sinais não modelados declarados`); } },
 
+  { id: "TC-F-64", axis: "F", title: "0.20.0-beta.37: leitura PROGRAMA — ordem só por dependency (acíclica), limites declarados e sem despejo de requisitos", tool: "get_sbd_toe_macro_processes",
+    run: async (c) => {
+      const r = await c.tool("get_sbd_toe_macro_processes", {});
+      if (!r.ok) return fail(r.error);
+      const d = r.data;
+      if (d.reading?.id !== "PROGRAMA") return fail("a resposta não declara a leitura que serve");
+      // (1) os cinco MP existem como DADOS, com a pergunta/invariante/dono que os identifica
+      const mps = d.macro_processes ?? [];
+      if (mps.length !== 5) return fail(`esperava os 5 macro-processos publicados, vieram ${mps.length}`);
+      if (!mps.every((m) => m.question && m.invariant && m.owner_role)) return fail("MP sem pergunta, invariante ou dono — é rótulo, não entidade");
+      // (2) ORDEM = só dependency, e o subgrafo tem de ser ACÍCLICO
+      const ao = d.adoption_order ?? {};
+      const levels = ao.levels ?? [];
+      if (!levels.length || !ao.rule) return fail("ordem de adopção sem níveis ou sem a regra declarada");
+      if (levels.flat().length !== 5) return fail("a ordem não cobre os cinco MP");
+      if (ao.first_step !== "MP-01") return fail(`primeiro passo publicado mudou: ${ao.first_step}`);
+      const rank = new Map(levels.flatMap((lv, i) => lv.map((m) => [m, i])));
+      const deps = d.prerequisites?.values ?? [];
+      if (!deps.length) return fail("sem pares de pré-requisito — «o que é pré-requisito de quê» fica por responder");
+      for (const e of deps) {
+        if (!(rank.get(e.from_mp) < rank.get(e.to_mp))) return fail(`dependency ${e.from_mp}→${e.to_mp} contradiz a ordem publicada`);
+        if (!e.output) return fail(`dependency ${e.from_mp}→${e.to_mp} sem o artefacto que é consumido`);
+      }
+      // (3) as FEEDBACK ficam fora da ordem — se entrassem, os cinco MP ciclariam (verificado aqui)
+      const fbs = d.feedback_loops?.values ?? [];
+      if (!fbs.length) return fail("realimentação não servida");
+      if (d.adoption_order?.excluded_from_order?.kind !== "feedback") return fail("a exclusão da realimentação não é declarada");
+      const withFb = [...deps.map((e) => [e.from_mp, e.to_mp]), ...fbs.map((e) => [e.from_mp, e.to_mp])];
+      const adj = new Map(); for (const [a, b] of withFb) adj.set(a, [...(adj.get(a) ?? []), b]);
+      const seen = new Set(); let cyclic = false;
+      const walk = (n, stack) => { if (stack.has(n)) { cyclic = true; return; } if (seen.has(n)) return; seen.add(n); stack.add(n); for (const m of adj.get(n) ?? []) walk(m, stack); stack.delete(n); };
+      for (const n of adj.keys()) walk(n, new Set());
+      if (!cyclic) return fail("controlo: com as feedback o grafo devia ciclar — a fixture mudou e a exclusão deixou de ser demonstrável");
+      if (deps.some((e) => fbs.some((f) => f.from_mp === e.from_mp && f.to_mp === e.to_mp && f.via === e.via))) return fail("aresta de realimentação a contar como pré-requisito");
+      // (4) os TRÊS limites declarados — não existe entidade «programa», a fase é lacuna, e não há contenção
+      const L = d.declared_limits ?? {};
+      if (!L.no_programme_entity || !L.sdlc_phase_traversal || !L.three_segmentations) return fail("limites da vista processual não declarados");
+      if (!/percurso/i.test(d.chapter_path?.note ?? "") || /cont[eé]m/i.test(d.chapter_path?.note ?? "")) return fail("o percurso de capítulos é servido como contenção");
+      if (mps.some((m) => "phases" in m || "sdlc_phases" in m)) return fail("travessia MP↔fase DERIVADA — é lacuna declarada, não se infere");
+      // (5) must-NOT do oráculo: a vista de programa não despeja os 273 requisitos nem um capítulo isolado
+      const ids = (JSON.stringify(d).match(/[A-Z]{3}-\d{3}/g) ?? []).length;
+      if (ids > 60) return fail(`a vista de programa traz ${ids} ids de requisito — é a leitura GUIDE disfarçada`);
+      const tk = Math.round(JSON.stringify(d).length / 4);
+      if (tk > 4000) return fail(`vista de programa com ${tk} tk — dieta de tokens`);
+      // (6) nunca-silêncio: um MP inexistente declara-se e mostra os que há
+      const u = await c.tool("get_sbd_toe_macro_processes", { mp_id: "MP-99" });
+      if (!u.ok) return fail("um id desconhecido devia ser resposta declarada, não erro");
+      if (u.data.status !== "unknown_macro_process" || (u.data.known ?? []).length !== 5) return fail("id desconhecido sem declaração ou sem os ids que existem");
+      // (7) o detalhe de um MP responde à mesma pergunta, com a realimentação que RECEBE
+      const one = await c.tool("get_sbd_toe_macro_processes", { mp_id: "MP-03" });
+      if (!one.ok) return fail(one.error);
+      if (one.data.macro_process?.mp_id !== "MP-03") return fail("detalhe não devolve o MP pedido");
+      if (!(one.data.prerequisites?.values ?? []).length) return fail("MP-03 sem pré-requisitos — a fixture publica-os");
+      return ok(`5 MP como dados; ordem ${levels.map((l) => l.join("∥")).join(" → ")} coerente com ${deps.length} dependency; ${fbs.length} feedback fora da ordem (com elas o grafo cicla ✓); 3 limites declarados; ${ids} ids de requisito; ${tk} tk`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

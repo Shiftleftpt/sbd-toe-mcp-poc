@@ -94,5 +94,5 @@
     "local_mirror_role": "build_input_only"
   },
   "primary_artifact": "canonical_chunks.jsonl",
-  "substrate_version": "manual-v1.8.0+sbdtoe-ontology-v2.4"
+  "substrate_version": "manual-v1.8.1+sbdtoe-ontology-v2.5"
 }

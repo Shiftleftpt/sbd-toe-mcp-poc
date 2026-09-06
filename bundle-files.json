@@ -96,6 +96,18 @@
       "path": "data/publish/semantic/requirement_source_coverage.jsonl",
       "since": "kg-2026-09-03 (contract v1.17)",
       "optional": true
+    },
+    {
+      "kind": "file",
+      "path": "data/publish/semantic/macro_processes.jsonl",
+      "since": "kg-v1-manual-v1.8.1-aligned-2026-09-06 (contract v1.18 §1.25)",
+      "optional": true
+    },
+    {
+      "kind": "file",
+      "path": "data/publish/semantic/mp_edges.jsonl",
+      "since": "kg-v1-manual-v1.8.1-aligned-2026-09-06 (contract v1.18 §1.25)",
+      "optional": true
     }
   ]
 }

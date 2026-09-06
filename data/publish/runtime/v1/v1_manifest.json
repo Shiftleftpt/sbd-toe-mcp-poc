@@ -1,7 +1,7 @@
 {
   "artifact_type": "v1_runtime_surface_manifest",
   "build": {
-    "generated_at": "2026-09-03T17:05:41.982190+00:00",
+    "generated_at": "2026-09-06T21:43:34.950216+00:00",
     "generator": "sbdtoe_indexing.workflows.build_v1_runtime_surface"
   },
   "drift_note": "Counts sourced from slice contracts (authoritative actual). Declared sum from consolidated index. Drift concentrated in working_contract slices (notably ASC-09 RPR); upstream V1 enumeration incomplete in some slices. Flagged for Archon visibility via Step 8 delivery handover.",
@@ -37,15 +37,15 @@
     },
     "manual_maturity_progression": {
       "path": "v1/manual_maturity_progression.jsonl",
-      "sha256": "3e55dc721b0e2dde7589bdf5b5cec29f962406da9a2fe75c00a77b9b8882e6c3"
+      "sha256": "5822c89d5ede5bfe75a449a345fe2b2382637804e0c7f523ab756a39dd2c019b"
     },
     "manual_rastreabilidade": {
       "path": "v1/manual_rastreabilidade.jsonl",
-      "sha256": "501a35ac288a86c91134b9b4ddc13db9e442c3231366a0af08d657a503e33ff5"
+      "sha256": "7496703e60975c92ef7c36f178c0b3fe3024fb97678ef7ecb215cc4f3b78281c"
     },
     "manual_threat_mitigation": {
       "path": "v1/manual_threat_mitigation.jsonl",
-      "sha256": "3a3eab39f956069f3a4842c4860d1e715e3bf4f4b0a54cdd9af5dba8cedfd4d8"
+      "sha256": "3abbf4569e30b2fb79dff443313d3939f72fc3dc374956c265424106e8c5ccc8"
     },
     "mechanisms": {
       "path": "v1/mechanisms.json",
@@ -102,7 +102,7 @@
     "expected_iter3_commit_sha": "71b9c029",
     "expected_run2_commit_sha": "455124a1",
     "format_note": "run-2 5-section structure (Manual ontology V2 entities + Core-mapped + Manual-only + Out-of-AppSec + Future-work). Substrate refs surface in ES grounding column inline (`<Source>: <ref1>, <ref2>; ... ; + N more sources`). §26 methodology label per Core-mapped row (Explícito/Semântico/Parcial/Reparação/Gap/Scope boundary). Manual V2 entities indexed per chapter.",
-    "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+    "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
     "manual_iter_anchor": "run-2"
   },
   "manual_threat_mitigation": {

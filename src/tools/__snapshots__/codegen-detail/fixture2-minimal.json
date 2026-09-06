@@ -741,7 +741,7 @@
   },
   "manual_grounding": {
     "total_entries": 69,
-    "manual_commit_sha": "f78dfe734a83b01fa9283c2df5a3eb0ba9528001",
+    "manual_commit_sha": "ea6b396b9caa77beddf1096b56250fe073796e8f",
     "groups": [
       {
         "rastreabilidade_role": "substrate_landing",
@@ -864,7 +864,7 @@
   },
   "repeat_call_hint": "Identical input returns this exact payload (deterministic) — reuse the context already received; deepen via detail:'minimal' or a targeted consult_security_requirements.",
   "provenance": {
-    "kg": "v1.11.0",
+    "kg": "dev:f87d5b46bf10",
     "server": "<pkg>",
     "runtime_v0": "data/publish/runtime/*.json + data/publish/ontology/*",
     "runtime_v1": "data/publish/runtime/v1/*",

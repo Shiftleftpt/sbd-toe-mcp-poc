@@ -1,13 +1,88 @@
 ---
 ai_assisted: true
-model: Claude Fable 5
+model: Claude Opus 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.36 (beta line, npm `beta`) — as bordas outra vez: as invariantes de varrimento passam a correr sobre o INVENTÁRIO VIVO (tools/list em tempo de teste) e apanharam à primeira o `metrics=` que devia ser `kpi_values`; conservação NA BANDA (emenda v1.2) com caminho concreto; o escasso declara-se; `assess` com âmbito e denominador explicado; `activated_by` com a cadeia completa; `unmodelled_signals`. Eixo I sob v1.2: 3·2·1 (antes) → 4·1·1 (depois), com GR-05 a voltar a SERVIDO. Selecção intocada; ouro H byte-idêntico.
+reasoning: v0.20.0-beta.37 (beta line, npm `beta`) — a vista PROCESSUAL: os cinco macro-processos MP-01..05 e a ordem de adopção publicada passam a ser servidos como dados (`get_sbd_toe_macro_processes`, leitura PROGRAMA). Ordem derivada EXCLUSIVAMENTE das arestas `dependency`; as `feedback` ficam fora por definição (com elas o grafo cicla — verificado no TC-F-64). Três limites declarados na resposta: não existe entidade «programa», a travessia MP↔fase do SDLC é lacuna publicada, e MP/capítulo/fase são três segmentações sem contenção. Re-pin do beta para o dev-build kg-v1-manual-v1.8.1-aligned-2026-09-06 (contract v1.18): moveu proveniência e ZERO conteúdo — ouro H byte-idêntico nos dois braços. Eixo I: 4·1·1 → **5·1·0**, com o GR-03 a subir de NÃO SERVIDO a SERVIDO (6/6).
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.37 — 2026-09-06
+
+**Expor a vista processual e medir o GR-03.** Dispatch do Orchestrator (handover
+`2026-09-06-orchestrator-pontifex-exposicao-macro-processos.md`). A montante, o Codex publicou os
+macro-processos como dados; **faltava a última perna — servi-la.** Linha estável **intocada**
+(latest 0.19.4, KG formal v1.11.0). Nada promovido.
+
+### 1 — `get_sbd_toe_macro_processes` — leitura PROGRAMA («por onde começamos, e com que sequência?»)
+
+Tool nova, 29ª. Serve `macro_processes[]` (pergunta · continuidade · invariante · dono ·
+participantes · percurso de capítulos), a **ordem de adopção publicada**, os pares de
+pré-requisito com o artefacto consumido, a realimentação, os papéis e o percurso de capítulos.
+**2.651 tk** na vista de programa; **2.019 tk** num MP em detalhe.
+
+Activa-se **pela pergunta**, não por uma lista de palavras à mão: a leitura está declarada no
+guia gerado (linha PROGRAMA da tabela de leituras) e a resposta declara-se em `reading.id`.
+
+### 2 — A ordem é só `dependency` — e a prova de que tem de ser
+
+`adoption_order.levels = [[MP-01], [MP-02 ∥ MP-04], [MP-03], [MP-05]]`, com `rule` verbatim da
+fonte e `first_step: MP-01`. As 9 arestas `feedback` vêm servidas em banda própria e
+**`excluded_from_order` declara porquê**. O TC-F-64 não confia na declaração: **reconstrói o
+grafo COM as feedback e exige que cicle** — se algum dia não ciclar, a exclusão deixou de ser
+demonstrável e a suite parte. É o controlo positivo aplicado a uma ordem.
+
+### 3 — Três limites, declarados na resposta e no guia
+
+| limite | o que a resposta diz |
+|---|---|
+| `no_programme_entity` | **não existe entidade «programa»**, e é deliberado (recusa de curadoria, ratificada). Publicam-se os cinco MP e a ordem; o «programa» é o que a organização monta com isto |
+| `sdlc_phase_traversal` | travessia MP↔fase **parcial e não publicada** — lacuna declarada, **não derivada** de capítulos nem de atribuições |
+| `three_segmentations` | MacroProcess, capítulo e fase são **três segmentações paralelas**; `traverses_bundles` é **percurso publicado, nunca contenção** |
+
+O TC-F-64 falha se algum MP passar a trazer `phases`/`sdlc_phases` — derivar a lacuna é o erro
+que o limite existe para impedir.
+
+### 4 — Re-pin do beta para o dev-build (proveniência mudou, conteúdo não)
+
+O beta servia ainda o release formal `v1.11.0` (manual v1.8.0 + ontologia v2.4). Passa ao
+dev-build `kg-v1-manual-v1.8.1-aligned-2026-09-06` (`f87d5b46bf10`, contract **v1.18**,
+manual v1.8.1 + ontologia v2.5) — é ele que traz `semantic/macro_processes.jsonl` e
+`semantic/mp_edges.jsonl` (entradas novas, `optional`, em `bundle-files.json`).
+
+**O que o re-pin moveu:** 8 snapshots de ouro do codegen, **139 linhas, todas de proveniência**
+(`kg`, `manual_commit_sha`) — **zero linhas de conteúdo**. E o **ouro do Eixo H ficou
+byte-idêntico nos dois braços** contra a beta.36. Um substrato novo que não move uma única
+selecção é o resultado que se quer ver.
+
+### 5 — Medição: Eixo I passa a **5 SERVIDO · 1 SERVIDO-MAL · 0 NÃO SERVIDO**
+
+| Caso | b.36 | b.37 | Peças |
+|---|---|---|---|
+| GR-01 IMPL | SERVIDO | SERVIDO | 5/5 |
+| GR-02 CROSS-CHECK | SERVIDO | SERVIDO | 5/5 |
+| **GR-03 PROGRAMA** | **NÃO SERVIDO (2/6)** | **SERVIDO (6/6)** | peça central servida |
+| GR-04 PAPEL/MOMENTO | SERVIDO-MAL | SERVIDO-MAL (3/4) | achado de CONTEÚDO, não de serving |
+| GR-05 CONSULT | SERVIDO | SERVIDO | 4/4 |
+| GR-06 SETUP | SERVIDO | SERVIDO | 4/4 |
+
+O GR-03 sobe **sem que a entidade «programa» exista** — a peça central ratificada é
+«macro-processos MP1–MP5 como dados», e a sequência que a pergunta procura está publicada em
+`adoption_order`. **A ausência da entidade está declarada como limite, e não bloqueou nenhuma
+peça do must-have.** Os must-NOT do oráculo — «devolver os 273 requisitos», «devolver um
+capítulo isolado como se fosse o programa» — passam a ser **verificados** (eram lista morta):
+a vista de programa traz 0 ids de requisito.
+
+**Disciplina da sonda:** a etiqueta da peça central manteve-se **verbatim** («macro-processos
+MP1–MP5 como dados»); só mudou por onde a sonda a procura. O oráculo é do lead.
+
+### Verificação
+
+Suite **801/801** · aceitação **171, 0 FAIL, gate PASS** (TC-F-64 novo) · **10 invariantes
+verdes (40 asserções)** · **ouro do Eixo H byte-idêntico nos dois braços** · orçamentos **14/14**
+· Eixo I **5·1·0** · 29 tools · `npm run check` verde com o pin verificado.
 
 ## 0.20.0-beta.36 — 2026-09-06
 

@@ -15,7 +15,7 @@ methodological substance, not an AI-content-generation event).
 
 | Tool | Provider | Used for |
 |------|----------|----------|
-| **Claude** (Opus 4.6, Opus 4.7, Opus 4.8, Sonnet 4.6, Fable 5) | Anthropic | Implementation pair-programming, README and documentation drafting, code review, refactoring, release-pipeline scripting, optimization planning |
+| **Claude** (Opus 4.6, Opus 4.7, Opus 4.8, Sonnet 4.6, Fable 5, Opus 5) | Anthropic | Implementation pair-programming, README and documentation drafting, code review, refactoring, release-pipeline scripting, optimization planning |
 | **Codex** | OpenAI | Initial code-generation drafts for selected modules during early development iterations |
 
 ## Development Use
