@@ -372,9 +372,24 @@ export function handleGetThreatLandscape(
 ): GetThreatLandscapeResult {
   const full = _resolveThreatLandscape(args, getOntologyData());
   // 0.15.0 (P0-1): paginação universal — default 25; coverage + size_estimate sempre.
+  /**
+   * 0.20.0-beta.28 — a deduplicação é um NÍVEL DE SERIALIZAÇÃO, não uma remoção.
+   * `associated_control_ids` é contrato publicado (v1.14 §1.21): renomeá-lo por omissão
+   * seria a mesma classe de dano que este ciclo combate. `full` fica byte-idêntico;
+   * `standard`/`minimal` trocam os arrays repetidos por refs + legenda (−50% medido).
+   */
+  const detailArg = typeof args["detail"] === "string" ? (args["detail"] as string) : undefined;
+  if (detailArg !== undefined && !["full", "standard", "minimal"].includes(detailArg)) {
+    throw Object.assign(new Error(`Invalid detail: "${detailArg}". Allowed: full, standard, minimal.`), {
+      rpcError: { code: -32602, message: `Invalid detail: "${detailArg}". Allowed: full, standard, minimal.` }
+    });
+  }
+  const dedupe = detailArg === "standard" || detailArg === "minimal";
+
   const offsetArg = typeof args["offset"] === "number" ? Math.max(0, Math.floor(args["offset"] as number)) : 0;
   const limitArg = typeof args["limit"] === "number" ? Math.max(1, Math.floor(args["limit"] as number)) : 25;
   const totalThreats = full.threats.length;
+  const allThreatsForRouting = full.threats;
   const pagedThreats = full.threats.slice(offsetArg, offsetArg + limitArg);
   const nextOffset = offsetArg + pagedThreats.length < totalThreats ? offsetArg + pagedThreats.length : null;
   full.threats = pagedThreats;
@@ -471,8 +486,110 @@ export function handleGetThreatLandscape(
     unknownHere.length === 0 &&
     full.threats.length === 0;
 
+  /**
+   * 0.20.0-beta.28 — COBERTURA NOMINAL SEM ROUTING REAL.
+   *
+   * `files` e `privacy` devolviam ~15 meta-ameaças de governação (MT-021..) vindas do
+   * cap. 02, sem uma única ameaça dos capítulos do próprio concern — «pior que o
+   * unsupported_concerns honesto: antes dizia que não sabia, agora entrega irrelevante com
+   * ar de fundamentado». O routing continua nominalmente a resolver; o que faltava era
+   * dizer que nada veio do domínio pedido.
+   */
+  /**
+   * 0.20.0-beta.28 — BASE DO ROUTING declarada.
+   *
+   * `files`/`privacy` devolviam dezenas de ameaças de capítulos sem relação com o concern
+   * (06/07/08/12 para manipulação de ficheiros) porque o routing passa pelos capítulos onde
+   * os CONTROLOS activados se definem — não por um domínio de ameaças do concern. As
+   * ameaças eram reais; a relevância era nominal, e nada o dizia.
+   *
+   * Duas afirmações, ambas derivadas dos dados do próprio roteamento:
+   *  - a BASE: domínio próprio do concern, ou capítulos dos controlos activados;
+   *  - se o concern TEM domínio próprio e ele não contribuiu com uma única ameaça, isso é
+   *    cobertura NOMINAL e é dito como tal.
+   * O cap. 02 nunca conta como prova de domínio: é o capítulo das meta-ameaças de processo.
+   */
+  const vocabForRouting = buildActivationVocabulary();
+  const domainChapters = new Set<number>();
+  for (const c of declaredConcerns) {
+    const own = CONCERN_TO_DOMAIN_CHAPTER[c];
+    if (own !== undefined) domainChapters.add(own);
+    const entry = vocabForRouting.concerns.values.find((x) => String(x.value) === c);
+    for (const chapter of entry?.activates_chapters ?? []) {
+      const n = chapterNumber(chapter);
+      if (!Number.isNaN(n)) domainChapters.add(n);
+    }
+  }
+  domainChapters.delete(2);
+  // conjunto COMPLETO (antes da paginação): paginar não pode mudar o veredicto
+  const allThreatChapters = new Set(allThreatsForRouting.map((t) => chapterNumber(String(t.chapter_id ?? ""))));
+  const hasDomain = domainChapters.size > 0;
+  const fromDomain = [...domainChapters].some((c) => allThreatChapters.has(c));
+  const nominalOnly = declaredConcerns.length > 0 && totalThreats > 0 && hasDomain && !fromDomain;
+
+  /**
+   * Deduplicação: `associated_control_names` vinha repetido verbatim em cada ameaça —
+   * 241 entradas para 13 nomes distintos, 2.585 tk de um payload de 11.944 (~22%).
+   * Legenda + referências: nenhum nome se perde, muda só a codificação.
+   */
+  const controlLegend: string[] = [];
+  const refOf = (name: string): number => {
+    const at = controlLegend.indexOf(name);
+    if (at >= 0) return at;
+    controlLegend.push(name);
+    return controlLegend.length - 1;
+  };
+  // `associated_control_ids` era a instância AO LADO da mesma classe, no mesmo payload:
+  // os CTRL-* repetidos verbatim ×36. A varredura apanhou-a; corrige-se com a de cima.
+  const controlIdLegend: string[] = [];
+  const refOfId = (id: string): number => {
+    const at = controlIdLegend.indexOf(id);
+    if (at >= 0) return at;
+    controlIdLegend.push(id);
+    return controlIdLegend.length - 1;
+  };
   const shaped = {
     ...full,
+    ...(dedupe
+      ? {
+          associated_control_legend: {
+            names: controlLegend,
+            ids: controlIdLegend,
+      note:
+        `Os ${controlLegend.length} nomes e ${controlIdLegend.length} ids DISTINTOS de controlos associados; cada ameaça ` +
+        "refere-os por índice em `associated_control_name_refs` e `associated_control_id_refs`. Dedup de " +
+              "serialização (0.20.0-beta.28): nada se perde — antes vinham repetidos verbatim em cada ameaça."
+          }
+        }
+      : {}),
+    ...(declaredConcerns.length > 0 && totalThreats > 0
+      ? {
+          routing_basis: {
+            basis: hasDomain ? ("domain_chapter" as const) : ("activated_controls" as const),
+            note: hasDomain
+              ? `Estes concerns têm capítulo(s) de ameaças próprio(s): ${[...domainChapters].sort((a, b) => a - b).join(", ")}.`
+              : "Estes concerns NÃO têm capítulo de ameaças próprio: as ameaças chegam pelos capítulos onde se DEFINEM os controlos que eles activam. São ameaças reais do âmbito activado, mas não são «as ameaças deste domínio» — o manual pode não publicar ameaças específicas para ele. Os REQUISITOS existem: `select_sbd_toe_requirements`."
+          }
+        }
+      : {}),
+    ...(nominalOnly
+      ? {
+          routing_note: {
+            declared_concerns: [...new Set(declaredConcerns)].sort(),
+            domain_chapters: [...domainChapters].sort((a, b) => a - b).map(String),
+            threat_chapters: [...allThreatChapters].filter((n) => !Number.isNaN(n)).sort((a, b) => a - b).map(String),
+            note:
+              (hasDomain
+                ? `COBERTURA NOMINAL: nenhuma das ${totalThreats} ameaças vem dos capítulos de domínio dos concerns ` +
+                  `declarados (${[...domainChapters].sort((a, b) => a - b).join(", ")}). `
+                : `COBERTURA NOMINAL: os concerns declarados não têm capítulo de ameaças próprio — as ${totalThreats} ` +
+                  "ameaças vêm todas do âmbito alargado. ") +
+              "São sobretudo meta-ameaças de PROCESSO (cap. 02) e do âmbito largo, NÃO ameaças específicas do domínio " +
+              "que pediste. Não as apresentes como o panorama de ameaças desse domínio: para estes concerns o manual " +
+              "pode simplesmente não publicar ameaças roteáveis. Os REQUISITOS existem — usa `select_sbd_toe_requirements`."
+          }
+        }
+      : {}),
     ...(emptyByLevel
       ? {
           empty_at_level: {
@@ -520,9 +637,15 @@ export function handleGetThreatLandscape(
       // DECLARED derivation; associated_controls_text is the Manual's prose;
       // associated_controls stays as-is for compatibility. Nothing invented.
       associated_controls: threat.associated_controls ?? [],
-      // 0.16.0 (v1.16 §1.23): nomes legíveis expostos — os dados subiram, a promessa diz a verdade nova.
-      associated_control_names: threat.associated_control_names ?? [],
-      associated_control_ids: threat.associated_control_ids ?? [],
+      // 0.20.0-beta.28: os NOMES vão para uma legenda e ficam aqui as referências —
+      // vinham repetidos verbatim em cada ameaça (241 entradas para 13 nomes distintos,
+      // ~22% do payload). Dedup de serialização: nenhum nome se perde.
+      ...(dedupe
+        ? { associated_control_name_refs: (threat.associated_control_names ?? []).map(refOf) }
+        : { associated_control_names: threat.associated_control_names ?? [] }),
+      ...(dedupe
+        ? { associated_control_id_refs: (threat.associated_control_ids ?? []).map(refOfId) }
+        : { associated_control_ids: threat.associated_control_ids ?? [] }),
       ...(threat.associated_controls_text ? { associated_controls_text: threat.associated_controls_text } : {}),
       ...(threat.associated_control_ids_derivation
         ? { associated_control_ids_derivation: threat.associated_control_ids_derivation }

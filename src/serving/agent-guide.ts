@@ -64,6 +64,33 @@ function domainsOf(category: string): string {
   return (mapping[category] ?? []).join(", ");
 }
 
+/**
+ * 0.20.0-beta.28 — a caixa de aviso sobre o mapa de ameaças passa a ser DERIVADA.
+ *
+ * Era texto fixo dentro de um bloco gerado: escrita na beta.24, quando o mapa resolvia 13
+ * dos 24, e ficou a dizer «SUBCONJUNTO» depois de a beta.27 o ter posto a resolver os 24 —
+ * enquanto o bloco `cross-surface`, esse derivado, dizia «24 de 24». Dois blocos GERADOS a
+ * afirmar coisas incompatíveis sobre a MESMA tool: a suite guardava igualdade com a fonte,
+ * não NÃO-CONTRADIÇÃO. Agora o aviso lê a cobertura real e diz o que ela for.
+ */
+function threatCoverageCaveat(total: number): string[] {
+  const supported = threatConcernSupport().supported.length;
+  if (supported >= total)
+    return [
+      "> **O mapa de ameaças cobre hoje os mesmos valores.** `get_threat_landscape` resolve",
+      `> ${supported} de ${total} — mas resolve AMEAÇAS, não requisitos, e um concern pode`,
+      "> não trazer capítulo nenhum ao nível pedido: nesse caso a resposta declara-o",
+      "> (`empty_at_level`), nunca devolve zero em silêncio. (Até 0.20.0-beta.23 este guia",
+      "> publicava a cobertura do mapa de ameaças com o rótulo «vocabulário» — 13 em vez de 24.)"
+    ];
+  return [
+    "> **Atenção — não confundir com a cobertura do mapa de ameaças.** `get_threat_landscape`",
+    `> resolve ${supported} de ${total} destes concerns e declara os restantes em`,
+    "> `unsupported_concerns`. Um concern não roteável por ameaças **tem requisitos à mesma**:",
+    "> usa `select_sbd_toe_requirements`."
+  ];
+}
+
 /** Tabela de concerns: o VOCABULÁRIO REAL (24), com o que cada valor activa. */
 export function generateConcernsBlock(): string {
   const vocab = buildActivationVocabulary();
@@ -85,11 +112,7 @@ export function generateConcernsBlock(): string {
     "Passa os concerns como strings minúsculas exactas desta tabela. Um valor fora dela é",
     "DECLARADO em `unknown_concerns` e ignorado — nunca descartado em silêncio.",
     "",
-    "> **Atenção — não confundir com a cobertura do mapa de ameaças.** `get_threat_landscape`",
-    "> resolve um SUBCONJUNTO destes concerns e declara os restantes em `unsupported_concerns`.",
-    "> Um concern não roteável por ameaças **tem requisitos à mesma**: usa",
-    "> `select_sbd_toe_requirements`. (Até 0.20.0-beta.23 este guia publicava a cobertura do",
-    "> mapa de ameaças com o rótulo «vocabulário» — 13 valores em vez de 24.)"
+    ...threatCoverageCaveat(rows.length)
   ].join("\n");
 }
 

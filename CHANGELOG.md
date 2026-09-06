@@ -3,11 +3,113 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.27 (beta line, npm `beta`) — adenda ao beta.26 com o assessment da beta.25. P0: o consult perdia 11 dos 24 concerns em silêncio e o rule_trace AFIRMAVA «0 requirements active» — resolvia por concernsMap cru em vez do mapa publicado; corrigido à raiz, o que curou também o mapa de ameaças (os 24 passam a roteáveis). Guia manda CONTRAPROVAR um vazio sem declaração, com bloco derivado de cobertura por superfície. E a INVARIANTE ENTRE SUPERFÍCIES (24 concerns × 3 níveis) apanhou mais 4 defeitos, dois deles introduzidos nesta própria vaga.
+reasoning: v0.20.0-beta.28 (beta line, npm `beta`) — INVARIANTES ENTRE SUPERFÍCIES: a classe, não a instância. A suite correu ANTES de qualquer correcção e produziu o inventário: 5 candidatos, 3 instâncias reais (consult × exposure, consult × data_sensitivity, contradição entre dois blocos GERADOS do guia) e 2 falsos positivos da própria suite, corrigidos antes de se confiar nela. Zero dívida. Mais: ignored_activators no consult (59 requisitos em causa, incluindo controlo de acesso), base de routing declarada no threat e deduplicação opcional (−51%).
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.28 — 2026-09-06
+
+**Invariantes ENTRE SUPERFÍCIES: a classe, não a instância.** Autorizado pelo lead
+(«avança com o beta.28», 2026-09-06); §20 da design note. Bundle pin INALTERADO (release KG
+`v1.11.0`); **linha estável intocada**.
+
+> A classe: «uma superfície honra um contrato que outra não honra, e a divergência nunca é
+> auto-declarada.» A disciplina já existia aplicada às TABELAS do guia (blocos gerados +
+> suite de igualdade). Esta vaga estende-a às **RESPOSTAS**, e da igualdade-com-a-fonte para
+> a **NÃO-CONTRADIÇÃO entre superfícies**.
+
+### 1 — A suite primeiro, e o INVENTÁRIO que ela produziu
+
+`surface-contract-invariant.test.ts` — as três asserções, escrita e corrida **antes** de
+corrigir seja o que for. As mensagens de falha SÃO o inventário.
+
+**Primeira corrida: 5 candidatos. Três reais, dois falsos positivos da própria suite.**
+
+| # | instância | veredicto |
+|---|---|---|
+| 1 | `consult_security_requirements` × `exposure` — aceite, inerte, mudo | **REAL** (o P0) |
+| 2 | `consult_security_requirements` × `data_sensitivity` — idem | **REAL** |
+| 3 | `map_sbd_toe_applicability` × `technologies` | **falso positivo meu** — a tool honra-o (banda `conditional`); a minha assinatura truncava a 4.000 chars e não via a diferença |
+| 4 | guia: `get_threat_landscape` — bloco `cross-surface` diz «24 de 24», bloco `concerns` diz «SUBCONJUNTO» | **REAL** |
+| 5 | guia: `select_sbd_toe_requirements` — mesma acusação | **falso positivo meu** — a caixa fala do mapa de ameaças e só *menciona* o select; o detector não atribuía a afirmação à tool certa |
+
+Corrigi o detector **antes** de confiar nele — um inventário com falsos positivos é pior do
+que não o ter. Segunda corrida: **3 instâncias reais, todas corrigidas nesta vaga. Zero
+dívida visível.** As outras duas asserções (concordância vocabulário/select/consult e
+efeito-ou-declaração de `technologies`/`changed_files`) passaram à primeira — a beta.27
+tinha fechado essa parte.
+
+### 2 — As correcções
+
+**`ignored_activators` no `consult` (P0).** Aceitava `exposure` e `data_sensitivity` e
+deitava-os fora, com a limitação declarada só no schema, em letra miúda. Reproduzido, com os
+números exactos do avaliador: mesmo input, `select` = **72** requisitos
+(ACC/AUT/ENC/ERR/FIL/LOG/PRI/SES/VAL), `consult` = **13** (FIL/PRI) — **59 perdidos,
+incluindo controlo de acesso**, num plano para aplicação autenticada com dados regulados.
+
+O `consult` é uma superfície de CATÁLOGO e estes são activadores de SELECÇÃO — a correcção
+não é fingir que os honra, é **dizer que não os honra**: `ignored_activators` com os valores,
+os concerns que activariam noutra superfície, **quantos requisitos estão em causa** (59 — o
+número é derivado do mesmo vocabulário e bate exactamente com a diferença real, verificado no
+cenário) e quem os honra. Mais uma entrada própria no `rule_trace`
+(`ACTIVATORS_NOT_HONOURED`).
+
+**Guia: a caixa de aviso passou a ser DERIVADA.** Era texto fixo dentro de um bloco gerado,
+escrito na beta.24 quando o mapa resolvia 13 de 24, e continuou a dizer «SUBCONJUNTO» depois
+de a beta.27 o ter posto a resolver os 24 — enquanto o bloco `cross-surface`, derivado, dizia
+«24 de 24». Agora lê a cobertura real e diz o que ela for.
+
+**`get_threat_landscape`: base de routing declarada.** `files`/`privacy` devolviam dezenas
+de ameaças de capítulos sem relação com o concern (06/07/08/12 para manipulação de ficheiros)
+porque o routing passa pelos capítulos onde os CONTROLOS se definem. As ameaças eram reais; a
+relevância era nominal, e nada o dizia. Passa a vir `routing_basis`:
+`domain_chapter` (o concern tem capítulo de ameaças próprio) ou **`activated_controls`** com
+a explicação de que não são «as ameaças deste domínio». Mais `routing_note` quando o concern
+TEM domínio próprio e ele não contribuiu com uma única ameaça.
+
+> Duas versões desta verificação foram descartadas por darem falsos alarmes — a primeira
+> usava categoria→capítulo (dava o cap. 02, o do catálogo, e fazia as meta-ameaças de
+> processo passarem por «ameaças do domínio»); a segunda olhava só para a página. A regra
+> final usa o mapa de domínio do próprio roteamento, sobre o conjunto completo, com o cap. 02
+> nunca a contar como prova de domínio.
+
+**Deduplicação, como NÍVEL de serialização.** Os `associated_control_*` vinham repetidos
+verbatim: **241 entradas para 13 nomes distintos**. Renomear campos publicados
+(`associated_control_ids`, contrato v1.14 §1.21) por omissão seria a mesma classe de dano que
+esta vaga combate — por isso segue o precedente da beta.26: `detail: "full"` (default)
+byte-idêntico, `standard`/`minimal` com legenda + referências.
+
+| concern | `full` | `minimal` |
+|---|---|---|
+| `files` | 12.039 tk | **5.922 (−51%)** |
+| `privacy` | 11.617 tk | **5.538 (−52%)** |
+| `auth` | 12.611 tk | **6.323 (−50%)** |
+| `iac` | 5.713 tk | 4.866 (−15%) |
+
+### 3 — «Onde mais vive esta classe?», com a varredura feita
+
+Varri os cinco payloads principais à procura de strings repetidas ≥5×:
+
+| superfície | desperdício por repetição | destino |
+|---|---|---|
+| `get_threat_landscape` | 5.451 tk (`associated_control_ids` ×36) | **corrigido nesta vaga** — era a instância ao lado, no mesmo payload, e a varredura apanhou-a |
+| `get_sbd_toe_verification_matrix` | **9.074 tk** (caminhos do manual ×90) | **reportado — maior desperdício absoluto, prioridade 1 para a próxima vaga** |
+| `select_sbd_toe_requirements` | 2.100 tk (razões do `narrowed_out` ×12) | **reportado — prioridade 2**; a dieta da beta.26 cobre o `selection_trace`, não o `narrowed_out` |
+| `consult_security_requirements` · `get_guide_by_role` | 0 · 163 tk | limpos |
+
+### Verificação
+
+- **Suite** 790/790 (54 ficheiros) · **Aceitação** 160 → **120 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novos TC-F-52/53).
+- **Ouro byte-idêntico ao da beta.27** nos dois braços: `discover` **10 PASS / 0 / 0**,
+  declarativo **6 PASS / 4 PART / 0 FAIL**. O `consult` não mudou de conjunto — a correcção
+  DECLARA, não altera a selecção.
+- **Orçamentos** 8/8 do `prepare` inalterados. O `full` do threat sobe ~95 tk
+  (`routing_basis`) — o custo de dizer a verdade — e o `minimal` desce metade.
+- **Gate**: stdout só JSON-RPC · exit 0 · `package_version` = `sbd://toe/version` =
+  `provenance.server`.
 
 ## 0.20.0-beta.27 — 2026-09-06
 

@@ -1255,6 +1255,12 @@ class McpRuntime {
           inputSchema: {
             type: "object",
             properties: {
+              detail: {
+                type: "string",
+                enum: ["full", "standard", "minimal"],
+                description:
+                  "Nível de SERIALIZAÇÃO (0.20.0-beta.28; default `full` = byte-idêntico ao anterior, mantém `associated_control_ids`/`associated_control_names` como o contrato v1.14 §1.21 os publica). `standard`/`minimal` trocam-nos por referências + `associated_control_legend` — medido −50% do payload (os mesmos 13 nomes vinham repetidos verbatim em cada ameaça). Dedup de serialização: nada se perde."
+              },
               risk_level: {
                 type: "string",
                 enum: ["L1", "L2", "L3"],

@@ -1284,6 +1284,76 @@ export const scenarios = [
       }
       return ok(`guia manda contraprovar e publica a cobertura por superfície; ${checked} pares concern×nível concordantes entre vocabulário, select e consult`); } },
 
+  { id: "TC-F-52", axis: "F", title: "0.20.0-beta.28 (classe): activador aceite pelo schema tem efeito OU vem declarado, em TODAS as superfícies", tool: "consult_security_requirements",
+    run: async (c) => {
+      // o P0: consult aceita exposure/data_sensitivity e deitava-os fora
+      const args = { risk_level: "L2", concerns: ["files", "privacy"], exposure: "authenticated", data_sensitivity: "regulated" };
+      const con = await c.tool("consult_security_requirements", args);
+      if (!con.ok) return fail(con.error);
+      const ign = con.data.ignored_activators;
+      if (!ign) return fail("consult aceita exposure/data_sensitivity e não declara que os ignora (classe viva)");
+      for (const k of ["exposure", "data_sensitivity"]) if (!(k in (ign.values ?? {}))) return fail(`ignored_activators não nomeia ${k}`);
+      if (!(ign.requirements_at_stake > 0)) return fail("não diz quantos requisitos estão em causa");
+      if (!ign.honoured_by) return fail("não diz que superfície os honra");
+      // e o número tem de bater com a diferença REAL entre as superfícies
+      const sel = await c.tool("select_sbd_toe_requirements", { ...args, limit: 500, detail: "minimal" });
+      if (!sel.ok) return fail(sel.error);
+      const perdidos = sel.data.selection.selected.filter(
+        (r) => !(con.data.requirements ?? []).some((x) => x.requirement_id === r.requirement_id)
+      ).length;
+      if (ign.requirements_at_stake !== perdidos)
+        return fail(`declara ${ign.requirements_at_stake} em causa, a diferença real é ${perdidos}`);
+      if (!(con.data.rule_trace ?? []).some((t) => t.startsWith("ACTIVATORS_NOT_HONOURED")))
+        return fail("o rule_trace não regista os activadores não honrados");
+      // varredura da CLASSE: nenhum outro par superfície×activador aceite fica mudo
+      const mudos = [];
+      for (const [tool, base, act, val] of [
+        ["consult_security_requirements", { risk_level: "L2", concerns: ["auth"] }, "exposure", "public"],
+        ["consult_security_requirements", { risk_level: "L2", concerns: ["auth"] }, "data_sensitivity", "regulated"],
+        ["map_sbd_toe_applicability", { riskLevel: "L2" }, "technologies", ["containers"]]
+      ]) {
+        const a = await c.tool(tool, base);
+        const b = await c.tool(tool, { ...base, [act]: val });
+        if (!a.ok || !b.ok) return fail((a.error ?? b.error));
+        const mudou = JSON.stringify(a.data) !== JSON.stringify(b.data);
+        const declarado = JSON.stringify(b.data).includes(act);
+        if (!mudou && !declarado) mudos.push(`${tool} × ${act}`);
+      }
+      if (mudos.length > 0) return fail(`pares aceites, inertes e mudos: ${mudos.join("; ")}`);
+      return ok(`consult declara exposure+data_sensitivity com ${ign.requirements_at_stake} requisitos em causa (= diferença real) e rule_trace próprio; 3 pares superfície×activador varridos, nenhum mudo`); } },
+
+  { id: "TC-F-53", axis: "F", title: "0.20.0-beta.28: guia sem contradição entre blocos gerados; threat com base de routing e dedup opcional", tool: "get_threat_landscape",
+    run: async (c) => {
+      // (b) dois blocos GERADOS não podem afirmar coisas incompatíveis sobre a mesma tool
+      const g = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/agent-guide" });
+      if (!g.ok) return fail(g.error);
+      const guide = typeof g.data?.content === "string" ? g.data.content : JSON.stringify(g.data);
+      const blocks = [...guide.matchAll(/<!-- BEGIN GENERATED: ([a-z-]+) -->([\s\S]*?)<!-- END GENERATED: \1 -->/g)];
+      if (blocks.length < 5) return fail("guia deixou de ser derivado");
+      const tool = "get_threat_landscape";
+      const full = blocks.filter(([, , body]) => (body.split("\n").find((l) => l.includes(tool)) ?? "").match(/(\d+)\s+de\s+(\d+)/)?.slice(1).every((v, _i, a) => v === a[0]));
+      const subset = blocks.filter(([, , body]) => body.split(/(?<=\.)\s|\n\n/).some((sent) => sent.includes(tool) && /SUBCONJUNTO|subconjunto/.test(sent)));
+      if (full.length > 0 && subset.length > 0) return fail("dois blocos GERADOS contradizem-se sobre o mapa de ameaças");
+      // base do routing declarada
+      const files = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["files"] });
+      if (!files.ok) return fail(files.error);
+      if (!files.data.routing_basis) return fail("sem base de routing declarada");
+      if (files.data.routing_basis.basis !== "activated_controls")
+        return fail(`files devia rotear por controlos activados, diz ${files.data.routing_basis.basis}`);
+      const iac = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["iac"] });
+      if (!iac.ok) return fail(iac.error);
+      if (iac.data.routing_basis?.basis !== "domain_chapter") return fail("iac tem capítulo próprio e devia dizê-lo");
+      // dedup opcional: full mantém o contrato, minimal poupa
+      const cheio = JSON.stringify(files.data).length;
+      const min = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["files"], detail: "minimal" });
+      if (!min.ok) return fail(min.error);
+      if (!(files.data.threats ?? []).every((t) => Array.isArray(t.associated_control_ids)))
+        return fail("detail=full deixou de publicar associated_control_ids (contrato v1.14 §1.21)");
+      if (!min.data.associated_control_legend) return fail("detail=minimal sem legenda");
+      const magro = JSON.stringify(min.data).length;
+      if (!(magro < cheio * 0.75)) return fail(`dedup poupou pouco: ${Math.round(cheio / 4)} → ${Math.round(magro / 4)} tk`);
+      return ok(`sem contradição entre blocos gerados; routing_basis files=activated_controls / iac=domain_chapter; dedup ${Math.round(cheio / 4)} → ${Math.round(magro / 4)} tk (-${((1 - magro / cheio) * 100).toFixed(0)}%) com full intacto`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

@@ -116,6 +116,14 @@ export interface ConsultSecurityRequirementsResult {
   controls: ControlWithConfidence[];
   artifacts: ArtifactWithCoverage[];
   rule_trace: string[];
+  /** 0.20.0-beta.28: activadores aceites pelo schema e NÃO honrados aqui — declarados. */
+  ignored_activators?: {
+    values: Record<string, unknown>;
+    would_activate_concerns: string[];
+    requirements_at_stake: number;
+    honoured_by: string;
+    note: string;
+  };
   /**
    * 0.20.0-beta.27: concerns válidos que ESTA superfície não resolve — mesmo mecanismo do
    * get_threat_landscape (beta.23). Presente só quando há algum; nunca um vazio mudo.
@@ -176,6 +184,26 @@ export interface ConsultSecurityRequirementsOutput {
   controls: ControlSlim[];
   artifacts: ArtifactSlim[];
   rule_trace: string[];
+  /**
+   * 0.20.0-beta.28 — ACTIVADORES ACEITES E NÃO HONRADOS, declarados.
+   *
+   * O `consult` aceitava `exposure` e `data_sensitivity` no schema e deitava-os fora. Mesmo
+   * input: `select` = 72 requisitos (ACC/AUT/ENC/ERR/FIL/LOG/PRI/SES/VAL), `consult` = 13
+   * (FIL/PRI) — 59 perdidos, INCLUINDO controlo de acesso, num plano para aplicação
+   * autenticada com dados regulados. A limitação existia só no schema, em letra miúda.
+   *
+   * O `consult` é uma superfície de CATÁLOGO (o que o nível traz, filtrado por concerns);
+   * `exposure` e `data_sensitivity` são activadores de SELECÇÃO. A correcção não é fingir
+   * que os honra — é dizer que não os honra, o que a outra superfície faria com eles, e
+   * quantos requisitos estão em causa.
+   */
+  ignored_activators?: {
+    values: Record<string, unknown>;
+    would_activate_concerns: string[];
+    requirements_at_stake: number;
+    honoured_by: string;
+    note: string;
+  };
   /** 0.20.0-beta.27: resolvido, mas o NÍVEL não tem requisitos destas categorias. */
   empty_at_level?: {
     concerns: string[];
@@ -450,6 +478,51 @@ export function _resolveConsultResult(
     },
   };
 
+  /**
+   * beta.28: activadores aceites e não honrados. O que está em causa calcula-se com o
+   * MESMO vocabulário que a outra superfície usa — não é estimativa.
+   */
+  let ignoredActivators: ConsultSecurityRequirementsResult["ignored_activators"];
+  const notHonoured: Record<string, unknown> = {};
+  const exposureArg = typeof args["exposure"] === "string" ? (args["exposure"] as string) : undefined;
+  const sensitivityArg = typeof args["data_sensitivity"] === "string" ? (args["data_sensitivity"] as string) : undefined;
+  if (exposureArg !== undefined) notHonoured["exposure"] = exposureArg;
+  if (sensitivityArg !== undefined) notHonoured["data_sensitivity"] = sensitivityArg;
+  if (Object.keys(notHonoured).length > 0) {
+    const v = buildActivationVocabulary();
+    const extraConcerns = [
+      ...new Set([
+        ...(v.exposure.values.find((x) => String(x.value) === exposureArg)?.activates_concerns ?? []),
+        ...(v.data_sensitivity.values.find((x) => String(x.value) === sensitivityArg)?.activates_concerns ?? [])
+      ])
+    ].sort();
+    const alreadyCategories = new Set(
+      (concernsApplied ?? []).flatMap((c) => [...categoriesForConcerns([c as Concern])])
+    );
+    const extraCategories = new Set(extraConcerns.flatMap((c) => [...categoriesForConcerns([c as Concern])]));
+    const atStake = allRequirements.filter(
+      (r) =>
+        r.applicable_levels?.[riskLevel] === true &&
+        extraCategories.has(r.category) &&
+        !alreadyCategories.has(r.category)
+    ).length;
+    ignoredActivators = {
+      values: notHonoured,
+      would_activate_concerns: extraConcerns,
+      requirements_at_stake: atStake,
+      honoured_by: "select_sbd_toe_requirements",
+      note:
+        `Esta tool ACEITA ${Object.keys(notHonoured).join(" e ")} no schema mas NÃO os honra: é uma superfície de ` +
+        `CATÁLOGO (o que o nível traz, filtrado por \`concerns\`), e estes são activadores de SELECÇÃO. ` +
+        (extraConcerns.length > 0
+          ? `Em \`select_sbd_toe_requirements\` activariam os concerns [${extraConcerns.join(", ")}] — ` +
+            `${atStake} requisito(s) a ${riskLevel} que esta resposta NÃO inclui. `
+          : "No vocabulário publicado estes valores não activam concern nenhum (são inertes). ") +
+        "Não tomes esta resposta como o âmbito completo do que declaraste: re-chama `select_sbd_toe_requirements` " +
+        "com os mesmos activadores, ou passa os concerns equivalentes aqui."
+    };
+  }
+
   // beta.27: resolveu categorias e o nível esvaziou — declara-se, com onde existem.
   let emptyAtLevel: ConsultSecurityRequirementsResult["empty_at_level"];
   if (concernsApplied && concernsApplied.length > 0 && filteredRequirements.length === 0 && unresolvedConcerns.length === 0) {
@@ -502,6 +575,12 @@ export function _resolveConsultResult(
     rule_trace.push(
       `CONCERNS_FILTER_REQUIREMENTS(concerns=[${concernsApplied.join(",")}]): ${atLevelCount} -> ${filteredRequirements.length} requirements (categories: ${active_categories.join(",") || "none"})`
     );
+    if (ignoredActivators) {
+      rule_trace.push(
+        `ACTIVATORS_NOT_HONOURED(${Object.keys(ignoredActivators.values).join(",")}): aceites pelo schema, ` +
+          `NÃO aplicados por esta superfície — ${ignoredActivators.requirements_at_stake} requisito(s) em causa. Ver ignored_activators.`
+      );
+    }
     if (unresolvedConcerns.length > 0) {
       rule_trace.push(
         `CONCERNS_UNRESOLVED(concerns=[${unresolvedConcerns.join(",")}]): sem categorias publicadas — ` +
@@ -523,6 +602,7 @@ export function _resolveConsultResult(
     controls,
     artifacts,
     rule_trace,
+    ...(ignoredActivators ? { ignored_activators: ignoredActivators } : {}),
     ...(emptyAtLevel ? { empty_at_level: emptyAtLevel } : {}),
     ...(unresolvedConcerns.length > 0
       ? {
@@ -589,6 +669,7 @@ export function handleConsultSecurityRequirements(
       controls: [],
       artifacts: [],
       rule_trace: [...full.rule_trace, "MODE_INDEX: requirement bodies elided — per-category index returned (declared, not silent)"],
+      ...(full.ignored_activators ? { ignored_activators: full.ignored_activators } : {}),
       ...(full.empty_at_level ? { empty_at_level: full.empty_at_level } : {}),
       ...(full.unsupported_concerns ? { unsupported_concerns: full.unsupported_concerns } : {}),
       coverage_gaps: full.coverage_gaps,
@@ -638,6 +719,7 @@ export function handleConsultSecurityRequirements(
       _coverage: artifact._coverage,
     })),
     rule_trace: full.rule_trace,
+    ...(full.ignored_activators ? { ignored_activators: full.ignored_activators } : {}),
     ...(full.empty_at_level ? { empty_at_level: full.empty_at_level } : {}),
     ...(full.unsupported_concerns ? { unsupported_concerns: full.unsupported_concerns } : {}),
     coverage_gaps: full.coverage_gaps,
