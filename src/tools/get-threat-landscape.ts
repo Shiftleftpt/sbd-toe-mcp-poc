@@ -116,6 +116,37 @@ const CONCERN_TO_DOMAIN_CHAPTER: Readonly<Record<string, number>> = {
  */
 let SUPPORT_CACHE: { supported: string[]; unsupported: string[] } | null = null;
 let probingSupport = false;
+/**
+ * 0.20.0-beta.29 (item 2) — que concerns têm capítulo de ameaças PRÓPRIO.
+ *
+ * «24 de 24» confundia ROTEAMENTO com COBERTURA: é verdade só no sentido de «não dá erro».
+ * O terceiro estado — `routing_basis: domain_chapter` vs `activated_controls` — só aparecia
+ * DEPOIS de gastar a chamada. Esta lista é derivada e publica-se antes.
+ */
+let domainConcernsCache: string[] | null = null;
+export function threatDomainConcerns(): string[] {
+  if (domainConcernsCache) return domainConcernsCache;
+  // Mesma regra do handler: capítulo próprio de domínio, EXCLUINDO 01/02 (classificação e
+  // meta-ameaças de processo). `requirements` mapeia para o cap. 02 e por isso NÃO conta —
+  // a lista publicada tem de ser a mesma que o `routing_basis` produz, ou é folclore outra vez.
+  const out = new Set<string>();
+  for (const entry of buildActivationVocabulary().concerns.values) {
+    const concern = String(entry.value);
+    const chapters = new Set<number>();
+    const own = CONCERN_TO_DOMAIN_CHAPTER[concern];
+    if (own !== undefined) chapters.add(own);
+    for (const chapter of entry.activates_chapters) {
+      const n = chapterNumber(chapter);
+      if (!Number.isNaN(n)) chapters.add(n);
+    }
+    chapters.delete(1);
+    chapters.delete(2);
+    if (chapters.size > 0) out.add(concern);
+  }
+  domainConcernsCache = [...out].sort();
+  return domainConcernsCache;
+}
+
 export function threatConcernSupport(): { supported: string[]; unsupported: string[] } {
   if (SUPPORT_CACHE) return SUPPORT_CACHE;
   if (probingSupport) return { supported: [], unsupported: [] };
@@ -203,9 +234,19 @@ export function _resolveThreatLandscape(
   // (CONCERN_TO_DOMAIN_CHAPTER) and by the chapters the resolved CONTROLS live in.
   const activeChapterNumbers = new Set<number>();
   const activeBundles = new Set<string>();
+  // Capítulos de DOMÍNIO dos concerns declarados — o escalão 1 da ordenação por pertença.
+  const orderingDomainChapters = new Set<number>();
   for (const concern of inputConcerns) {
     const domainChapter = CONCERN_TO_DOMAIN_CHAPTER[concern];
-    if (domainChapter !== undefined) activeChapterNumbers.add(domainChapter);
+    if (domainChapter !== undefined) {
+      activeChapterNumbers.add(domainChapter);
+      orderingDomainChapters.add(domainChapter);
+    }
+    for (const chapter of buildActivationVocabulary().concerns.values.find((x) => String(x.value) === concern)
+      ?.activates_chapters ?? []) {
+      const n = chapterNumber(chapter);
+      if (!Number.isNaN(n)) orderingDomainChapters.add(n);
+    }
   }
   // G-b decision 2 (2026-08-30): the DEFINING chapters of the activated controls count
   // as in-scope — a control that defines its content in a chapter brings that chapter's
@@ -346,11 +387,40 @@ export function _resolveThreatLandscape(
     });
   }
 
+  /**
+   * 0.20.0-beta.29 — ORDENAÇÃO POR PERTENÇA AO ÂMBITO DECLARADO.
+   *
+   * A ordem anterior era `mitigation_confidence` e depois `chapter_id`. Como quase tudo é
+   * `derived`, na prática era ALFABÉTICA POR CAPÍTULO: as 40 primeiras eram MT-001..040 dos
+   * caps. 01/02 («Overengineering», «Segurança opcional») e as relevantes ficavam nas
+   * páginas 2-6 — ~15.800 tk de payload com retorno nulo. Avisar que a ordem é inútil não a
+   * torna útil.
+   *
+   * É a MESMA correcção que fechou os `evidence_patterns` na beta.27: PERTENÇA primeiro.
+   * Três escalões, todos derivados do que foi declarado:
+   *   1. capítulo de domínio dos concerns declarados (o mais específico que existe);
+   *   2. restantes capítulos activados (chegaram cá pelos controlos que os concerns activam);
+   *   3. capítulos 01 e 02 — classificação e meta-ameaças de PROCESSO: verdadeiras, mas
+   *      genéricas, e por isso ao fim.
+   * Dentro de cada escalão mantém-se a ordem antiga (confidence, depois capítulo, depois id)
+   * para o resultado continuar determinístico.
+   */
+  const GENERIC_CHAPTERS = new Set([1, 2]);
+  const tierOf = (chapterId: string | undefined): number => {
+    const n = chapterNumber(String(chapterId ?? ""));
+    if (Number.isNaN(n)) return 2;
+    if (GENERIC_CHAPTERS.has(n)) return 3;
+    return orderingDomainChapters.has(n) ? 1 : 2;
+  };
   threats.sort((left, right) => {
+    const tier = tierOf(left.chapter_id) - tierOf(right.chapter_id);
+    if (tier !== 0) return tier;
     const rank = { direct: 0, derived: 1, heuristic: 2 } as const;
     const confidenceOrder = rank[left.mitigation_confidence] - rank[right.mitigation_confidence];
     if (confidenceOrder !== 0) return confidenceOrder;
-    return (left.chapter_id ?? "").localeCompare(right.chapter_id ?? "");
+    const byChapter = (left.chapter_id ?? "").localeCompare(right.chapter_id ?? "");
+    if (byChapter !== 0) return byChapter;
+    return (left.id ?? "").localeCompare(right.id ?? "");
   });
 
   return {
@@ -548,6 +618,43 @@ export function handleGetThreatLandscape(
     controlIdLegend.push(id);
     return controlIdLegend.length - 1;
   };
+  // Mapeamento ANTES do literal: é ele que preenche as legendas via `refOf`/`refOfId`.
+  // Enquanto vivia dentro do literal, a nota da legenda era interpolada primeiro e saía
+  // sempre «0 nomes e 0 ids» com os arrays cheios — o bug do contador (beta.28).
+  const mappedThreats = full.threats.map((threat) => ({
+      id: threat.id,
+      name: threat.name,
+      mitigation_confidence: threat.mitigation_confidence,
+      mitigated_by: threat.mitigated_by,
+      related_antipatterns: threat.related_antipatterns,
+      // Surface the threat's own association fields carried by the substrate.
+      // Contract v1.14 §1.21: associated_control_ids are structural CTRL-* ids with a
+      // DECLARED derivation; associated_controls_text is the Manual's prose;
+      // associated_controls stays as-is for compatibility. Nothing invented.
+      associated_controls: threat.associated_controls ?? [],
+      // 0.20.0-beta.28: os NOMES vão para uma legenda e ficam aqui as referências —
+      // vinham repetidos verbatim em cada ameaça (241 entradas para 13 nomes distintos,
+      // ~22% do payload). Dedup de serialização: nenhum nome se perde.
+      ...(dedupe
+        ? { associated_control_name_refs: (threat.associated_control_names ?? []).map(refOf) }
+        : { associated_control_names: threat.associated_control_names ?? [] }),
+      ...(dedupe
+        ? { associated_control_id_refs: (threat.associated_control_ids ?? []).map(refOfId) }
+        : { associated_control_ids: threat.associated_control_ids ?? [] }),
+      ...(threat.associated_controls_text ? { associated_controls_text: threat.associated_controls_text } : {}),
+      ...(threat.associated_control_ids_derivation
+        ? { associated_control_ids_derivation: threat.associated_control_ids_derivation }
+        : {}),
+      ...(threat.mitigated_threat_id ? { mitigated_threat_id: threat.mitigated_threat_id } : {}),
+      ...(threat.chapter_id ? { chapter_id: threat.chapter_id } : {}),
+      ...(threat.mitigation_summary ? { mitigation_summary: threat.mitigation_summary } : {}),
+      ...(threat.how_it_arises ? { how_it_arises: threat.how_it_arises } : {}),
+      ...(threat.methodology ? { methodology: threat.methodology } : {}),
+      ...(threat.essence ? { essence: threat.essence } : {}),
+      ...(threat.threat_category ? { threat_category: threat.threat_category } : {}),
+      ...(threat.mitigation_strength ? { mitigation_strength: threat.mitigation_strength } : {}),
+  }));
+
   const shaped = {
     ...full,
     ...(dedupe
@@ -626,39 +733,7 @@ export function handleGetThreatLandscape(
       note:
         "Threat entries are canonical runtime entities. Mitigation and antipattern enrichment are derived structurally from the published deterministic runtime bundle.",
     },
-    threats: full.threats.map((threat) => ({
-      id: threat.id,
-      name: threat.name,
-      mitigation_confidence: threat.mitigation_confidence,
-      mitigated_by: threat.mitigated_by,
-      related_antipatterns: threat.related_antipatterns,
-      // Surface the threat's own association fields carried by the substrate.
-      // Contract v1.14 §1.21: associated_control_ids are structural CTRL-* ids with a
-      // DECLARED derivation; associated_controls_text is the Manual's prose;
-      // associated_controls stays as-is for compatibility. Nothing invented.
-      associated_controls: threat.associated_controls ?? [],
-      // 0.20.0-beta.28: os NOMES vão para uma legenda e ficam aqui as referências —
-      // vinham repetidos verbatim em cada ameaça (241 entradas para 13 nomes distintos,
-      // ~22% do payload). Dedup de serialização: nenhum nome se perde.
-      ...(dedupe
-        ? { associated_control_name_refs: (threat.associated_control_names ?? []).map(refOf) }
-        : { associated_control_names: threat.associated_control_names ?? [] }),
-      ...(dedupe
-        ? { associated_control_id_refs: (threat.associated_control_ids ?? []).map(refOfId) }
-        : { associated_control_ids: threat.associated_control_ids ?? [] }),
-      ...(threat.associated_controls_text ? { associated_controls_text: threat.associated_controls_text } : {}),
-      ...(threat.associated_control_ids_derivation
-        ? { associated_control_ids_derivation: threat.associated_control_ids_derivation }
-        : {}),
-      ...(threat.mitigated_threat_id ? { mitigated_threat_id: threat.mitigated_threat_id } : {}),
-      ...(threat.chapter_id ? { chapter_id: threat.chapter_id } : {}),
-      ...(threat.mitigation_summary ? { mitigation_summary: threat.mitigation_summary } : {}),
-      ...(threat.how_it_arises ? { how_it_arises: threat.how_it_arises } : {}),
-      ...(threat.methodology ? { methodology: threat.methodology } : {}),
-      ...(threat.essence ? { essence: threat.essence } : {}),
-      ...(threat.threat_category ? { threat_category: threat.threat_category } : {}),
-      ...(threat.mitigation_strength ? { mitigation_strength: threat.mitigation_strength } : {}),
-    })),
+    threats: mappedThreats,
     next: threatLandscapeAffordances(full.risk_level, full.meta.concernsApplied ?? undefined),
   };
   return { ...shaped, size_estimate: estimateSize(shaped) } as unknown as GetThreatLandscapeResult;

@@ -22,7 +22,7 @@ import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./server-surface.js";
 import { getOntologyData } from "../tools/ontology-loader.js";
 import { handleListSbdToeChapters } from "../tools/structured-tools.js";
 import { handleConsultSecurityRequirements, consultSupportedConcerns } from "../tools/consult-security-requirements.js";
-import { threatConcernSupport } from "../tools/get-threat-landscape.js";
+import { threatConcernSupport, threatDomainConcerns } from "../tools/get-threat-landscape.js";
 
 type GuideChapter = {
   id: string;
@@ -234,6 +234,7 @@ export function generateOutputSizesBlock(): string {
  */
 export function generateCrossSurfaceBlock(): string {
   const concerns = buildActivationVocabulary().concerns.values.map((c) => String(c.value));
+  const domainConcerns = threatDomainConcerns();
   const consultOk = consultSupportedConcerns().length;
   const threats = threatConcernSupport();
   return [
@@ -244,7 +245,16 @@ export function generateCrossSurfaceBlock(): string {
     `| \`select_sbd_toe_requirements\` | ${concerns.length} de ${concerns.length} | os requisitos do que declaraste, com traço |`,
     `| \`consult_security_requirements\` | ${consultOk} de ${concerns.length} | o catálogo do nível, filtrado pelos concerns |`,
     `| \`sbd://toe/activation-vocabulary\` | ${concerns.length} de ${concerns.length} | o que cada valor activa, e quantos requisitos por nível |`,
-    `| \`get_threat_landscape\` | ${threats.supported.length} de ${concerns.length} | AMEAÇAS (não requisitos); os restantes vêm em \`unsupported_concerns\` |`,
+    `| \`get_threat_landscape\` | ${threats.supported.length} de ${concerns.length} **sem erro** · ${domainConcerns.length} com ameaças de DOMÍNIO próprias | AMEAÇAS, não requisitos — ver abaixo |`,
+    "",
+    "",
+    `**Roteamento ≠ cobertura.** \`get_threat_landscape\` aceita os ${concerns.length} concerns sem erro, mas só`,
+    `**${domainConcerns.length}** têm capítulo de ameaças PRÓPRIO — ${domainConcerns.map((c) => "`" + c + "`").join(", ")}.`,
+    `Para os outros ${concerns.length - domainConcerns.length} as ameaças chegam pelos capítulos onde se DEFINEM os`,
+    "controlos que o concern activa: são reais e do âmbito activado, mas não são «as ameaças deste",
+    "domínio». A resposta di-lo em `routing_basis` (`domain_chapter` vs `activated_controls`) — e agora",
+    "sabe-lo ANTES de gastar a chamada. As ameaças vêm ordenadas por PERTENÇA ao âmbito declarado",
+    "(capítulo de domínio primeiro, governação genérica dos caps. 01/02 por último).",
     "",
     "**Regra de contraprova.** Um resultado vazio **sem** `unsupported_concerns` não é",
     "prova de ausência: CONTRAPROVA antes de comunicar — `select_sbd_toe_requirements` com",

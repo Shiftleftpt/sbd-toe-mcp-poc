@@ -229,7 +229,13 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
         status: "resolved",
         operator: "extend",
         obligations,
-        note: "Operador `extend`: obrigações do overlay ACRESCEM à selecção por categoria; `replace` aguarda o modelo de overlay (ADR 0014)."
+        note:
+          "Operador `extend`: as obrigações do overlay vêm em LISTA PARALELA (`overlay.obligations`) — " +
+          "`selection.selected[]` é IDÊNTICO com e sem overlay, verificado. A nota anterior dizia que as " +
+          "obrigações «ACRESCEM à selecção», o que descrevia o que NÃO acontece: elas não entram em " +
+          "`selected`, não têm `selection_trace` e não contam para `meta.eligible`. Cruza-as tu com os " +
+          "requisitos — é trabalho do chamador, não do servidor. O operador `replace` aguarda o modelo de " +
+          "overlay (ADR 0014)."
       };
     }
   }
@@ -316,7 +322,10 @@ export function handleSelectRequirements(args: Record<string, unknown>): SelectR
       eligible: result.eligible_count,
       eligible_denominator: "activated_at_level",
       note:
-        "coverage pagina `selected`; `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão. `eligible` é o denominador `activated_at_level` — os quatro denominadores vêm nomeados e definidos em `denominators`.",
+        "coverage pagina `selected` por ORDEM DE ID (alfabética por categoria: ACC primeiro, VAL por último) — " +
+        "NÃO é ordem de relevância, e com uma selecção grande as últimas categorias ficam nas páginas finais " +
+        "(ex.: VAL em offset=200). Se procuras uma categoria específica, declara o concern que a activa em vez " +
+        "de paginar até lá. `narrowed_out` vem completo (agrupado por categoria). O veredicto de nível usa o catálogo publicado. `out_of_scope_chapters` fecha o âmbito: o que nenhuma declaração activou é dito por contagem, não por omissão. `eligible` é o denominador `activated_at_level` — os quatro denominadores vêm nomeados e definidos em `denominators`.",
       notes: dieted.note ? [...result.notes, dieted.note] : result.notes
     },
     next: result.needs_input

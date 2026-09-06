@@ -1351,8 +1351,86 @@ export const scenarios = [
         return fail("detail=full deixou de publicar associated_control_ids (contrato v1.14 §1.21)");
       if (!min.data.associated_control_legend) return fail("detail=minimal sem legenda");
       const magro = JSON.stringify(min.data).length;
-      if (!(magro < cheio * 0.75)) return fail(`dedup poupou pouco: ${Math.round(cheio / 4)} → ${Math.round(magro / 4)} tk`);
+      // A poupança depende de quanta repetição a página traz — e desde a beta.29 a página 1
+      // é do DOMÍNIO, logo menos repetitiva. Garante-se que poupa e que não perde nada,
+      // não uma percentagem fixa (que media a repetição, não a dedup).
+      if (!(magro < cheio)) return fail(`dedup não poupou: ${Math.round(cheio / 4)} → ${Math.round(magro / 4)} tk`);
+      const refsOk = (min.data.threats ?? []).every((t) => Array.isArray(t.associated_control_name_refs));
+      if (!refsOk) return fail("detail=minimal sem referências à legenda");
+      const nomes = min.data.associated_control_legend.names ?? [];
+      const todasResolvem = (min.data.threats ?? []).every((t) => (t.associated_control_name_refs ?? []).every((i) => nomes[i] !== undefined));
+      if (!todasResolvem) return fail("referências da legenda não resolvem — a dedup perderia informação");
       return ok(`sem contradição entre blocos gerados; routing_basis files=activated_controls / iac=domain_chapter; dedup ${Math.round(cheio / 4)} → ${Math.round(magro / 4)} tk (-${((1 - magro / cheio) * 100).toFixed(0)}%) com full intacto`); } },
+
+  { id: "TC-F-54", axis: "F", title: "0.20.0-beta.29 (item 1): ameaças ordenadas por PERTENÇA — a página 1 deixa de ser governação genérica", tool: "get_threat_landscape",
+    run: async (c) => {
+      const medidas = [];
+      for (const concern of ["integration", "iac", "logging", "files"]) {
+        const p1 = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: [concern] });
+        if (!p1.ok) return fail(p1.error);
+        const threats = p1.data.threats ?? [];
+        if (threats.length === 0) return fail(`${concern} sem ameaças — fixture mudou`);
+        const genericas = threats.filter((t) => /^0?[12]-/.test(String(t.chapter_id ?? ""))).length;
+        if (genericas === threats.length)
+          return fail(`${concern}: a página 1 é toda dos caps. 01/02 (governação genérica) — a ordem não ordena`);
+        // monotonia: nenhuma genérica antes de uma específica
+        const firstGeneric = threats.findIndex((t) => /^0?[12]-/.test(String(t.chapter_id ?? "")));
+        const lastSpecific = threats.map((t) => !/^0?[12]-/.test(String(t.chapter_id ?? ""))).lastIndexOf(true);
+        if (firstGeneric >= 0 && lastSpecific > firstGeneric)
+          return fail(`${concern}: ameaça genérica (${threats[firstGeneric]?.id}) à frente de uma específica (${threats[lastSpecific]?.id})`);
+        medidas.push(`${concern}: ${threats.length - genericas}/${threats.length} específicas na p.1`);
+      }
+      // o conjunto COMPLETO não muda — a ordem muda, o conteúdo não
+      const full = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["integration"], limit: 500 });
+      if (!full.ok) return fail(full.error);
+      if ((full.data.coverage?.total ?? 0) < 100) return fail("total inesperado — fixture mudou");
+      const genericasNoFim = (full.data.threats ?? []).slice(-5).every((t) => /^0?[12]-/.test(String(t.chapter_id ?? "")));
+      if (!genericasNoFim) return fail("as meta-ameaças de processo não ficaram no fim do conjunto completo");
+      return ok(`${medidas.join("; ")}; caps. 01/02 no fim do conjunto completo (${full.data.coverage.total} ameaças)`); } },
+
+  { id: "TC-F-55", axis: "F", title: "0.20.0-beta.29 (itens 2,3,5): roteamento ≠ cobertura, contador da legenda, e a nota do extend diz o que acontece", tool: "read_sbd_toe_resource",
+    run: async (c) => {
+      // item 2 — as duas colunas, com os nomes, e iguais ao comportamento real
+      const g = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/agent-guide" });
+      if (!g.ok) return fail(g.error);
+      const guide = typeof g.data?.content === "string" ? g.data.content : JSON.stringify(g.data);
+      if (!/Roteamento ≠ cobertura/i.test(guide)) return fail("o guia não distingue roteamento de cobertura");
+      const m = /só\s*\n?\*\*(\d+)\*\* têm capítulo de ameaças PRÓPRIO/.exec(guide) ?? /\*\*(\d+)\*\* têm capítulo de ameaças PRÓPRIO/.exec(guide);
+      if (!m) return fail("o guia não publica quantos concerns têm domínio próprio");
+      const publicado = Number(m[1]);
+      const vocabRes = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/activation-vocabulary" });
+      if (!vocabRes.ok) return fail(vocabRes.error);
+      const text = typeof vocabRes.data?.content === "string" ? vocabRes.data.content : JSON.stringify(vocabRes.data);
+      const values = (JSON.parse(text.slice(text.indexOf("{"))).concerns?.values ?? []).map((x) => String(x.value));
+      let reais = 0;
+      for (const concern of values) {
+        const r = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: [concern] });
+        if (!r.ok) return fail(r.error);
+        if (!r.data.routing_basis) return fail(`${concern}: sem routing_basis`);
+        if (r.data.routing_basis.basis === "domain_chapter") reais += 1;
+      }
+      if (publicado !== reais) return fail(`o guia publica ${publicado} com domínio próprio, o servidor produz ${reais}`);
+      // item 3 — o contador da legenda bate com os arrays
+      const min = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["auth"], detail: "minimal" });
+      if (!min.ok) return fail(min.error);
+      const L = min.data.associated_control_legend;
+      if (!L) return fail("sem legenda em detail=minimal");
+      const mm = /Os (\d+) nomes e (\d+) ids/.exec(L.note ?? "");
+      if (!mm) return fail("nota da legenda sem contagens");
+      if (Number(mm[1]) !== L.names.length || Number(mm[2]) !== L.ids.length)
+        return fail(`contador da legenda diz ${mm[1]}/${mm[2]} com arrays ${L.names.length}/${L.ids.length}`);
+      // item 5 — a nota do extend descreve o comportamento REAL
+      const semOverlay = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], limit: 500, detail: "minimal" });
+      const comOverlay = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["auth"], limit: 500, detail: "minimal", include_regulatory_overlay: true, regulatory_frameworks: ["RGPD"] });
+      if (!semOverlay.ok || !comOverlay.ok) return fail(semOverlay.error ?? comOverlay.error);
+      const ids = (x) => x.data.selection.selected.map((r) => r.requirement_id).join(",");
+      if (ids(semOverlay) !== ids(comOverlay)) return fail("o overlay mudou a selecção — a nota teria de ser outra");
+      // A nota CITA a frase antiga para dizer o que substituiu; citar não é afirmar (mesmo
+      // tropeço do obituário do minLevel na beta.25). Remove-se a explicação antes de testar.
+      const nota = (comOverlay.data.overlay?.note ?? "").replace(/A nota anterior dizia[\s\S]*?não contam para `meta\.eligible`\./, " ");
+      if (/ACRESCEM à selecção/.test(nota)) return fail("a nota do extend continua a descrever o que NÃO acontece");
+      if (!/LISTA PARALELA|lista paralela/i.test(nota)) return fail("a nota não diz onde as obrigações realmente vêm");
+      return ok(`guia publica ${publicado} com domínio próprio = comportamento real; contador ${mm[1]}/${mm[2]} = arrays; nota do extend descreve a lista paralela (selecção idêntica, ${comOverlay.data.overlay.obligations.length} obrigações)`); } },
 
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {

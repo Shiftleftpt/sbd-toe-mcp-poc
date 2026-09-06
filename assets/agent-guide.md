@@ -77,18 +77,23 @@ who served it). The same tool mirrors ANY resource of the
 list below — including the templated ones (e.g. `sbd://toe/codegen-instructions/codegen`,
 the target of `codegen_instructions_ref` in dieted payloads).
 
-After reading this guide, run:
+> **ANTES de o tentares chamar — verdade do canal:** `setup_sbd_toe_agent` é um **prompt
+> MCP**, não uma tool. Clientes sem suporte de prompts (p.ex. Claude Desktop) **não o
+> expõem**, e um agente que siga esta secção em sequência chama uma tool que não existe.
+> Confirma que o teu cliente lista prompts; se não listar, salta o passo — a alternativa
+> equivalente está aqui em baixo e é completa.
+
+Se o teu cliente expõe prompts, corre:
 
 ```
 setup_sbd_toe_agent(riskLevel="<L1|L2|L3>", projectRole="<role>")
 ```
 
-This returns the list of active chapters and risk-level specific rules for the project.
+Devolve os capítulos activos e as regras específicas do nível de risco.
 
-> **Verdade do canal:** `setup_sbd_toe_agent` é um **prompt MCP**, não uma tool — clientes
-> sem suporte de prompts (p.ex. Claude Desktop) não o expõem. Alternativa equivalente: já
-> leste este guia (via `read_sbd_toe_resource`); passa `risk_level` e os **activadores
-> DECLARADOS** (`concerns`, `exposure`, `data_sensitivity`, `technologies`, `changed_files`)
+> **Se não expõe (ou preferes ir direito):** já leste este guia (via
+> `read_sbd_toe_resource`); passa `risk_level` e os **activadores DECLARADOS**
+> (`concerns`, `exposure`, `data_sensitivity`, `technologies`, `changed_files`)
 > directamente ao `select_sbd_toe_requirements`. O `stack` é texto livre e só conta quando
 > traz um valor de `technologies` como token exacto — prefere `technologies`.
 

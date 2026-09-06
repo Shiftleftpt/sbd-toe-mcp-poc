@@ -239,10 +239,17 @@ describe("handleGetThreatLandscape surface", () => {
   // activated control DEFINES in ch.02 (C1 identity/auth, C2 data_protection, C3 tooling)
   // — not as a side effect of cataloguing. Concerns whose controls define elsewhere
   // (logging → monitoring ch.12, iac → infrastructure ch.08) still exclude ch.02.
+  // 0.20.0-beta.29: a ordem passou a ser por PERTENÇA ao âmbito e os caps. 01/02 (meta-ameaças
+  // de processo) vão para o FIM — que é o objectivo da correcção. A garantia G-b é sobre o
+  // ÂMBITO, não sobre a primeira página: verifica-se no conjunto completo.
   it("brings ch.02 into scope for concerns whose activated controls DEFINE there (auth via C1)", () => {
-    const r = handleGetThreatLandscape({ risk_level: "L2", concerns: ["auth"] });
+    const r = handleGetThreatLandscape({ risk_level: "L2", concerns: ["auth"], limit: 500 });
     expect(r.meta.activeBundles).toContain("02-requisitos-seguranca");
     expect(r.threats.some((t) => /^MT-0(2[1-9]|3[0-8])$/.test(t.id ?? ""))).toBe(true);
+    // e as meta-ameaças NÃO podem estar à frente das do domínio activado
+    const firstMeta = r.threats.findIndex((t) => /^MT-0(2[1-9]|3[0-8])$/.test(t.id ?? ""));
+    const lastDomain = r.threats.map((t) => !/^0?[12]-/.test(String(t.chapter_id ?? ""))).lastIndexOf(true);
+    expect(firstMeta, "meta-ameaças de processo à frente das do domínio").toBeGreaterThan(lastDomain);
   });
 
   it("still excludes ch.02 for concerns with no ch.02-defining control (logging, iac)", () => {

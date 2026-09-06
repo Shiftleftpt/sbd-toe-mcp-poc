@@ -3,11 +3,113 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.28 (beta line, npm `beta`) — INVARIANTES ENTRE SUPERFÍCIES: a classe, não a instância. A suite correu ANTES de qualquer correcção e produziu o inventário: 5 candidatos, 3 instâncias reais (consult × exposure, consult × data_sensitivity, contradição entre dois blocos GERADOS do guia) e 2 falsos positivos da própria suite, corrigidos antes de se confiar nela. Zero dívida. Mais: ignored_activators no consult (59 requisitos em causa, incluindo controlo de acesso), base de routing declarada no threat e deduplicação opcional (−51%).
+reasoning: v0.20.0-beta.29 (beta line, npm `beta`) — navegação: pôr o relevante à frente e dizer a verdade sobre o roteamento. Ameaças ordenadas por PERTENÇA ao âmbito (a página 1 de `integration` passa de MT-001..008 «Overengineering» do cap. 01 para MT-039.. do cap. 03); roteamento ≠ cobertura publicado antes da chamada (24 sem erro · 11 com domínio próprio, nomeados, derivados e iguais ao comportamento); bug do contador da legenda (dizia «0 nomes e 0 ids» com 13 nos arrays); ordem invertida no guia (ressalva antes da instrução); nota do `operator: extend` a descrever o que acontece. Selecção INALTERADA, ouro byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.29 — 2026-09-06
+
+**Navegação: pôr o relevante à frente e dizer a verdade sobre o roteamento.** Autorizado
+pelo lead («avançamos agora com o pontifex», 2026-09-06); §22 da design note, lane SERVING.
+Bundle pin INALTERADO (release KG `v1.11.0`); **linha estável intocada**. As lanes de
+VOCABULÁRIO (25.º concern) e EPISTÉMICA (`model_limits`) ficam com o lead — não tocadas.
+
+### 1 — Ameaças ordenadas por PERTENÇA ao âmbito declarado
+
+Reproduzido: a ordem era `mitigation_confidence` e depois `chapter_id`, mas **todas as
+ameaças são `derived`** — logo era alfabética por capítulo, e as 40 primeiras eram
+MT-001..040 dos caps. 01/02. Medido também o filtro: 14 concerns → 218 ameaças,
+1 concern → 218 (**0% de redução** na sonda desta linha).
+
+É a **mesma correcção que fechou os `evidence_patterns` na beta.27** — pertença primeiro.
+Três escalões derivados do declarado: (1) capítulo de domínio dos concerns; (2) restantes
+capítulos activados (chegaram pelos controlos); (3) **caps. 01 e 02 por último** —
+classificação e meta-ameaças de PROCESSO, verdadeiras mas genéricas. Dentro de cada escalão,
+a ordem antiga, para o resultado continuar determinístico.
+
+**A página 1, antes → depois:**
+
+| concern | antes | depois |
+|---|---|---|
+| `integration` | MT-001..008 @cap.01 («Overengineering», «Segurança opcional») | **MT-039..045 @cap.03** |
+| `iac` | idem | **MT-132..138 @cap.08** (o seu capítulo de domínio) |
+| `logging` | idem | **MT-197..203 @cap.12** |
+| `files` | idem | **MT-093..099 @cap.06** |
+
+Em todos os quatro casos a página 1 passou a ser **25/25 (ou 15/15) específicas**, e as
+meta-ameaças de processo ficam no fim do conjunto completo — verificado por cenário, com
+monotonia (nenhuma genérica à frente de uma específica). O conjunto NÃO muda: muda a ordem.
+O payload da página 1 desce de ~6,7k para **5.834 tk** (5.221 em `detail="minimal"`).
+
+**A varredura da classe «ordena por id prometendo relevância»:** varri as descrições de
+todas as tools à procura de promessas de ordem. **Nenhuma outra superfície promete
+relevância enquanto ordena por id** — o `prepare` já ordena por pertença desde a beta.27 e
+di-lo; o `plan_sbd_toe_rollout` é phase-ordered e declara que o DAG está adiado. Ficou uma
+etiqueta desactualizada («evidence-pattern relevance-cap metrics»), corrigida. As duas
+entradas de REPETIÇÃO da varredura da beta.28 são de outra classe (duplicação, não ordem) e
+**ficam reportadas com prioridade**: `get_sbd_toe_verification_matrix` **9.074 tk**
+(prioridade 1) e `select.narrowed_out` **2.100 tk** (prioridade 2).
+
+### 2 — Roteamento ≠ cobertura, dito ANTES de gastar a chamada
+
+«24 de 24» era verdade só no sentido de «não dá erro». O terceiro estado — `routing_basis`
+`domain_chapter` vs `activated_controls` — só aparecia depois da chamada. A tabela do guia
+(bloco gerado) e a descrição da tool passam a publicar **duas colunas**: *resolve sem erro:
+**24*** · *tem ameaças de domínio próprias: **11***, com os onze **nomeados**
+(`architecture`, `build`, `deployment`, `distribution`, `iac`, `logging`, `monitoring`,
+`release`, `supply_chain`, `testing`, `threat_modeling`).
+
+> O avaliador estimou 7; a minha primeira derivação deu 12. **O número publicado é o
+> medido**: 11, e o cenário verifica concern a concern que a lista publicada é exactamente a
+> que o `routing_basis` produz. A diferença estava no `requirements`, cujo capítulo é o 02 —
+> que a ordenação exclui por ser o das meta-ameaças. Publicar um número que o servidor não
+> produz seria repetir o defeito dos «13 concerns» da beta.24.
+
+### 3 — O bug do contador
+
+`associated_control_legend.note` dizia «os **0** nomes e **0** ids DISTINTOS» com 13 nos
+arrays. Causa: num literal de objecto, a nota era interpolada **antes** de o
+`threats.map(...)` correr o `refOf` que preenche as legendas. O mapeamento passou para antes
+do literal. *(Uma primeira tentativa com getter não resolveu — o spread avalia getters no
+mesmo instante.)* **Varredura da classe:** percorri as notas de seis superfícies à procura de
+contadores a zero contraditórios com arrays irmãos — **nenhum outro**. Era instância única.
+
+### 4, 5, 6 — Guia, `extend`, e as armadilhas ditas onde se encontram
+
+- **Ordem no guia invertida.** «After reading this guide, run `setup_sbd_toe_agent`» vinha
+  ANTES da ressalva de que é um prompt MCP que muitos clientes não expõem — um agente
+  sequencial chamava uma tool inexistente. A ressalva passa a vir primeiro, e a alternativa
+  deixa de ser «equivalente» em letra miúda para ser o caminho completo.
+- **`operator: "extend"`.** Verificado: `selected[]` é **idêntico** com e sem overlay (27 vs
+  27) e as obrigações vêm em lista paralela. A nota descrevia o que NÃO acontece
+  («ACRESCEM à selecção»); passa a descrever o real — não entram em `selected`, não têm
+  `selection_trace`, não contam para `meta.eligible`, e o cruzamento é trabalho do chamador.
+  O `replace` continua a aguardar o ADR 0014.
+- **Promessa e excepção no mesmo sítio**: a descrição do threat diz agora, ela própria, que
+  em `detail="standard"/"minimal"` os nomes e ids vêm por referência à legenda.
+- **Armadilha da paginação**, dita onde o consumidor a encontra (`meta.note` do select):
+  a paginação é por ID (alfabética por categoria — ACC primeiro, VAL por último), **não é
+  relevância**, e com selecções grandes as últimas categorias ficam nas páginas finais.
+
+### Verificação
+
+- **Suite** 790/790 (54 ficheiros) · **Aceitação** 162 → **122 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novos TC-F-54/55).
+- **A invariante entre superfícies da beta.28 continua verde** (10/10 nas duas suites).
+- **Ouro byte-idêntico ao da beta.28** nos dois braços: `discover` **10 PASS / 0 / 0**,
+  declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu** — esta vaga é de
+  navegação.
+- **Orçamentos** 8/8 do `prepare` inalterados.
+- **Gate**: stdout só JSON-RPC · exit 0 · `package_version` = `sbd://toe/version` =
+  `provenance.server`.
+- **Dois cenários meus tiveram de ser corrigidos** e a razão é declarável: o TC-F-53 media
+  uma percentagem fixa de poupança da dedup, que media a REPETIÇÃO da página 1 — e a página 1
+  deixou de ser repetitiva justamente por causa desta vaga; passa a verificar que poupa e que
+  as referências resolvem todas (sem perda). O TC-F-55 acusava a nota do `extend` por ela
+  CITAR a frase antiga ao explicar o que substituiu — o mesmo tropeço do obituário do
+  minLevel na beta.25.
 
 ## 0.20.0-beta.28 — 2026-09-06
 

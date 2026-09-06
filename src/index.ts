@@ -63,7 +63,7 @@ import {
 } from "./resources/sbd-toe-resources.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./serving/server-surface.js";
 import { buildAgentGuide } from "./serving/agent-guide.js";
-import { threatConcernSupport } from "./tools/get-threat-landscape.js";
+import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
 
@@ -1242,8 +1242,13 @@ class McpRuntime {
           name: "get_threat_landscape",
           title: "Get SbD-ToE Threat Landscape",
           description:
-            `COBERTURA DECLARADA (0.20.0-beta.26): este mapa resolve ${threatConcernSupport().supported.length} dos ${DECLARED_CONCERNS.length} concerns do vocabulário — ` +
-            `${threatConcernSupport().supported.join(", ")}. ` +
+            `ROTEAMENTO ≠ COBERTURA (0.20.0-beta.29): aceita os ${DECLARED_CONCERNS.length} concerns do vocabulário sem erro, mas só ` +
+            `${threatDomainConcerns().length} têm capítulo de ameaças PRÓPRIO — ${threatDomainConcerns().join(", ")}. ` +
+            `Para os outros ${DECLARED_CONCERNS.length - threatDomainConcerns().length} as ameaças chegam pelos capítulos onde se DEFINEM os controlos que o concern activa: ` +
+            "são reais e do âmbito activado, mas NÃO são «as ameaças deste domínio». A resposta declara-o em `routing_basis` " +
+            "(`domain_chapter` | `activated_controls`) — e a tabela acima diz-to ANTES de gastares a chamada. " +
+            "Em detail='standard'/'minimal' os nomes e ids dos controlos vêm por REFERÊNCIA à `associated_control_legend` — a promessa de campos completos é do detail='full'. ORDEM: por PERTENÇA ao âmbito declarado (capítulo de domínio primeiro; caps. 01/02, governação e meta-ameaças de processo, por último), " +
+            "depois mitigation_confidence, capítulo e id. A paginação segue essa ordem, por isso a página 1 é a parte relevante. " +
             "Qualquer outro concern é VÁLIDO e tem requisitos, mas não é roteável AQUI: vem declarado em `unsupported_concerns`, e se TODOS os declarados forem não-roteáveis a resposta é `needs_input` em vez de um payload cheio de ameaças de governação sem relação com o pedido. " +
             "Deterministic threat resolution for an application context using the SbD-ToE ontology threats pipeline. " +
             "Returns threats from the published runtime bundle relevant to the active requirement/chapter scope " +
@@ -1455,7 +1460,7 @@ class McpRuntime {
             "Returns one of four statuses: ready_for_codegen, needs_clarification, needs_decomposition, " +
             "unsupported_scope. On ready_for_codegen the output carries activation_trace (with score, " +
             "source and reason), activated_scope, g2_context, manual_grounding, regulatory_overlay, " +
-            "citation_map, completeness_report (incl. evidence-pattern relevance-cap metrics), " +
+            "citation_map, completeness_report (incl. as métricas do cap de evidence_patterns — o cap é por PERTENÇA ao âmbito, não por relevância), " +
             "llm_codegen_instructions and security_rationale_template — with provenance for each section. " +
             "Evidence patterns are ordered by MEMBERSHIP of the activated scope — first those whose "
             + "`maps_to_requirement_id` is a requirement of the activated scope, then those of a direct "
