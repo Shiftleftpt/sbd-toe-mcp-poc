@@ -113,7 +113,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.36 → `b26461181e74ecf8e8f5628f010b1bda00e5ffe5` (2026-09-06; tag anotada nesta commit; npm ao fechar) fecha a classe que o
+**Beta line:** v0.20.0-beta.36 → `b26461181e74ecf8e8f5628f010b1bda00e5ffe5` (2026-09-06; `release.yml` run 34055196074 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.36` = `beta`, gitHead igual; GitHub pre-release) fecha a classe que o
 assessment externo (8/10, a nota mais alta desde a b.21) identificou como a única que resta: «texto e
 metadados que descrevem a interface sem serem gerados a partir dela». A lição própria é que a
 invariante next-verbatim não apanhou o `metrics` vs `kpi_values` porque a tool era NOVA — a lista era
@@ -423,6 +423,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.36 tag commit recorded (`b2646118`); npm `beta` publish + GitHub pre-release confirmed (run 34055196074); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.36 registered (invariantes sobre inventário vivo; conservação na banda v1.2; assess com âmbito; cadeia de activação; unmodelled_signals; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.35 tag commit recorded (`fe4f59ae`); npm `beta` publish + GitHub pre-release confirmed (run 34052937325); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.35 registered (leitura CONSULT com antipadrões e nível que anota; GR-05 sobe a SERVIDO; GR-04 declarado achado de conteúdo; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
