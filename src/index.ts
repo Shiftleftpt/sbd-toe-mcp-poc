@@ -65,6 +65,7 @@ import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./serving/server-surface.js";
 import { buildAgentGuide } from "./serving/agent-guide.js";
 import { buildModelResource, buildQuickStart } from "./serving/model-resource.js";
 import { THREAT_ORDERING, SELECT_PAGINATION } from "./serving/behaviour-notes.js";
+import { handleGetPlaybook } from "./tools/get-playbook.js";
 import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
@@ -1030,6 +1031,27 @@ class McpRuntime {
               limit: { type: "number" }
             },
             required: [],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "get_sbd_toe_playbook",
+          title: "Get SbD-ToE Cross-Check / Playbook",
+          description:
+            "CAMINHO NORMATIVO para cross-checks e playbooks (0.20.0-beta.33). Responde a «somos sujeitos ao DORA/NIS2/CRA/RGPD/AI-Act — como é que o SbD-ToE nos serve?» com o PLAYBOOK publicado pelo Manual: mapa artigo→capítulo→acção, fases com marcos e checklist de leitura, servidos com a AUTORIDADE declarada. Ao contrário do `search_sbd_toe_manual` (NÃO-NORMATIVO, leitura), esta superfície é normativa. " +
+            "Sem argumentos devolve o ÍNDICE (barato); `framework=\"DORA\"` os playbooks desse diploma; `playbook_id=…` as secções paginadas. Os EXEMPLOS ILUSTRATIVOS vêm em banda SEPARADA e nunca com o estatuto dos cross-checks. " +
+            "Framework sem cross-check publicado (ISO 27001, HIPAA, PCI-DSS, SOC2, FedRAMP, CSA STAR) devolve `status: \"no_cross_check\"` com o roadmap do próprio Manual — declarado, nunca improvisado. " +
+            "Toda a resposta traz a DELIMITAÇÃO: o SbD-ToE não é uma norma, e implementá-lo não é conformidade.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              framework: { type: "string", description: "Código ou id do framework (DORA, NIS2, CRA, RGPD, AI-ACT, ENISA-CSA; ou EXT-DORA…). Sem isto, devolve o índice completo." },
+              playbook_id: { type: "string", description: "Id do playbook para ler as SECÇÕES (ex.: `OVR-DORA-playbook`). Os ids vêm do índice." },
+              kind: { type: "string", enum: ["normative_cross_check", "implementation_playbook", "convergence_note", "illustrative_example", "illustrative_index"], description: "Filtra o índice por tipo." },
+              offset: { type: "number", description: "Paginação sobre as secções do playbook." },
+              limit: { type: "number", description: "Secções por página (default 10; 450 secções publicadas no total)." }
+            },
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -2155,6 +2177,13 @@ class McpRuntime {
             duration_ms: Date.now() - startedAt,
             ...metadata,
             message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "get_sbd_toe_playbook": {
+          const result = handleGetPlaybook(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           return;
         }

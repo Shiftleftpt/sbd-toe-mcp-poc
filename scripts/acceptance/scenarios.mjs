@@ -1578,6 +1578,49 @@ export const scenarios = [
         return fail("uma chamada sem equivalente no consult não declara o que não é comparável");
       return ok(`nota e descrição partilham a frase publicada; página 1 do domínio (cap. ${primeira.slice(0, 2)}); routing_basis com ${rb.by_concern.length} concerns e ${bases.size} bases; contraprova ${x.agreement.select}=${x.agreement.consult} e ${real.data.cross_surface_check.not_comparable.length} itens declarados como não comparáveis`); } },
 
+  { id: "TC-F-60", axis: "F", title: "0.20.0-beta.33: caminho NORMATIVO para playbooks — autoridade declarada e exemplo ≠ cross-check", tool: "get_sbd_toe_playbook",
+    run: async (c) => {
+      const idx = await c.tool("get_sbd_toe_playbook", { framework: "DORA" });
+      if (!idx.ok) return fail(idx.error);
+      const d = idx.data;
+      if (!(d.normative_playbooks ?? []).length) return fail("sem playbooks normativos para o DORA");
+      if (!d.illustrative_examples) return fail("exemplos ilustrativos não vêm em banda separada");
+      const misturado = (d.normative_playbooks ?? []).filter((p) => /illustrative/.test(p.playbook_kind));
+      if (misturado.length > 0) return fail(`exemplo ilustrativo servido como normativo: ${misturado.map((x) => x.playbook_id).join(", ")}`);
+      for (const p of d.normative_playbooks)
+        for (const k of ["authority_class", "curation_status", "adoption_status"])
+          if (!p[k]) return fail(`${p.playbook_id} sem ${k}`);
+      // delimitação obrigatória em TODA a resposta
+      if (!/não é uma norma/i.test(d.delimitation ?? "")) return fail("resposta sem a delimitação honesta");
+      if (!/conformidade final depende/i.test(d.delimitation ?? "")) return fail("a delimitação não diz que a conformidade exige formalização");
+      // secções paginadas, com o tier certo
+      const pbId = d.normative_playbooks.find((p) => p.playbook_kind === "implementation_playbook")?.playbook_id;
+      const pb = await c.tool("get_sbd_toe_playbook", { playbook_id: pbId, limit: 5 });
+      if (!pb.ok) return fail(pb.error);
+      if (pb.data.playbook.authority.tier !== "normative") return fail("playbook de implementação sem tier normativo");
+      if ((pb.data.sections ?? []).length === 0) return fail("playbook sem secções");
+      if (!(pb.data.coverage?.total > (pb.data.sections ?? []).length)) return fail("sem paginação sobre as secções");
+      if (!/não é uma norma/i.test(pb.data.delimitation ?? "")) return fail("secções servidas sem delimitação");
+      const ex = await c.tool("get_sbd_toe_playbook", { playbook_id: d.illustrative_examples.values[0]?.playbook_id });
+      if (!ex.ok) return fail(ex.error);
+      if (ex.data.playbook.authority.tier !== "illustrative") return fail("exemplo servido com tier normativo");
+      if (!/n[ãa]o normaliza|N[ÃA]O t[êe]m o estatuto|ILUSTRATIVO/i.test(JSON.stringify(ex.data.playbook.authority)))
+        return fail("o exemplo não avisa que ilustra e não normaliza");
+      // framework sem cross-check: DECLARADO, com o roadmap do Manual
+      const pci = await c.tool("get_sbd_toe_playbook", { framework: "PCI-DSS" });
+      if (!pci.ok) return fail(pci.error);
+      if (pci.data.status !== "no_cross_check") return fail("framework sem cross-check não é declarado");
+      if (!(pci.data.roadmap_declared_by_manual ?? []).includes("PCI-DSS")) return fail("roadmap não derivado do Manual");
+      if (!/ainda não existe/i.test(pci.data.note ?? "")) return fail("a nota não diz que o cross-check não existe");
+      // ligação nos dois sentidos
+      const reg = await c.tool("map_sbd_toe_regulatory_activation", { framework: "DORA" });
+      if (!reg.ok) return fail(reg.error);
+      const aponta = (reg.data.next ?? []).some((n) => n.tool === "get_sbd_toe_playbook");
+      if (!aponta) return fail("o overlay não encaminha para o playbook");
+      const volta = (pb.data.next ?? []).some((n) => n.tool === "map_sbd_toe_regulatory_activation");
+      if (!volta) return fail("o playbook não aponta de volta para as obrigações");
+      return ok(`DORA: ${d.normative_playbooks.length} normativos + ${d.illustrative_examples.values.length} ilustrativos em banda separada, com autoridade e delimitação; ${pb.data.coverage.total} secções paginadas; PCI-DSS declarado com roadmap de ${pci.data.roadmap_declared_by_manual.length}; ligação nos dois sentidos`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

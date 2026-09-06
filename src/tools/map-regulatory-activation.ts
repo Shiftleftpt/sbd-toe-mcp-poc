@@ -64,6 +64,15 @@ const CROSS_CUTTING = "(cross-cutting)";
 function buildAffordances(frameworkShort: string): Affordance[] {
   return boundAffordances([
     {
+      // 0.20.0-beta.33 — ligação nos DOIS sentidos: quem pede as áreas activadas passa a
+      // saber que o Manual publica um CROSS-CHECK/PLAYBOOK para o mesmo diploma. As duas
+      // coisas viviam separadas e a mais rica era a invisível.
+      intent: "o CROSS-CHECK/PLAYBOOK do Manual para este framework (mapa artigo→capítulo, fases, checklist)",
+      tool: "get_sbd_toe_playbook",
+      with: `framework="${frameworkShort}"`,
+      kind: "structural"
+    },
+    {
       intent: "scope the activated areas to a risk level + see active chapters/controls",
       tool: "map_sbd_toe_applicability",
       with: 'riskLevel="<L1|L2|L3>"; cruza com os capítulos acima',
@@ -230,6 +239,11 @@ export function handleMapRegulatoryActivation(
         "by manual chapter. Counts are the full set (coverage-preserving) — nothing invented."
     },
     coverage,
+    /**
+     * 0.20.0-beta.33 — ligação nos DOIS sentidos. As áreas activadas e o PLAYBOOK viviam
+     * separados, e a peça mais rica era a invisível: quem pedia o overlay não sabia que o
+     * Manual publica um cross-check para o mesmo diploma.
+     */
     next: buildAffordances(framework.short_code)
   };
 }

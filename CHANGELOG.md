@@ -3,11 +3,108 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.32 (beta line, npm `beta`) — EIXO I (leituras): implementação da medição e PRIMEIRA BASELINE contra o oráculo novo do lead (golden-reading-cases.md v1, ratificado «adjudico»). Seis leituras medidas por SERVIDO/SERVIDO-MAL/NÃO SERVIDO: 1 SERVIDO (GR-06, o controlo positivo) e 5 SERVIDO-MAL. Nada foi corrigido — a baseline é o produto. O controlo positivo obrigou a corrigir a SONDA (falso positivo da medição), não o servidor. Ouro H byte-idêntico; selecção intocada.
+reasoning: v0.20.0-beta.33 (beta line, npm `beta`) — PLAYBOOKS com caminho próprio: `get_sbd_toe_playbook` dá superfície NORMATIVA aos 20 cross-checks/playbooks e às 450 secções que o bundle já publicava e ninguém alcançava sem retrieval não-normativo. Autoridade servida com o conteúdo (exemplo ilustrativo em banda separada), delimitação honesta obrigatória, frameworks sem cross-check declarados com o roadmap do próprio Manual, e ligação nos dois sentidos com o overlay. GR-02 no Eixo I: NÃO SERVIDO (v1.1) → SERVIDO. Selecção intocada; ouro H byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.33 — 2026-09-06
+
+**PLAYBOOKS com caminho próprio — o GR-02 sai de NÃO SERVIDO.** Autorizado pelo lead
+(«avança», 2026-09-06) a partir da baseline medida do Eixo I. Oráculo: GR-02 + **emenda
+v1.1** («há caminho» exige a PEÇA CENTRAL; a do GR-02 é **o playbook**). Bundle pin
+INALTERADO (release KG `v1.11.0`); **linha estável intocada**.
+
+> A medição da beta.32 deu ao GR-02 **1 de 5 peças**, e sob o critério v1.1 isso é **NÃO
+> SERVIDO**: o playbook do DORA só era alcançável por `search_sbd_toe_manual`, declarado
+> NÃO-NORMATIVO. É a leitura que os clientes fazem primeiro — «como é que o SbD-ToE me serve
+> para o DORA?» — e era a que estava pior.
+
+### Não havia nada a construir a montante
+
+Confirmado: `overlay/overlay_playbooks.json` publica **20 entradas** (6 cross-check normativo
+· 5 playbooks de implementação · 3 notas de convergência · 5 exemplos ilustrativos · 1
+índice) e todas ligam por `document_id` a **450 secções** nos chunks de
+`002-cross-check-normativo`. **Faltava a porta** — e é só isso que esta vaga é.
+
+### A forma: `get_sbd_toe_playbook`
+
+Tool nova, porque é uma LEITURA distinta (não é selecção) e precisa de declarar autoridade
+própria; um resource não paginaria 450 secções.
+
+| pedido | resposta |
+|---|---|
+| sem argumentos | índice completo — **2.276 tk** |
+| `framework="DORA"` | os playbooks do diploma — **1.341 tk** |
+| `playbook_id="OVR-DORA-playbook"` | secções paginadas (10 por defeito) — **3.129 tk**; as 29 completas = 7.497 tk |
+| `kind=…` | filtra o índice por tipo |
+
+Alcançável pelas três formas onde faz sentido: **por framework** (conceito), **por
+`playbook_id`** (estrutura), **por tipo** (estrutura), e o `next` navega para as obrigações.
+
+### Como distingo playbook de exemplo ilustrativo
+
+O Manual distingue-os e a superfície **nunca os mistura**: os 5 `illustrative_example` (+ o
+índice) saem numa **banda própria**, `illustrative_examples`, com aviso de que *mostram uma
+forma de fazer e não normalizam*. Cada resposta traz `authority.tier`
+(`normative` | `illustrative`) mais o `authority_class`, `curation_status` e
+`adoption_status` que o bundle publica. Um exemplo servido como cross-check parte o cenário.
+
+### A delimitação é obrigatória, não opcional
+
+Toda a resposta desta superfície traz a **delimitação honesta**: *o SbD-ToE não é uma norma;
+implementá-lo cobre grande parte da base AppSec e operacional, mas a conformidade final
+depende de formalização regulatória adicional, que fica fora do Manual*. Sem esta peça,
+servir um playbook vira claim de conformidade — que é o que este programa nunca faz.
+
+### Frameworks sem cross-check: declarados, com o roadmap DO MANUAL
+
+`framework="PCI-DSS"` (ou ISO 27001, HIPAA, SOC2, FedRAMP, CSA STAR) devolve
+`status: "no_cross_check"` com a lista **derivada do próprio Manual** (a secção «Frameworks a
+Incluir (Roadmap)» do `002-cross-check-normativo-01-intro`), a razão, e o que EXISTE — o
+grounding no AppSec Core — com a proibição explícita de construir um cross-check a partir de
+requisitos genéricos. A variante negativa do GR-02 continua a passar.
+
+### Ligação nos dois sentidos
+
+Quem pede `map_sbd_toe_regulatory_activation` passa a ser encaminhado para o playbook (era a
+peça mais rica e a invisível); o playbook aponta de volta para as obrigações e para os
+requisitos do capítulo. **Sobre o `framework_ids` plural:** verificado — **nenhuma superfície
+de serving lia os playbooks** antes desta vaga, portanto o defeito de agrupar por
+`framework_id` singular não existia aqui; a nova superfície lê o campo plural, como
+publicado.
+
+### O EIXO I, antes → depois
+
+| caso | beta.32 (critério v1) | beta.33 (critério **v1.1**) |
+|---|---|---|
+| **GR-02** | SERVIDO-MAL → **NÃO SERVIDO** sob v1.1 | **SERVIDO** (5/5 peças, por caminho normativo) |
+| GR-01 | SERVIDO-MAL | **NÃO SERVIDO** — *sem alteração de código: é o critério v1.1 a aplicar-se* (a peça central são os KPIs por capítulo, que continuam sem caminho) |
+| GR-03 | SERVIDO-MAL | **NÃO SERVIDO** — idem (MP1–MP5 não existem como entidades) |
+| GR-04 · GR-05 | SERVIDO-MAL | SERVIDO-MAL (inalterados) |
+| GR-06 | SERVIDO | SERVIDO (controlo positivo) |
+
+**Total: 2 SERVIDO · 2 SERVIDO-MAL · 2 NÃO SERVIDO.** Os movimentos do GR-01 e GR-03 são a
+**re-classificação prevista pela própria emenda v1.1**, não regressões — e é isso que a
+emenda queria: uma escala que discrimina.
+
+> **A sonda do GR-03 tinha um falso positivo meu**, da mesma família do que o controlo
+> positivo apanhou na beta.32: dava os MP1–MP5 como «encontrados» porque o regex casava com o
+> **título de um chunk** (`os-cinco-macro-processos`) — ou seja, com a PROSA que o oráculo já
+> declara existir. Apertei a sonda para exigir **entidade** (`resolve_entities` com id
+> `MP-[1-5]`), e o caso passou a NÃO SERVIDO, que é o que o oráculo prevê. Corrigi a
+> MEDIÇÃO, não o servidor.
+
+### Verificação
+
+- **Suite** 799/799 · **Aceitação** 167 → **127 PASS · 17 PART · 0 FAIL**, gate **PASS**
+  (novo TC-F-60).
+- **As oito invariantes verdes** (39 asserções).
+- **Ouro do Eixo H byte-idêntico ao da beta.32** nos dois braços: `discover`
+  **10 PASS / 0 / 0**, declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu.**
+- **Orçamentos** 8/8 do `prepare` inalterados — a superfície nova é independente e paginada.
+- **Gate**: stdout só JSON-RPC · exit 0 · 26 tools (com `get_sbd_toe_playbook`).
 
 ## 0.20.0-beta.32 — 2026-09-06
 

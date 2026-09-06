@@ -38,11 +38,21 @@ const piece = (name, found, evidence, opts = {}) => ({
 });
 
 /**
- * Classificação. `path` = houve alguma superfície que respondeu à leitura.
- * Uma peça servida só por superfície NÃO-NORMATIVA nunca conta como servida.
+ * Classificação — CRITÉRIO v1.1 (emenda do lead, 2026-09-06: «sigo recomendação»).
+ *
+ * «Há caminho» passa a exigir caminho para a **PEÇA CENTRAL** da leitura. Com o critério
+ * original (qualquer caminho conta) quase nada seria NÃO SERVIDO e a escala deixava de
+ * discriminar — o GR-03 provou-o ao dar SERVIDO-MAL com 1 de 6 peças.
+ *
+ * Peça central por caso, ratificada com a emenda: GR-01 = os KPIs/medida de capacidade ·
+ * GR-02 = o PLAYBOOK · GR-03 = a sequência/programa (MP1-5) · GR-04 = o que o papel faz
+ * naquele momento · GR-05 = a resposta de conhecimento atravessada · GR-06 = o arranque
+ * configurável. Uma peça servida só por superfície NÃO-NORMATIVA nunca conta como servida.
  */
-function classify({ path, pieces, mustNotViolations }) {
-  if (!path) return NAO_SERVIDO;
+function classify({ pieces, mustNotViolations }, centralPiece) {
+  const central = pieces.find((p) => p.name === centralPiece);
+  if (central === undefined) return NAO_SERVIDO;
+  if (!central.found || central.nonNormative) return NAO_SERVIDO;
   const missing = pieces.filter((p) => !p.found || p.nonNormative);
   if (missing.length === 0 && mustNotViolations.length === 0) return SERVIDO;
   return SERVIDO_MAL;
@@ -51,6 +61,8 @@ function classify({ path, pieces, mustNotViolations }) {
 export const readingCases = [
   {
     id: "GR-01",
+    /** Peça CENTRAL (emenda v1.1 do oráculo) — sem caminho para ela, é NÃO SERVIDO. */
+    centralPiece: "KPIs/métricas DO CAPÍTULO",
     reading: "IMPL",
     title: "pôr de pé um capítulo (capacidade organizacional)",
     question:
@@ -111,6 +123,8 @@ export const readingCases = [
   },
   {
     id: "GR-02",
+    /** Peça CENTRAL (emenda v1.1 do oráculo) — sem caminho para ela, é NÃO SERVIDO. */
+    centralPiece: "playbook: mapa artigo→capítulo→acção",
     reading: "CROSS-CHECK/PLAYBOOK",
     title: "usar uma norma com o Manual (DORA)",
     question: "Somos entidade financeira sujeita a DORA. Como é que o SbD-ToE nos serve?",
@@ -120,24 +134,48 @@ export const readingCases = [
       const overlay = await client.tool("map_sbd_toe_regulatory_activation", { framework: "DORA" });
       used.push("map_sbd_toe_regulatory_activation");
       const od = overlay.ok ? (overlay.data?.data ?? overlay.data ?? {}) : {};
+      // 0.20.0-beta.33: existe caminho NORMATIVO — a sonda usa-o, como um agente usaria.
+      const idx = await client.tool("get_sbd_toe_playbook", { framework: "DORA" });
+      used.push("get_sbd_toe_playbook");
+      const normative = idx.ok ? (idx.data?.normative_playbooks ?? []) : [];
+      const pbId = normative.find((p) => p.playbook_kind === "implementation_playbook")?.playbook_id;
+      const pb = pbId ? await client.tool("get_sbd_toe_playbook", { playbook_id: pbId, limit: 40 }) : { ok: false };
+      const sections = pb.ok ? (pb.data?.sections ?? []) : [];
+      const allText = JSON.stringify(sections).toLowerCase();
       const search = await client.tool("search_sbd_toe_manual", { query: "DORA playbook cross-check fases marcos" });
       used.push("search_sbd_toe_manual");
       const searchHit = search.ok && JSON.stringify(search.data ?? {}).toLowerCase().includes("dora");
       const pieces = [
         piece(
           "playbook: mapa artigo→capítulo→acção",
-          searchHit,
-          searchHit ? "só via search_sbd_toe_manual" : "não encontrado",
-          { nonNormative: searchHit }
+          normative.length > 0 && sections.length > 0,
+          normative.length > 0
+            ? `get_sbd_toe_playbook (NORMATIVO): ${normative.length} playbooks, ${pb.ok ? pb.data.coverage.total : 0} secções`
+            : searchHit
+              ? "só via search_sbd_toe_manual"
+              : "não encontrado",
+          { nonNormative: normative.length === 0 && searchHit }
         ),
-        piece("as 6 fases com marcos (M0-M2 … M12-M18)", false, "sem entidade nem caminho estruturado para fases do playbook"),
-        piece("checklist de leitura", false, "sem caminho próprio"),
+        piece(
+          "as 6 fases com marcos (M0-M2 … M12-M18)",
+          /\bm0\b|\bm1\b|fase\s*\d|marco/.test(allText),
+          sections.length > 0 ? "nas secções do playbook servido" : "sem caminho"
+        ),
+        piece(
+          "checklist de leitura",
+          /checklist/.test(allText),
+          sections.length > 0 ? "nas secções do playbook servido" : "sem caminho próprio"
+        ),
         piece(
           "delimitação honesta (manual vs overlay/compliance)",
-          Boolean(od.unsupported_obligations) || (od.activated ?? []).length > 0,
+          Boolean(idx.ok && String(idx.data?.delimitation ?? "").length > 50) || Boolean(od.unsupported_obligations) || (od.activated ?? []).length > 0,
           (od.activated ?? []).length > 0 ? `${(od.activated ?? []).length} áreas activadas` : "sem áreas"
         ),
-        piece("princípio declarado (cobre base AppSec; conformidade exige formalização)", false, "não publicado como dado"),
+        piece(
+          "princípio declarado (cobre base AppSec; conformidade exige formalização)",
+          Boolean(idx.ok && /não é uma norma|conformidade final depende/i.test(String(idx.data?.delimitation ?? ""))),
+          "delimitação servida em toda a resposta da superfície de playbooks"
+        ),
       ];
       const mustNotViolations = [];
       if ((od.activated ?? []).length > 0 && !od.unsupported_obligations)
@@ -151,11 +189,13 @@ export const readingCases = [
           ? "variante negativa (PCI-DSS): o servidor recusa/declara em vez de improvisar ✓"
           : "variante negativa (PCI-DSS): responde sem declarar que o cross-check não existe ✗"
       );
-      return { path: overlay.ok, pieces, mustNotViolations, used, notes };
+      return { path: overlay.ok || idx.ok, pieces, mustNotViolations, used, notes };
     },
   },
   {
     id: "GR-03",
+    /** Peça CENTRAL (emenda v1.1 do oráculo) — sem caminho para ela, é NÃO SERVIDO. */
+    centralPiece: "macro-processos MP1–MP5 como dados",
     reading: "PROGRAMA",
     title: "implementar SbD de raiz",
     question: "Organização de ~200 pessoas, sem programa de segurança aplicacional. Por onde começamos e com que sequência?",
@@ -165,9 +205,25 @@ export const readingCases = [
       const rollout = await client.tool("plan_sbd_toe_rollout", {});
       used.push("plan_sbd_toe_rollout");
       const rd = rollout.ok ? (rollout.data?.data ?? rollout.data ?? {}) : {};
+      /**
+       * Os MP1–MP5 contam como servidos SÓ se existirem como ENTIDADES. A 1ª versão desta
+       * sonda testava o texto da resposta do `query_sbd_toe_entities` e casava com o TÍTULO
+       * de um chunk («os-cinco-macro-processos») — ou seja, com a PROSA que o oráculo já
+       * declara existir. Falso positivo da medição, da mesma família do que o controlo
+       * positivo apanhou na beta.32.
+       */
       const mp = await client.tool("query_sbd_toe_entities", { query: "MP1 macro-processo programa" });
       used.push("query_sbd_toe_entities");
-      const mpFound = mp.ok && /MP-?[1-5]|macro.?process/i.test(JSON.stringify(mp.data ?? {}));
+      const mpTypes = ["macro_process", "macroprocess", "programme", "program", "phase"];
+      let mpFound = false;
+      for (const rt of mpTypes) {
+        const probe = await client.tool("resolve_entities", { record_type: rt, limit: 1 });
+        if (probe.ok && (probe.data?.total ?? 0) > 0 && /MP-?[1-5]/i.test(JSON.stringify(probe.data?.entities ?? []))) {
+          mpFound = true;
+          break;
+        }
+      }
+      used.push("resolve_entities");
       const cla = await client.tool("select_sbd_toe_requirements", {
         risk_level: "L1",
         chapters: ["01-classificacao-aplicacoes"],
@@ -186,7 +242,11 @@ export const readingCases = [
           cla.ok && (cla.data?.selection?.selected ?? []).length > 0,
           `${(cla.data?.selection?.selected ?? []).length} requisitos CLA alcançáveis por estrutura`
         ),
-        piece("macro-processos MP1–MP5 como dados", mpFound, mpFound ? "encontrados" : "não existem como entidades no KG"),
+        piece(
+          "macro-processos MP1–MP5 como dados",
+          mpFound,
+          mpFound ? "existem como entidades" : "só PROSA nos chunks — não existem como entidades no KG"
+        ),
       ];
       const mustNotViolations = [];
       notes.push("o oráculo declara NÃO SERVIDO esperado por construção enquanto os MP1–MP5 não forem modelados");
@@ -195,6 +255,8 @@ export const readingCases = [
   },
   {
     id: "GR-04",
+    /** Peça CENTRAL (emenda v1.1 do oráculo) — sem caminho para ela, é NÃO SERVIDO. */
+    centralPiece: "user stories aplicáveis ao papel",
     reading: "PAPEL/MOMENTO",
     title: "o que faço eu, agora",
     question:
@@ -230,6 +292,8 @@ export const readingCases = [
   },
   {
     id: "GR-05",
+    /** Peça CENTRAL (emenda v1.1 do oráculo) — sem caminho para ela, é NÃO SERVIDO. */
+    centralPiece: "requisitos",
     reading: "CONSULT",
     title: "o que o Manual diz sobre X (sem tarefa)",
     question: "O que é que o SbD-ToE diz sobre gestão de segredos?",
@@ -271,6 +335,8 @@ export const readingCases = [
   },
   {
     id: "GR-06",
+    /** Peça CENTRAL (emenda v1.1 do oráculo) — sem caminho para ela, é NÃO SERVIDO. */
+    centralPiece: "arranque barato (quick-start)",
     reading: "SETUP",
     title: "configurar-se para usar bem o Manual (controlo positivo)",
     question: "Sou um agente novo neste repositório. Como me configuro para trabalhar com o SbD-ToE?",
@@ -337,7 +403,7 @@ export async function runReadingCase(client, rc) {
       notes: [],
     };
   }
-  const verdict = classify(probe);
+  const verdict = classify(probe, rc.centralPiece);
   const missing = probe.pieces
     .filter((p) => !p.found || p.nonNormative)
     .map((p) => `${p.name}${p.nonNormative ? " (só por superfície NÃO-NORMATIVA)" : ""} — ${p.evidence}`);
@@ -347,6 +413,7 @@ export async function runReadingCase(client, rc) {
     title: rc.title,
     question: rc.question,
     verdict,
+    centralPiece: rc.centralPiece,
     pieces: probe.pieces,
     missing,
     mustNotViolations: probe.mustNotViolations,
