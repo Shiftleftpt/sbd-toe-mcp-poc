@@ -1,6 +1,6 @@
 {
   "name": "@shiftleftpt/sbd-toe-mcp",
-  "version": "0.20.0-beta.31",
+  "version": "0.20.0-beta.32",
   "license": "Apache-2.0",
   "description": "MCP server for the SbD-ToE (Security by Design — Theory of Everything) security manual — structured tools for Claude, GitHub Copilot and other MCP clients",
   "keywords": [
@@ -95,7 +95,8 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "eval:acceptance": "node scripts/run-acceptance-scenarios.mjs",
-    "eval:axis-h": "node scripts/run-axis-h-selection.mjs"
+    "eval:axis-h": "node scripts/run-axis-h-selection.mjs",
+    "eval:axis-i": "node scripts/run-axis-i-readings.mjs"
   },
   "engines": {
     "node": ">=20.9.0"

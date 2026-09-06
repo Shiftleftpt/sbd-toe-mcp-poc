@@ -1,0 +1,358 @@
+/**
+ * Axis I — LEITURAS: medição das outras leituras do Manual contra o oráculo do lead.
+ *
+ * Oráculo: DevelopmentGovernance/docs/golden-reading-cases.md — **v1 RATIFICADO
+ * 2026-09-06 («adjudico»), sem emendas**. O .md é canónico e é do programme lead: este
+ * módulo TRANSCREVE as perguntas e os must-have/must-NOT para execução e **nunca os
+ * ajusta ao comportamento observado**. Regra herdada do Eixo H.
+ *
+ * Porque existe: os 10 casos do Eixo H medem UMA leitura (GUIDE — «que requisitos se
+ * aplicam a esta tarefa») e medem-na bem. As outras leituras (IMPL, CROSS-CHECK, PROGRAMA,
+ * PAPEL/MOMENTO, CONSULT, SETUP) nunca foram medidas — e é por isso que onze ciclos de
+ * melhoria não moveram o Eixo H: melhoraram tudo menos a selecção por tarefa.
+ *
+ * Veredicto por caso (método confirmado pelo lead na ratificação):
+ *   SERVIDO      — há caminho E a resposta traz as peças que a leitura exige.
+ *   SERVIDO-MAL  — há caminho, mas faltam peças; ou só se lá chega por superfície
+ *                  NÃO-NORMATIVA; ou o que falta NÃO é declarado.
+ *   NÃO SERVIDO  — não há caminho.
+ * A evolução mede-se por MIGRAÇÃO DE ESTADO, não por percentagem.
+ *
+ * Axis I é MEDIÇÃO: nunca entra no gate de promoção (como o H; o gate é o Axis E).
+ */
+
+export const ORACLE_VERSION = "v1 (ratificado 2026-09-06, «adjudico», sem emendas)";
+export const ORACLE_PATH = "DevelopmentGovernance/docs/golden-reading-cases.md";
+
+const SERVIDO = "SERVIDO";
+const SERVIDO_MAL = "SERVIDO-MAL";
+const NAO_SERVIDO = "NÃO SERVIDO";
+
+/** Uma peça do must-have: encontrada, e por que caminho. */
+const piece = (name, found, evidence, opts = {}) => ({
+  name,
+  found: Boolean(found),
+  evidence: String(evidence ?? ""),
+  nonNormative: Boolean(opts.nonNormative),
+  declared: opts.declared === undefined ? null : Boolean(opts.declared),
+});
+
+/**
+ * Classificação. `path` = houve alguma superfície que respondeu à leitura.
+ * Uma peça servida só por superfície NÃO-NORMATIVA nunca conta como servida.
+ */
+function classify({ path, pieces, mustNotViolations }) {
+  if (!path) return NAO_SERVIDO;
+  const missing = pieces.filter((p) => !p.found || p.nonNormative);
+  if (missing.length === 0 && mustNotViolations.length === 0) return SERVIDO;
+  return SERVIDO_MAL;
+}
+
+export const readingCases = [
+  {
+    id: "GR-01",
+    reading: "IMPL",
+    title: "pôr de pé um capítulo (capacidade organizacional)",
+    question:
+      "A organização quer implementar o cap. 07 (CI/CD seguro). O que precisa de ter, como sabe que está capaz, e como mede?",
+    async probe(client) {
+      const used = [];
+      const notes = [];
+      const checklist = await client.tool("get_sbd_toe_chapter_implementation_checklist", { chapter: "07-cicd-seguro" });
+      used.push("get_sbd_toe_chapter_implementation_checklist");
+      const items = checklist.ok ? (checklist.data?.data?.items ?? checklist.data?.items ?? []) : [];
+      const brief = await client.tool("get_sbd_toe_chapter_brief", { chapter: "07-cicd-seguro" });
+      used.push("get_sbd_toe_chapter_brief");
+      const briefData = brief.ok ? (brief.data?.data ?? brief.data ?? {}) : {};
+      // KPIs por capítulo: existe caminho?
+      const kpiTry = await client.tool("resolve_entities", { record_type: "metric", limit: 5 });
+      const kpiTry2 = await client.tool("query_sbd_toe_entities", { query: "KPI CI/CD" });
+      used.push("resolve_entities", "query_sbd_toe_entities");
+      const kpiPath =
+        (kpiTry.ok && (kpiTry.data?.total ?? 0) > 0) ||
+        (kpiTry2.ok && JSON.stringify(kpiTry2.data ?? {}).includes("kpi"));
+      // papéis e momento
+      const roles = await client.tool("get_guide_by_role", { risk_level: "L2", phase: "build" });
+      used.push("get_guide_by_role");
+      const roleData = roles.ok ? (roles.data?.data ?? roles.data ?? {}) : {};
+      // ligação ao cap. 14
+      const gov = await client.tool("select_sbd_toe_requirements", {
+        risk_level: "L2",
+        chapters: ["14-governanca-contratacao"],
+        detail: "minimal",
+        limit: 200,
+      });
+      used.push("select_sbd_toe_requirements");
+      const pieces = [
+        piece("checklist de implementação do capítulo", items.length > 0, `${items.length} itens de checklist`),
+        piece("KPIs/métricas DO CAPÍTULO", kpiPath, kpiPath ? "há caminho" : "sem caminho para pedir KPIs por capítulo"),
+        piece(
+          "artefactos que a capacidade exige",
+          Array.isArray(briefData.artifact_ids) && briefData.artifact_ids.length > 0,
+          `${(briefData.artifact_ids ?? []).length} artefactos no brief`
+        ),
+        piece(
+          "papéis envolvidos e momento no ciclo",
+          (roleData.assignments ?? []).length > 0 || Object.keys(roleData.role_summary ?? {}).length > 0,
+          `${(roleData.assignments ?? []).length} atribuições na fase`
+        ),
+        piece(
+          "ligação ao cap. 14 (governação/excepção)",
+          gov.ok && (gov.data?.selection?.selected ?? []).length > 0,
+          `${(gov.data?.selection?.selected ?? []).length} requisitos GOV alcançáveis`
+        ),
+      ];
+      // must-NOT: devolver a lista de requisitos técnicos como se fosse a resposta
+      const mustNotViolations = [];
+      if (items.length === 0 && (gov.data?.selection?.selected ?? []).length > 0)
+        notes.push("sem checklist, a única resposta disponível seria a lista de requisitos (must-NOT do caso)");
+      return { path: checklist.ok, pieces, mustNotViolations, used, notes };
+    },
+  },
+  {
+    id: "GR-02",
+    reading: "CROSS-CHECK/PLAYBOOK",
+    title: "usar uma norma com o Manual (DORA)",
+    question: "Somos entidade financeira sujeita a DORA. Como é que o SbD-ToE nos serve?",
+    async probe(client) {
+      const used = [];
+      const notes = [];
+      const overlay = await client.tool("map_sbd_toe_regulatory_activation", { framework: "DORA" });
+      used.push("map_sbd_toe_regulatory_activation");
+      const od = overlay.ok ? (overlay.data?.data ?? overlay.data ?? {}) : {};
+      const search = await client.tool("search_sbd_toe_manual", { query: "DORA playbook cross-check fases marcos" });
+      used.push("search_sbd_toe_manual");
+      const searchHit = search.ok && JSON.stringify(search.data ?? {}).toLowerCase().includes("dora");
+      const pieces = [
+        piece(
+          "playbook: mapa artigo→capítulo→acção",
+          searchHit,
+          searchHit ? "só via search_sbd_toe_manual" : "não encontrado",
+          { nonNormative: searchHit }
+        ),
+        piece("as 6 fases com marcos (M0-M2 … M12-M18)", false, "sem entidade nem caminho estruturado para fases do playbook"),
+        piece("checklist de leitura", false, "sem caminho próprio"),
+        piece(
+          "delimitação honesta (manual vs overlay/compliance)",
+          Boolean(od.unsupported_obligations) || (od.activated ?? []).length > 0,
+          (od.activated ?? []).length > 0 ? `${(od.activated ?? []).length} áreas activadas` : "sem áreas"
+        ),
+        piece("princípio declarado (cobre base AppSec; conformidade exige formalização)", false, "não publicado como dado"),
+      ];
+      const mustNotViolations = [];
+      if ((od.activated ?? []).length > 0 && !od.unsupported_obligations)
+        notes.push("a resposta disponível é contagem de obrigações activadas — o must-NOT do caso");
+      // variante negativa
+      const pci = await client.tool("map_sbd_toe_regulatory_activation", { framework: "PCI-DSS" });
+      used.push("map_sbd_toe_regulatory_activation(PCI-DSS)");
+      const pciDeclared = !pci.ok || Boolean((pci.data?.data ?? pci.data ?? {}).unsupported_obligations);
+      notes.push(
+        pciDeclared
+          ? "variante negativa (PCI-DSS): o servidor recusa/declara em vez de improvisar ✓"
+          : "variante negativa (PCI-DSS): responde sem declarar que o cross-check não existe ✗"
+      );
+      return { path: overlay.ok, pieces, mustNotViolations, used, notes };
+    },
+  },
+  {
+    id: "GR-03",
+    reading: "PROGRAMA",
+    title: "implementar SbD de raiz",
+    question: "Organização de ~200 pessoas, sem programa de segurança aplicacional. Por onde começamos e com que sequência?",
+    async probe(client) {
+      const used = [];
+      const notes = [];
+      const rollout = await client.tool("plan_sbd_toe_rollout", {});
+      used.push("plan_sbd_toe_rollout");
+      const rd = rollout.ok ? (rollout.data?.data ?? rollout.data ?? {}) : {};
+      const mp = await client.tool("query_sbd_toe_entities", { query: "MP1 macro-processo programa" });
+      used.push("query_sbd_toe_entities");
+      const mpFound = mp.ok && /MP-?[1-5]|macro.?process/i.test(JSON.stringify(mp.data ?? {}));
+      const cla = await client.tool("select_sbd_toe_requirements", {
+        risk_level: "L1",
+        chapters: ["01-classificacao-aplicacoes"],
+        detail: "minimal",
+        limit: 50,
+      });
+      used.push("select_sbd_toe_requirements");
+      const phases = rd.phases ?? rd.rollout ?? rd.steps ?? [];
+      const pieces = [
+        piece("travessia longitudinal (cap. 14: governo em operação E pôr o programa de pé)", false, "sem entidade de «programa»"),
+        piece("ordem/fases do programa", Array.isArray(phases) && phases.length > 0, `${Array.isArray(phases) ? phases.length : 0} fases no rollout`),
+        piece("o que é pré-requisito de quê", false, "o rollout declara que o DAG de dependências está adiado"),
+        piece("papéis a criar", false, "sem caminho para papéis do PROGRAMA (só papéis de prática)"),
+        piece(
+          "ligação à classificação (cap. 01) como primeiro passo",
+          cla.ok && (cla.data?.selection?.selected ?? []).length > 0,
+          `${(cla.data?.selection?.selected ?? []).length} requisitos CLA alcançáveis por estrutura`
+        ),
+        piece("macro-processos MP1–MP5 como dados", mpFound, mpFound ? "encontrados" : "não existem como entidades no KG"),
+      ];
+      const mustNotViolations = [];
+      notes.push("o oráculo declara NÃO SERVIDO esperado por construção enquanto os MP1–MP5 não forem modelados");
+      return { path: rollout.ok, pieces, mustNotViolations, used, notes };
+    },
+  },
+  {
+    id: "GR-04",
+    reading: "PAPEL/MOMENTO",
+    title: "o que faço eu, agora",
+    question:
+      "Sou Product Owner, início de sprint, equipa a construir uma feature de exportação de dados. O que tenho de garantir?",
+    async probe(client) {
+      const used = [];
+      const notes = [];
+      const po = await client.tool("get_guide_by_role", { risk_level: "L2", role: "product-owner", include_detail: true });
+      used.push("get_guide_by_role");
+      const d = po.ok ? (po.data?.data ?? po.data ?? {}) : {};
+      const assignments = d.assignments ?? [];
+      const checklist = d.role_checklist ?? [];
+      const withPhase = assignments.filter((a) => a.canonical_phase ?? a.phase).length;
+      const otherRoles = assignments.filter((a) => (a.canonical_role ?? a.role) && (a.canonical_role ?? a.role) !== d.canonicalRole);
+      const ids = checklist.map((x) => x.user_story_id ?? x.id).filter(Boolean);
+      const pieces = [
+        piece("user stories aplicáveis ao papel", checklist.length > 0 || assignments.length > 0, `${checklist.length} histórias / ${assignments.length} atribuições`),
+        piece("o momento no ciclo", withPhase > 0, `${withPhase} atribuições com fase`),
+        piece("o que o PO decide vs o que delega", false, "não publicado como dado (nem no assignment nem na história)"),
+        piece(
+          "a evidência que fica",
+          checklist.some((x) => JSON.stringify(x).toLowerCase().includes("dod") || JSON.stringify(x).toLowerCase().includes("evid")),
+          "DoD/evidência nas histórias"
+        ),
+      ];
+      const mustNotViolations = [];
+      if (otherRoles.length > 0) mustNotViolations.push(`${otherRoles.length} atribuições de OUTROS papéis na resposta`);
+      if (ids.length !== new Set(ids).size) mustNotViolations.push("contagens inflacionadas por histórias duplicadas");
+      if (d.meta?.assignmentCount !== undefined && d.meta?.distinctUserStoryCount !== undefined)
+        notes.push(`denominadores declarados: ${d.meta.assignmentCount} atribuições / ${d.meta.distinctUserStoryCount} histórias`);
+      return { path: po.ok, pieces, mustNotViolations, used, notes };
+    },
+  },
+  {
+    id: "GR-05",
+    reading: "CONSULT",
+    title: "o que o Manual diz sobre X (sem tarefa)",
+    question: "O que é que o SbD-ToE diz sobre gestão de segredos?",
+    async probe(client) {
+      const used = [];
+      const notes = [];
+      // pergunta de conhecimento: sem tarefa e sem projecto
+      const consult = await client.tool("consult_security_requirements", { risk_level: "L2", concerns: ["secrets"] });
+      used.push("consult_security_requirements");
+      const cd = consult.ok ? (consult.data?.data ?? consult.data ?? {}) : {};
+      const threats = await client.tool("get_threat_landscape", { risk_level: "L2", concerns: ["secrets"] });
+      used.push("get_threat_landscape");
+      const anti = await client.tool("query_sbd_toe_entities", { query: "antipadrão segredos" });
+      used.push("query_sbd_toe_entities");
+      const antiFound = anti.ok && /antipattern|antipadr/i.test(JSON.stringify(anti.data ?? {}));
+      const matrix = await client.tool("get_sbd_toe_verification_matrix", { risk_level: "L2" });
+      used.push("get_sbd_toe_verification_matrix");
+      const guide = await client.tool("get_guide_by_role", { risk_level: "L2", phase: "build" });
+      used.push("get_guide_by_role");
+      const requiresLevel = !consult.ok && /risk_level/i.test(String(consult.error ?? ""));
+      const pieces = [
+        piece("requisitos", (cd.requirements ?? []).length > 0, `${(cd.requirements ?? []).length} requisitos`),
+        piece("práticas / onde no ciclo", guide.ok, "get_guide_by_role por fase"),
+        piece("provas", matrix.ok && ((matrix.data?.data ?? matrix.data ?? {}).rows ?? []).length > 0, "matriz de verificação"),
+        piece("ameaças", threats.ok && (threats.data?.coverage?.total ?? 0) > 0, `${threats.data?.coverage?.total ?? 0} ameaças`),
+        piece("antipadrões (o que NÃO fazer)", antiFound, antiFound ? "via query_entities" : "sem caminho próprio para os 26 antipadrões"),
+        piece("proveniência marcada (manual-grounded)", Boolean(cd.provenance ?? consult.data?.provenance), "provenance no payload"),
+        piece(
+          "não exige risk_level para uma pergunta de conhecimento",
+          !requiresLevel ? false : false,
+          "todas as superfícies normativas exigem risk_level"
+        ),
+      ];
+      const mustNotViolations = [];
+      if (requiresLevel) mustNotViolations.push("exige risk_level para responder a uma pergunta de conhecimento");
+      notes.push("o `risk_level` foi fornecido pela sonda (L2) porque as superfícies o exigem — a pergunta do oráculo não o traz");
+      return { path: consult.ok, pieces, mustNotViolations, used, notes };
+    },
+  },
+  {
+    id: "GR-06",
+    reading: "SETUP",
+    title: "configurar-se para usar bem o Manual (controlo positivo)",
+    question: "Sou um agente novo neste repositório. Como me configuro para trabalhar com o SbD-ToE?",
+    async probe(client) {
+      const used = [];
+      const notes = [];
+      const quick = await client.resource("sbd://toe/quick-start");
+      const model = await client.resource("sbd://toe/model");
+      const guideRes = await client.resource("sbd://toe/agent-guide");
+      used.push("read_sbd_toe_resource(quick-start, model, agent-guide)");
+      const skill = await client.tool("generate_sbd_toe_skill", { role: "developer", format: "skill" });
+      used.push("generate_sbd_toe_skill");
+      const guideText = guideRes.text ?? "";
+      const quickTk = Math.round((quick.text ?? "").length / 4);
+      const ways = (model.data?.how_to_ask?.ways ?? []).map((w) => w.id);
+      const pieces = [
+        piece("arranque barato (quick-start)", quickTk > 0 && quickTk < 1200, `${quickTk} tk`),
+        piece("skill/subagente do papel certo", skill.ok && (skill.data?.content ?? "").length > 0, "generate_sbd_toe_skill(role)"),
+        piece("vocabulário e as três formas de pedir", ways.length === 3, `formas publicadas: ${ways.join(",") || "—"}`),
+        piece(
+          "declaração do que o servidor NÃO faz",
+          /nunca CALCULA|não classifica|nunca emitir n[íi]vel|NÃO INTERPRETO PROSA/i.test(guideText + (quick.text ?? "")),
+          "declarado no guia/quick-start"
+        ),
+      ];
+      const mustNotViolations = [];
+      /**
+       * must-NOT: mandar CHAMAR o que o cliente pode não expor antes de avisar.
+       *
+       * A 1ª versão desta sonda comparava a primeira MENÇÃO ao nome com a primeira ocorrência
+       * de «prompt MCP» — e deu falso positivo: a primeira menção está DENTRO da própria
+       * ressalva («ANTES de o tentares chamar — verdade do canal: `setup_sbd_toe_agent` é um
+       * **prompt MCP**»), e a regex falhava na quebra de linha do markdown. Achado sobre a
+       * MEDIÇÃO, não sobre o servidor — que era exactamente o que o oráculo previa para o
+       * controlo positivo. Agora compara-se a INVOCAÇÃO (chamada com parênteses) com a
+       * ressalva, sobre o texto normalizado.
+       */
+      const flat = guideText.replace(/\s+/g, " ");
+      const invocationIdx = flat.search(/setup_sbd_toe_agent\s*\(/);
+      const caveatIdx = flat.search(/setup_sbd_toe_agent[^.]{0,120}?(é um )?\*{0,2}prompt/i);
+      if (invocationIdx >= 0 && (caveatIdx < 0 || caveatIdx > invocationIdx))
+        mustNotViolations.push("o guia manda chamar `setup_sbd_toe_agent` antes de avisar que é um prompt");
+      if (/infer[eê]nc|adivinh/i.test(guideText) && !/n[ãa]o (interpreto|adivinh|infer)/i.test(guideText))
+        mustNotViolations.push("promete inferência");
+      return { path: Boolean(quick.text), pieces, mustNotViolations, used, notes };
+    },
+  },
+];
+
+export async function runReadingCase(client, rc) {
+  let probe;
+  try {
+    probe = await rc.probe(client);
+  } catch (error) {
+    return {
+      case: rc.id,
+      reading: rc.reading,
+      title: rc.title,
+      verdict: NAO_SERVIDO,
+      pieces: [],
+      missing: ["a sonda não conseguiu correr"],
+      mustNotViolations: [String(error?.message ?? error).slice(0, 120)],
+      used: [],
+      notes: [],
+    };
+  }
+  const verdict = classify(probe);
+  const missing = probe.pieces
+    .filter((p) => !p.found || p.nonNormative)
+    .map((p) => `${p.name}${p.nonNormative ? " (só por superfície NÃO-NORMATIVA)" : ""} — ${p.evidence}`);
+  return {
+    case: rc.id,
+    reading: rc.reading,
+    title: rc.title,
+    question: rc.question,
+    verdict,
+    pieces: probe.pieces,
+    missing,
+    mustNotViolations: probe.mustNotViolations,
+    used: [...new Set(probe.used)],
+    notes: probe.notes,
+  };
+}
+
+export const VERDICTS = { SERVIDO, SERVIDO_MAL, NAO_SERVIDO };

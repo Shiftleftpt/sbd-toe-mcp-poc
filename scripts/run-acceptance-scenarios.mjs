@@ -99,7 +99,7 @@ md.push(`Statuses: PASS = meets verdict · PART = partially / documented gap con
 md.push("## Rollup", "", "| Axis | Scenarios | PASS | PART | FAIL | SKIP | Executed | PASS+PART of executed |", "|---|---|---|---|---|---|---|---|");
 for (const r of rollup) { const ex = r.total - r.SKIP; md.push(`| ${r.axis} — ${r.name} | ${r.total} | ${r.PASS} | ${r.PART} | ${r.FAIL} | ${r.SKIP} | ${ex} | ${ex ? Math.round(((r.PASS + r.PART) / ex) * 100) : 0}% |`); }
 md.push(`| **Total** | **${totals.total}** | **${totals.PASS}** | **${totals.PART}** | **${totals.FAIL}** | **${totals.SKIP}** | **${executed}** | **${Math.round(((totals.PASS + totals.PART) / executed) * 100)}%** |`, "");
-md.push(`Promotion gate (Axis E): ${gateFails.length === 0 ? "**PASS**" : `**FAIL** (${gateFails.map((r) => r.id).join(", ")})`}. Axis H is measurement only (never gates) — dedicated report via npm run eval:axis-h.`, "");
+md.push(`Promotion gate (Axis E): ${gateFails.length === 0 ? "**PASS**" : `**FAIL** (${gateFails.map((r) => r.id).join(", ")})`}. Axis H (selecção) e Axis I (leituras) são MEDIÇÃO e nunca entram no gate — relatórios próprios via \`npm run eval:axis-h\` e \`npm run eval:axis-i\`.`, "");
 md.push("## Coverage", "");
 md.push(`- **Scenarios:** ${executed}/${totals.total} executed (${coverage.scenarios.executed_pct}%); ${totals.SKIP} skipped — ${acSkipped.length} commercial/stateful ACs + ${totals.SKIP - acSkipped.length} needing a client LLM.`);
 md.push(`- **Tools:** ${exercisedTools.length}/${exposedTools.length} exposed tools exercised${unexercisedTools.length ? ` — not exercised: \`${unexercisedTools.join("`, `")}\`` : ""}.`);

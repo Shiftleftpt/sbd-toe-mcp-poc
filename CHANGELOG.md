@@ -3,11 +3,85 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.31 (beta line, npm `beta`) — AS BORDAS: o que descreve comportamento passa a ser gerado a partir do comportamento. Invariante alargada às 11 superfícies que resolvem vocabulário (o P0 do get_guide_by_role entrou porque a tool nunca esteve no varrimento) — inventário de 4 instâncias, 2 delas desconhecidas; notas das respostas e descrições das tools passam a ler de uma fonte única (a nota fóssil do threat dava o conselho OPOSTO ao correcto, duas versões atrasada); routing_basis desambiguado e por concern; contraprova possível via cross_surface_check; unsupported_obligations, equivalent_to e denominador de histórias.
+reasoning: v0.20.0-beta.32 (beta line, npm `beta`) — EIXO I (leituras): implementação da medição e PRIMEIRA BASELINE contra o oráculo novo do lead (golden-reading-cases.md v1, ratificado «adjudico»). Seis leituras medidas por SERVIDO/SERVIDO-MAL/NÃO SERVIDO: 1 SERVIDO (GR-06, o controlo positivo) e 5 SERVIDO-MAL. Nada foi corrigido — a baseline é o produto. O controlo positivo obrigou a corrigir a SONDA (falso positivo da medição), não o servidor. Ouro H byte-idêntico; selecção intocada.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.32 — 2026-09-06
+
+**EIXO I (leituras): a medição e a primeira baseline.** Autorizado pelo lead («adjudico» +
+«avança», 2026-09-06). Oráculo novo, **imutável e do lead**:
+`DevelopmentGovernance/docs/golden-reading-cases.md` v1 (GR-01..06) — transcrito, nunca
+emendado, e as expectativas **não** foram ajustadas ao comportamento observado. Bundle pin
+INALTERADO (release KG `v1.11.0`); **linha estável intocada**.
+
+> Porque existe: os 10 casos do Eixo H medem UMA leitura (GUIDE — «que requisitos se aplicam
+> a esta tarefa») e medem-na bem. As outras seis nunca foram medidas — e é por isso que onze
+> ciclos de melhoria não moveram o Eixo H: melhoraram tudo menos a selecção por tarefa.
+
+### A BASELINE — 1 SERVIDO · 5 SERVIDO-MAL · 0 NÃO SERVIDO
+
+| Caso | Leitura | Veredicto | Peças | O que falta para SUBIR DE ESTADO |
+|---|---|---|---|---|
+| **GR-01** | IMPL | SERVIDO-MAL | 3/5 | **KPIs por capítulo** (existem 99 métricas no bundle, sem caminho para as pedir por capítulo) · **artefactos** da capacidade (0 no brief do cap. 07) |
+| **GR-02** | CROSS-CHECK | SERVIDO-MAL | **1/5** | o **playbook DORA** só existe por `search_sbd_toe_manual`, que está declarado **NÃO-NORMATIVO** · as **6 fases com marcos** e a **checklist de leitura** não têm entidade nem caminho · o **princípio declarado** não é dado |
+| **GR-03** | PROGRAMA | SERVIDO-MAL | 3/6 | **MP1–MP5 não existem como entidades no KG** · sem entidade de «programa» · o `plan_rollout` declara o DAG de dependências adiado · sem papéis do PROGRAMA |
+| **GR-04** | PAPEL/MOMENTO | SERVIDO-MAL | 3/4 | **o que o papel decide vs o que delega** não é publicado como dado (nem no assignment nem na história) |
+| **GR-05** | CONSULT | SERVIDO-MAL | 5/7 | os **26 antipadrões** não têm caminho próprio · **todas as superfícies normativas exigem `risk_level`** para uma pergunta de conhecimento |
+| **GR-06** | SETUP | **SERVIDO** | 4/4 | — (controlo positivo) |
+
+**Nenhum must-NOT violado** em nenhum dos seis.
+
+### O controlo positivo fez o seu trabalho — sobre a MEDIÇÃO
+
+Na primeira corrida o **GR-06 deu SERVIDO-MAL**. O oráculo prevê que ele passe e o despacho
+manda investigar a medição antes de concluir — e era mesmo a medição: a minha sonda comparava
+a primeira **menção** a `setup_sbd_toe_agent` com a primeira ocorrência de «prompt MCP», e a
+primeira menção está **dentro da própria ressalva** («ANTES de o tentares chamar — verdade do
+canal: `setup_sbd_toe_agent` é um **prompt MCP**»); além disso a regex falhava na quebra de
+linha do markdown. Corrigida a SONDA (compara a **invocação** com a ressalva, sobre texto
+normalizado), o GR-06 passa a **SERVIDO** e as 4 peças estão servidas. **O servidor não foi
+tocado.**
+
+### Divergência entre a previsão do oráculo e a medição — para o lead
+
+O oráculo ratificado diz que o **GR-03 entra «com NÃO SERVIDO esperado por construção»**. A
+medição dá **SERVIDO-MAL**, e a razão é o critério: *NÃO SERVIDO = não há caminho*, e há —
+`plan_sbd_toe_rollout` responde e entrega **uma** das peças do must-have (a ordem/fases). As
+outras cinco faltam, incluindo os MP1–MP5. **Não ajustei o oráculo nem forcei o veredicto**:
+registo a divergência para o lead decidir se o critério de «caminho» deve ser mais exigente
+(p.ex. exigir que o caminho sirva a peça CENTRAL da leitura, não uma qualquer).
+
+### O que RESISTI a corrigir
+
+Todas as lacunas acima. Duas eram tentadoramente triviais e ficaram por tocar, para a
+baseline ser honesta: **(a)** dar caminho aos 26 antipadrões (GR-05) — o `resolve_entities`
+já os tem como `record_type`, faltava só ensino e uma porta; **(b)** os artefactos do cap. 07
+no GR-01, que o brief já resolve para outros capítulos. Ambas passam para a fila do ciclo
+seguinte, agora com alvo medido.
+
+### Como está montado
+
+`scripts/acceptance/axis-i.mjs` (os seis casos transcritos + a classificação) e
+`scripts/run-axis-i-readings.mjs` (`npm run eval:axis-i`), no padrão do Eixo H. O registo em
+`docs/acceptance-runs/` guarda **veredicto, peça a peça, evidência e o que falta** — para a
+evolução se medir por **migração de estado** entre corridas, não por percentagem. Como o
+Eixo H, **o Eixo I é medição e nunca entra no gate de promoção** (o Eixo E continua a ser o
+único portão), e o relatório de aceitação passa a dizê-lo.
+
+### Verificação
+
+- **Suite** 799/799 (57 ficheiros) · **Aceitação** 166 → **126 PASS · 17 PART · 0 FAIL**,
+  gate **PASS**.
+- **As oito invariantes verdes** (39 asserções): conservação, entre-superfícies,
+  contrato-de-superfície, alcançabilidade, superfícies de vocabulário, notas de
+  comportamento, guia derivado, next-verbatim.
+- **Ouro do Eixo H byte-idêntico ao da beta.31** nos dois braços: `discover`
+  **10 PASS / 0 / 0**, declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu**
+  — esta vaga não alterou comportamento, só instrumentou a medição.
+- **Orçamentos** 8/8 inalterados · **Gate**: stdout só JSON-RPC · exit 0 · versão coerente.
 
 ## 0.20.0-beta.31 — 2026-09-06
 

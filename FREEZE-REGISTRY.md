@@ -79,6 +79,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 | v0.20.0-beta.5 | 62a1eda (`62a1eda3982147e44369c8a9271ca3697af2680f`; annotated tag object `5165a04a`) | 2026-08-31 | formal KG `v1.7.0` (`29156b86…`, contract v1.14, ontology v2.2, Manual v1.7.1) — same pin and content as stable v0.10.4 | `beta` (superseded) |
 | v0.20.0-beta.6 | 322c38f (`322c38f4dc440aad40bf110b8e20d3d40f623318`; annotated tag object `71098136`) | 2026-08-31 | formal KG `v1.7.0` + MP1 selection operation (= stable 0.11.0 → `102b8166`) | `beta` (superseded) |
 | v0.20.0-beta.7 | 4256ee0 (`4256ee0f09386a45e69012ec565375965f49b0de`; annotated tag object `6e75ef23`) | 2026-08-31 | formal KG `v1.9.0` (`11153c85…`, contract v1.15, 273/29 FIL/PRI — zero-delta over the verified v1.8.0 dev-build) | `beta` (formal batch, «3 sims») |
+| v0.20.0-beta.32 | PENDING (tag commit registado ao fechar) | 2026-09-06 | EIXO I (leituras): medição implementada no runner + PRIMEIRA BASELINE contra o oráculo novo do lead (golden-reading-cases.md v1) — 1 SERVIDO · 5 SERVIDO-MAL · 0 NÃO SERVIDO; nada corrigido (a baseline é o produto); o controlo positivo apanhou um falso positivo da SONDA, não do servidor | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.31 | 711b6b5 (`711b6b523f00876fb65b7aa9f7e2677e4b97b5f8`) | 2026-09-06 | AS BORDAS: invariante alargada às 11 superfícies de vocabulário (4 instâncias, 2 desconhecidas — get_guide_by_role, checklist cap. 00, overlay ENISA-CSA); notas das respostas e descrições com FONTE ÚNICA (a nota fóssil do threat dava o conselho oposto); routing_basis por concern e desambiguado; cross_surface_check; unsupported_obligations, equivalent_to, distinctUserStoryCount | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.30 | e374f7c (`e374f7c8c1a514b621c314f629b9ad1937224df0`) | 2026-09-06 | TRÊS FORMAS DE PEDIR: forma B (chapters/categories na superfície de selecção, traço declared_structure) e C de primeira classe; recurso `sbd://toe/model` (entidades, relações e cardinalidades reais) + `quick-start` (500 tk vs 13.135); invariante de ALCANÇABILIDADE (0 inalcançáveis, 9 caminhos falsos eliminados); cap. 14 e cap. 01 com porta verdadeira. Selecção por A INALTERADA | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.29 | 2ff3809 (`2ff38091657b20769c250740f8f2ab770e131850`) | 2026-09-06 | navegação: ameaças por PERTENÇA ao âmbito (página 1 deixa de ser governação genérica); roteamento ≠ cobertura publicado antes da chamada (24 sem erro · 11 com domínio próprio, nomeados e medidos); bug do contador da legenda; ordem do setup no guia; nota do operator extend. Selecção INALTERADA | `beta` (`latest` = 0.19.4, estável inalterada) |
@@ -108,7 +109,17 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.31 → `711b6b523f00876fb65b7aa9f7e2677e4b97b5f8` (2026-09-06; `release.yml` run 34041253012 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.31` = `beta`, gitHead igual; GitHub pre-release) aplica às BORDAS a
+**Beta line:** v0.20.0-beta.32 → PENDING (2026-09-06; tag e npm ao fechar) implementa o EIXO I —
+leituras — a par do Eixo H e mede-o pela primeira vez contra o oráculo novo do programme lead
+(`golden-reading-cases.md` v1, ratificado «adjudico», imutável e transcrito sem emendas). Baseline:
+**1 SERVIDO (GR-06, o controlo positivo) · 5 SERVIDO-MAL · 0 NÃO SERVIDO**, sem nenhum must-NOT
+violado. NADA foi corrigido — a medição é o produto da vaga, e as lacunas que ela expõe (KPIs por
+capítulo, playbooks só por superfície não-normativa, MP1–MP5 inexistentes no KG, antipadrões sem porta,
+decide-vs-delega não publicado, `risk_level` exigido para perguntas de conhecimento) passam a ser fila
+de trabalho com alvo medido. O controlo positivo fez o seu papel: na 1ª corrida deu SERVIDO-MAL e a
+investigação mostrou que o defeito era da SONDA, não do servidor. Selecção intocada; ouro do Eixo H
+byte-idêntico.
+Prior: v0.20.0-beta.31 → `711b6b523f00876fb65b7aa9f7e2677e4b97b5f8` (2026-09-06; `release.yml` run 34041253012 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.31` = `beta`, gitHead igual; GitHub pre-release) aplica às BORDAS a
 disciplina que o núcleo já tinha: o que descreve comportamento passa a ser gerado a partir do
 comportamento. A invariante entre superfícies alargou-se às 11 tools que resolvem vocabulário — o P0
 entrou porque o `get_guide_by_role` nunca estivera no varrimento — e o inventário deu 4 instâncias,
@@ -368,6 +379,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.32 registered (Eixo I implementado e primeira baseline das leituras: 1 SERVIDO / 5 SERVIDO-MAL / 0 NÃO SERVIDO; medição nunca entra no gate; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.31 tag commit recorded (`711b6b52`); npm `beta` publish + GitHub pre-release confirmed (run 34041253012); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.31 registered (bordas: invariante alargada a 11 superfícies com 4 instâncias; fonte única para notas e descrições; routing_basis por concern; cross_surface_check; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.30 tag commit recorded (`e374f7c8`); npm `beta` publish + GitHub pre-release confirmed (run 34035926529); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
