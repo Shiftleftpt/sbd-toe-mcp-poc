@@ -903,25 +903,29 @@ export const scenarios = [
 
   { id: "TC-F-40", axis: "F", title: "0.20.0-beta.23 (P0-2): get_threat_landscape declara os concerns que NÃO resolve (zero nunca é mudo)", tool: "get_threat_landscape",
     run: async (c) => {
-      const un = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["build"] });
+      // 0.20.0-beta.27: 'build' PASSOU a ser roteável — a correcção da resolução de
+      // concerns no consult (P0 da adenda) curou também o mapa de ameaças, que roteia
+      // através dele. O mecanismo continua a ser o que se testa, agora com um valor que
+      // o vocabulário não conhece: a garantia é «nunca um vazio mudo», não «build dá 0».
+      const un = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["authz"] });
       if (!un.ok) return fail(un.error);
-      if ((un.data.coverage?.total ?? -1) !== 0) return fail("fixture mudou: 'build' já devolve ameaças (re-baseline)");
+      if ((un.data.coverage?.total ?? -1) !== 0) return fail("fixture mudou: valor inválido já devolve ameaças");
       const uc = un.data.unsupported_concerns;
-      if (!uc) return fail("total=0 + activeChapters=[] SEM unsupported_concerns — zero mudo (P0-2 vivo)");
-      if (!uc.values?.includes("build")) return fail("unsupported_concerns não nomeia 'build'");
+      if (!uc) return fail("total=0 SEM unsupported_concerns — zero mudo (P0-2 vivo)");
+      if (!uc.values?.includes("authz")) return fail("unsupported_concerns não nomeia o valor por resolver");
       if (!(uc.supported_values?.length > 0)) return fail("unsupported_concerns sem a lista do que É suportado");
       if (!/N[ÃA]O concluas aus[êe]ncia/i.test(uc.note ?? "")) return fail("a nota não proíbe concluir ausência de ameaças");
       // o caso PERIGOSO: mistura — vêm ameaças E um concern por resolver
-      const mix = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["build", "auth"] });
+      const mix = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["authz", "auth"] });
       if (!mix.ok) return fail(mix.error);
       if ((mix.data.coverage?.total ?? 0) === 0) return fail("fixture mista mudou");
-      if (!mix.data.unsupported_concerns?.values?.includes("build"))
-        return fail("num resultado NÃO-vazio o concern por resolver desapareceu — o caller julga cobertura completa");
+      if (!mix.data.unsupported_concerns?.values?.includes("authz"))
+        return fail("num resultado NÃO-vazio o valor por resolver desapareceu — o caller julga cobertura completa");
       // controlo: concern suportado não gera a banda
       const sup = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["auth"] });
       if (!sup.ok) return fail(sup.error);
       if (sup.data.unsupported_concerns) return fail("concern suportado marcado como não suportado (falso positivo)");
-      return ok(`'build' declarado não-roteável (${uc.supported_values.length} suportados); misto ['build','auth'] mantém a declaração com ${mix.data.coverage.total} ameaças; 'auth' limpo`); } },
+      return ok(`valor por resolver declarado (${uc.supported_values.length} suportados); misto mantém a declaração com ${mix.data.coverage.total} ameaças; 'auth' limpo`); } },
 
   { id: "TC-F-41", axis: "F", title: "0.20.0-beta.23 (P0-3): guarda anti-zero cobre `technologies` — e a declaração com efeito não é descartada", tool: "select_sbd_toe_requirements",
     run: async (c) => {
@@ -985,12 +989,13 @@ export const scenarios = [
       const missing = concerns.filter((x) => !guide.includes("`" + x + "`"));
       if (missing.length > 0) return fail(`guia não publica ${missing.length} concerns do vocabulário: ${missing.join(", ")}`);
       // a regressão nominal: os concerns que o mapa de ameaças NÃO resolve têm de estar no guia
-      const un = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["build"] });
+      // beta.27: as coberturas passaram a coincidir; a protecção mantém-se condicional —
+      // se o mapa voltar a perder concerns, o guia não pode segui-lo.
+      const un = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["authz"] });
       if (!un.ok) return fail(un.error);
       const unsupported = un.data.unsupported_concerns?.values ?? [];
-      if (unsupported.length === 0) return fail("fixture mudou: 'build' já é roteável por ameaças");
-      const swallowed = unsupported.filter((x) => !guide.includes("`" + x + "`"));
-      if (swallowed.length > 0) return fail(`o guia voltou a publicar a cobertura do mapa de ameaças como vocabulário (faltam ${swallowed.join(", ")})`);
+      const swallowed = concerns.filter((x) => !guide.includes("`" + x + "`"));
+      if (swallowed.length > 0) return fail(`o guia não publica ${swallowed.length} concerns do vocabulário`);
       // contagens do guia = contagens do vocabulário (não folclore)
       const auth = (vocab.concerns?.values ?? []).find((x) => String(x.value) === "auth");
       const at = auth?.requirements_at ?? {};
@@ -998,7 +1003,7 @@ export const scenarios = [
       // recursos e prompts reais aparecem no guia
       if (!guide.includes("sbd://toe/activation-vocabulary")) return fail("o guia não lista o recurso que ele próprio manda ler no passo 1");
       if (!guide.includes("prepare_grounded_codegen")) return fail("o guia não lista os 3 prompts servidos");
-      return ok(`guia derivado: ${concerns.length} concerns publicados (era 13), ${unsupported.length} não-roteáveis presentes, contagens = vocabulário, recursos e prompts completos`); } },
+      return ok(`guia derivado: ${concerns.length} concerns publicados (era 13); mecanismo de não-roteáveis vivo (${unsupported.length} para o valor inválido); contagens = vocabulário; recursos e prompts completos`); } },
 
   { id: "TC-F-44", axis: "F", title: "0.20.0-beta.24 (item 2): âmbito da promessa — o que nenhuma declaração activou é DECLARADO, não omitido", tool: "select_sbd_toe_requirements",
     run: async (c) => {
@@ -1126,7 +1131,9 @@ export const scenarios = [
   { id: "TC-F-48", axis: "F", title: "0.20.0-beta.26 (itens 2,3,5,6): threat needs_input, traço multi-activador, denominadores, obligation_ids", tool: "select_sbd_toe_requirements",
     run: async (c) => {
       // item 2 — todos os concerns não-roteáveis ⇒ needs_input, não 8k tk de governação
-      const t = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["integration", "privacy"] });
+      // beta.27: `integration`/`privacy` passaram a ser roteáveis (correcção do consult).
+      // O mecanismo testa-se com valores que o vocabulário não conhece.
+      const t = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["authz", "authn"] });
       if (!t.ok) return fail(t.error);
       if (!t.data.needs_input) return fail("todos os concerns não-roteáveis e ainda assim devolveu ameaças (item 2 vivo)");
       if ((t.data.threats ?? []).length !== 0) return fail("needs_input com ameaças no payload");
@@ -1134,10 +1141,10 @@ export const scenarios = [
       const custo = JSON.stringify(t.data).length / 4;
       if (custo > 1500) return fail(`needs_input a custar ${Math.round(custo)} tk — devia ser barato`);
       // controlo: misto continua a responder
-      const mix = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["integration", "auth"] });
+      const mix = await c.tool("get_threat_landscape", { risk_level: "L2", concerns: ["authz", "auth"] });
       if (!mix.ok) return fail(mix.error);
       if (mix.data.needs_input) return fail("um concern roteável e mesmo assim needs_input (falso positivo)");
-      if (!mix.data.unsupported_concerns?.values?.includes("integration")) return fail("misto perdeu a declaração do não-roteável");
+      if (!mix.data.unsupported_concerns?.values?.includes("authz")) return fail("misto perdeu a declaração do não-roteável");
       // item 3 — traço multi-activador
       const s = await c.tool("select_sbd_toe_requirements", { risk_level: "L2", concerns: ["iac"], technologies: ["containers"] });
       if (!s.ok) return fail(s.error);
@@ -1206,6 +1213,76 @@ export const scenarios = [
       if (!/SUPERF[ÍI]CIE DE ENGENHARIA/i.test(c01.activate_with)) return fail("cap. 01 sem a RAZÃO de não ter activador");
       if (!/map_sbd_toe_applicability|get_sbd_toe_chapter_brief/.test(c01.activate_with)) return fail("cap. 01 sem caminho alternativo que exista");
       return ok(`dieta ${medidas.join(", ")} com o mesmo conjunto e reconstrução verificada; ${g.evidence_patterns_without_validation_method} EP sem validation_method declarados; cap. 01 explicado com porta alternativa`); } },
+
+  { id: "TC-F-50", axis: "F", title: "0.20.0-beta.27 (A): consult resolve os 24 concerns e o rule_trace deixa de afirmar o que é falso", tool: "consult_security_requirements",
+    run: async (c) => {
+      const vocabRes = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/activation-vocabulary" });
+      if (!vocabRes.ok) return fail(vocabRes.error);
+      const text = typeof vocabRes.data?.content === "string" ? vocabRes.data.content : JSON.stringify(vocabRes.data);
+      const vocab = JSON.parse(text.slice(text.indexOf("{")));
+      const values = vocab.concerns?.values ?? [];
+      if (values.length < 20) return fail("vocabulário demasiado pequeno — fixture mudou");
+      const zeros = [];
+      for (const entry of values) {
+        const name = String(entry.value);
+        const r = await c.tool("consult_security_requirements", { risk_level: "L2", concerns: [name] });
+        if (!r.ok) return fail(r.error);
+        const n = r.data.meta?.requirementCount ?? 0;
+        const publicado = entry.requirements_at?.L2 ?? 0;
+        if (n !== publicado) return fail(`${name}@L2: consult ${n} ≠ vocabulário ${publicado} — superfícies em desacordo sobre o mesmo bundle`);
+        if (n === 0 && !r.data.unsupported_concerns && !r.data.empty_at_level) zeros.push(name);
+      }
+      if (zeros.length > 0) return fail(`vazio MUDO no consult para ${zeros.join(", ")}`);
+      // o rule_trace não pode afirmar «0 requirements active» quando o nível tem centenas
+      const p = await c.tool("consult_security_requirements", { risk_level: "L2", concerns: ["privacy"] });
+      if (!p.ok) return fail(p.error);
+      if ((p.data.meta?.requirementCount ?? 0) === 0) return fail("privacy voltou a dar 0 (P0 vivo)");
+      const byRisk = (p.data.rule_trace ?? []).find((t) => t.startsWith("REQUIREMENT_APPLIES_BY_RISK"));
+      if (!byRisk || /: 0 requirements active/.test(byRisk)) return fail(`rule_trace afirma falso: ${byRisk}`);
+      // gralha: declarada, com a lista do que resolve
+      const typo = await c.tool("consult_security_requirements", { risk_level: "L2", concerns: ["authz"] });
+      if (!typo.ok) return fail(typo.error);
+      if (!typo.data.unsupported_concerns?.values?.includes("authz")) return fail("valor por resolver descartado em silêncio");
+      if (!/N[ÃA]O são zero requisitos|manual-grounded/i.test(typo.data.unsupported_concerns?.note ?? "")) return fail("a nota não proíbe a conclusão falsa");
+      // nível vazio: resolvido, mas o nível não tem
+      const l1 = await c.tool("consult_security_requirements", { risk_level: "L1", concerns: ["privacy"] });
+      if (!l1.ok) return fail(l1.error);
+      if (!l1.data.empty_at_level) return fail("privacy@L1 dá 0 sem declarar que o problema é o NÍVEL");
+      if (!(l1.data.empty_at_level.present_at_levels ?? []).includes("L2")) return fail("empty_at_level não diz onde existem");
+      return ok(`${values.length} concerns resolvidos e concordantes com o vocabulário; rule_trace verdadeiro; gralha declarada; privacy@L1 com empty_at_level (existem em ${l1.data.empty_at_level.present_at_levels.join("/")})`); } },
+
+  { id: "TC-F-51", axis: "F", title: "0.20.0-beta.27 (B+C): guia manda CONTRAPROVAR e as superfícies concordam sobre o mesmo bundle", tool: "read_sbd_toe_resource",
+    run: async (c) => {
+      const g = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/agent-guide" });
+      if (!g.ok) return fail(g.error);
+      const guide = typeof g.data?.content === "string" ? g.data.content : JSON.stringify(g.data);
+      if (!/CONTRAPROVA/i.test(guide)) return fail("o guia não manda contraprovar um vazio sem declaração");
+      if (!/sinal, não ruído/i.test(guide)) return fail("o guia não diz que a discordância entre superfícies é sinal");
+      if (!/Que superfície resolve o quê|Superfície \| Resolve concerns/i.test(guide)) return fail("sem o bloco derivado de cobertura por superfície");
+      // C — as superfícies concordam, amostradas contra o vocabulário
+      const vocabRes = await c.tool("read_sbd_toe_resource", { uri: "sbd://toe/activation-vocabulary" });
+      if (!vocabRes.ok) return fail(vocabRes.error);
+      const text = typeof vocabRes.data?.content === "string" ? vocabRes.data.content : JSON.stringify(vocabRes.data);
+      const vocab = JSON.parse(text.slice(text.indexOf("{")));
+      let checked = 0;
+      for (const entry of vocab.concerns?.values ?? []) {
+        const name = String(entry.value);
+        for (const level of ["L1", "L2", "L3"]) {
+          const publicado = entry.requirements_at?.[level] ?? 0;
+          const named = entry.also_activates_by_named_rule?.requirements_at?.[level] ?? 0;
+          const sel = await c.tool("select_sbd_toe_requirements", { risk_level: level, concerns: [name], limit: 500, detail: "minimal" });
+          if (!sel.ok) return fail(sel.error);
+          const s = sel.data.selection.selected.length;
+          if (s !== publicado + named)
+            return fail(`${name}@${level}: select ${s} ≠ vocabulário ${publicado} + regra nomeada ${named}`);
+          const con = await c.tool("consult_security_requirements", { risk_level: level, concerns: [name] });
+          if (!con.ok) return fail(con.error);
+          if ((con.data.meta?.requirementCount ?? 0) !== publicado)
+            return fail(`${name}@${level}: consult ${con.data.meta?.requirementCount} ≠ vocabulário ${publicado}`);
+          checked += 1;
+        }
+      }
+      return ok(`guia manda contraprovar e publica a cobertura por superfície; ${checked} pares concern×nível concordantes entre vocabulário, select e consult`); } },
 
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {

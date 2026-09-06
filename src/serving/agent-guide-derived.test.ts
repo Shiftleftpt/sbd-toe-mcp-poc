@@ -71,14 +71,19 @@ describe("invariante beta.24 — agent-guide derivado", () => {
     const concerns = vocab.concerns.values.map((c) => String(c.value));
     const missing = concerns.filter((c) => !guide.includes(`\`${c}\``));
     expect(missing, `concerns do vocabulário ausentes do guia: ${missing.join(", ")}`).toEqual([]);
-    // a regressão específica: os 11 que o mapa de ameaças NÃO resolve têm de estar lá
+    // A regressão específica: o guia seguia a cobertura do MAPA DE AMEAÇAS em vez do
+    // vocabulário. Desde 0.20.0-beta.27 as duas coberturas coincidem (a correcção da
+    // resolução de concerns no consult tornou os 24 roteáveis), por isso a asserção
+    // deixou de poder assumir que há não-roteáveis — mas a protecção sobrevive:
+    // SE o mapa voltar a perder concerns, o guia não pode segui-lo.
     const unsupported = threatConcernSupport().unsupported;
-    expect(unsupported.length).toBeGreaterThan(0);
     const swallowed = unsupported.filter((c) => !guide.includes(`\`${c}\``));
     expect(
       swallowed,
       `o guia voltou a publicar a cobertura do mapa de ameaças como vocabulário (faltam ${swallowed.join(", ")})`
     ).toEqual([]);
+    // e o guia continua a publicar os 24, venha de onde vier a cobertura das ameaças
+    expect(concerns.length).toBe(24);
   });
 
   it("as contagens por nível do guia são as do vocabulário (não folclore)", () => {

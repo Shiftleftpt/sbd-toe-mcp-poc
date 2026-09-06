@@ -387,13 +387,23 @@ export function handleGetThreatLandscape(
     : [];
   const support = declaredConcerns.length > 0 ? threatConcernSupport() : { supported: [], unsupported: [] };
   const unsupportedHere = declaredConcerns.filter((c) => support.unsupported.includes(c));
+  // beta.27: valores FORA do vocabulário eram ignorados em silêncio aqui (o `select`
+  // declara-os em `unknown_concerns` desde a beta.22). Mesma classe, quarta instância —
+  // apanhada pela invariante entre superfícies, não por um avaliador.
+  // A fonte de «conhecido» é o VOCABULÁRIO, não a sondagem de suporte: `threatConcernSupport()`
+  // devolve listas vazias enquanto está a sondar (guarda de recursão), e usá-la aqui fazia a
+  // cache classificar TODOS os concerns como desconhecidos — resultado dependente da ordem
+  // da primeira chamada. Apanhado pela suite antes de sair da lane.
+  const knownConcerns = new Set(buildActivationVocabulary().concerns.values.map((c) => String(c.value)));
+  const unknownHere = declaredConcerns.filter((c) => !knownConcerns.has(c));
   /**
    * 0.20.0-beta.26 (§17-C) — quando TODOS os concerns declarados são não-roteáveis, o
    * roteamento cai para o âmbito largo e devolve ~25 ameaças de GOVERNAÇÃO (MT-001..025,
    * 8,4k tk) que não têm nada a ver com o que foi pedido. Cobrar esse payload para dizer
    * «não sei» é o oposto do contrato: agora pede DECLARAÇÃO, com a lista do que resolve.
    */
-  const allUnsupported = declaredConcerns.length > 0 && unsupportedHere.length === declaredConcerns.length;
+  const allUnsupported =
+    declaredConcerns.length > 0 && unsupportedHere.length + unknownHere.length === declaredConcerns.length;
   if (allUnsupported) {
     return {
       provenance: {
@@ -412,7 +422,7 @@ export function handleGetThreatLandscape(
        * substitui. Uma promessa cumprida não se retira por se ter arranjado melhor.
        */
       unsupported_concerns: {
-        values: [...new Set(unsupportedHere)].sort(),
+        values: [...new Set([...unsupportedHere, ...unknownHere])].sort(),
         supported_values: support.supported,
         note:
           `Concerns VÁLIDOS do vocabulário que o mapa de ameaças não resolve: ${[...new Set(unsupportedHere)].sort().join(", ")}. ` +
@@ -422,7 +432,8 @@ export function handleGetThreatLandscape(
       },
       needs_input: {
         reason:
-          `Nenhum dos concerns declarados (${[...new Set(declaredConcerns)].sort().join(", ")}) é roteável pelo mapa de ameaças. ` +
+          `Nenhum dos concerns declarados (${[...new Set(declaredConcerns)].sort().join(", ")}) é roteável pelo mapa de ameaças` +
+          (unknownHere.length > 0 ? ` (fora do vocabulário: ${[...new Set(unknownHere)].sort().join(", ")})` : "") + ". " +
           "Sem esta paragem a resposta seria o âmbito largo — ameaças de GOVERNAÇÃO sem relação com o que pediste, " +
           "a custo de payload cheio, para acabar a dizer que não sabe. Zero útil não é uma resposta.",
         supported_concerns: support.supported,
@@ -442,16 +453,42 @@ export function handleGetThreatLandscape(
         concernsApplied: declaredConcerns,
         note: "needs_input: nenhum concern roteável declarado. Nada foi resolvido — e por isso nada é cobrado."
       },
-      coverage: { total: 0, returned: 0, offset: 0, nextOffset: null, hasMore: false }
+      coverage: { total: 0, returned: 0, offset: 0, nextOffset: null, hasMore: false },
+      // RF-H: a banda `next` está em TODAS as respostas — um pedido de declaração também
+      // é uma resposta. Apanhado pela suite de affordances antes de sair da lane.
+      next: threatLandscapeAffordances(full.risk_level, support.supported.slice(0, 2))
     } as unknown as GetThreatLandscapeResult;
   }
 
+  /**
+   * 0.20.0-beta.27 — o concern RESOLVE mas o NÍVEL não traz capítulos: zero ameaças sem
+   * uma palavra. Mesma classe do `empty_at_level` do consult, encontrada pela invariante
+   * entre superfícies (privacy@L1, threat_modeling@L1).
+   */
+  const emptyByLevel =
+    declaredConcerns.length > 0 &&
+    unsupportedHere.length === 0 &&
+    unknownHere.length === 0 &&
+    full.threats.length === 0;
+
   const shaped = {
     ...full,
-    ...(unsupportedHere.length > 0
+    ...(emptyByLevel
+      ? {
+          empty_at_level: {
+            concerns: [...new Set(declaredConcerns)].sort(),
+            level: full.risk_level,
+            note:
+              `Os concerns declarados são roteáveis, mas a ${full.risk_level} não activam capítulo nenhum — por isso zero ameaças. ` +
+              "NÃO é ausência de ameaças nem «não aplicável»: é o NÍVEL. Confirma noutro nível ou com " +
+              "`select_sbd_toe_requirements`, e não apresentes este vazio como «manual-grounded»."
+          }
+        }
+      : {}),
+    ...(unsupportedHere.length + unknownHere.length > 0
       ? {
           unsupported_concerns: {
-            values: [...new Set(unsupportedHere)].sort(),
+            values: [...new Set([...unsupportedHere, ...unknownHere])].sort(),
             supported_values: support.supported,
             note:
               `Concerns VÁLIDOS do vocabulário que o mapa de ameaças não resolve: ${[...new Set(unsupportedHere)].sort().join(", ")}. ` +

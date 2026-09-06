@@ -76,8 +76,8 @@ export const TECHNOLOGY_TO_CHAPTERS: Readonly<Record<string, readonly string[]>>
  * privilégio, AUT-006 credenciais em claro, ENC-006 segredos expostos} ∪ {DEP-011,
  * DEP-013, DEP-014 — supply chain AI do cap. 05}.
  */
-const R1_RULE_ID = "R1:principal-nao-humano";
-const R1_PRINCIPAL_SET: readonly string[] = ["ACC-002", "AUT-006", "ENC-006", "DEP-011", "DEP-013", "DEP-014"];
+export const R1_RULE_ID = "R1:principal-nao-humano";
+export const R1_PRINCIPAL_SET: readonly string[] = ["ACC-002", "AUT-006", "ENC-006", "DEP-011", "DEP-013", "DEP-014"];
 
 /**
  * R2 (decisão pós-P2 do programme lead, 2026-08-31, GC-02): SES-* resolve-se por
@@ -106,7 +106,7 @@ const SES008_RULE_ID = "SES-008-por-tecnologia";
 export const SES008_TECHNOLOGY = "jwt";
 const SES008_TECH_PATTERN = /\bjwt\b|token de utilizador|user token|bearer token|refresh token/i;
 
-const AGENTIC_WAVE_PATTERN = /\bagente|\bagent\b|agêntic|agentic|autonom|kill.?switch|mandate|tool.?call/i;
+export const AGENTIC_WAVE_PATTERN = /\bagente|\bagent\b|agêntic|agentic|autonom|kill.?switch|mandate|tool.?call/i;
 
 /** 0.19.0 (ronda 3): estabilidade da origem — lexical = casamento de termos da
  * redacção (revogável por reescrever a frase); declared = concern explícito, regra

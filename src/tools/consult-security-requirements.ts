@@ -21,6 +21,8 @@ import type {
 } from "./ontology-loader.js";
 import { estimateSize } from "../serving/response-shaping.js";
 import { servedKgReleaseTag, servingServerVersion } from "../version-info.js";
+import { categoriesForConcerns, type Concern } from "./prepare-codegen-context.js";
+import { buildActivationVocabulary } from "../serving/activation-vocabulary.js";
 import { getOntologyData } from "./ontology-loader.js";
 import type { Affordance } from "../serving/protocol-envelope.js";
 import { consultAffordances } from "../serving/affordances.js";
@@ -91,6 +93,21 @@ export interface ConsultCoverageGaps {
   requirements_without_control_link: RequirementControlLinkGap;
 }
 
+/**
+ * O que o `consult` resolve, DERIVADO (não escrito à mão): um concern é suportado quando o
+ * mapa publicado lhe dá pelo menos uma categoria. Depois da correcção do P0 são os 24 —
+ * a função fica porque o mecanismo tem de cobrir o que vier, não só o que já apareceu.
+ */
+let consultSupportCache: string[] | null = null;
+export function consultSupportedConcerns(): string[] {
+  if (consultSupportCache) return consultSupportCache;
+  consultSupportCache = buildActivationVocabulary()
+    .concerns.values.map((c) => String(c.value))
+    .filter((c) => categoriesForConcerns([c as Concern]).size > 0)
+    .sort();
+  return consultSupportCache;
+}
+
 export interface ConsultSecurityRequirementsResult {
   risk_level: string;
   active_categories: string[];
@@ -99,6 +116,28 @@ export interface ConsultSecurityRequirementsResult {
   controls: ControlWithConfidence[];
   artifacts: ArtifactWithCoverage[];
   rule_trace: string[];
+  /**
+   * 0.20.0-beta.27: concerns válidos que ESTA superfície não resolve — mesmo mecanismo do
+   * get_threat_landscape (beta.23). Presente só quando há algum; nunca um vazio mudo.
+   */
+  unsupported_concerns?: {
+    values: string[];
+    supported_values: string[];
+    note: string;
+  };
+  /**
+   * 0.20.0-beta.27 — o concern RESOLVE mas o NÍVEL não tem nada dessas categorias.
+   * `privacy`@L1 dava 0 sem uma palavra: não é ausência de obrigação, é o nível. O
+   * `select` já o dizia desde a beta.22 (needs_input explicando o nível); o `consult` não —
+   * a mesma classe, noutra tool, encontrada pela invariante entre superfícies.
+   */
+  empty_at_level?: {
+    concerns: string[];
+    level: string;
+    categories: string[];
+    present_at_levels: string[];
+    note: string;
+  };
   coverage_gaps: ConsultCoverageGaps;
   meta: {
     requirementCount: number;
@@ -137,6 +176,20 @@ export interface ConsultSecurityRequirementsOutput {
   controls: ControlSlim[];
   artifacts: ArtifactSlim[];
   rule_trace: string[];
+  /** 0.20.0-beta.27: resolvido, mas o NÍVEL não tem requisitos destas categorias. */
+  empty_at_level?: {
+    concerns: string[];
+    level: string;
+    categories: string[];
+    present_at_levels: string[];
+    note: string;
+  };
+  /** 0.20.0-beta.27: concerns válidos que esta superfície não resolve — nunca um vazio mudo. */
+  unsupported_concerns?: {
+    values: string[];
+    supported_values: string[];
+    note: string;
+  };
   coverage_gaps: ConsultCoverageGaps;
   /** mode: "index" (opt-in, additive): per-category index replacing the full requirement bodies. */
   index?: ConsultRequirementsIndexEntry[];
@@ -323,11 +376,29 @@ export function _resolveConsultResult(
   let filteredRequirements = allRequirements.filter(
     (requirement) => requirement.applicable_levels?.[riskLevel] === true
   );
+  /** Quantos se aplicam ao NÍVEL, antes de qualquer filtro de concern (o trace precisa). */
+  const atLevelCount = filteredRequirements.length;
 
+  /**
+   * 0.20.0-beta.27 (P0 da adenda) — o `consult` resolvia concerns por `concernsMap` CRU,
+   * enquanto o vocabulário publicado e o `select` resolvem por `concernsMap ∪ suplemento`.
+   * Os 11 concerns mais recentes vivem só no suplemento: `privacy` dava `requirementCount: 0`
+   * e `active_categories: []` enquanto o vocabulário publicava 5 e o select devolvia 5.
+   *
+   * Três agravantes que o tornam pior que o caso do mapa de ameaças: não havia
+   * `unsupported_concerns`; o `rule_trace` AFIRMAVA «0 requirements active» (asserção falsa,
+   * não silêncio); e o guia encaminhava esse vazio para «manual-grounded», o selo epistémico
+   * mais forte do servidor.
+   *
+   * Correcção à CLASSE, não à instância: passa a usar a MESMA resolução publicada — e o
+   * que ainda assim não resolver é DECLARADO, para o mecanismo cobrir também o que vier.
+   */
+  const unresolvedConcerns: string[] = [];
   if (concernsApplied && concernsApplied.length > 0) {
     const concernCategories = new Set<string>();
     for (const concern of concernsApplied) {
-      const categories = concernsMap[concern] ?? [];
+      const categories = categoriesForConcerns([concern as Concern]);
+      if (categories.size === 0) unresolvedConcerns.push(concern);
       for (const category of categories) concernCategories.add(category);
     }
     filteredRequirements = filteredRequirements.filter((requirement) =>
@@ -379,9 +450,33 @@ export function _resolveConsultResult(
     },
   };
 
+  // beta.27: resolveu categorias e o nível esvaziou — declara-se, com onde existem.
+  let emptyAtLevel: ConsultSecurityRequirementsResult["empty_at_level"];
+  if (concernsApplied && concernsApplied.length > 0 && filteredRequirements.length === 0 && unresolvedConcerns.length === 0) {
+    const resolvedCategories = [...new Set(concernsApplied.flatMap((c) => [...categoriesForConcerns([c as Concern])]))].sort();
+    const presentAt = (["L1", "L2", "L3"] as const).filter((other) =>
+      allRequirements.some((r) => resolvedCategories.includes(r.category) && r.applicable_levels?.[other] === true)
+    );
+    emptyAtLevel = {
+      concerns: [...concernsApplied],
+      level: riskLevel,
+      categories: resolvedCategories,
+      present_at_levels: presentAt,
+      note:
+        `O concern RESOLVEU (categorias ${resolvedCategories.join(", ") || "—"}), mas nenhum requisito dessas categorias se aplica a ${riskLevel}. ` +
+        (presentAt.length > 0
+          ? `Existem em ${presentAt.join("/")}. `
+          : "Não existem em nenhum nível publicado. ") +
+        "NÃO é ausência de obrigação nem «não aplicável» — é o NÍVEL. Não apresentes isto como «manual-grounded: nada se aplica»."
+    };
+  }
+
   const rule_trace: string[] = [];
+  // beta.27: o filtro de NÍVEL conta o que o nível activa — não o que sobra depois dos
+  // concerns. Dizer «0 requirements active» a L2 (que tem 247) por o concern não ter
+  // resolvido era uma asserção FALSA, e o consumidor citava-a como facto do manual.
   rule_trace.push(
-    `REQUIREMENT_APPLIES_BY_RISK(risk_level=${riskLevel}): ${filteredRequirements.length} requirements active`
+    `REQUIREMENT_APPLIES_BY_RISK(risk_level=${riskLevel}): ${atLevelCount} requirements active`
   );
   if (directControlCount > 0) {
     rule_trace.push(
@@ -405,8 +500,14 @@ export function _resolveConsultResult(
   }
   if (concernsApplied && concernsApplied.length > 0) {
     rule_trace.push(
-      `CONCERNS_FILTER_REQUIREMENTS(concerns=[${concernsApplied.join(",")}]): intersected with risk-level filter`
+      `CONCERNS_FILTER_REQUIREMENTS(concerns=[${concernsApplied.join(",")}]): ${atLevelCount} -> ${filteredRequirements.length} requirements (categories: ${active_categories.join(",") || "none"})`
     );
+    if (unresolvedConcerns.length > 0) {
+      rule_trace.push(
+        `CONCERNS_UNRESOLVED(concerns=[${unresolvedConcerns.join(",")}]): sem categorias publicadas — ` +
+          "isto NÃO é ausência de requisitos, é um concern que esta superfície não resolve. Ver unsupported_concerns."
+      );
+    }
   }
   if (requirementsWithoutControlLink.length > 0) {
     rule_trace.push(
@@ -422,6 +523,20 @@ export function _resolveConsultResult(
     controls,
     artifacts,
     rule_trace,
+    ...(emptyAtLevel ? { empty_at_level: emptyAtLevel } : {}),
+    ...(unresolvedConcerns.length > 0
+      ? {
+          unsupported_concerns: {
+            values: [...new Set(unresolvedConcerns)].sort(),
+            supported_values: consultSupportedConcerns(),
+            note:
+              `Concerns VÁLIDOS do vocabulário que esta superfície não resolve: ${[...new Set(unresolvedConcerns)].sort().join(", ")}. ` +
+              "NÃO são zero requisitos — são zero requisitos RESOLVÍVEIS aqui. Não concluas ausência a partir desta resposta " +
+              "nem a apresentes como «manual-grounded»: confirma com `select_sbd_toe_requirements` (mesmos concerns) e com " +
+              "`sbd://toe/activation-vocabulary`, que publica o que cada valor activa. Uma discordância entre superfícies é sinal, não ruído."
+          }
+        }
+      : {}),
     coverage_gaps,
     meta: {
       requirementCount: filteredRequirements.length,
@@ -474,6 +589,8 @@ export function handleConsultSecurityRequirements(
       controls: [],
       artifacts: [],
       rule_trace: [...full.rule_trace, "MODE_INDEX: requirement bodies elided — per-category index returned (declared, not silent)"],
+      ...(full.empty_at_level ? { empty_at_level: full.empty_at_level } : {}),
+      ...(full.unsupported_concerns ? { unsupported_concerns: full.unsupported_concerns } : {}),
       coverage_gaps: full.coverage_gaps,
       index: [...byCategory.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([category, ids]) => ({ category, count: ids.length, requirement_ids: ids.sort() })),
       size_estimate: estimateSize(full.requirements),
@@ -521,6 +638,8 @@ export function handleConsultSecurityRequirements(
       _coverage: artifact._coverage,
     })),
     rule_trace: full.rule_trace,
+    ...(full.empty_at_level ? { empty_at_level: full.empty_at_level } : {}),
+    ...(full.unsupported_concerns ? { unsupported_concerns: full.unsupported_concerns } : {}),
     coverage_gaps: full.coverage_gaps,
     meta: full.meta,
     next: consultAffordances(full.risk_level, full.meta.concernsApplied ?? undefined),

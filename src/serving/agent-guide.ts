@@ -21,7 +21,8 @@ import { buildActivationVocabulary } from "./activation-vocabulary.js";
 import { RESOURCE_CATALOG, PROMPT_CATALOG } from "./server-surface.js";
 import { getOntologyData } from "../tools/ontology-loader.js";
 import { handleListSbdToeChapters } from "../tools/structured-tools.js";
-import { handleConsultSecurityRequirements } from "../tools/consult-security-requirements.js";
+import { handleConsultSecurityRequirements, consultSupportedConcerns } from "../tools/consult-security-requirements.js";
+import { threatConcernSupport } from "../tools/get-threat-landscape.js";
 
 type GuideChapter = {
   id: string;
@@ -200,7 +201,39 @@ export function generateOutputSizesBlock(): string {
   ].join("\n");
 }
 
+/**
+ * 0.20.0-beta.27 (item B) — QUE SUPERFÍCIE RESOLVE O QUÊ, derivado.
+ *
+ * As superfícies derivam do MESMO bundle e podem discordar por defeito (foi o que
+ * aconteceu: o `consult` resolvia 13 dos 24 concerns porque usava o mapa cru em vez do
+ * publicado, e AFIRMAVA «0 requirements active»). O agente precisa de saber que a
+ * discordância é possível — e o que fazer quando a encontra.
+ */
+export function generateCrossSurfaceBlock(): string {
+  const concerns = buildActivationVocabulary().concerns.values.map((c) => String(c.value));
+  const consultOk = consultSupportedConcerns().length;
+  const threats = threatConcernSupport();
+  return [
+    `${DERIVED_NOTE}`,
+    "",
+    "| Superfície | Resolve concerns | O que devolve |",
+    "|---|---|---|",
+    `| \`select_sbd_toe_requirements\` | ${concerns.length} de ${concerns.length} | os requisitos do que declaraste, com traço |`,
+    `| \`consult_security_requirements\` | ${consultOk} de ${concerns.length} | o catálogo do nível, filtrado pelos concerns |`,
+    `| \`sbd://toe/activation-vocabulary\` | ${concerns.length} de ${concerns.length} | o que cada valor activa, e quantos requisitos por nível |`,
+    `| \`get_threat_landscape\` | ${threats.supported.length} de ${concerns.length} | AMEAÇAS (não requisitos); os restantes vêm em \`unsupported_concerns\` |`,
+    "",
+    "**Regra de contraprova.** Um resultado vazio **sem** `unsupported_concerns` não é",
+    "prova de ausência: CONTRAPROVA antes de comunicar — `select_sbd_toe_requirements` com",
+    "os mesmos concerns, ou `sbd://toe/activation-vocabulary`, que publica quantos requisitos",
+    "cada valor activa por nível. Se as superfícies discordarem, **é sinal, não ruído**:",
+    "comunica a discordância, não escolhas a que te dá jeito — e nunca apresentes o vazio",
+    "como «manual-grounded», que é o selo epistémico mais forte deste servidor."
+  ].join("\n");
+}
+
 const GENERATORS: Record<string, () => string> = {
+  "cross-surface": generateCrossSurfaceBlock,
   "output-sizes": generateOutputSizesBlock,
   concerns: generateConcernsBlock,
   activators: generateActivatorsBlock,

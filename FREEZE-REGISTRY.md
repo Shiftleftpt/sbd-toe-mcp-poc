@@ -79,6 +79,7 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 | v0.20.0-beta.5 | 62a1eda (`62a1eda3982147e44369c8a9271ca3697af2680f`; annotated tag object `5165a04a`) | 2026-08-31 | formal KG `v1.7.0` (`29156b86…`, contract v1.14, ontology v2.2, Manual v1.7.1) — same pin and content as stable v0.10.4 | `beta` (superseded) |
 | v0.20.0-beta.6 | 322c38f (`322c38f4dc440aad40bf110b8e20d3d40f623318`; annotated tag object `71098136`) | 2026-08-31 | formal KG `v1.7.0` + MP1 selection operation (= stable 0.11.0 → `102b8166`) | `beta` (superseded) |
 | v0.20.0-beta.7 | 4256ee0 (`4256ee0f09386a45e69012ec565375965f49b0de`; annotated tag object `6e75ef23`) | 2026-08-31 | formal KG `v1.9.0` (`11153c85…`, contract v1.15, 273/29 FIL/PRI — zero-delta over the verified v1.8.0 dev-build) | `beta` (formal batch, «3 sims») |
+| v0.20.0-beta.27 | PENDING (tag commit registado ao fechar) | 2026-09-06 | adenda beta.26 (assessment da beta.25): P0 do consult (11 dos 24 concerns perdidos em silêncio + rule_trace a AFIRMAR «0 requirements active») corrigido à raiz — curou também o mapa de ameaças (24 roteáveis); guia manda CONTRAPROVAR + bloco derivado de cobertura por superfície; INVARIANTE ENTRE SUPERFÍCIES (24×3) que apanhou 4 defeitos, 2 deles desta vaga | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.26 | b1ab9a7 (`b1ab9a73fb862f88db1ed4233f58ff00937a67c3`) | 2026-09-06 | economia e auditoria (o que restava da lista do avaliador): evidence_patterns por PERTENÇA ao âmbito (era prefixo alfabético); threat_landscape com needs_input (8,3k→434 tk) + cobertura na descrição; traço multi-activador; dieta do `select` (−21% a −58%, mesmo conjunto); denominadores nomeados; obligation_ids; P1-3/P1-4; cap. 01 explicado. Selecção INALTERADA | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.25 | 0c3060e (`0c3060e9d4e64fc9ad3c459d54831ba86719d015`) | 2026-09-06 | adenda ao beta.24: teoria do minLevel morta na GERAÇÃO do guia (sobrevivia na coluna «Presente desde» introduzida pela beta.24) + varredura do guia inteiro (10 afirmações que contradiziam o comportamento: «TWO bands», «L1 reduz o âmbito», doutrina pré-declarativa, tamanhos folclóricos, search sem a marca NÃO-NORMATIVO); guarda de 6→10 propriedades; bundle pin unchanged (KG `v1.11.0`) | `beta` (`latest` = 0.19.4, estável inalterada) |
 | v0.20.0-beta.24 | 863ed99 (`863ed99bacb3797b9603ef387b4c736dd8ec40c1`) | 2026-09-06 | agent-guide GERADO do vocabulário e da superfície real (os «13 concerns» eram o supported_values do mapa de ameaças); `out_of_scope_chapters` dá ÂMBITO à promessa never-silent e a invariante de conservação varre o universo; higiene do `task` (resíduos + `task_context` canónico, alias mantido); bundle pin unchanged (KG `v1.11.0`) | `beta` (`latest` = 0.19.4, estável inalterada) |
@@ -103,7 +104,16 @@ Prerelease tags issued on `0.20-beta` (annotated; immutable like every pushed ta
 
 **Current branch:** `0.20-beta` — this copy of the registry lives on the beta branch; the
 stable-line rows mirror master (`102b816`, 0.11.0 prepared) and are maintained there.
-**Beta line:** v0.20.0-beta.26 → `b1ab9a73fb862f88db1ed4233f58ff00937a67c3` (2026-09-06; `release.yml` run 34026770992 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.26` = `beta`, gitHead igual; GitHub pre-release) fecha a
+**Beta line:** v0.20.0-beta.27 → PENDING (2026-09-06; tag e npm ao fechar) fecha a adenda do
+assessment da beta.25. O `consult` perdia 11 dos 24 concerns em silêncio e o `rule_trace` AFIRMAVA
+«0 requirements active» com 247 aplicáveis ao nível — resolvia por `concernsMap` cru em vez do mapa
+publicado. Corrigido à RAIZ, o que curou também o mapa de ameaças (os 24 passam a roteáveis: uma
+causa alimentava três superfícies). O guia passa a mandar CONTRAPROVAR um vazio sem declaração, com
+bloco derivado de cobertura por superfície. E a INVARIANTE ENTRE SUPERFÍCIES (24 concerns × 3
+níveis, 5 propriedades) apanhou quatro defeitos à primeira execução — incluindo o vocabulário a
+prometer MENOS do que o servidor entrega para `agents` — e dois defeitos introduzidos nesta própria
+vaga, antes de saírem da lane.
+Prior: v0.20.0-beta.26 → `b1ab9a73fb862f88db1ed4233f58ff00937a67c3` (2026-09-06; `release.yml` run 34026770992 publicou npm `@shiftleftpt/sbd-toe-mcp@0.20.0-beta.26` = `beta`, gitHead igual; GitHub pre-release) fecha a
 Fase 4 com a vaga de ECONOMIA E AUDITORIA: nenhum item toca fidelidade, motor ou documentação
 derivada, e a selecção fica byte-a-byte na mesma (ouro idêntico nos dois braços). Os
 `evidence_patterns` passam a ordenar por PERTENÇA ao âmbito (a sonda de validação trazia 5 em 5
@@ -315,6 +325,7 @@ prohibits tag deletion without explicit authorisation):
 | 2026-09-04 | v0.20.0-beta.20 tag commit recorded (`bc101795`); npm `beta` publish + GitHub pre-release confirmed (run 33907019917). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 registered (experiência «declarativo primeiro»: contrato de serviço v1.18-beta, vocabulário de activação publicado, needs_input, modos baseline/discover; oráculo histórico 10/10 em discover + conjunto declarativo novo 6/4/0; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-05 | v0.20.0-beta.21 tag commit recorded (`41553419`); npm `beta` publish + GitHub pre-release confirmed (run 33963546721). | Claude Opus 5 (Pontifex), authorised by Pedro Farinha |
+| 2026-09-06 | v0.20.0-beta.27 registered (P0 do consult corrigido à raiz; guia com regra de contraprova; invariante entre superfícies 24×3 com 4 defeitos apanhados; bundle pin unchanged KG v1.11.0). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.26 tag commit recorded (`b1ab9a73`); npm `beta` publish + GitHub pre-release confirmed (run 34026770992); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.26 registered (economia e auditoria: EP por pertença ao âmbito; threat needs_input; traço multi-activador; dieta do select; denominadores nomeados; obligation_ids; P1-3/P1-4; cap. 01 explicado; selecção inalterada, ouro idêntico). Tag on the commit introducing this row. No frozen state touched; stable line unaffected. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |
 | 2026-09-06 | v0.20.0-beta.25 tag commit recorded (`0c3060e9`); npm `beta` publish + GitHub pre-release confirmed (run 34024615011); gitHead = tag commit. | Claude Fable 5 (Pontifex), authorised by Pedro Farinha |

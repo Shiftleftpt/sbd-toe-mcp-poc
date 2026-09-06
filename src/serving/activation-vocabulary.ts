@@ -12,6 +12,7 @@
  * se o motor mudar, o vocabulário muda com ele, ou o teste parte.
  */
 import { getOntologyData } from "../tools/ontology-loader.js";
+import { R1_RULE_ID, R1_PRINCIPAL_SET, AGENTIC_WAVE_PATTERN } from "./selection.js";
 import {
   VALID_CONCERNS,
   CONCERN_TO_V0_CATEGORIES_SUPPLEMENT,
@@ -28,6 +29,20 @@ export interface ConcernVocabularyEntry {
   activates_categories: string[];
   activates_chapters: string[];
   requirements_at: Record<"L1" | "L2" | "L3", number>;
+  /**
+   * 0.20.0-beta.27 — o que REGRAS NOMEADAS acrescentam além das categorias.
+   *
+   * `requirements_at` conta por CATEGORIA, e era a única coisa publicada: para `agents` o
+   * vocabulário prometia 4 a L3 enquanto o `select` devolvia 19. A diferença não era um
+   * defeito do motor — eram regras nomeadas e publicadas (R1:principal-nao-humano e a vaga
+   * agêntica) que o vocabulário não declarava. Apanhado pela invariante entre superfícies.
+   */
+  also_activates_by_named_rule?: {
+    rule_ids: string[];
+    requirements_at: Record<"L1" | "L2" | "L3", number>;
+    requirement_ids: string[];
+    note: string;
+  };
 }
 
 export interface ActivatorVocabularyEntry {
@@ -96,11 +111,37 @@ export function buildActivationVocabulary(): ActivationVocabulary {
       counts[level] = ontology.requirements.filter(
         (r) => categories.includes(r.category) && r.applicable_levels?.[level] === true
       ).length;
+    // Regras NOMEADAS que acrescentam requisitos a este concern além das categorias.
+    const namedExtra =
+      concern === ("agents" as Concern)
+        ? ontology.requirements.filter(
+            (r) =>
+              !categories.includes(r.category) &&
+              (R1_PRINCIPAL_SET.includes(r.requirement_id) ||
+                (r.type !== "base" && AGENTIC_WAVE_PATTERN.test(`${r.name} ${r.description ?? ""}`)))
+          )
+        : [];
+    const namedCounts = {} as Record<"L1" | "L2" | "L3", number>;
+    for (const level of levels)
+      namedCounts[level] = namedExtra.filter((r) => r.applicable_levels?.[level] === true).length;
     return {
       value: concern,
       activates_categories: categories,
       activates_chapters: [...(CONCERN_TO_DOMAIN_CHAPTERS[concern] ?? [])],
-      requirements_at: counts
+      requirements_at: counts,
+      ...(namedExtra.length > 0
+        ? {
+            also_activates_by_named_rule: {
+              rule_ids: [R1_RULE_ID, "agents_wave"],
+              requirements_at: namedCounts,
+              requirement_ids: namedExtra.map((r) => r.requirement_id).sort(),
+              note:
+                `Além das categorias (${categories.join(", ")}), este concern activa requisitos por REGRA NOMEADA — ` +
+                `${R1_RULE_ID} (o agente é um principal não-humano) e a vaga agêntica. Cada inclusão traz o seu ` +
+                "traço no `select`; contam-se aqui para o vocabulário não prometer menos do que o servidor entrega."
+            }
+          }
+        : {})
     };
   });
 

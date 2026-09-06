@@ -3,11 +3,101 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.26 (beta line, npm `beta`) — economia e auditoria: tudo o que restava da lista do avaliador numa vaga. evidence_patterns por PERTENÇA ao âmbito (era prefixo alfabético: 5/5 fora do âmbito numa tarefa de validação); get_threat_landscape com needs_input quando todos os concerns são não-roteáveis (8,3k tk → 434 tk) e cobertura declarada na descrição; traço multi-activador; dieta do select por legenda de justificações (−21% a −58%, mesmo conjunto); denominadores nomeados e definidos; obligation_ids no overlay; P1-3/P1-4 (cobertura parcial declarada, gap inexistente deixa de ser declarado); cap. 01 explicado. Selecção INALTERADA, ouro byte-idêntico.
+reasoning: v0.20.0-beta.27 (beta line, npm `beta`) — adenda ao beta.26 com o assessment da beta.25. P0: o consult perdia 11 dos 24 concerns em silêncio e o rule_trace AFIRMAVA «0 requirements active» — resolvia por concernsMap cru em vez do mapa publicado; corrigido à raiz, o que curou também o mapa de ameaças (os 24 passam a roteáveis). Guia manda CONTRAPROVAR um vazio sem declaração, com bloco derivado de cobertura por superfície. E a INVARIANTE ENTRE SUPERFÍCIES (24 concerns × 3 níveis) apanhou mais 4 defeitos, dois deles introduzidos nesta própria vaga.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.27 — 2026-09-06
+
+**Adenda ao beta.26** (assessment da beta.25). O âmbito original do beta.26 foi entregue
+por inteiro — os 8 itens, incluindo o dos `evidence_patterns` — por isso **não houve nada a
+empurrar**. Bundle pin INALTERADO (release KG `v1.11.0`); **linha estável intocada**.
+
+### A — P0: o `consult` perdia 11 dos 24 concerns, em silêncio, e AFIRMAVA a ausência
+
+Reproduzido: os 13 legados resolviam; os 11 mais recentes davam `requirementCount: 0` e
+`active_categories: []` — `privacy`@L2 dava **0** enquanto o vocabulário publicava **5** e o
+`select` devolvia **5**. Pior que o caso do mapa de ameaças pelas três razões apontadas: sem
+`unsupported_concerns`; com o `rule_trace` a **AFIRMAR** `«REQUIREMENT_APPLIES_BY_RISK(L2):
+0 requirements active»` (asserção falsa, não silêncio — e L2 tem 247); e com o guia a
+encaminhar esse vazio para «manual-grounded», o selo epistémico mais forte do servidor.
+
+**Causa, à terceira aparição do mesmo conjunto de 11:** o `consult` resolvia concerns por
+`concernsMap` **cru** enquanto o vocabulário publicado e o `select` resolvem por
+`concernsMap ∪ suplemento`. Os 11 vivem só no suplemento. Verificado antes de mexer: os 13
+legados são **byte-idênticos** nos dois mapas, logo a correcção não podia mexer-lhes.
+
+Corrigido **à raiz** (a mesma resolução publicada), mais o mecanismo para o que vier:
+`unsupported_concerns` + `supported_values` + nota que proíbe a conclusão, e um `rule_trace`
+que diz a verdade (`247 requirements active`, depois `CONCERNS_FILTER_REQUIREMENTS: 247 → 5
+(categories: PRI)`, e `CONCERNS_UNRESOLVED` quando é o caso).
+
+> **Efeito não previsto, e o melhor argumento para a nota de método:** o mapa de ameaças
+> roteia ATRAVÉS do consult. Corrigir a raiz tornou **os 24 concerns roteáveis por ameaças**
+> — os 11 «não suportados» da beta.23 deixaram de existir. Uma causa alimentava três
+> superfícies; o `unsupported_concerns` do mapa de ameaças fica como mecanismo dormente,
+> pronto para o dia em que o bundle mude, que é o que se quer de uma guarda.
+
+### B — o guia manda CONTRAPROVAR
+
+A linha entrou na fonte do gerador. Um vazio **sem** `unsupported_concerns` deixa de poder
+ser comunicado: contraprova-se contra `select_sbd_toe_requirements` ou contra
+`sbd://toe/activation-vocabulary` antes de dizer o que quer que seja — «**uma discordância
+entre superfícies é sinal, não ruído**» — e nunca se apresenta o vazio como
+«manual-grounded». Acompanha um **bloco derivado novo** (`cross-surface`) que publica, por
+superfície, quantos concerns cada uma resolve e o que devolve.
+
+### C — INVARIANTE ENTRE SUPERFÍCIES (a peça de fundo)
+
+`cross-surface-invariant.test.ts`: 24 concerns × 3 níveis, cinco propriedades — contagens,
+**conjuntos de ids**, categorias, ausência de vazios mudos, e declaração de valores fora do
+vocabulário. **Apanhou quatro defeitos à primeira execução, dois deles introduzidos nesta
+própria vaga:**
+
+1. **`agents`: o vocabulário prometia MENOS do que o servidor entrega** — 4 a L3 contra 19
+   do `select`. Não era defeito do motor: eram **regras nomeadas publicadas**
+   (`R1:principal-nao-humano` e a vaga agêntica) que o vocabulário não declarava. Passa a
+   publicá-las em `also_activates_by_named_rule` (ids e contagens por nível). A beta.23 só
+   verificava «prometido ⊆ em banda», nunca o inverso — por isso nunca o viu.
+2. **`consult`: vazio por NÍVEL era mudo** (`privacy`@L1, `threat_modeling`@L1 — o concern
+   resolve, o nível não tem nada dessas categorias). O `select` já o declarava desde a
+   beta.22; o `consult` não. Ganha `empty_at_level`, com os níveis onde existem.
+3. **mapa de ameaças: o mesmo vazio por nível**, também mudo → mesma declaração.
+4. **mapa de ameaças: valores FORA do vocabulário ignorados em silêncio** (o `select`
+   declara-os desde a beta.22) → passam a `unsupported_concerns`.
+
+**E apanhou dois defeitos meus, desta vaga, antes de saírem da lane:**
+
+- ao declarar os valores desconhecidos usei `threatConcernSupport()`, que devolve listas
+  vazias enquanto está a sondar (guarda de recursão): a cache **envenenava-se a si própria**
+  e classificava TODOS os concerns como desconhecidos — resultado dependente da ordem da
+  primeira chamada, com `logging`/`iac`/`auth` a caírem para zero. A fonte certa é o
+  vocabulário, que não recorre;
+- o retorno `needs_input` do mapa de ameaças largava a banda `next` de topo, que o RF-H
+  exige em **todas** as respostas — um pedido de declaração também é uma resposta.
+
+O enunciado da invariante teve de ser afinado duas vezes até ficar exacto (como em beta.23):
+a lei é **`select == requirements_at + named_rule`** e **`consult == requirements_at`**, e um
+vazio conta como declarado se trouxer `unsupported_concerns` **ou** `empty_at_level`.
+
+### Verificação
+
+- **Suite** 785/785 (53 ficheiros) · **Aceitação** 158 → **118 PASS · 17 PART · 0 FAIL**,
+  gate **PASS** (novos TC-F-50/51; o TC-F-51 verifica os **72 pares** concern×nível).
+- **Ouro byte-idêntico ao da beta.26 nos dois braços**, incluindo o braço `consult`:
+  `discover` **10 PASS / 0 / 0**, declarativo **6 PASS / 4 PART / 0 FAIL**. Os casos-ouro
+  declaram concerns dos 13 legados, que a correcção não toca.
+- **Orçamentos** 8/8 do `prepare` inalterados. O `consult` passa a **custar** onde antes
+  devolvia zero (privacy 1.372 tk, build 2.111, deployment 3.965, supply_chain 4.570) — é o
+  preço de responder em vez de mentir; os 13 legados ficam iguais (auth 2.022 tk).
+- **Gate**: stdout só JSON-RPC · exit 0 · `package_version` = `sbd://toe/version` =
+  `provenance.server`.
+- **Cenários actualizados, com a razão declarada:** TC-F-40/43/48 assumiam `build`/
+  `integration`/`privacy` como não-roteáveis por ameaças. Deixaram de o ser — a fixture
+  mudou **para melhor**. Passam a exercer o mesmo mecanismo com valores que o vocabulário
+  não conhece, que é o que a guarda tem de proteger.
 
 ## 0.20.0-beta.26 — 2026-09-06
 

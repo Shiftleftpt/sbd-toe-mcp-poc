@@ -221,7 +221,7 @@ get_threat_landscape         ← deterministic: threats relevant to a risk level
 | `mitigation_confidence: "heuristic"` | Flag as inferred linkage — not structural evidence |
 | `mitigation_confidence: "derived"` | Structural chapter-match — reliable |
 | `threats: []` **with** `unsupported_concerns` | **Do NOT say "not applicable in this scope".** The concern is valid and its requirements exist — this THREAT MAP does not route it. Cite `unsupported_concerns.note`, then call `select_sbd_toe_requirements` for the same concern; assert nothing about absence of threats |
-| `assignments: []` / `threats: []` **with no** `unsupported_concerns` | Empty *within a resolved scope*: say "manual-grounded: no entries at this risk level for this scope" — do not invent, and do not generalise beyond the scope actually resolved (check `meta.activeChapters` is non-empty before claiming coverage) |
+| `assignments: []` / `threats: []` / `requirements: []` **with no** `unsupported_concerns` | **CONTRAPROVA ANTES DE COMUNICAR.** Um vazio sem declaração pode ser um concern que ESTA superfície não resolve (aconteceu: o `consult` devolvia 0 para 11 dos 24 concerns e o `rule_trace` afirmava «0 requirements active»). Confirma com `select_sbd_toe_requirements` (mesmos concerns) ou com `sbd://toe/activation-vocabulary`, que publica quantos requisitos cada valor activa por nível. **Uma discordância entre superfícies é sinal, não ruído** — comunica-a. Só depois de contraprovado podes dizer "manual-grounded: no entries at this risk level for this scope" (e verifica que `meta.activeChapters`/`active_categories` não está vazio antes de reclamar cobertura) |
 | `active_domains` | List the security domains active at this risk level |
 | `coverage_gaps.requirements_without_control_link` (consult) | Those requirements are active but have **no published control link** — say so (declared gap, routed to Codex); do not invent controls |
 | `match: "declared_gap"` / `meta.declared_gap` (query_sbd_toe_entities, resolve_entities) | Cite `declared_gap.note` verbatim — a legacy / unresolvable citation, not a missing requirement |
@@ -267,6 +267,13 @@ generate_sbd_toe_skill(role, format, flavour)  ← per-role configuration (RF-S)
                            Use this to answer "configure yourself/this agent for role X".
                            Also exposed as resources sbd://toe/skill/{role} and sbd://toe/subagent/{role}.
 ```
+
+---
+
+## Que superfície resolve o quê (e como contraprovar)
+
+<!-- BEGIN GENERATED: cross-surface -->
+<!-- END GENERATED: cross-surface -->
 
 ---
 
