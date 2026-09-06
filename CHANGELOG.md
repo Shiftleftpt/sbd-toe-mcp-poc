@@ -3,11 +3,89 @@ ai_assisted: true
 model: Claude Fable 5
 date: 2026-09-06
 purpose: documentation
-reasoning: v0.20.0-beta.33 (beta line, npm `beta`) — PLAYBOOKS com caminho próprio: `get_sbd_toe_playbook` dá superfície NORMATIVA aos 20 cross-checks/playbooks e às 450 secções que o bundle já publicava e ninguém alcançava sem retrieval não-normativo. Autoridade servida com o conteúdo (exemplo ilustrativo em banda separada), delimitação honesta obrigatória, frameworks sem cross-check declarados com o roadmap do próprio Manual, e ligação nos dois sentidos com o overlay. GR-02 no Eixo I: NÃO SERVIDO (v1.1) → SERVIDO. Selecção intocada; ouro H byte-idêntico.
+reasoning: v0.20.0-beta.34 (beta line, npm `beta`) — CAPACIDADE: `get_sbd_toe_chapter_capability` dá caminho à MEDIDA de capacidade (99 KPIs com thresholds por nível + artefactos), fecha o ciclo com o assess nos dois sentidos, e declara a leitura IMPL vs GUIDE na própria resposta e no guia. GR-01 no Eixo I: NÃO SERVIDO → SERVIDO (5/5). Descoberto que o brief JÁ servia os artefactos — o zero era defeito da sonda. Declarada a lacuna do checklist. Selecção intocada; ouro H byte-idêntico.
 review_status: pending-human-review
 ---
 
 # Changelog
+
+## 0.20.0-beta.34 — 2026-09-06
+
+**CAPACIDADE — o GR-01 sai de NÃO SERVIDO.** Autorizado pelo lead («avança», 2026-09-06) a
+partir da medição #2 do Eixo I. Oráculo: GR-01 + emenda v1.1 (**peça central = os KPIs/medida
+de capacidade do capítulo**). Bundle pin INALTERADO (release KG `v1.11.0`); **linha estável
+intocada**.
+
+> A leitura IMPL — «a organização quer implementar o cap. 07: que capacidade precisa de ter,
+> como sabe que está capaz, e como mede?» — não tinha a sua peça central: as 99 métricas
+> estão publicadas com thresholds por nível, e a única superfície que lhes tocava
+> (`assess_sbd_toe_implementation`) avalia KPIs que o CHAMADOR traz. **Nada havia a construir
+> a montante; faltava a porta.**
+
+### A forma: `get_sbd_toe_chapter_capability`
+
+| pedido | custo |
+|---|---|
+| `chapter="07-cicd-seguro", risk_level="L2"` | **3.270 tk** — 7 KPIs + 29 artefactos |
+| `metric_id="CIC-K01"` | **449 tk** |
+| todos os 99 KPIs | 6.165 tk (paginado, 25/página) |
+
+Alcançável **por capítulo**, **por `metric_id`** e **por dimensão**; `risk_level` acrescenta
+`target_at_level`. O que a torna uma superfície de MEDIR e não de listar é servir os
+**`thresholds_by_level`** como dado (L1/L2/L3, com operador, valor e unidade) — mais o tipo,
+o período e a proveniência. Capítulo sem KPIs publicados devolve `no_measures_published`
+declarado, nunca um vazio mudo.
+
+### O ciclo fecha-se nos dois sentidos
+
+A vista IMPL encaminha para `assess_sbd_toe_implementation` («traz os teus valores medidos»)
+e a avaliação passa a apontar de volta para os KPIs que o Manual define. Até aqui o chamador
+tinha de trazer os KPIs **às cegas**, porque nada publicava os que o Manual estabelece.
+
+### Os artefactos: o defeito era da MEDIÇÃO, não do servidor
+
+O GR-01 media «0 artefactos no brief». Investigado: **o brief serve 29 artefactos para o
+cap. 07** — a sonda é que o chamava com `chapter` em vez de `chapterId` e lia `artifact_ids`
+em vez de `artifacts`. Terceira vaga seguida em que o instrumento tinha um defeito que se
+lia como defeito do servidor; corrigi a sonda. A vista IMPL serve-os na mesma, com
+`mandatory` e categoria, porque a leitura pede-os no mesmo sítio que a medida.
+
+### IMPL ≠ GUIDE, declarado onde é preciso
+
+A mesma pergunta sobre um capítulo tem duas respostas legítimas, e servir uma quando se
+pedia a outra é o must-NOT do próprio caso. Agora: a resposta da vista IMPL traz o campo
+**`reading: { id: "IMPL" }`** com a distinção explícita, e o guia ganha um bloco GERADO novo
+— **«As LEITURAS»** — que mapeia as seis leituras (GUIDE · IMPL · CONSULT · CROSS-CHECK ·
+PAPEL/MOMENTO · SETUP) às superfícies que as servem.
+
+### Declarado, não corrigido (decisão do lead)
+
+Confirmada a lacuna que o avaliador suspeitou: **o `chapter_implementation_checklist` não
+cobre capacidade organizacional** — devolve 1 item para o cap. 02, 2 para o cap. 07 e 2 para
+o cap. 14, e os itens são **secções de prosa** (chunks de retrieval), não uma checklist de
+capacidade. Mudar isto é decisão do lead, não desta vaga.
+
+### O EIXO I, antes → depois
+
+| caso | beta.33 | **beta.34** |
+|---|---|---|
+| **GR-01** | **NÃO SERVIDO** | **SERVIDO** — 5/5 peças |
+| GR-02 | SERVIDO | SERVIDO |
+| GR-03 | NÃO SERVIDO | NÃO SERVIDO |
+| GR-04 · GR-05 | SERVIDO-MAL | SERVIDO-MAL |
+| GR-06 | SERVIDO | SERVIDO |
+
+**3 SERVIDO · 2 SERVIDO-MAL · 1 NÃO SERVIDO** (era 2/2/2). **Nenhum outro caso se moveu.**
+
+### Verificação
+
+- **Suite** 799/799 · **Aceitação** 168 → **128 PASS · 17 PART · 0 FAIL**, gate **PASS**
+  (novo TC-F-61).
+- **As oito invariantes verdes** (39 asserções).
+- **Ouro do Eixo H byte-idêntico ao da beta.33** nos dois braços: `discover`
+  **10 PASS / 0 / 0**, declarativo **6 PASS / 4 PART / 0 FAIL**. **A selecção não se mexeu.**
+- **Orçamentos** 8/8 do `prepare` inalterados — a superfície nova é independente e paginada.
+- **Gate**: stdout só JSON-RPC · exit 0 · 27 tools.
 
 ## 0.20.0-beta.33 — 2026-09-06
 

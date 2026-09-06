@@ -1621,6 +1621,49 @@ export const scenarios = [
       if (!volta) return fail("o playbook não aponta de volta para as obrigações");
       return ok(`DORA: ${d.normative_playbooks.length} normativos + ${d.illustrative_examples.values.length} ilustrativos em banda separada, com autoridade e delimitação; ${pb.data.coverage.total} secções paginadas; PCI-DSS declarado com roadmap de ${pci.data.roadmap_declared_by_manual.length}; ligação nos dois sentidos`); } },
 
+  { id: "TC-F-61", axis: "F", title: "0.20.0-beta.34: vista IMPL — a MEDIDA de capacidade tem caminho, com thresholds por nível", tool: "get_sbd_toe_chapter_capability",
+    run: async (c) => {
+      const r = await c.tool("get_sbd_toe_chapter_capability", { chapter: "07-cicd-seguro", risk_level: "L2" });
+      if (!r.ok) return fail(r.error);
+      const d = r.data;
+      const measures = d.measures ?? [];
+      if (measures.length === 0) return fail("sem KPIs para o cap. 07 — a peça central continua sem caminho");
+      // é MEDIR e não listar: thresholds POR NÍVEL como dado
+      for (const m of measures) {
+        if (!m.thresholds_by_level) return fail(`${m.metric_id} sem thresholds_by_level`);
+        for (const lvl of ["L1", "L2", "L3"]) if (!(lvl in m.thresholds_by_level)) return fail(`${m.metric_id} sem ${lvl}`);
+        if (!m.metric_type || !m.period) return fail(`${m.metric_id} sem tipo/período`);
+      }
+      const comAlvo = measures.filter((m) => m.target_at_level && m.target_at_level.value !== undefined);
+      if (comAlvo.length === 0) return fail("risk_level não produziu alvo em nenhum KPI");
+      // artefactos da capacidade
+      if (!((d.artifacts?.total ?? 0) > 0)) return fail("a vista IMPL não traz os artefactos da capacidade");
+      // a leitura vem DECLARADA e distingue-se da GUIDE
+      if (d.reading?.id !== "IMPL") return fail("a resposta não declara que leitura é");
+      if (!/GUIDE/.test(d.reading?.note ?? "")) return fail("a resposta não distingue IMPL de GUIDE");
+      // capítulo sem KPIs: declarado, nunca vazio mudo
+      const nada = await c.tool("get_sbd_toe_chapter_capability", { chapter: "00-fundamentos" });
+      if (!nada.ok) return fail(nada.error);
+      if ((nada.data.measures ?? []).length === 0 && nada.data.status !== "no_measures_published")
+        return fail("capítulo sem KPIs devolve vazio mudo");
+      // o ciclo fecha-se nos dois sentidos
+      const paraAssess = (d.next ?? []).some((n) => n.tool === "assess_sbd_toe_implementation");
+      if (!paraAssess) return fail("a vista IMPL não encaminha para a avaliação");
+      // `assess` exige os valores medidos — é essa a sua natureza: avalia o que TU mediste.
+      const assess = await c.tool("assess_sbd_toe_implementation", {
+        risk_level: "L2",
+        kpi_values: { [measures[0].metric_id]: 95 }
+      });
+      if (!assess.ok) return fail(assess.error);
+      const volta = (assess.data.next ?? []).some((n) => n.tool === "get_sbd_toe_chapter_capability");
+      if (!volta) return fail("a avaliação não aponta para os KPIs que o Manual define");
+      // o brief serve os artefactos (era defeito da sonda, não do servidor)
+      const brief = await c.tool("get_sbd_toe_chapter_brief", { chapterId: "07-cicd-seguro" });
+      if (!brief.ok) return fail(brief.error);
+      const arts = (brief.data.data ?? brief.data).artifacts ?? [];
+      if (arts.length === 0) return fail("o brief do cap. 07 não traz artefactos");
+      return ok(`cap. 07: ${measures.length} KPIs com thresholds L1/L2/L3 e ${comAlvo.length} com alvo a L2; ${d.artifacts.total} artefactos (${d.artifacts.mandatory} obrigatórios); leitura declarada IMPL; ciclo fechado com o assess; brief com ${arts.length} artefactos`); } },
+
   { id: "TC-G-01", axis: "G", title: "trace válido: determinismo + paginação G1 (3 lentes, total, cursor, sem IRIs)", tool: "trace_sbd_toe_graph",
     run: async (c) => {
       const shas = [];

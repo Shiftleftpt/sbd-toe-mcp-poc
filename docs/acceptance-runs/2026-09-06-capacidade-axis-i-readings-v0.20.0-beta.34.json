@@ -1,0 +1,362 @@
+{
+  "stamp": "2026-09-06-capacidade",
+  "version": "0.20.0-beta.34",
+  "oracle": {
+    "path": "DevelopmentGovernance/docs/golden-reading-cases.md",
+    "version": "v1 (ratificado 2026-09-06, «adjudico», sem emendas)"
+  },
+  "counts": {
+    "SERVIDO": 3,
+    "SERVIDO-MAL": 2,
+    "NÃO SERVIDO": 1
+  },
+  "results": [
+    {
+      "case": "GR-01",
+      "reading": "IMPL",
+      "title": "pôr de pé um capítulo (capacidade organizacional)",
+      "question": "A organização quer implementar o cap. 07 (CI/CD seguro). O que precisa de ter, como sabe que está capaz, e como mede?",
+      "verdict": "SERVIDO",
+      "centralPiece": "KPIs/métricas DO CAPÍTULO",
+      "pieces": [
+        {
+          "name": "checklist de implementação do capítulo",
+          "found": true,
+          "evidence": "2 itens de checklist",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "KPIs/métricas DO CAPÍTULO",
+          "found": true,
+          "evidence": "get_sbd_toe_chapter_capability: 7 KPIs com thresholds por nível",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "artefactos que a capacidade exige",
+          "found": true,
+          "evidence": "29 no brief · 29 na vista IMPL",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "papéis envolvidos e momento no ciclo",
+          "found": true,
+          "evidence": "29 atribuições na fase",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "ligação ao cap. 14 (governação/excepção)",
+          "found": true,
+          "evidence": "13 requisitos GOV alcançáveis",
+          "nonNormative": false,
+          "declared": null
+        }
+      ],
+      "missing": [],
+      "mustNotViolations": [],
+      "used": [
+        "get_sbd_toe_chapter_implementation_checklist",
+        "get_sbd_toe_chapter_brief",
+        "get_sbd_toe_chapter_capability",
+        "get_guide_by_role",
+        "select_sbd_toe_requirements"
+      ],
+      "notes": []
+    },
+    {
+      "case": "GR-02",
+      "reading": "CROSS-CHECK/PLAYBOOK",
+      "title": "usar uma norma com o Manual (DORA)",
+      "question": "Somos entidade financeira sujeita a DORA. Como é que o SbD-ToE nos serve?",
+      "verdict": "SERVIDO",
+      "centralPiece": "playbook: mapa artigo→capítulo→acção",
+      "pieces": [
+        {
+          "name": "playbook: mapa artigo→capítulo→acção",
+          "found": true,
+          "evidence": "get_sbd_toe_playbook (NORMATIVO): 3 playbooks, 29 secções",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "as 6 fases com marcos (M0-M2 … M12-M18)",
+          "found": true,
+          "evidence": "nas secções do playbook servido",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "checklist de leitura",
+          "found": true,
+          "evidence": "nas secções do playbook servido",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "delimitação honesta (manual vs overlay/compliance)",
+          "found": true,
+          "evidence": "15 áreas activadas",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "princípio declarado (cobre base AppSec; conformidade exige formalização)",
+          "found": true,
+          "evidence": "delimitação servida em toda a resposta da superfície de playbooks",
+          "nonNormative": false,
+          "declared": null
+        }
+      ],
+      "missing": [],
+      "mustNotViolations": [],
+      "used": [
+        "map_sbd_toe_regulatory_activation",
+        "get_sbd_toe_playbook",
+        "search_sbd_toe_manual",
+        "map_sbd_toe_regulatory_activation(PCI-DSS)"
+      ],
+      "notes": [
+        "a resposta disponível é contagem de obrigações activadas — o must-NOT do caso",
+        "variante negativa (PCI-DSS): o servidor recusa/declara em vez de improvisar ✓"
+      ]
+    },
+    {
+      "case": "GR-03",
+      "reading": "PROGRAMA",
+      "title": "implementar SbD de raiz",
+      "question": "Organização de ~200 pessoas, sem programa de segurança aplicacional. Por onde começamos e com que sequência?",
+      "verdict": "NÃO SERVIDO",
+      "centralPiece": "macro-processos MP1–MP5 como dados",
+      "pieces": [
+        {
+          "name": "travessia longitudinal (cap. 14: governo em operação E pôr o programa de pé)",
+          "found": false,
+          "evidence": "sem entidade de «programa»",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "ordem/fases do programa",
+          "found": true,
+          "evidence": "8 fases no rollout",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "o que é pré-requisito de quê",
+          "found": false,
+          "evidence": "o rollout declara que o DAG de dependências está adiado",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "papéis a criar",
+          "found": false,
+          "evidence": "sem caminho para papéis do PROGRAMA (só papéis de prática)",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "ligação à classificação (cap. 01) como primeiro passo",
+          "found": true,
+          "evidence": "7 requisitos CLA alcançáveis por estrutura",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "macro-processos MP1–MP5 como dados",
+          "found": false,
+          "evidence": "só PROSA nos chunks — não existem como entidades no KG",
+          "nonNormative": false,
+          "declared": null
+        }
+      ],
+      "missing": [
+        "travessia longitudinal (cap. 14: governo em operação E pôr o programa de pé) — sem entidade de «programa»",
+        "o que é pré-requisito de quê — o rollout declara que o DAG de dependências está adiado",
+        "papéis a criar — sem caminho para papéis do PROGRAMA (só papéis de prática)",
+        "macro-processos MP1–MP5 como dados — só PROSA nos chunks — não existem como entidades no KG"
+      ],
+      "mustNotViolations": [],
+      "used": [
+        "plan_sbd_toe_rollout",
+        "query_sbd_toe_entities",
+        "resolve_entities",
+        "select_sbd_toe_requirements"
+      ],
+      "notes": [
+        "o oráculo declara NÃO SERVIDO esperado por construção enquanto os MP1–MP5 não forem modelados"
+      ]
+    },
+    {
+      "case": "GR-04",
+      "reading": "PAPEL/MOMENTO",
+      "title": "o que faço eu, agora",
+      "question": "Sou Product Owner, início de sprint, equipa a construir uma feature de exportação de dados. O que tenho de garantir?",
+      "verdict": "SERVIDO-MAL",
+      "centralPiece": "user stories aplicáveis ao papel",
+      "pieces": [
+        {
+          "name": "user stories aplicáveis ao papel",
+          "found": true,
+          "evidence": "10 histórias / 12 atribuições",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "o momento no ciclo",
+          "found": true,
+          "evidence": "12 atribuições com fase",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "o que o PO decide vs o que delega",
+          "found": false,
+          "evidence": "não publicado como dado (nem no assignment nem na história)",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "a evidência que fica",
+          "found": true,
+          "evidence": "DoD/evidência nas histórias",
+          "nonNormative": false,
+          "declared": null
+        }
+      ],
+      "missing": [
+        "o que o PO decide vs o que delega — não publicado como dado (nem no assignment nem na história)"
+      ],
+      "mustNotViolations": [],
+      "used": [
+        "get_guide_by_role"
+      ],
+      "notes": [
+        "denominadores declarados: 12 atribuições / 10 histórias"
+      ]
+    },
+    {
+      "case": "GR-05",
+      "reading": "CONSULT",
+      "title": "o que o Manual diz sobre X (sem tarefa)",
+      "question": "O que é que o SbD-ToE diz sobre gestão de segredos?",
+      "verdict": "SERVIDO-MAL",
+      "centralPiece": "requisitos",
+      "pieces": [
+        {
+          "name": "requisitos",
+          "found": true,
+          "evidence": "14 requisitos",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "práticas / onde no ciclo",
+          "found": true,
+          "evidence": "get_guide_by_role por fase",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "provas",
+          "found": true,
+          "evidence": "matriz de verificação",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "ameaças",
+          "found": true,
+          "evidence": "137 ameaças",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "antipadrões (o que NÃO fazer)",
+          "found": false,
+          "evidence": "sem caminho próprio para os 26 antipadrões",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "proveniência marcada (manual-grounded)",
+          "found": true,
+          "evidence": "provenance no payload",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "não exige risk_level para uma pergunta de conhecimento",
+          "found": false,
+          "evidence": "todas as superfícies normativas exigem risk_level",
+          "nonNormative": false,
+          "declared": null
+        }
+      ],
+      "missing": [
+        "antipadrões (o que NÃO fazer) — sem caminho próprio para os 26 antipadrões",
+        "não exige risk_level para uma pergunta de conhecimento — todas as superfícies normativas exigem risk_level"
+      ],
+      "mustNotViolations": [],
+      "used": [
+        "consult_security_requirements",
+        "get_threat_landscape",
+        "query_sbd_toe_entities",
+        "get_sbd_toe_verification_matrix",
+        "get_guide_by_role"
+      ],
+      "notes": [
+        "o `risk_level` foi fornecido pela sonda (L2) porque as superfícies o exigem — a pergunta do oráculo não o traz"
+      ]
+    },
+    {
+      "case": "GR-06",
+      "reading": "SETUP",
+      "title": "configurar-se para usar bem o Manual (controlo positivo)",
+      "question": "Sou um agente novo neste repositório. Como me configuro para trabalhar com o SbD-ToE?",
+      "verdict": "SERVIDO",
+      "centralPiece": "arranque barato (quick-start)",
+      "pieces": [
+        {
+          "name": "arranque barato (quick-start)",
+          "found": true,
+          "evidence": "583 tk",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "skill/subagente do papel certo",
+          "found": true,
+          "evidence": "generate_sbd_toe_skill(role)",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "vocabulário e as três formas de pedir",
+          "found": true,
+          "evidence": "formas publicadas: A,B,C",
+          "nonNormative": false,
+          "declared": null
+        },
+        {
+          "name": "declaração do que o servidor NÃO faz",
+          "found": true,
+          "evidence": "declarado no guia/quick-start",
+          "nonNormative": false,
+          "declared": null
+        }
+      ],
+      "missing": [],
+      "mustNotViolations": [],
+      "used": [
+        "read_sbd_toe_resource(quick-start, model, agent-guide)",
+        "generate_sbd_toe_skill"
+      ],
+      "notes": []
+    }
+  ]
+}

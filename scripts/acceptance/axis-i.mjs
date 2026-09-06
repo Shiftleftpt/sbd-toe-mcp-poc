@@ -73,16 +73,20 @@ export const readingCases = [
       const checklist = await client.tool("get_sbd_toe_chapter_implementation_checklist", { chapter: "07-cicd-seguro" });
       used.push("get_sbd_toe_chapter_implementation_checklist");
       const items = checklist.ok ? (checklist.data?.data?.items ?? checklist.data?.items ?? []) : [];
-      const brief = await client.tool("get_sbd_toe_chapter_brief", { chapter: "07-cicd-seguro" });
+      /**
+       * O brief pede `chapterId`, não `chapter` — a 1ª versão desta sonda chamava-o com o
+       * nome errado e lia `artifact_ids` em vez de `artifacts`, o que deu «0 artefactos» na
+       * baseline. Defeito da MEDIÇÃO: o brief serve 29 artefactos para o cap. 07.
+       */
+      const brief = await client.tool("get_sbd_toe_chapter_brief", { chapterId: "07-cicd-seguro" });
       used.push("get_sbd_toe_chapter_brief");
       const briefData = brief.ok ? (brief.data?.data ?? brief.data ?? {}) : {};
-      // KPIs por capítulo: existe caminho?
-      const kpiTry = await client.tool("resolve_entities", { record_type: "metric", limit: 5 });
-      const kpiTry2 = await client.tool("query_sbd_toe_entities", { query: "KPI CI/CD" });
-      used.push("resolve_entities", "query_sbd_toe_entities");
-      const kpiPath =
-        (kpiTry.ok && (kpiTry.data?.total ?? 0) > 0) ||
-        (kpiTry2.ok && JSON.stringify(kpiTry2.data ?? {}).includes("kpi"));
+      // KPIs por capítulo: existe caminho NORMATIVO, com thresholds por nível?
+      const cap = await client.tool("get_sbd_toe_chapter_capability", { chapter: "07-cicd-seguro", risk_level: "L2" });
+      used.push("get_sbd_toe_chapter_capability");
+      const capData = cap.ok ? cap.data ?? {} : {};
+      const measures = capData.measures ?? [];
+      const kpiPath = measures.length > 0 && measures.every((m) => m.thresholds_by_level !== undefined);
       // papéis e momento
       const roles = await client.tool("get_guide_by_role", { risk_level: "L2", phase: "build" });
       used.push("get_guide_by_role");
@@ -97,11 +101,17 @@ export const readingCases = [
       used.push("select_sbd_toe_requirements");
       const pieces = [
         piece("checklist de implementação do capítulo", items.length > 0, `${items.length} itens de checklist`),
-        piece("KPIs/métricas DO CAPÍTULO", kpiPath, kpiPath ? "há caminho" : "sem caminho para pedir KPIs por capítulo"),
+        piece(
+          "KPIs/métricas DO CAPÍTULO",
+          kpiPath,
+          kpiPath
+            ? `get_sbd_toe_chapter_capability: ${measures.length} KPIs com thresholds por nível`
+            : "sem caminho para pedir KPIs por capítulo"
+        ),
         piece(
           "artefactos que a capacidade exige",
-          Array.isArray(briefData.artifact_ids) && briefData.artifact_ids.length > 0,
-          `${(briefData.artifact_ids ?? []).length} artefactos no brief`
+          (Array.isArray(briefData.artifacts) && briefData.artifacts.length > 0) || (capData.artifacts?.total ?? 0) > 0,
+          `${(briefData.artifacts ?? []).length} no brief · ${capData.artifacts?.total ?? 0} na vista IMPL`
         ),
         piece(
           "papéis envolvidos e momento no ciclo",

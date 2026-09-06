@@ -66,6 +66,7 @@ import { buildAgentGuide } from "./serving/agent-guide.js";
 import { buildModelResource, buildQuickStart } from "./serving/model-resource.js";
 import { THREAT_ORDERING, SELECT_PAGINATION } from "./serving/behaviour-notes.js";
 import { handleGetPlaybook } from "./tools/get-playbook.js";
+import { handleGetChapterCapability } from "./tools/get-chapter-capability.js";
 import { threatConcernSupport, threatDomainConcerns } from "./tools/get-threat-landscape.js";
 
 type JsonRpcId = string | number;
@@ -1031,6 +1032,27 @@ class McpRuntime {
               limit: { type: "number" }
             },
             required: [],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true }
+        },
+        {
+          name: "get_sbd_toe_chapter_capability",
+          title: "Get SbD-ToE Chapter Capability (IMPL)",
+          description:
+            "LEITURA IMPL (0.20.0-beta.34) — «a organização quer implementar o cap. N: que capacidade precisa de ter, como sabe que está capaz, e COMO MEDE?». Publica os KPIs que o MANUAL define para o capítulo, com os `thresholds_by_level` (L1/L2/L3) como dado — é isso que distingue MEDIR de listar — mais os ARTEFACTOS que a capacidade tem de produzir. " +
+            "NÃO é a leitura GUIDE: se a pergunta é «que requisitos se aplicam a ESTA tarefa», isso é `select_sbd_toe_requirements`. A resposta declara qual das duas recebeste no campo `reading`. " +
+            "Alcançável por capítulo (`chapter`), por KPI (`metric_id`) ou por dimensão (`dimension`); `risk_level` acrescenta o alvo desse nível. Fecha o ciclo com `assess_sbd_toe_implementation`, que avalia os valores que TU medires contra estes mesmos KPIs.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              chapter: { type: "string", description: "Id do capítulo (ex.: `07-cicd-seguro`). Sem isto, devolve todos os KPIs publicados." },
+              metric_id: { type: "string", description: "Um KPI concreto (ex.: `ARC-K01`)." },
+              dimension: { type: "string", description: "Filtra por dimensão (ex.: `T-01`)." },
+              risk_level: { type: "string", enum: ["L1", "L2", "L3"], description: "Acrescenta `target_at_level`: o threshold que ESTE nível exige." },
+              offset: { type: "number", description: "Paginação sobre os KPIs." },
+              limit: { type: "number", description: "KPIs por página (default 25; 99 publicados no total)." }
+            },
             additionalProperties: false
           },
           annotations: { readOnlyHint: true }
@@ -2177,6 +2199,13 @@ class McpRuntime {
             duration_ms: Date.now() - startedAt,
             ...metadata,
             message: "Tool invocation completed"
+          });
+          return;
+        }
+        case "get_sbd_toe_chapter_capability": {
+          const result = handleGetChapterCapability(args);
+          this.sendResponse(request.id, {
+            content: [{ type: "text", text: JSON.stringify(result) }]
           });
           return;
         }

@@ -25,7 +25,7 @@ import { boundAffordances, type ProtocolEnvelope } from "../serving/protocol-env
 const VALID_RISK = ["L1", "L2", "L3"] as const;
 type RiskLevel = (typeof VALID_RISK)[number];
 
-interface ParsedThreshold {
+export interface ParsedThreshold {
   comparable: boolean;
   operator: "gte" | "lte" | "eq" | string;
   value: number;
@@ -33,17 +33,24 @@ interface ParsedThreshold {
   raw?: string;
 }
 
-interface MetricRecord {
+export interface MetricRecord {
   metric_id: string;
   label: string;
   chapter_id?: string;
   source_document_id?: string;
   source_file?: string;
   thresholds_by_level_parsed?: Record<string, ParsedThreshold | null>;
+  /** 0.20.0-beta.34: campos que a vista IMPL publica — já vinham no bundle, faltava o tipo. */
+  metric_type?: string;
+  metric_scope?: string;
+  period?: string;
+  dimension_ids?: string[];
+  related_documents?: Array<{ document_ref?: string; relationship?: string }>;
 }
 
 let cachedMetrics: MetricRecord[] | undefined;
-function loadMetrics(): MetricRecord[] {
+/** 0.20.0-beta.34: exportado — a vista IMPL serve os MESMOS KPIs que esta tool avalia. */
+export function loadMetrics(): MetricRecord[] {
   if (cachedMetrics !== undefined) return cachedMetrics;
   try {
     const parsed = JSON.parse(readFileSync(resolveAppPath("data/publish/runtime/metrics.json"), "utf-8")) as {
@@ -242,6 +249,15 @@ export function handleAssessImplementation(args: Record<string, unknown>): Proto
         "Tracked/observed progress over time is the Premium state layer, not this tool."
     },
     next: boundAffordances([
+      {
+        // 0.20.0-beta.34 — o ciclo fecha-se: até aqui o chamador tinha de trazer os KPIs às
+        // cegas, porque nada publicava os que o Manual define. A vista IMPL publica-os com
+        // os thresholds por nível; esta tool avalia os valores que ele medir.
+        intent: "os KPIs que o MANUAL define para o capítulo, com os thresholds por nível (traz-os para cá)",
+        tool: "get_sbd_toe_chapter_capability",
+        with: 'chapter="07-cicd-seguro", risk_level="L2"',
+        kind: "structural"
+      },
       {
         intent: "close a gap: get the implementation checklist for the gap's chapter",
         tool: "get_sbd_toe_chapter_implementation_checklist",

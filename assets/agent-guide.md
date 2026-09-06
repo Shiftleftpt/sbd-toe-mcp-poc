@@ -20,6 +20,11 @@ Lê o pedido, o código e a conversa — e **DECLARA** o que interpretaste:
 **Eu não interpreto prosa**: respondo com o que o KG sabe sobre o que declaraste, mais as
 adjacências do grafo, de forma reproduzível e auditável.
 
+### As LEITURAS — qual das respostas queres
+
+<!-- BEGIN GENERATED: readings -->
+<!-- END GENERATED: readings -->
+
 ### As TRÊS FORMAS DE PEDIR
 
 <!-- BEGIN GENERATED: how-to-ask -->

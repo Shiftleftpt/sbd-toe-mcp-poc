@@ -305,7 +305,36 @@ export function generateHowToAskBlock(): string {
   ].join("\n");
 }
 
+/**
+ * 0.20.0-beta.34 — AS LEITURAS: a mesma pergunta sobre um capítulo tem respostas diferentes.
+ *
+ * «O que é preciso para o cap. 07?» é ambígua: pode ser «que requisitos se aplicam à MINHA
+ * TAREFA» (GUIDE) ou «que capacidade a ORGANIZAÇÃO precisa de ter e como sabe que a tem»
+ * (IMPL). Servir uma quando se pedia a outra é o must-NOT do caso GR-01 do oráculo — e era
+ * o que acontecia, porque só a leitura GUIDE tinha superfície própria.
+ */
+export function generateReadingsBlock(): string {
+  return [
+    `${DERIVED_NOTE}`,
+    "",
+    "| Leitura | A pergunta que responde | Onde |",
+    "|---|---|---|",
+    "| **GUIDE** | «que requisitos se aplicam a ESTA tarefa/mudança?» | `select_sbd_toe_requirements` · `prepare_sbd_toe_codegen_context` |",
+    "| **IMPL** | «que capacidade a ORGANIZAÇÃO precisa de ter, e COMO MEDE que a tem?» | `get_sbd_toe_chapter_capability` (KPIs com thresholds por nível + artefactos) · `get_sbd_toe_chapter_implementation_checklist` · `assess_sbd_toe_implementation` |",
+    "| **CONSULT** | «o que o Manual diz sobre X?» (sem tarefa) | `consult_security_requirements` · `get_threat_landscape` · `get_sbd_toe_verification_matrix` |",
+    "| **CROSS-CHECK** | «somos sujeitos à norma N — como é que o Manual serve?» | `get_sbd_toe_playbook` · `map_sbd_toe_regulatory_activation` |",
+    "| **PAPEL/MOMENTO** | «o que faço EU, agora?» | `get_guide_by_role` |",
+    "| **SETUP** | «como me configuro?» | `sbd://toe/quick-start` · `generate_sbd_toe_skill` |",
+    "",
+    "**A mesma pergunta sobre um capítulo tem duas respostas legítimas** — «o que fazer na tarefa»",
+    "(GUIDE) e «o que a organização precisa de ter» (IMPL) — e não são substituíveis. Responder à",
+    "IMPL com a lista de requisitos técnicos é um erro conhecido: as respostas da vista IMPL",
+    "declaram-no no campo `reading`, para saberes qual recebeste."
+  ].join("\n");
+}
+
 const GENERATORS: Record<string, () => string> = {
+  readings: generateReadingsBlock,
   "how-to-ask": generateHowToAskBlock,
   "cross-surface": generateCrossSurfaceBlock,
   "output-sizes": generateOutputSizesBlock,
